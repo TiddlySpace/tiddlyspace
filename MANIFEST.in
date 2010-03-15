@@ -1,0 +1,3 @@
+include README Makefile
+recursive-include test *
+recursive-include tiddlywebplugins/tiddlyspace/resources *
