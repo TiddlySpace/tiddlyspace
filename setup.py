@@ -21,6 +21,7 @@ setup(
     url = 'http://pypi.python.org/pypi/%s' % NAME,
     packages = find_packages(exclude=['test']),
     platforms = 'Posix; MacOS X; Windows',
+    scripts = ['tiddlyspace'],
     install_requires = [
         'setuptools',
         'tiddlyweb',

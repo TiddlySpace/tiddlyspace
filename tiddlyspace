@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+"""
+TiddlySpace instantiation script
+"""
+
+import sys
+
+from tiddlyweb.util import std_error_message
+
+from tiddlywebplugins.instancer.util import spawn
+
+from tiddlywebplugins.tiddlyspace import instance as instance_module
+from tiddlywebplugins.tiddlyspace.config import config as init_config
+
+
+def main(args):
+    args = [unicode(arg, 'UTF-8') for arg in args]
+    instance_path = args[1]
+
+    spawn(instance_path, init_config, instance_module)
+    std_error_message('TiddlySpace instance has been created.')
+
+    return True
+
+
+if __name__ == '__main__':
+    status = not main(sys.argv)
+    sys.exit(status)
