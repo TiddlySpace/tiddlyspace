@@ -11,10 +11,10 @@ from tiddlywebplugins.instancer.util import cache_tiddlers
 
 
 def main(args):
-	cache_tiddlers("tiddlywebplugins.tiddlyspace")
+	cache_tiddlers('tiddlywebplugins.tiddlyspace')
 	return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 	status = not main(sys.argv)
 	sys.exit(status)
