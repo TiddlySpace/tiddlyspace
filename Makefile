@@ -1,4 +1,4 @@
-.PHONY: clean test remotes dist release pypi
+.PHONY: clean test remotes dist release pypi dev
 
 clean:
 	find . -name "*.pyc" | xargs rm || true
@@ -20,3 +20,10 @@ release: dist pypi
 
 pypi: test
 	python setup.py sdist upload
+
+dev: remotes
+	@twinstance_dev tiddlywebplugins.tiddlyspace dev_instance
+	@echo "from devtiddlers import update_config; update_config(config)" \
+		>> dev_instance/tiddlywebconfig.py
+	@echo "INFO development instance created in dev_instance," \
+		"using tiddler locations defined in devtiddlers.py"
