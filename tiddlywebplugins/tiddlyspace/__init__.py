@@ -16,7 +16,10 @@ from tiddlywebplugins.tiddlyspace.config import config as space_config
 
 def init(config):
     import tiddlywebwiki
+    import tiddlywebplugins.logout
     import tiddlywebplugins.virtualhosting # calling init not required
 
     merge_config(config, space_config)
+
     tiddlywebwiki.init(config)
+    tiddlywebplugins.logout.init(config)

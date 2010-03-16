@@ -27,6 +27,7 @@ setup(
         'tiddlyweb',
         'tiddlywebwiki',
         'tiddlywebplugins.utils>=1.0',
+        'tiddlywebplugins.logout',
         'tiddlywebplugins.virtualhosting',
         ],
     include_package_data = True,
