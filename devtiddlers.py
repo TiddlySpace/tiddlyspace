@@ -1,5 +1,9 @@
 instance_tiddlers = {
-    'tiddlyspace':['../src/controls/index.recipe', '../src/lib/index.recipe']
+    'tiddlyspace': [
+        '../src/controls/index.recipe',
+        '../src/lib/index.recipe',
+        '../src/model/index.recipe'
+    ]
 }
 
 
