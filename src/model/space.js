@@ -8,26 +8,18 @@ TiddlyWeb.Space = function(name, owner, host) {
 TiddlyWeb.Space.prototype = new TiddlyWeb.Resource();
 $.extend(TiddlyWeb.Space.prototype, {
 	put: function(callback, errback) {
-		var policies = { bags: {}, recipes: {} };
-		policies.bags.private = {
-			read: this.members,
-			write: this.members,
-			create: this.members,
-			"delete": this.members,
-			manage: this.members,
-			accept: this.members,
-			owner: this.members[0]
+		policies = {
+			private: {
+				read: this.members,
+				write: this.members,
+				create: this.members,
+				"delete": this.members,
+				manage: this.members,
+				accept: this.members,
+				owner: this.members[0]
+			}
 		};
-		policies.recipes.private = $.extend({}, policies.bags.private, {
-			write: undefined,
-			create: undefined,
-			"delete": undefined,
-			accept: undefined
-		});
-		policies.bags.public = $.extend({}, policies.bags.private, {
-			read: []
-		});
-		policies.recipes.public = $.extend({}, policies.recipes.private, {
+		policies.public = $.extend({}, policies.private, {
 			read: []
 		});
 
@@ -40,7 +32,7 @@ $.extend(TiddlyWeb.Space.prototype, {
 				var container = new TiddlyWeb[className](name, self.host);
 				container.desc = self.name + " space, " + visibility + " " +
 					(type == "bag" ? "content" : "document");
-				container.policy = policies[type + "s"][visibility];
+				container.policy = policies[visibility];
 				if(type == "recipe") {
 					container.recipe = [
 						["system", ""],
