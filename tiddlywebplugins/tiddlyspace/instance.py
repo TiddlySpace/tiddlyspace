@@ -8,7 +8,9 @@ from tiddlywebwiki.instance import (instance_config, store_contents,
 instance_config['system_plugins'] = ['tiddlywebplugins.tiddlyspace']
 
 store_contents['tiddlyspace'] = [
-    'src/controls/index.recipe'
+    'src/controls/index.recipe',
+    'src/lib/index.recipe',
+    'src/model/index.recipe'
 ]
 
 store_structure['bags']['tiddlyspace'] = {

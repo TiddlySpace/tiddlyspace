@@ -1,4 +1,4 @@
-.PHONY: clean test remotes dist release pypi dev
+.PHONY: clean test remotes jslib dist release pypi dev
 
 clean:
 	find . -name "*.pyc" | xargs rm || true
@@ -10,8 +10,13 @@ clean:
 test:
 	py.test -x test
 
-remotes:
+remotes: jslib
 	./cacher
+
+jslib:
+	mkdir -p "src/lib"
+	curl -o "src/lib/chrjs.js" \
+		"http://github.com/tiddlyweb/chrjs/raw/f1d0285ed0cea51578fc261960ef644760668dc3/main.js"
 
 dist: clean remotes test
 	python setup.py sdist
