@@ -1,9 +1,11 @@
 (function($) {
 
 TiddlyWeb.Space = function(name, owner, host) {
+	TiddlyWeb.Resource.apply(this, ["space", host]);
 	this.name = name;
 	this.members = [owner];
 };
+TiddlyWeb.Space.prototype = new TiddlyWeb.Resource();
 $.extend(TiddlyWeb.Space.prototype, {
 	put: function(callback, errback) {
 		policies = {
