@@ -18,8 +18,10 @@ def init(config):
     import tiddlywebwiki
     import tiddlywebplugins.logout
     import tiddlywebplugins.virtualhosting # calling init not required
+    import tiddlywebplugins.socialusers
 
     merge_config(config, space_config)
 
     tiddlywebwiki.init(config)
     tiddlywebplugins.logout.init(config)
+    tiddlywebplugins.socialusers.init(config)
