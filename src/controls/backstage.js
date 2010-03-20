@@ -16,7 +16,7 @@ config.macros.TiddlySpaceUser = {
 			$("<a>login</a>").
 				attr("href", "/challenge/openid?tiddlyweb_redirect=" + host).
 				appendTo(place);
-			wikify("!Register\n<<register>>", place);
+			wikify("<<register>>", place);
 		} else {
 			$("<dl />").
 				append("<dt>current user</dt>").

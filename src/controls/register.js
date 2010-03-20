@@ -2,24 +2,27 @@
 (function($) {
 
 config.macros.register = {
+	label: "Register",
 	msgUserSuccess: "created user %0",
 	msgUserError: "error creating user %0: %1",
 	msgSpaceSuccess: "created space %0",
 	msgSpaceError: "error creating space %0: %1",
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		// TODO: valid HTML
-		$(place).
+		var container = $("<fieldset />");
+		$("<legend />").text(this.label).appendTo(container);
+		$(container).
 			append('<input type="text" value="username" />').
 			append('<input type="password" value="password" />');
 		$('<input type="submit" value="register" />').
 			click(this.onClick).
-			appendTo(place);
+			appendTo(container);
+		$('<form action="" />').append(container).appendTo(place);
 	},
 	onClick: function(ev) {
 		var btn = $(this);
-		var password = btn.prev().val(); // XXX: hacky
-		var username = btn.prev().prev().val(); // XXX: hacky
+		var username = btn.siblings("input[type=text]").val();
+		var password = btn.siblings("input[type=password]").val();
 		var host = store.getTiddler("TiddlyWebConfig").fields["server.host"]; // XXX: suboptimal?
 
 		var self = config.macros.register;
