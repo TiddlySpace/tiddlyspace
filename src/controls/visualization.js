@@ -12,19 +12,22 @@
 //{{{
 (function($) {
 
-// hijack view handler to add private/public class to story tiddlers
-var _handler = config.macros.view.handler;
-config.macros.view.handler = function(place, macroName, params, wikifier, paramString, tiddler) {
-	_handler.apply(this, arguments);
-	if(params[0] == "title") {
-		var bag = tiddler.fields["server.bag"];
-		if(!bag) { // new tiddler
+// hijack displayTiddler to add private/public class to story tiddlers
+var _displayTiddler = Story.prototype.displayTiddler;
+Story.prototype.displayTiddler = function(srcElement, tiddler, template,
+	animate, unused, customFields, toggle, animationSrc) {
+	var el = _displayTiddler.apply(this, arguments);
+	if(!(tiddler instanceof Tiddler)) {
+		tiddler = store.getTiddler(tiddler);
+	}
+	if(tiddler) {
+		var container = tiddler.fields["server.bag"];
+		if(!container) { // new tiddler
 			var workspace = tiddler.fields["server.workspace"];
-			bag = workspace ? workspace.split("/")[1] : null;
+			container = workspace ? workspace.split("/")[1] : null;
 		}
-		var type = bag ? bag.split("_")[1] : null;
+		var type = container ? container.split("_")[1] : null;
 		if(type) { // TODO: explicitly check for private/public!?
-			var el = story.findContainingTiddler(place);
 			$(el).addClass(type);
 		}
 	}
