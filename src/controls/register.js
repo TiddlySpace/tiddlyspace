@@ -1,3 +1,6 @@
+/***
+|''Requires''|TiddlyWebConfig|
+***/
 //{{{
 (function($) {
 
@@ -23,7 +26,7 @@ config.macros.register = {
 		var btn = $(this);
 		var username = btn.siblings("input[type=text]").val();
 		var password = btn.siblings("input[type=password]").val();
-		var host = store.getTiddler("TiddlyWebConfig").fields["server.host"]; // XXX: suboptimal?
+		var host = config.defaultCustomFields["server.host"];
 
 		var self = config.macros.register;
 		var callback = function(resource, status, xhr) {

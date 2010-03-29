@@ -1,3 +1,6 @@
+/***
+|''Requires''|TiddlyWebConfig|
+***/
 //{{{
 (function($) {
 
@@ -10,11 +13,11 @@ config.backstageTasks.push("tiddlyspace");
 
 config.macros.TiddlySpaceUser = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var host = store.getTiddler("TiddlyWebConfig").fields["server.host"]; // XXX: suboptimal?
-		host = encodeURIComponent(host);
 		if(config.options.txtUserName == "GUEST") {
-			$("<a>login</a>").
-				attr("href", "/challenge/openid?tiddlyweb_redirect=" + host).
+			var host = config.defaultCustomFields["server.host"];
+			host = encodeURIComponent(host);
+			$("<a>login</a>"). // TODO: reuse form provided by register macro
+				attr("href", "/challenge/cookie_form?tiddlyweb_redirect=" + host).
 				appendTo(place);
 			wikify("<<register>>", place);
 		} else {
