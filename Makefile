@@ -6,6 +6,7 @@ clean:
 	rm -r build || true
 	rm -r *.egg-info || true
 	rm -r tiddlywebplugins/tiddlyspace/resources || true
+	rm src/frontpage/*.tid || true
 
 test:
 	py.test -x test

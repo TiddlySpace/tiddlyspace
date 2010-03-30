@@ -5,14 +5,37 @@ creates local cache of instance tiddlers to be included in distribution
 """
 
 import sys
+import os
+
 import mangler
+
+from tiddlyweb.util import read_utf8_file, write_utf8_file, std_error_message
 
 from tiddlywebplugins.instancer.util import cache_tiddlers
 
 
 def main(args):
+    static_files = ['index.html', 'main.css']
+    generate_binary_tiddlers(static_files, "src/frontpage", "frontpage")
     cache_tiddlers('tiddlywebplugins.tiddlyspace')
     return True
+
+
+def generate_binary_tiddlers(filenames, directory, bag_name): # XXX: specific version of TiddlyRecon's more generic cacher
+    """
+    generates (pseudo-)binary tiddlers from known static files
+    """
+    for filename in filenames:
+        filepath = os.path.join(directory, filename)
+        text = read_utf8_file(filepath)
+        if filename.endswith('.html'): # XXX: special-casing magic
+            text = text.replace('main.css',
+                'bags/%s/tiddlers/main.css' % bag_name)
+        content_type = 'type: text/%s' % filename.split('.')[1]
+        tiddler = '%s\n\n%s' % (content_type, text)
+        tiddler_path = '%s.tid' % filepath
+        std_error_message('creating %s' % tiddler_path)
+        write_utf8_file(tiddler_path, tiddler)
 
 
 if __name__ == '__main__':

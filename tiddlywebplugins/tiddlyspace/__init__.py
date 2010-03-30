@@ -11,7 +11,9 @@ __version__ = '0.2.0'
 
 from tiddlyweb.util import merge_config
 
+from tiddlywebplugins.utils import replace_handler
 from tiddlywebplugins.tiddlyspace.config import config as space_config
+from tiddlywebplugins.tiddlyspace.root_handler import home
 
 
 def init(config):
@@ -26,3 +28,6 @@ def init(config):
     tiddlywebwiki.init(config)
     tiddlywebplugins.logout.init(config)
     tiddlywebplugins.socialusers.init(config)
+
+    if 'selector' in config: # system plugin
+        replace_handler(config['selector'], '/', dict(GET=home))
