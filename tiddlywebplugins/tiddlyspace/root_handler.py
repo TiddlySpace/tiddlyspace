@@ -1,3 +1,4 @@
+from tiddlyweb.model.bag import Bag
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
 
@@ -35,7 +36,13 @@ def serve_frontpage(environ, start_response):
 def serve_space(environ, start_response, http_host):
     space = _determine_space(environ, http_host)
     user = environ['tiddlyweb.usersign']['name']
-    type = 'private' if space == user else 'public'
+
+    store = environ['tiddlyweb.store']
+    bag = Bag("%s_private" % space)
+    bag = store.get(bag)
+    members = bag.policy.manage # XXX: authoritative?
+
+    type = 'private' if user in members else 'public'
     recipe_name = '%s_%s' % (space, type)
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
     environ['tiddlyweb.type'] = 'text/x-tiddlywiki'

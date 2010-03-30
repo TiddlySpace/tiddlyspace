@@ -16,7 +16,7 @@ $.extend(TiddlyWeb.Space.prototype, {
 				"delete": this.members,
 				manage: this.members,
 				accept: this.members,
-				owner: this.members[0]
+				owner: this.members[0] // XXX: ignored by TiddlyWeb
 			}
 		};
 		policies.public = $.extend({}, policies.private, {
