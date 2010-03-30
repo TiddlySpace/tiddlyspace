@@ -29,7 +29,8 @@ setup(
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout',
         'tiddlywebplugins.virtualhosting',
-        'tiddlywebplugins.socialusers'
+        'tiddlywebplugins.socialusers',
+        'tiddlywebplugins.geofilters'
     ],
     include_package_data = True,
     zip_safe = False
