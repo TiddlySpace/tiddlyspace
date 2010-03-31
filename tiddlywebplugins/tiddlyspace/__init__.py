@@ -6,7 +6,7 @@ website: http://tiddlyspace.com
 repository: http://github.com/TiddlySpace/tiddlyspace
 """
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 
 from tiddlyweb.util import merge_config
@@ -30,4 +30,5 @@ def init(config):
     tiddlywebplugins.socialusers.init(config)
 
     if 'selector' in config: # system plugin
+        config['auth_systems'] = ['%s.challenger' % __package__] # XXX: does not belong here!?
         replace_handler(config['selector'], '/', dict(GET=home))
