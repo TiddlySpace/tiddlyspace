@@ -4,11 +4,29 @@ TiddlyWeb.Space = function(name, owner, host) {
 	TiddlyWeb.Resource.apply(this, ["space", host]);
 	this.name = name;
 	this.members = [owner];
-	this.containers = this.getContainers();
+	this.constituents = this.getConstituents();
 };
 TiddlyWeb.Space.prototype = new TiddlyWeb.Resource();
 $.extend(TiddlyWeb.Space.prototype, {
-	getContainers: function() {
+	put: function(callback, errback) {
+		var xhrCount = 0;
+		var _callback = function(data, status, xhr) {
+			xhrCount++;
+			if(xhrCount == 4) {
+				callback(data, status, xhr);
+			}
+		};
+		var _errback = function(xhr, error, exc) {
+			if(xhrCount >= 0) {
+				xhrCount = -5;
+				errback(xhr, error, exc);
+			}
+		};
+		for(var i = 0; i < this.constituents.length; i++) {
+			this.constituents[i].put(_callback, _errback);
+		}
+	},
+	getConstituents: function() {
 		var policies = {
 			private: {
 				read: this.members,
@@ -47,24 +65,6 @@ $.extend(TiddlyWeb.Space.prototype, {
 			});
 		});
 		return containers;
-	},
-	put: function(callback, errback) {
-		var xhrCount = 0;
-		var _callback = function(data, status, xhr) {
-			xhrCount++;
-			if(xhrCount == 4) {
-				callback(data, status, xhr);
-			}
-		};
-		var _errback = function(xhr, error, exc) {
-			if(xhrCount >= 0) {
-				xhrCount = -5;
-				errback(xhr, error, exc);
-			}
-		};
-		for(var i = 0; i < this.containers.length; i++) {
-			this.containers[i].put(_callback, _errback);
-		}
 	}
 });
 
