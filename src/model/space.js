@@ -18,24 +18,6 @@ $.extend(TiddlyWeb.Space.prototype, {
 	put: function(callback, errback) {
 		this.request("put", callback, errback);
 	},
-	request: function(type, callback, errback) {
-		var xhrCount = 0;
-		var _callback = function(data, status, xhr) {
-			xhrCount++;
-			if(xhrCount == 4) {
-				callback(data, status, xhr);
-			}
-		};
-		var _errback = function(xhr, error, exc) {
-			if(xhrCount >= 0) {
-				xhrCount = -5;
-				errback(xhr, error, exc);
-			}
-		};
-		for(var i = 0; i < this.constituents.length; i++) {
-			this.constituents[i][type](_callback, _errback);
-		}
-	},
 	getConstituents: function() {
 		var policies = {
 			private: {
@@ -75,6 +57,24 @@ $.extend(TiddlyWeb.Space.prototype, {
 			});
 		});
 		return containers;
+	},
+	request: function(type, callback, errback) {
+		var xhrCount = 0;
+		var _callback = function(data, status, xhr) {
+			xhrCount++;
+			if(xhrCount == 4) {
+				callback(data, status, xhr);
+			}
+		};
+		var _errback = function(xhr, error, exc) {
+			if(xhrCount >= 0) {
+				xhrCount = -5;
+				errback(xhr, error, exc);
+			}
+		};
+		for(var i = 0; i < this.constituents.length; i++) {
+			this.constituents[i][type](_callback, _errback);
+		}
 	}
 });
 
