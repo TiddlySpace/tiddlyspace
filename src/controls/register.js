@@ -4,7 +4,7 @@
 //{{{
 (function($) {
 
-config.macros.register = {
+var macro = config.macros.register = {
 	label: "Register",
 	msgUserSuccess: "created user %0",
 	msgUserError: "error creating user %0: %1",
@@ -28,20 +28,19 @@ config.macros.register = {
 		var password = btn.siblings("input[type=password]").val();
 		var host = config.defaultCustomFields["server.host"];
 
-		var self = config.macros.register;
 		var callback = function(resource, status, xhr) {
-			displayMessage(self.msgUserSuccess.format([username]));
+			displayMessage(macro.msgUserSuccess.format([username]));
 			var space = new TiddlyWeb.Space(username, [username], host);
 			space.put(_callback, _errback);
 		};
 		var errback = function(xhr, error, exc) {
-			displayMessage(self.msgUserError.format([username, xhr.statusText]));
+			displayMessage(macro.msgUserError.format([username, xhr.statusText]));
 		};
 		var _callback = function(resource, status, xhr) {
-			displayMessage(self.msgSpaceSuccess.format([username]));
+			displayMessage(macro.msgSpaceSuccess.format([username]));
 		};
 		var _errback = function(xhr, error, exc) {
-			displayMessage(self.msgSpaceError.format([username, xhr.statusText]));
+			displayMessage(macro.msgSpaceError.format([username, xhr.statusText]));
 		};
 
 		var user = new TiddlyWeb.User(username, password, host);
