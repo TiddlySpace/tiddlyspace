@@ -30,5 +30,4 @@ def init(config):
     tiddlywebplugins.socialusers.init(config)
 
     if 'selector' in config: # system plugin
-        config['auth_systems'] = ['%s.challenger' % __package__] # XXX: does not belong here!?
         replace_handler(config['selector'], '/', dict(GET=home))
