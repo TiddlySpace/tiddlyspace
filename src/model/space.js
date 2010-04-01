@@ -4,11 +4,12 @@ TiddlyWeb.Space = function(name, owner, host) {
 	TiddlyWeb.Resource.apply(this, ["space", host]);
 	this.name = name;
 	this.members = [owner];
+	this.containers = this.getContainers();
 };
 TiddlyWeb.Space.prototype = new TiddlyWeb.Resource();
 $.extend(TiddlyWeb.Space.prototype, {
-	put: function(callback, errback) {
-		policies = {
+	getContainers: function() {
+		var policies = {
 			private: {
 				read: this.members,
 				write: this.members,
@@ -22,7 +23,6 @@ $.extend(TiddlyWeb.Space.prototype, {
 		policies.public = $.extend({}, policies.private, {
 			read: []
 		});
-
 		var containers = [];
 		var self = this;
 		$.each(["bag", "recipe"], function(i, type) {
@@ -46,7 +46,9 @@ $.extend(TiddlyWeb.Space.prototype, {
 				containers.push(container);
 			});
 		});
-
+		return containers;
+	},
+	put: function(callback, errback) {
 		var xhrCount = 0;
 		var _callback = function(data, status, xhr) {
 			xhrCount++;
@@ -60,8 +62,8 @@ $.extend(TiddlyWeb.Space.prototype, {
 				errback(xhr, error, exc);
 			}
 		};
-		for(var i = 0; i < containers.length; i++) {
-			containers[i].put(_callback, _errback);
+		for(var i = 0; i < this.containers.length; i++) {
+			this.containers[i].put(_callback, _errback);
 		}
 	}
 });
