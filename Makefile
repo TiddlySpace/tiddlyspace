@@ -18,8 +18,8 @@ jslib:
 	mkdir -p "src/lib"
 	curl -o "src/lib/chrjs.js" \
 		"http://github.com/tiddlyweb/chrjs/raw/master/main.js"
-	curl -o "src/lib/user.js" \
-		"http://github.com/tiddlyweb/chrjs/raw/master/user.js"
+	curl -o "src/lib/users.js" \
+		"http://github.com/tiddlyweb/chrjs/raw/master/users.js"
 
 dist: clean remotes test
 	python setup.py sdist
