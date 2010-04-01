@@ -8,7 +8,17 @@ TiddlyWeb.Space = function(name, owner, host) {
 };
 TiddlyWeb.Space.prototype = new TiddlyWeb.Resource();
 $.extend(TiddlyWeb.Space.prototype, {
+	get: function(callback, errback) {
+		var self = this;
+		var _callback = function(resource, status, xhr) {
+			callback(self, status, xhr);
+		};
+		this.request("get", _callback, errback);
+	},
 	put: function(callback, errback) {
+		this.request("put", callback, errback);
+	},
+	request: function(type, callback, errback) {
 		var xhrCount = 0;
 		var _callback = function(data, status, xhr) {
 			xhrCount++;
@@ -23,7 +33,7 @@ $.extend(TiddlyWeb.Space.prototype, {
 			}
 		};
 		for(var i = 0; i < this.constituents.length; i++) {
-			this.constituents[i].put(_callback, _errback);
+			this.constituents[i][type](_callback, _errback);
 		}
 	},
 	getConstituents: function() {
