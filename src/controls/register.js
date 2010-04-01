@@ -17,7 +17,7 @@ config.macros.register = {
 		$(container).
 			append('<input type="text" value="username" />').
 			append('<input type="password" value="password" />');
-		$('<input type="submit" value="register" />').
+		$('<input type="submit" />').val(this.label).
 			click(this.onClick).
 			appendTo(container);
 		$('<form action="" />').append(container).appendTo(place);
@@ -46,7 +46,7 @@ config.macros.register = {
 
 		var user = new TiddlyWeb.User(username, password, host);
 		user.create(callback, errback);
-		return false; // XXX: unnecessary?
+		return false;
 	}
 };
 

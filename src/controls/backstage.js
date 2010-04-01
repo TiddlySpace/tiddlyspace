@@ -16,9 +16,7 @@ config.macros.TiddlySpaceUser = {
 		if(config.options.txtUserName == "GUEST") {
 			var host = config.defaultCustomFields["server.host"];
 			host = encodeURIComponent(host);
-			$("<a>login</a>"). // TODO: reuse form provided by register macro
-				attr("href", "/challenge/cookie_form?tiddlyweb_redirect=" + host).
-				appendTo(place);
+			$("<a>login</a>").attr("href", "/challenge").appendTo(place); // TODO: reuse form provided by register macro
 			wikify("<<register>>", place);
 		} else {
 			$("<dl />").
