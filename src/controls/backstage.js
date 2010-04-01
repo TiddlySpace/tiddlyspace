@@ -7,7 +7,7 @@
 config.tasks.tiddlyspace = {
 	text: "TiddlySpace",
 	tooltip: "TiddlySpace control panel",
-	content: "<<TiddlySpaceUser>>"
+	content: "<<TiddlySpaceUser>>\n<<TiddlySpaceMembers>>"
 };
 config.backstageTasks.push("tiddlyspace");
 
