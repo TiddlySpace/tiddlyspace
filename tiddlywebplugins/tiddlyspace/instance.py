@@ -6,6 +6,7 @@ from tiddlywebwiki.instance import (instance_config, store_contents,
 
 
 instance_config['system_plugins'] = ['tiddlywebplugins.tiddlyspace']
+instance_config['twanager_plugins'] = ['tiddlywebplugins.tiddlyspace']
 
 store_contents['tiddlyspace'] = [
     'src/controls/index.recipe',

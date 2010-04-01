@@ -6,7 +6,7 @@ website: http://tiddlyspace.com
 repository: http://github.com/TiddlySpace/tiddlyspace
 """
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 
 from tiddlyweb.util import merge_config
