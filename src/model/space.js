@@ -1,9 +1,9 @@
 (function($) {
 
-TiddlyWeb.Space = function(name, owner, host) {
+TiddlyWeb.Space = function(name, members, host) {
 	TiddlyWeb.Resource.apply(this, ["space", host]);
 	this.name = name;
-	this.members = [owner];
+	this.members = members;
 	this.constituents = this.getConstituents();
 };
 TiddlyWeb.Space.prototype = new TiddlyWeb.Resource();

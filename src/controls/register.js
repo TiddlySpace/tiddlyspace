@@ -31,7 +31,7 @@ config.macros.register = {
 		var self = config.macros.register;
 		var callback = function(resource, status, xhr) {
 			displayMessage(self.msgUserSuccess.format([username]));
-			var space = new TiddlyWeb.Space(username, username, host);
+			var space = new TiddlyWeb.Space(username, [username], host);
 			space.put(_callback, _errback);
 		};
 		var errback = function(xhr, error, exc) {
