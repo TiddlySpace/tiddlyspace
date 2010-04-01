@@ -39,30 +39,30 @@ $.extend(TiddlyWeb.Space.prototype, {
 		policies.public = $.extend({}, policies.private, {
 			read: []
 		});
-		var containers = [];
+		var entities = [];
 		var self = this;
 		$.each(["bag", "recipe"], function(i, type) {
 			$.each(["private", "public"], function(j, visibility) {
 				var className = TiddlyWeb._capitalize(type);
 				var name = self.name + "_" + visibility;
-				var container = new TiddlyWeb[className](name, self.host);
-				container.desc = self.name + " space, " + visibility + " " +
+				var entity = new TiddlyWeb[className](name, self.host);
+				entity.desc = self.name + " space, " + visibility + " " +
 					(type == "bag" ? "content" : "document");
-				container.policy = policies[visibility];
+				entity.policy = policies[visibility];
 				if(type == "recipe") {
-					container.recipe = [
+					entity.recipe = [
 						["system", ""],
 						["tiddlyspace", ""],
 						[self.name + "_public", ""]
 					];
 					if(visibility == "private") {
-						container.recipe.push([self.name + "_private", ""]);
+						entity.recipe.push([self.name + "_private", ""]);
 					}
 				}
-				containers.push(container);
+				entities.push(entity);
 			});
 		});
-		return containers;
+		return entities;
 	},
 	request: function(type, callback, errback) {
 		var responseData = [];
