@@ -10,13 +10,19 @@ TiddlyWeb.Space.prototype = new TiddlyWeb.Resource();
 $.extend(TiddlyWeb.Space.prototype, {
 	get: function(callback, errback) {
 		var self = this;
-		var _callback = function(resource, status, xhr) {
+		var _callback = function(entities, status, xhr) {
+			self.constituents = entities;
+			self.members = self.constituents[0].policy.manage; // XXX: authoritative?
 			callback(self, status, xhr);
 		};
 		this.request("get", _callback, errback);
 	},
 	put: function(callback, errback) {
-		this.request("put", callback, errback);
+		var self = this;
+		var _callback = function(responseData, status, xhr) {
+			callback(self, status, xhr);
+		};
+		this.request("put", _callback, errback);
 	},
 	getConstituents: function() {
 		var policies = {
@@ -59,20 +65,23 @@ $.extend(TiddlyWeb.Space.prototype, {
 		return containers;
 	},
 	request: function(type, callback, errback) {
+		var responseData = [];
+		var entityCount = this.constituents.length;
 		var xhrCount = 0;
 		var _callback = function(data, status, xhr) {
+			responseData.push(data);
 			xhrCount++;
-			if(xhrCount == 4) {
-				callback(data, status, xhr);
+			if(xhrCount == entityCount) {
+				callback(responseData, status, xhr);
 			}
 		};
 		var _errback = function(xhr, error, exc) {
 			if(xhrCount >= 0) {
-				xhrCount = -5;
+				xhrCount = (entityCount + 1) * -1;
 				errback(xhr, error, exc);
 			}
 		};
-		for(var i = 0; i < this.constituents.length; i++) {
+		for(var i = 0; i < entityCount; i++) {
 			this.constituents[i][type](_callback, _errback);
 		}
 	}
