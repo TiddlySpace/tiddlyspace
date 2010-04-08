@@ -7,6 +7,7 @@ clean:
 	rm -r *.egg-info || true
 	rm -r tiddlywebplugins/tiddlyspace/resources || true
 	rm src/frontpage/*.tid || true
+	cat .gitignore | while read -r entry; do $$entry; done
 
 test:
 	py.test -x test
