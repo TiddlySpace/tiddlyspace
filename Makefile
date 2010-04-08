@@ -1,4 +1,4 @@
-.PHONY: clean purge test remotes jslib dist release pypi dev
+.PHONY: clean purge test remotes jslib dist release deploy pypi dev
 
 clean:
 	find . -name "*.pyc" | xargs rm || true
@@ -40,6 +40,9 @@ dist: clean remotes test
 	python setup.py sdist
 
 release: dist pypi
+
+deploy: dist
+	./deploy.sh nodist $(ARGS)
 
 pypi: test
 	python setup.py sdist upload
