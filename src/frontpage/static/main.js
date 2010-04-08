@@ -1,7 +1,14 @@
-jQuery(function($) {
+(function() {
+
+var $;
+var host = document.location.toString().split("#")[0]; // XXX: brittle?
+
+var main = function() {
+	document.getElementById("registerButton").onclick = onClickRegister;
+	document.getElementById("loginButton").onclick = onClickLogin;
+};
 
 var register = function(username, password) {
-	var host = document.location.toString().split("#")[0]; // XXX: brittle?
 
 	var userCallback = function(resource, status, xhr) {
 		notify("user created: " + username);
@@ -26,12 +33,16 @@ var login = function(username, password) {
 };
 
 var onClickRegister = function(ev) {
-	showForm("Register", null, register);
+	loadDependencies(function() {
+		showForm("Register", null, register);
+	});
 	return false;
 };
 
 var onClickLogin = function(ev) {
-	showForm("Login", null, login);
+	loadDependencies(function() {
+		showForm("Register", null, register);
+	});
 	return false;
 };
 
@@ -64,7 +75,43 @@ var notify = function(msg) { // TODO
 	}
 };
 
-$("#registerButton").click(onClickRegister);
-$("#loginButton").click(onClickLogin);
+var loadDependencies = function(callback) {
+	var uris = [
+		["static/jquery.min.js", function() {
+			jQuery.noConflict();
+			$ = jQuery;
+		}],
+		"static/jquery-json.min.js",
+		"static/chrjs.js",
+		"static/users.js",
+		"static/space.js"
+	];
+	if(window.jQuery && jQuery.toJSON &&
+		window.TiddlyWeb && window.TiddlyWeb.User && window.TiddlyWeb.Space) {
+		uris = [];
+	}
+	// linearize callbacks
+	var next = function() {
+		if(uris.length) {
+			var uri = uris.shift();
+			if(typeof uri != "object") {
+				var _callback = next;
+			} else {
+				var __callback = uri[1];
+				_callback = function() {
+					__callback();
+					next();
+				}
+				uri = uri[0];
+			}
+			loadScript(uri, _callback);
+		} else {
+			callback();
+		}
+	};
+	next();
+};
 
-});
+main();
+
+})();

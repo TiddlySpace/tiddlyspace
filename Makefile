@@ -24,6 +24,8 @@ jslib:
 	curl -o "src/lib/users.js" \
 		"http://github.com/tiddlyweb/chrjs/raw/master/users.js"
 	# front page -- XXX: duplication
+	curl -o "src/frontpage/static/loadScript.js" \
+		"http://github.com/FND/jsutil/raw/master/loadScript.js"
 	curl -o "src/frontpage/static/jquery.min.js" \
 		"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"
 	curl -o "src/frontpage/static/jquery-json.min.js" \
