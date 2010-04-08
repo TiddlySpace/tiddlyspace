@@ -1,7 +1,7 @@
 jQuery(function($) {
 
 var register = function(username, password) {
-	var host = document.location.toString(); // XXX: brittle?
+	var host = document.location.toString().split("#")[0]; // XXX: brittle?
 
 	var userCallback = function(resource, status, xhr) {
 		notify("user created: " + username);
