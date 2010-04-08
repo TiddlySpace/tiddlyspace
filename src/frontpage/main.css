@@ -13,10 +13,17 @@ body > #container {
 }
 
 #container {
-	background-color: #fff;
+	background-color: #FFF;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#C7EAFF), to(#FFFFFF));
 	background: -moz-linear-gradient(0% 100% 90deg, #C7EAFF, #FFFFFF);
 	min-width: 43em;
+}
+
+#userForm {
+	display: none;
+	position: relative;
+	z-index: 200;
+	background-color: #FFF;
 }
 
 #header {

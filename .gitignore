@@ -1,3 +1,8 @@
 *.pyc
 src/lib/chrjs.js
 src/lib/users.js
+src/frontpage/static/chrjs.js
+src/frontpage/static/jquery-json.min.js
+src/frontpage/static/jquery.min.js
+src/frontpage/static/space.js
+src/frontpage/static/users.js

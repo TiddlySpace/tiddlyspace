@@ -23,6 +23,16 @@ jslib:
 		"http://github.com/tiddlyweb/chrjs/raw/master/main.js"
 	curl -o "src/lib/users.js" \
 		"http://github.com/tiddlyweb/chrjs/raw/master/users.js"
+	# front page -- XXX: duplication
+	curl -o "src/frontpage/static/jquery.min.js" \
+		"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"
+	curl -o "src/frontpage/static/jquery-json.min.js" \
+		"http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js"
+	curl -o "src/frontpage/static/chrjs.js" \
+		"http://github.com/tiddlyweb/chrjs/raw/master/main.js"
+	curl -o "src/frontpage/static/users.js" \
+		"http://github.com/tiddlyweb/chrjs/raw/master/users.js"
+	cp src/model/space.js src/frontpage/static/
 
 dist: clean remotes test
 	python setup.py sdist
@@ -36,5 +46,8 @@ dev: remotes
 	@twinstance_dev tiddlywebplugins.tiddlyspace dev_instance
 	@echo "from devtiddlers import update_config; update_config(config)" \
 		>> dev_instance/tiddlywebconfig.py
+	@sed -e "s/\(system_plugins.*'tiddlywebplugins\.tiddlyspace'\)/\1, 'tiddlywebplugins.static'/" \
+		-i dev_instance/tiddlywebconfig.py
+	@ln -s ../src/frontpage/static dev_instance/static
 	@echo "INFO development instance created in dev_instance," \
 		"using tiddler locations defined in devtiddlers.py"
