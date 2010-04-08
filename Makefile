@@ -1,4 +1,4 @@
-.PHONY: clean test remotes jslib dist release pypi dev
+.PHONY: clean purge test remotes jslib dist release pypi dev
 
 clean:
 	find . -name "*.pyc" | xargs rm || true
@@ -7,7 +7,9 @@ clean:
 	rm -r *.egg-info || true
 	rm -r tiddlywebplugins/tiddlyspace/resources || true
 	rm src/frontpage/*.tid || true
-	cat .gitignore | while read -r entry; do rm $$entry; done || true
+
+purge: clean
+	cat .gitignore | while read -r entry; do rm "$$entry"; done || true
 
 test:
 	py.test -x test
