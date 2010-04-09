@@ -9,7 +9,6 @@ var main = function() {
 };
 
 var register = function(username, password) {
-
 	var userCallback = function(resource, status, xhr) {
 		notify("user created: " + username);
 		var space = new TiddlyWeb.Space(username, [username], host);
@@ -82,9 +81,9 @@ var loadDependencies = function(callback) {
 			$ = jQuery;
 		}],
 		"static/jquery-json.min.js",
-		"static/chrjs.js",
-		"static/users.js",
-		"static/space.js"
+		"bags/tiddlyspace/tiddlers/chrjs",
+		"bags/tiddlyspace/tiddlers/users",
+		"bags/tiddlyspace/tiddlers/space"
 	];
 	if(window.jQuery && jQuery.toJSON &&
 		window.TiddlyWeb && window.TiddlyWeb.User && window.TiddlyWeb.Space) {

@@ -23,18 +23,13 @@ jslib:
 		"http://github.com/tiddlyweb/chrjs/raw/master/main.js"
 	curl -o "src/lib/users.js" \
 		"http://github.com/tiddlyweb/chrjs/raw/master/users.js"
-	# front page -- XXX: duplication
+	# front page
 	curl -o "src/frontpage/static/loadScript.js" \
 		"http://github.com/FND/jsutil/raw/master/loadScript.js"
 	curl -o "src/frontpage/static/jquery.min.js" \
 		"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"
 	curl -o "src/frontpage/static/jquery-json.min.js" \
 		"http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js"
-	curl -o "src/frontpage/static/chrjs.js" \
-		"http://github.com/tiddlyweb/chrjs/raw/master/main.js"
-	curl -o "src/frontpage/static/users.js" \
-		"http://github.com/tiddlyweb/chrjs/raw/master/users.js"
-	cp src/model/space.js src/frontpage/static/
 
 dist: clean remotes test
 	python setup.py sdist
