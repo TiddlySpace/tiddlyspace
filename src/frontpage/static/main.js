@@ -26,40 +26,37 @@ var register = function(username, password) {
 	return false;
 };
 
-var login = function(username, password) {
-	// TODO
-	return false;
-};
-
 var onClickRegister = function(ev) {
 	loadDependencies(function() {
-		showForm("Register", null, register);
+		showForm("Register", { customAction: register });
 	});
 	return false;
 };
 
 var onClickLogin = function(ev) {
 	loadDependencies(function() {
-		showForm("Register", null, register);
+		showForm("Login", {
+			formAction: "/challenge/tiddlywebplugins.tiddlyspace.challenger" // XXX: hardcoded
+		});
 	});
 	return false;
 };
 
-var showForm = function(label, btnLabel, action) {
-	var callback = function(ev) {
+var showForm = function(label, options) {
+	var btnLabel = options.btnLabel || label;
+	var formAction = options.formAction || "#"; // XXX: ?
+	var action = !options.customAction ? function() {} : function(ev) { // XXX: hacky
 		var form = $(this).closest("form");
-		var username = form.find("input[type=text]").val();
-		var password = form.find("input[type=password]").val();
-		action(username, password);
+		var username = form.find("input[name=user]").val();
+		var password = form.find("input[name=password]").val();
+		options.customAction(username, password);
+		return false;
 	};
 	$("#userForm").
 		remove().
-		attr("action", "#"). // XXX: ?
+		attr("action", formAction).
 		find("legend").text(label).end().
-		find("input[type=submit]").
-			val(btnLabel || label).
-			click(callback).
-			end().
+		find("input[type=submit]").val(btnLabel).click(action).end().
 		prependTo(document.body).
 		show();
 	$("html, body").animate({ scrollTop: 0 }, 1000);
@@ -100,7 +97,7 @@ var loadDependencies = function(callback) {
 				_callback = function() {
 					__callback();
 					next();
-				}
+				};
 				uri = uri[0];
 			}
 			loadScript(uri, _callback);
