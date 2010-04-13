@@ -26,12 +26,10 @@ fi
 
 host="${log_name}tiddlyspace.com"
 base_dir="/data/vhost/tiddlyspace.labs.osmosoft.com"
-static_dir="$base_dir/htdocs"
 instance_dir="$base_dir/tiddlyweb"
 temp_dir="/tmp/dev"
 
 package_name="tiddlywebplugins.tiddlyspace"
-static_files="src/frontpage/static/*"
 
 if $dist; then
 	make dist
@@ -40,8 +38,6 @@ filename=`ls dist/$package_name*.tar.gz | tail -n1 | sed -e "s/dist\///"` # XXX:
 
 ssh $host "mkdir -p $temp_dir"
 scp "dist/$filename" "$host:$temp_dir/"
-scp $static_files "$host:$static_dir/"
 ssh $host "sudo pip install -U $pip_options $temp_dir/$filename && " \
-	"sudo chown -R \"$USERNAME:www-data\" $static_dir/ && " \
 	"cd $instance_dir && twanager update && " \
 	"echo INFO: deployment complete"

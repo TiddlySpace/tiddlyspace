@@ -1,2 +1,6 @@
 tiddler: index.html.tid
 tiddler: main.css.tid
+tiddler: main.js
+tiddler: ../lib/loadScript.js
+tiddler: ../lib/jquery.min.js
+tiddler: ../lib/jquery-json.min.js
