@@ -1,8 +1,11 @@
-Python files:
+JavaScript code:
+* tabs for indentation
+* double quotes
+
+Python code:
 * spaces for indentation (four per level)
 * single quotes
 * PEP8 compliance
 
-non-Python files:
-* tabs for indentation
-* double quotes
+shell scripts:
+* spaces for indentation (four per level)
