@@ -1,7 +1,7 @@
 (function() {
 
 var $;
-var host = document.location.toString().split("#")[0]; // XXX: brittle?
+var host = document.location.toString().split("#")[0].replace(/\/$/, ""); // XXX: brittle?
 
 var main = function() {
 	document.getElementById("registerButton").onclick = onClickRegister;
@@ -23,40 +23,55 @@ var register = function(username, password) {
 
 	var user = new TiddlyWeb.User(username, password, host);
 	user.create(userCallback, errback);
-	return false;
+};
+
+var login = function(username, password) {
+	var challenger = "tiddlywebplugins.tiddlyspace.challenger"; // XXX: hardcoded
+	var uri = host + "/challenge/" + challenger;
+	var data = {
+		user: username,
+		password: password
+	};
+	$.ajax({
+		url: uri,
+		type: "POST",
+		data: data,
+		success: function(data, status, xhr) {
+			var spaceUri = host.replace("://", "://" + username + "."); // XXX: hacky?
+			window.location = spaceUri;
+		},
+		error: function(xhr, error, exc) {
+			notify("error logging in", error);
+		}
+	});
 };
 
 var onClickRegister = function(ev) {
 	loadDependencies(function() {
-		showForm("Register", { customAction: register });
+		showForm("Register", null, register);
 	});
 	return false;
 };
 
 var onClickLogin = function(ev) {
 	loadDependencies(function() {
-		showForm("Login", {
-			formAction: "/challenge/tiddlywebplugins.tiddlyspace.challenger" // XXX: hardcoded
-		});
+		showForm("Login", null, login);
 	});
 	return false;
 };
 
-var showForm = function(label, options) {
-	var btnLabel = options.btnLabel || label;
-	var formAction = options.formAction || "#"; // XXX: ?
-	var action = !options.customAction ? function() {} : function(ev) { // XXX: hacky
+var showForm = function(label, btnLabel, action) {
+	var callback = function(ev) {
 		var form = $(this).closest("form");
-		var username = form.find("input[name=user]").val();
+		var username = form.find("input[name=username]").val();
 		var password = form.find("input[name=password]").val();
-		options.customAction(username, password);
+		action(username, password);
 		return false;
 	};
 	$("#userForm").
 		remove().
-		attr("action", formAction).
 		find("legend").text(label).end().
-		find("input[type=submit]").val(btnLabel).click(action).end().
+		find("input[type=submit]").val(btnLabel || label).click(callback).end().
 		prependTo(document.body).
 		show();
 	$("html, body").animate({ scrollTop: 0 }, 1000);
