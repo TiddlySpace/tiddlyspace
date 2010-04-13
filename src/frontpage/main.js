@@ -88,11 +88,11 @@ var notify = function(msg) { // TODO
 
 var loadDependencies = function(callback) {
 	var uris = [
-		["static/jquery.min.js", function() {
+		["bags/frontpage/tiddlers/jquery.min", function() {
 			jQuery.noConflict();
 			$ = jQuery;
 		}],
-		"static/jquery-json.min.js",
+		"bags/frontpage/tiddlers/jquery-json.min",
 		"bags/tiddlyspace/tiddlers/chrjs",
 		"bags/tiddlyspace/tiddlers/users",
 		"bags/tiddlyspace/tiddlers/space"
