@@ -1,0 +1,15 @@
+* install dependencies
+** components listed in setup.py's install_requires
+** tiddlywebplugins.devstore
+* extend hosts file (e.g. /etc/hosts) to include one or more subdomains, e.g.:
+    127.0.0.1 localhost foo.localhost bar.localhost
+* create development instance:
+    $ make dev
+    $ cd dev_instance
+    $ twanager server
+    # open http://0.0.0.0:8080 in web browser
+* changes to *.js within the repository files are reflected directly in the
+  browser (after a page reload)
+* deploy: $ make deploy
+
+also see STYLE guide

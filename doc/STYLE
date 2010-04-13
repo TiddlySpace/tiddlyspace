@@ -1,0 +1,8 @@
+Python files:
+* spaces for indentation (four per level)
+* single quotes
+* PEP8 compliance
+
+non-Python files:
+* tabs for indentation
+* double quotes
