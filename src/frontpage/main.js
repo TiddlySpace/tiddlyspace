@@ -16,6 +16,7 @@ var register = function(username, password) {
 	};
 	var spaceCallback = function(resource, status, xhr) {
 		notify("space created: " + username);
+		login(username, password);
 	};
 	var errback = function(xhr, error, exc) {
 		notify("error", username, xhr.statusText);
