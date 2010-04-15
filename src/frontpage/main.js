@@ -73,7 +73,8 @@ var showForm = function(label, btnLabel, action) {
 		find("legend").text(label).end().
 		find("input[type=submit]").val(btnLabel || label).click(callback).end().
 		prependTo(document.body).
-		show();
+		show().
+		find("input[name=username]").select();
 	$("html, body").animate({ scrollTop: 0 }, 1000);
 };
 
