@@ -14,6 +14,18 @@ store_contents['tiddlyspace'] = [
     'src/model/index.recipe'
 ]
 
+store_structure['bags']['MAPUSER'] = {
+    'desc': 'maps extracted user credentials to canonical username',
+    'policy': {
+        'read': ['NONE'],
+        'write': ['NONE'],
+        'create': ['ANY'],
+        'delete': ['NONE'],
+        'manage': ['NONE'],
+        'accept': ['NONE'],
+        'owner': 'administrator'
+    }
+}
 store_structure['bags']['tiddlyspace'] = {
     'desc': 'TiddlySpace client',
     'policy': store_structure['bags']['system']['policy']
