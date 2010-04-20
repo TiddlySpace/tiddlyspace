@@ -1,6 +1,8 @@
 from tiddlyweb.model.bag import Bag
+from tiddlyweb.store import NoBagError
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
+from tiddlyweb.web.http import HTTP404
 
 
 def home(environ, start_response):
@@ -50,7 +52,10 @@ def _determine_space_recipe(environ, space_name):
     store = environ['tiddlyweb.store']
     user = environ['tiddlyweb.usersign']['name']
     bag = Bag("%s_private" % space_name)
-    bag = store.get(bag)
+    try:
+        bag = store.get(bag)
+    except NoBagError, exc:
+        raise HTTP404('Space for %s does not exist' % space_name)
     members = bag.policy.manage # XXX: authoritative?
 
     type = 'private' if user in members else 'public'
