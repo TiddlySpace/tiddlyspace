@@ -21,7 +21,6 @@ def init(config):
     import tiddlywebplugins.logout
     import tiddlywebplugins.virtualhosting # calling init not required
     import tiddlywebplugins.socialusers
-    import tiddlywebplugins.geofilters # calling init not required
 
     merge_config(config, space_config)
 
