@@ -24,14 +24,15 @@ setup(
     scripts = ['tiddlyspace'],
     install_requires = [
         'setuptools',
-        'tiddlyweb',
+        'tiddlyweb>=1.1.0',
         'tiddlywebwiki>=0.27',
         'tiddlywebplugins.twimport>=0.9.4', # XXX: temporary, until latest version is included in tiddlywebwiki (via instancer)
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout',
         'tiddlywebplugins.virtualhosting',
         'tiddlywebplugins.socialusers',
-        'tiddlywebplugins.magicuser'
+        'tiddlywebplugins.magicuser',
+        'tiddlywebplugins.mselect',
     ],
     include_package_data = True,
     zip_safe = False
