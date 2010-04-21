@@ -19,12 +19,12 @@ def make_test_env():
 
 
 def make_fake_space(store, name):
-    public_recipe = Recipe('thing_public')
-    private_recipe = Recipe('thing_private')
-    public_bag = Bag('thing_public')
-    private_bag = Bag('thing_private')
-    public_recipe.set_recipe([('system', ''), ('thing_public', '')])
-    private_recipe.set_recipe([('system', ''), ('thing_public', ''),
-        ('thing_private', '')])
+    public_recipe = Recipe('%s_public' % name)
+    private_recipe = Recipe('%s_private' % name)
+    public_bag = Bag('%s_public' % name)
+    private_bag = Bag('%s_private' % name)
+    public_recipe.set_recipe([('system', ''), ('%s_public' % name, '')])
+    private_recipe.set_recipe([('system', ''), ('%s_public' % name, ''),
+        ('%s_private' % name, '')])
     for entity in [public_recipe, private_recipe, public_bag, private_bag]:
         store.put(entity)
