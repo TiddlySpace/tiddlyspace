@@ -1,4 +1,5 @@
 modifier: psd
+tags: excludeLists
 
 Hi <<option txtUserName>>!  You are a member of the following spaces:
 
