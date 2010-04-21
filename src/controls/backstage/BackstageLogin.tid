@@ -1,0 +1,11 @@
+modifier: psd
+
+Username: 
+<<edit username "" "username">>
+
+Password: 
+<<edit password "" "******">>
+
+<html><button type="button">Login</button></html> //you already have a space and would like to login//
+
+<html><button type="button">Register</button></html> //all you need is a username and password//

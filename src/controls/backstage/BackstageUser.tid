@@ -1,0 +1,10 @@
+modifier: psd
+
+Hi <<option txtUserName>>!  You are a member of the following spaces:
+
+* [[@psd|http://psd.tiddlyspace.com]]
+* [[@osmosoft|http://osmosoft.tiddlyspace.com]]
+* [[TiddlySlidy|http://tiddlyslidy.tiddlyspace.com]]
+* [[TiddlySpace|http://tiddlyspace.tiddlyspace.com]]
+
+<html><button type="button">Logout</button></html>
