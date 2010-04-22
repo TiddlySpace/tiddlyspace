@@ -30,7 +30,7 @@ var macro = config.macros.register = {
 
 		var callback = function(resource, status, xhr) {
 			displayMessage(macro.msgUserSuccess.format([username]));
-			var space = new TiddlyWeb.Space(username, [username], host);
+			var space = new tiddlyweb.Space(username, [username], host);
 			space.put(_callback, _errback);
 		};
 		var errback = function(xhr, error, exc) {
@@ -43,7 +43,7 @@ var macro = config.macros.register = {
 			displayMessage(macro.msgSpaceError.format([username, xhr.statusText]));
 		};
 
-		var user = new TiddlyWeb.User(username, password, host);
+		var user = new tiddlyweb.User(username, password, host);
 		user.create(callback, errback);
 		return false;
 	}

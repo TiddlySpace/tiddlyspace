@@ -1,13 +1,13 @@
 (function($) {
 
-TiddlyWeb.Space = function(name, members, host) {
-	TiddlyWeb.Resource.apply(this, ["space", host]);
+tiddlyweb.Space = function(name, members, host) {
+	tiddlyweb.Resource.apply(this, ["space", host]);
 	this.name = name;
 	this.members = members;
 	this.constituents = this.getConstituents();
 };
-TiddlyWeb.Space.prototype = new TiddlyWeb.Resource();
-$.extend(TiddlyWeb.Space.prototype, {
+tiddlyweb.Space.prototype = new tiddlyweb.Resource();
+$.extend(tiddlyweb.Space.prototype, {
 	get: function(callback, errback) {
 		var self = this;
 		var _callback = function(entities, status, xhr) {
@@ -43,9 +43,9 @@ $.extend(TiddlyWeb.Space.prototype, {
 		var self = this;
 		$.each(["bag", "recipe"], function(i, type) {
 			$.each(["private", "public"], function(j, visibility) {
-				var className = TiddlyWeb._capitalize(type);
+				var className = tiddlyweb._capitalize(type);
 				var name = self.name + "_" + visibility;
-				var entity = new TiddlyWeb[className](name, self.host);
+				var entity = new tiddlyweb[className](name, self.host);
 				entity.desc = self.name + " space, " + visibility + " " +
 					(type == "bag" ? "content" : "document");
 				entity.policy = policies[visibility];

@@ -29,7 +29,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 
 		var getCallback = function(space, status, xhr) {
 			space.members.pushUnique(username);
-			space = new TiddlyWeb.Space(space.name, space.members, space.host); // XXX: required because policies are only calculated on instantiation
+			space = new tiddlyweb.Space(space.name, space.members, space.host); // XXX: required because policies are only calculated on instantiation
 			space.put(putCallback, errback);
 		};
 		var putCallback = function(resource, status, xhr) {
@@ -39,7 +39,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 			displayMessage(macro.msgError.format([username, xhr.statusText]));
 		};
 
-		var space = new TiddlyWeb.Space(spaceName, [null], host);
+		var space = new tiddlyweb.Space(spaceName, [null], host);
 		space.get(getCallback, errback);
 		return false;
 	}

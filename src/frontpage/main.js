@@ -11,7 +11,7 @@ var main = function() {
 var register = function(username, password) {
 	var userCallback = function(resource, status, xhr) {
 		notify("user created: " + username);
-		var space = new TiddlyWeb.Space(username, [username], host);
+		var space = new tiddlyweb.Space(username, [username], host);
 		space.put(spaceCallback, errback);
 	};
 	var spaceCallback = function(resource, status, xhr) {
@@ -22,7 +22,7 @@ var register = function(username, password) {
 		notify("error", username, xhr.statusText);
 	};
 
-	var user = new TiddlyWeb.User(username, password, host);
+	var user = new tiddlyweb.User(username, password, host);
 	user.create(userCallback, errback);
 };
 
@@ -100,7 +100,7 @@ var loadDependencies = function(callback) {
 		"bags/tiddlyspace/tiddlers/space"
 	];
 	if(window.jQuery && jQuery.toJSON &&
-		window.TiddlyWeb && window.TiddlyWeb.User && window.TiddlyWeb.Space) {
+		window.tiddlyweb && window.tiddlyweb.User && window.tiddlyweb.Space) {
 		uris = [];
 	}
 	// linearize callbacks
