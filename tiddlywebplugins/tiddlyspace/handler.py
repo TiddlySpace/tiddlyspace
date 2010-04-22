@@ -61,8 +61,8 @@ def _determine_space_recipe(environ, space_name):
         raise HTTP404('Space for %s does not exist' % space_name)
     members = bag.policy.manage # XXX: authoritative?
 
-    type = 'private' if user in members else 'public'
-    recipe_name = '%s_%s' % (space_name, type)
+    space_type = 'private' if user in members else 'public'
+    recipe_name = '%s_%s' % (space_name, space_type)
     return recipe_name
 
 
@@ -132,7 +132,7 @@ class ControlView(object):
 
             if filter_string:
                 filters, _ = parse_for_filters(filter_string)
-                for filter in filters:
-                    environ['tiddlyweb.filters'].insert(0, filter)
+                for single_filter in filters:
+                    environ['tiddlyweb.filters'].insert(0, single_filter)
 
         return self.application(environ, start_response)
