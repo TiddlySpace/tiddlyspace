@@ -119,7 +119,7 @@ class ControlView(object):
                 for bag in bags:
                     filter_parts.append('name:%s' % bag)
                 filter_string += ','.join(filter_parts)
-            elif 'tiddlers' in req_uri:
+            else:
                 entity_name = req_uri.split('/')[2]
                 if '/recipes/' in req_uri:
                     valid_recipes = ['%s_%s' % (space_name, status)
