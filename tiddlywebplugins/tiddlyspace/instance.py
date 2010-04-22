@@ -1,6 +1,8 @@
-import os
+"""
+Instance structure configuration for all tiddlyspace
+instances.
+"""
 
-from tiddlywebwiki.instance import store_structure, store_contents
 from tiddlywebwiki.instance import (instance_config, store_contents,
     store_structure)
 
