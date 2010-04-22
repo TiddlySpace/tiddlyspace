@@ -72,7 +72,10 @@ def _determine_space(environ, http_host):
     """
     # XXX: This is broken for spaces which are not a subdomain
     # of the main tiddlyspace domain.
-    return http_host.split('.')[0]
+    server_host = environ['tiddlyweb.config']['server_host']['host']
+    if '.%s' % server_host in http_host:
+        return http_host.rsplit('.', server_host.count('.') + 1)[0]
+    return None
 
 
 class ControlView(object):
