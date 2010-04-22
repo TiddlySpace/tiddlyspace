@@ -57,12 +57,14 @@ def test_space_has_limited_view():
 
     assert response['status'] == '200'
     assert 'other_' not in content, content
+    assert 'thing_' in content, content
 
     response, content = http.request('http://thing.0.0.0.0:8080/bags',
             method='GET')
 
     assert response['status'] == '200'
     assert 'other_' not in content, content
+    assert 'thing_' in content, content
 
     response, content = http.request(
             'http://thing.0.0.0.0:8080/bags/thing_public/tiddlers',
@@ -75,6 +77,15 @@ def test_space_has_limited_view():
     assert response['status'] == '404', content
 
     response, content = http.request(
-            'http://other.0.0.0.0:8080/bags/other_public/tiddlers',
+            'http://other.0.0.0.0:8080/bags',
             method='GET')
     assert response['status'] == '200', content
+    assert 'other_' in content, content
+    assert 'thing_' not in content, content
+
+    response, content = http.request(
+            'http://0.0.0.0:8080/bags',
+            method='GET')
+    assert response['status'] == '200', content
+    assert 'other_' in content, content
+    assert 'thing_' in content, content

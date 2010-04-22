@@ -30,8 +30,11 @@ def init(config):
     tiddlywebwiki.init(config)
     tiddlywebplugins.logout.init(config)
     tiddlywebplugins.socialusers.init(config)
+    tiddlywebplugins.mselect.init(config)
 
     if 'selector' in config: # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
-    config['server_request_filters'].insert(
-            config['server_request_filters'].index(UserExtract) + 1, ControlView)
+        if ControlView not in config['server_request_filters']:
+            config['server_request_filters'].insert(
+                    config['server_request_filters'].
+                    index(UserExtract) + 1, ControlView)
