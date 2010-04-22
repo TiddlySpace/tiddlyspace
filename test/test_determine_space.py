@@ -1,5 +1,5 @@
 
-from tiddlywebplugins.tiddlyspace.root_handler import _determine_space
+from tiddlywebplugins.tiddlyspace.handler import _determine_space
 
 config = {
         'server_host': {

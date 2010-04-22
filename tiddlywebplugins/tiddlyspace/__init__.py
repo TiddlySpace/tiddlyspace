@@ -15,7 +15,7 @@ from tiddlyweb.web.extractor import UserExtract
 
 from tiddlywebplugins.utils import replace_handler
 from tiddlywebplugins.tiddlyspace.config import config as space_config
-from tiddlywebplugins.tiddlyspace.root_handler import home, ControlView
+from tiddlywebplugins.tiddlyspace.handler import home, ControlView
 
 
 def init(config):
