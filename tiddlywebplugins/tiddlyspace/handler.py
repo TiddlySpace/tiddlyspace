@@ -22,6 +22,19 @@ def home(environ, start_response):
         return serve_space(environ, start_response, http_host)
 
 
+def friendly_uri(environ, start_response):
+    http_host, host_url = _determine_host(environ)
+    if http_host == host_url:
+        raise HTTP404('No resource found')
+    else:
+        space_name = _determine_space(environ, http_host)
+        recipe_name = _determine_space_recipe(environ, space_name)
+        # tiddler_name already in uri
+        environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
+        return get_tiddler(environ, start_response)
+
+
+
 def serve_frontpage(environ, start_response):
     """
     serves front page generated from tiddlers in frontpage bag
