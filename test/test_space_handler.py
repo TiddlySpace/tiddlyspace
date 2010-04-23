@@ -2,6 +2,7 @@
 Test and flesh a /spaces handler-space.
 
 GET /spaces: list all spaces
+GET /spaces/{space_name}: 204 if exist
 GET /spaces/{space_name}/members: list all members
 PUT /spaces/{space_name}: create a space
 PUT /spaces/{space_name}/members/{member_name}: add a member
@@ -54,3 +55,26 @@ def test_spaces_list():
 
     info = simplejson.loads(content)
     assert info == ['cdent']
+
+    make_fake_space(store, 'fnd')
+    response, content = http.request('http://0.0.0.0:8080/spaces',
+            method='GET')
+    assert response['status'] == '200'
+
+    info = simplejson.loads(content)
+    assert 'cdent' in info
+    assert 'fnd' in info
+
+
+def test_space_exist():
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/cdent',
+            method='GET')
+    assert response['status'] == '204'
+    assert content == ''
+
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/nancy',
+            method='GET')
+    assert response['status'] == '404'
+    assert 'nancy does not exist' in content
