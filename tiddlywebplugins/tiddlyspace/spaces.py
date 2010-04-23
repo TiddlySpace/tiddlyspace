@@ -131,7 +131,7 @@ def _validate_space_name(name):
     Determine if space name can be used.
     We've already checked if the space exists.
     """
-    if True: # XXX for now always valid
+    if name.islower(): # just a stub for now
         return
     else:
         raise HTTP409('Invalid space name: %s' % name)

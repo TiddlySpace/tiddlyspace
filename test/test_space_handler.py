@@ -165,3 +165,13 @@ def test_create_space():
     assert recipe_list[1][0] == 'tiddlyspace'
     assert recipe_list[2][0] == 'extra_public'
     assert recipe_list[3][0] == 'extra_private'
+
+
+def test_case_in_space():
+    cookie = get_auth('cdent', 'cow')
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/CeXtRa',
+            method='PUT',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            )
+    assert response['status'] == '409'
