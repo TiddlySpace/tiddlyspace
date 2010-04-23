@@ -17,15 +17,12 @@ from test.fixtures import make_test_env, make_fake_space, get_auth
 from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
 import httplib2
-import Cookie
 import simplejson
 
 from tiddlyweb.store import Store
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
-
-AUTH_COOKIE = None
 
 def setup_module(module):
     make_test_env()
@@ -266,3 +263,27 @@ def test_delete_member():
     assert bag.policy.write == ['cdent']
     assert bag.policy.create == ['cdent']
     assert bag.policy.delete == ['cdent']
+
+
+def test_subscription():
+    cookie = get_auth('cdent', 'cow')
+    http = httplib2.Http()
+    subscriptions = simplejson.dumps({'subscriptions': ['extra']})
+    response, content = http.request('http://0.0.0.0:8080/spaces/cdent',
+            method='POST',
+            headers={
+                'Content-Type': 'application/json',
+                },
+            body=subscriptions)
+    assert response['status'] == '403'
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/cdent',
+            method='POST',
+            headers={
+                'Content-Type': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"' % cookie,
+                },
+            body=subscriptions)
+    assert response['status'] == '204'
+
+

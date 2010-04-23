@@ -24,6 +24,7 @@ def add_spaces_routes(selector):
     selector.add('/spaces/{space_name:segment}',
             GET=confirm_space, # confirm space exists
             PUT=create_space,  # create a new space
+            POST=subscribe_space, # subscribe a space to this space
             )
     selector.add('/spaces/{space_name:segment}/members', # list space members
             GET=list_space_members)
@@ -138,6 +139,51 @@ def list_space_members(environ, start_response):
         ('Content-Type', 'application/json; charset=UTF-8')
         ])
     return simplejson.dumps(members)
+
+
+def subscribe_space(environ, start_response):
+    store = environ['tiddlyweb.store']
+    space_name = environ['wsgiorg.routing_args'][1]['space_name']
+    current_user = environ['tiddlyweb.usersign']
+    try:
+        public_name = '%s_public' % space_name
+        private_name = '%s_private' % space_name
+        public_bag = store.get(Bag(public_name))
+        private_bag = store.get(Bag(private_name))
+        public_recipe = store.get(Recipe(public_name))
+        private_recipe = store.get(Recipe(private_name))
+    except (NoBagError, NoRecipeError):
+        raise HTTP404('space %s does not exist' % space_name)
+
+    private_bag.policy.allows(current_user, 'manage')
+
+    try:
+        length = environ['CONTENT_LENGTH']
+        content = environ['wsgi.input'].read(int(length))
+        info = simplejson.loads(content)
+        subscriptions = info['subscriptions']
+    except (simplejson.decoder.JSONDecodeError, KeyError), exc:
+        raise HTTP409('Invalid content for subscription: %s' % exc)
+
+    public_recipe_list = public_recipe.get_recipe()
+    private_recipe_list = private_recipe.get_recipe()
+    for space in subscriptions:
+        try:
+            subscribed_recipe = store.get(Recipe('%s_public' % space))
+            for bag, filter in subscribed_recipe.get_recipe()[2:]:
+                if (bag, filter) not in public_recipe_list:
+                    public_recipe_list.insert(-1, (bag, filter))
+                if (bag, filter) not in private_recipe_list:
+                    private_recipe_list.insert(-2, (bag, filter))
+        except NoRecipeError, exc:
+            raise HTTP409('Invalid content for subscription: %s' % exc)
+    public_recipe.set_recipe(public_recipe_list)
+    store.put(public_recipe)
+    private_recipe.set_recipe(private_recipe_list)
+    store.put(private_recipe)
+
+    start_response('204 No Content', [])
+    return ['']
 
 
 def _create_space(environ, start_response, space_name):
