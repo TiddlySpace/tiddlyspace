@@ -8,7 +8,8 @@ import simplejson
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.policy import Policy
 from tiddlyweb.model.recipe import Recipe
-from tiddlyweb.store import NoRecipeError, NoBagError
+from tiddlyweb.model.user import User
+from tiddlyweb.store import NoRecipeError, NoBagError, NoUserError
 from tiddlyweb.web.http import HTTP404, HTTP409
 
 from tiddlywebplugins.utils import require_any_user
@@ -49,6 +50,11 @@ def add_space_member(environ, start_response):
         raise HTTP404('space %s does not exist' % space_name)
 
     private_bag.policy.allows(current_user, 'manage')
+
+    try:
+        store.get(User(user_name))
+    except NoUserError:
+        raise HTTP409('attemp to add non-existent user: %s' % user_name)
 
     for entity in [public_bag, private_bag, public_recipe, private_recipe]:
         new_policy = _update_policy(entity.policy, add=user_name)

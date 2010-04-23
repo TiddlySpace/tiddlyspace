@@ -229,6 +229,13 @@ def test_add_a_member():
             )
     assert response['status'] == '204'
 
+    cookie = get_auth('fnd', 'bird')
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/mary',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='PUT',
+            )
+    assert response['status'] == '409'
+
 
 def test_delete_member():
     cookie = get_auth('fnd', 'bird')
