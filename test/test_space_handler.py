@@ -44,6 +44,12 @@ def setup_module(module):
     user = User('cdent')
     user.set_password('cow')
     module.store.put(user)
+    user = User('fnd')
+    user.set_password('bird')
+    module.store.put(user)
+    user = User('psd')
+    user.set_password('cat')
+    module.store.put(user)
 
 
 def teardown_module(module):
@@ -175,3 +181,52 @@ def test_case_in_space():
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             )
     assert response['status'] == '409'
+
+
+def test_add_a_member():
+    cookie = get_auth('cdent', 'cow')
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/fnd',
+            method='PUT',
+            )
+    assert response['status'] == '403'
+
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/fnd',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='PUT',
+            )
+    assert response['status'] == '204'
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='GET')
+    assert response['status'] == '200'
+    info = simplejson.loads(content)
+    assert info == ['cdent', 'fnd']
+
+    bag = store.get(Bag('extra_private'))
+    assert bag.policy.owner == 'cdent'
+    assert bag.policy.read == ['cdent', 'fnd']
+    assert bag.policy.accept == ['NONE']
+    assert bag.policy.manage == ['cdent', 'fnd']
+    assert bag.policy.write == ['cdent', 'fnd']
+    assert bag.policy.create == ['cdent', 'fnd']
+    assert bag.policy.delete == ['cdent', 'fnd']
+
+    # authed user not in space may not add people
+    cookie = get_auth('psd', 'cat')
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/psd',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='PUT',
+            )
+    assert response['status'] == '403'
+
+    cookie = get_auth('fnd', 'bird')
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/psd',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='PUT',
+            )
+    assert response['status'] == '204'
