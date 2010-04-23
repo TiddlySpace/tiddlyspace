@@ -7,7 +7,8 @@ GET /spaces/{space_name}/members: list all members
 PUT /spaces/{space_name}: create a space
 PUT /spaces/{space_name}/members/{member_name}: add a member
 DELETE /spaces/{space_name}/members/{member_name}: remove a member
-POST /spaces/{space_name}/subscriber: Handle subscribing a space
+POST /spaces/{space_name}: Handle subscription, the data package is
+  JSON as {"subscriptions": ["space1", "space2", "space3"]}
 """
 
 
