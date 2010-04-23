@@ -25,6 +25,10 @@ def setup_module(module):
     module.store = Store(config['server_store'][0],
             config['server_store'][1], {'tiddlyweb.config': config})
 
+def teardown_module(module):
+    import os
+    os.chdir('..')
+
 
 def test_home_page_exist():
     http = httplib2.Http()
