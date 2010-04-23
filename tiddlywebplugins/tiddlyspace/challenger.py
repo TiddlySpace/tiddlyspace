@@ -53,4 +53,4 @@ def _extend_cookie(name, cookie_string, environ):
     cookie.load(cookie_string)
     domain = environ['tiddlyweb.config']['server_host']['host']
     cookie[name]['domain'] = domain
-    return cookie.output()
+    return cookie.output(header='')
