@@ -3,6 +3,13 @@
 
 config.backstageTasks = [];
 
+config.tasks.autoSave = {
+	text: "autosave",
+	tooltip: "toggle automatic saving",
+	action: function() {}
+};
+config.backstageTasks.push("autoSave");
+
 config.tasks.login = {
 	text: "login",
 	tooltip: "TiddlySpace login",
@@ -38,14 +45,22 @@ config.tasks.options = {
 };
 config.backstageTasks.push("options");
 
+// initialize state
 var _show = backstage.show;
-backstage.show = function() { // XXX: not very safe, due to unknown time of evaluation
+backstage.show = function() {
+	// selectively hide backstage tasks based on user status -- XXX: unsafe in backstage.show, due to unknown time of evaluation
 	var tasks = $("#backstageToolbar .backstageTask").show();
 	if(config.options.txtUserName == "GUEST") {
-		tasks.slice(1, 3).hide();
+		tasks.slice(2, 4).hide();
 	} else {
-		tasks.eq(0).hide();
+		tasks.eq(1).hide();
 	}
+	// add AutoSave option
+	var place = $('<span task="autoSave"></span>').
+		replaceAll("#backstageToolbar [task=autoSave]")[0];
+	invokeMacro(place, "option", "chkAutoSave");
+	$("<span>autosave</span>").appendTo(place);
+	// display backstage
 	return _show.apply(this, arguments);
 };
 
