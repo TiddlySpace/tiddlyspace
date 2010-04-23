@@ -6,8 +6,9 @@ listing, creation, subscription, etc.
 import simplejson
 
 from tiddlyweb.model.recipe import Recipe
-from tiddlyweb.web.http import HTTP404
 from tiddlyweb.store import NoRecipeError
+from tiddlyweb.web.http import HTTP404
+
 
 def add_spaces_routes(selector):
     """
