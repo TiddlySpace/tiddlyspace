@@ -10,6 +10,7 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.store import NoRecipeError, NoBagError
 from tiddlyweb.web.http import HTTP404
 
+
 def add_spaces_routes(selector):
     """
     Set up the routes and handlers used by spaces.
