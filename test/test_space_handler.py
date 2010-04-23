@@ -12,7 +12,7 @@ POST /spaces/{space_name}: Handle subscription, the data package is
 """
 
 
-from test.fixtures import make_test_env, make_fake_space
+from test.fixtures import make_test_env, make_fake_space, get_auth
 
 from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
@@ -41,6 +41,7 @@ def setup_module(module):
     make_fake_space(module.store, 'cdent')
     user = User('cdent')
     user.set_password('cow')
+    module.store.put(user)
 
 
 def teardown_module(module):
@@ -85,6 +86,47 @@ def test_space_members():
     http = httplib2.Http()
     response, content = http.request('http://0.0.0.0:8080/spaces/cdent/members',
             method='GET')
+    assert response['status'] == '401'
+    cookie = get_auth('cdent', 'cow')
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/cdent/members',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='GET')
     assert response['status'] == '200'
+    info = simplejson.loads(content)
+    assert info == ['cdent']
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/nancy/members',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='GET')
+    response['status'] == '404'
+
+
+def test_create_space():
+    cookie = get_auth('cdent', 'cow')
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/cdent',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='PUT')
+    assert response['status'] == '409'
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra',
+            method='GET')
+    assert response['status'] == '404'
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra',
+            method='PUT')
+    assert response['status'] == '403'
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra',
+            method='PUT',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            )
+    assert response['status'] == '201'
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='GET')
+    response['status'] == '200'
     info = simplejson.loads(content)
     assert info == ['cdent']
