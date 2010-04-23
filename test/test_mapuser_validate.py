@@ -39,6 +39,8 @@ def setup_module(module):
     user = User('cdent')
     user.set_password('cow')
     module.store.put(user)
+    user = User('fnd')
+    module.store.put(user)
 
 
 def teardown_module(module):
@@ -58,6 +60,7 @@ def test_create_map_requires_user():
 
 
 def test_create_map_uses_user():
+    global AUTH_COOKIE
     http = httplib2.Http()
     response, content = http.request(
             'http://0.0.0.0:8080/challenge/tiddlywebplugins.tiddlyspace.challenger',
@@ -100,3 +103,16 @@ def test_create_map_uses_user():
                 'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE},
             body='{}')
     assert response['status'] == '403'
+
+
+def test_user_may_not_map_user():
+    """Make user X can't map user Y to themselves."""
+    global AUTH_COOKIE
+    http = httplib2.Http()
+    response, content = http.request(
+            'http://0.0.0.0:8080/bags/MAPUSER/tiddlers/fnd',
+            method='PUT',
+            headers={'Content-Type': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE},
+            body='{}')
+    assert response['status'] == '409'

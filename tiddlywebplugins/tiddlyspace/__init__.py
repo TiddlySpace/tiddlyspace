@@ -11,7 +11,7 @@ __version__ = '0.2.2'
 
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.util import merge_config
-from tiddlyweb.web.validator import TIDDLER_VALIDATORS
+from tiddlyweb.web.validator import TIDDLER_VALIDATORS, InvalidTiddlerError
 
 from tiddlyweb.web.extractor import UserExtract
 
@@ -50,6 +50,11 @@ def validate_mapuser(tiddler, environ):
     for the bag is set to ANY.
     """
     if tiddler.bag == 'MAPUSER':
+        store = environ['tiddlyweb.store']
+        # XXX this is a potentially expensive operation but let's not
+        # early optimize
+        if tiddler.title in (user.usersign for user in store.list_users()):
+            raise InvalidTiddlerError('username exists')
         tiddler.text = ''
         tiddler.tags = []
         tiddler.fields = {}
