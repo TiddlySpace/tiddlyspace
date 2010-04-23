@@ -21,6 +21,8 @@ import Cookie
 import simplejson
 
 from tiddlyweb.store import Store
+from tiddlyweb.model.bag import Bag
+from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
 
 AUTH_COOKIE = None
@@ -130,3 +132,36 @@ def test_create_space():
     response['status'] == '200'
     info = simplejson.loads(content)
     assert info == ['cdent']
+
+    bag = store.get(Bag('extra_public'))
+    assert bag.policy.owner == 'cdent'
+    assert bag.policy.read == []
+    assert bag.policy.accept == ['NONE']
+    assert bag.policy.manage == ['cdent']
+    assert bag.policy.write == ['cdent']
+    assert bag.policy.create == ['cdent']
+    assert bag.policy.delete == ['cdent']
+
+    bag = store.get(Bag('extra_private'))
+    assert bag.policy.owner == 'cdent'
+    assert bag.policy.read == ['cdent']
+    assert bag.policy.accept == ['NONE']
+    assert bag.policy.manage == ['cdent']
+    assert bag.policy.write == ['cdent']
+    assert bag.policy.create == ['cdent']
+    assert bag.policy.delete == ['cdent']
+
+    recipe = store.get(Recipe('extra_public'))
+    recipe_list = recipe.get_recipe()
+    assert len(recipe_list) == 3
+    assert recipe_list[0][0] == 'system'
+    assert recipe_list[1][0] == 'tiddlyspace'
+    assert recipe_list[2][0] == 'extra_public'
+
+    recipe = store.get(Recipe('extra_private'))
+    recipe_list = recipe.get_recipe()
+    assert len(recipe_list) == 4
+    assert recipe_list[0][0] == 'system'
+    assert recipe_list[1][0] == 'tiddlyspace'
+    assert recipe_list[2][0] == 'extra_public'
+    assert recipe_list[3][0] == 'extra_private'
