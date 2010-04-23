@@ -32,7 +32,6 @@ def add_spaces_routes(selector):
             PUT=add_space_member)
 
 
-@require_any_user()
 def add_space_member(environ, start_response):
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']

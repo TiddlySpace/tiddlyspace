@@ -216,7 +216,6 @@ def test_add_a_member():
 
     # authed user not in space may not add people
     cookie = get_auth('psd', 'cat')
-    http = httplib2.Http()
     response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/psd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='PUT',
@@ -224,7 +223,6 @@ def test_add_a_member():
     assert response['status'] == '403'
 
     cookie = get_auth('fnd', 'bird')
-    http = httplib2.Http()
     response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/psd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='PUT',
