@@ -19,6 +19,7 @@ from tiddlywebplugins.utils import replace_handler
 from tiddlywebplugins.tiddlyspace.config import config as space_config
 from tiddlywebplugins.tiddlyspace.handler import (home,
         friendly_uri, ControlView)
+from tiddlywebplugins.tiddlyspace.spaces import add_spaces_routes
 
 
 def init(config):
@@ -37,6 +38,7 @@ def init(config):
 
     if 'selector' in config: # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
+        add_spaces_routes(config['selector'])
         config['selector'].add('/{tiddler_name:segment', GET=friendly_uri)
         if ControlView not in config['server_request_filters']:
             config['server_request_filters'].insert(
