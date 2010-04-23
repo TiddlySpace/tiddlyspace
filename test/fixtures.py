@@ -23,6 +23,7 @@ def make_fake_space(store, name):
     private_recipe = Recipe('%s_private' % name)
     public_bag = Bag('%s_public' % name)
     private_bag = Bag('%s_private' % name)
+    private_bag.policy.manage = [name]
     public_recipe.set_recipe([('system', ''), ('%s_public' % name, '')])
     private_recipe.set_recipe([('system', ''), ('%s_public' % name, ''),
         ('%s_private' % name, '')])

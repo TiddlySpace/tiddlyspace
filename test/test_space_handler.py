@@ -79,3 +79,12 @@ def test_space_exist():
             method='GET')
     assert response['status'] == '404'
     assert 'nancy does not exist' in content
+
+
+def test_space_members():
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/cdent/members',
+            method='GET')
+    assert response['status'] == '200'
+    info = simplejson.loads(content)
+    assert info == ['cdent']
