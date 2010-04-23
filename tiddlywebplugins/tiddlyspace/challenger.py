@@ -2,8 +2,8 @@ from Cookie import SimpleCookie
 
 from tiddlyweb.model.user import User
 from tiddlyweb.store import NoUserError
-from tiddlyweb.web.util import server_host_url, make_cookie
 from tiddlyweb.web.challengers import cookie_form
+from tiddlyweb.web.util import server_host_url, make_cookie
 
 
 class Challenger(cookie_form.Challenger):

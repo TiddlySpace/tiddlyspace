@@ -1,12 +1,12 @@
-from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
+from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.store import NoBagError, NoRecipeError
+from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
 from tiddlyweb.web.http import HTTP404
 
-from tiddlyweb import control
 
 def home(environ, start_response):
     """
