@@ -228,3 +228,34 @@ def test_add_a_member():
             method='PUT',
             )
     assert response['status'] == '204'
+
+
+def test_delete_member():
+    cookie = get_auth('fnd', 'bird')
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/psd',
+            method='DELETE',
+            )
+    assert response['status'] == '403'
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/psd',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='DELETE',
+            )
+    assert response['status'] == '204'
+
+    # delete self
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/fnd',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='DELETE',
+            )
+    assert response['status'] == '204'
+
+    bag = store.get(Bag('extra_private'))
+    assert bag.policy.owner == 'cdent'
+    assert bag.policy.read == ['cdent']
+    assert bag.policy.accept == ['NONE']
+    assert bag.policy.manage == ['cdent']
+    assert bag.policy.write == ['cdent']
+    assert bag.policy.create == ['cdent']
+    assert bag.policy.delete == ['cdent']

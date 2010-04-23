@@ -28,8 +28,9 @@ def add_spaces_routes(selector):
             GET=list_space_members)
     selector.add('/spaces/{space_name:segment}/members', # list space members
             GET=list_space_members)
-    selector.add('/spaces/{space_name:segment}/members/{user_name:segment}', # add member to space
-            PUT=add_space_member)
+    selector.add('/spaces/{space_name:segment}/members/{user_name:segment}',
+            PUT=add_space_member, # add member to space
+            DELETE=delete_space_member) # delete from from space
 
 
 def add_space_member(environ, start_response):
@@ -50,7 +51,7 @@ def add_space_member(environ, start_response):
     private_bag.policy.allows(current_user, 'manage')
 
     for entity in [public_bag, private_bag, public_recipe, private_recipe]:
-        new_policy = _update_policy(entity.policy, user_name)
+        new_policy = _update_policy(entity.policy, add=user_name)
         entity.policy = new_policy
         store.put(entity)
 
@@ -80,6 +81,31 @@ def create_space(environ, start_response):
         return _create_space(environ, start_response, space_name)
     raise HTTP409('%s already exists' % space_name)
 
+
+def delete_space_member(environ, start_response):
+    store = environ['tiddlyweb.store']
+    space_name = environ['wsgiorg.routing_args'][1]['space_name']
+    user_name = environ['wsgiorg.routing_args'][1]['user_name']
+    current_user = environ['tiddlyweb.usersign']
+    try:
+        public_name = '%s_public' % space_name
+        private_name = '%s_private' % space_name
+        public_bag = store.get(Bag(public_name))
+        private_bag = store.get(Bag(private_name))
+        public_recipe = store.get(Recipe(public_name))
+        private_recipe = store.get(Recipe(private_name))
+    except (NoBagError, NoRecipeError):
+        raise HTTP404('space %s does not exist' % space_name)
+
+    private_bag.policy.allows(current_user, 'manage')
+
+    for entity in [public_bag, private_bag, public_recipe, private_recipe]:
+        new_policy = _update_policy(entity.policy, subtract=user_name)
+        entity.policy = new_policy
+        store.put(entity)
+
+    start_response('204 No Content', [])
+    return ['']
 
 def list_spaces(environ, start_response):
     store = environ['tiddlyweb.store']
@@ -124,11 +150,13 @@ def _make_policy(member):
     return policy
 
 
-def _update_policy(policy, new_member):
+def _update_policy(policy, add=None, subtract=None):
     for constraint in ('read', 'write', 'create', 'delete', 'manage'):
         constraint_values = getattr(policy, constraint)
-        if new_member not in constraint_values:
-            constraint_values.append(new_member)
+        if add and add not in constraint_values:
+            constraint_values.append(add)
+        if subtract and subtract in constraint_values:
+            constraint_values.remove(subtract)
     return policy
 
 
