@@ -1,9 +1,28 @@
 import os
 import sys
 import shutil
+import httplib2
+import Cookie
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
+
+
+
+def get_auth(username, password):
+    http = httplib2.Http()
+    response, content = http.request(
+            'http://0.0.0.0:8080/challenge/tiddlywebplugins.tiddlyspace.challenger',
+            body='user=%s&password=%s' % (username, password),
+            method='POST',
+            headers={'Content-Type': 'application/x-www-form-urlencoded'})
+    assert response.previous['status'] == '303'
+
+    user_cookie = response.previous['set-cookie']
+    cookie = Cookie.SimpleCookie()
+    cookie.load(user_cookie)
+    return cookie['tiddlyweb_user'].value
+
 
 def make_test_env():
     try:

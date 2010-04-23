@@ -40,21 +40,6 @@ def teardown_module(module):
     os.chdir('..')
 
 
-def get_auth():
-    http = httplib2.Http()
-    response, content = http.request(
-            'http://0.0.0.0:8080/challenge/tiddlywebplugins.tiddlyspace.challenger',
-            body='user=cdent&password=cow',
-            method='POST',
-            headers={'Content-Type': 'application/x-www-form-urlencoded'})
-    assert response.previous['status'] == '303'
-
-    user_cookie = response.previous['set-cookie']
-    cookie = Cookie.SimpleCookie()
-    cookie.load(user_cookie)
-    return cookie['tiddlyweb_user'].value
-
-
 def test_friendly():
     http = httplib2.Http()
     response, content_core = http.request(
