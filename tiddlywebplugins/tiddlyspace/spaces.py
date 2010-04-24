@@ -6,9 +6,9 @@ listing, creation, subscription, etc.
 import simplejson
 
 from tiddlyweb.model.bag import Bag
-from tiddlyweb.model.policy import Policy
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
+from tiddlyweb.model.policy import Policy
 from tiddlyweb.store import NoRecipeError, NoBagError, NoUserError
 from tiddlyweb.web.http import HTTP404, HTTP409
 
