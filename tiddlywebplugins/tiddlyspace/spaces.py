@@ -139,9 +139,18 @@ def list_spaces(environ, start_response):
     List all the spaces on the service, as a JSON list.
     """
     store = environ['tiddlyweb.store']
-    spaces = [recipe.name.rstrip('_public') for
-            recipe in store.list_recipes() if
-            recipe.name.endswith('_public')]
+    mine = environ['tiddlyweb.query'].get('mine', [None])[0]
+    current_user = environ['tiddlyweb.usersign']['name']
+    if mine:
+        spaces = [recipe.name.rstrip('_public') for
+                recipe in store.list_recipes() if
+                recipe.name.endswith('_public') and
+                current_user in recipe.policy.manage
+                ]
+    else:
+        spaces = [recipe.name.rstrip('_public') for
+                recipe in store.list_recipes() if
+                recipe.name.endswith('_public')]
     start_response('200 OK', [
         ('Content-Type', 'application/json; charset=UTF-8')
         ])

@@ -326,9 +326,9 @@ def test_blacklisted_subscription():
 
 def test_list_my_spaces():
     http = httplib2.Http()
-    response, content = http.request('http://0.0.0.0:8080/spaces?mine',
+    response, content = http.request('http://0.0.0.0:8080/spaces?mine=1',
             method='GET')
     assert response['status'] == '200'
 
     info = simplejson.loads(content)
-    print info
+    assert 'fnd' not in info
