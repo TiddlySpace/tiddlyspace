@@ -289,6 +289,9 @@ def _make_space(environ, space_name):
         (public_recipe.name, ''),
         (private_recipe.name, '')
         ])
+    private_recipe.policy = _make_policy(member)
+    public_recipe.policy = _make_policy(member)
+    public_recipe.policy.read = []
     store.put(public_recipe)
     store.put(private_recipe)
 

@@ -156,6 +156,13 @@ def test_create_space():
     assert bag.policy.delete == ['cdent']
 
     recipe = store.get(Recipe('extra_public'))
+    assert recipe.policy.owner == 'cdent'
+    assert recipe.policy.read == []
+    assert recipe.policy.accept == ['NONE']
+    assert recipe.policy.manage == ['cdent']
+    assert recipe.policy.write == ['cdent']
+    assert recipe.policy.create == ['cdent']
+    assert recipe.policy.delete == ['cdent']
     recipe_list = recipe.get_recipe()
     assert len(recipe_list) == 3
     assert recipe_list[0][0] == 'system'
@@ -164,6 +171,13 @@ def test_create_space():
 
     recipe = store.get(Recipe('extra_private'))
     recipe_list = recipe.get_recipe()
+    assert recipe.policy.owner == 'cdent'
+    assert recipe.policy.read == ['cdent']
+    assert recipe.policy.accept == ['NONE']
+    assert recipe.policy.manage == ['cdent']
+    assert recipe.policy.write == ['cdent']
+    assert recipe.policy.create == ['cdent']
+    assert recipe.policy.delete == ['cdent']
     assert len(recipe_list) == 4
     assert recipe_list[0][0] == 'system'
     assert recipe_list[1][0] == 'tiddlyspace'
@@ -308,3 +322,16 @@ def test_blacklisted_subscription():
             body=subscriptions)
     assert response['status'] == '409'
     assert 'Subscription not allowed to space: scrappy' in content
+
+
+def test_list_my_spaces():
+# XXX not ready 
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces?mine',
+            method='GET')
+    assert response['status'] == '200'
+
+    info = simplejson.loads(content)
+    print info
+
+
