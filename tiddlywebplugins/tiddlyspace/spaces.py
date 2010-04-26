@@ -114,6 +114,7 @@ def delete_space_member(environ, start_response):
     start_response('204 No Content', [])
     return ['']
 
+
 def list_spaces(environ, start_response):
     store = environ['tiddlyweb.store']
     spaces = [recipe.name.rstrip('_public') for
@@ -217,7 +218,7 @@ def _make_space(environ, space_name):
     member = environ['tiddlyweb.usersign']['name']
 
     # XXX stub out the clumsy way for now
-    # can make this much more delcarative
+    # can make this much more declarative
 
     private_bag = Bag('%s_private' % space_name)
     public_bag = Bag('%s_public' % space_name)
