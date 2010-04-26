@@ -185,6 +185,17 @@ def test_create_space():
     assert recipe_list[3][0] == 'extra_private'
 
 
+def test_reserved_space_name():
+    cookie = get_auth('cdent', 'cow')
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/www',
+            method='PUT',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            )
+    assert response['status'] == '409'
+    assert 'Invalid space name: www' in content
+
+
 def test_case_in_space():
     cookie = get_auth('cdent', 'cow')
     http = httplib2.Http()

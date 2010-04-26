@@ -235,7 +235,7 @@ def _create_space(environ, start_response, space_name):
     """
     Create the space named by space_name. Raise 201 on success.
     """
-    _validate_space_name(space_name)
+    _validate_space_name(environ, space_name)
     _make_space(environ, space_name)
     start_response('201 Created', [])
     return ['']
@@ -305,14 +305,18 @@ def _make_space(environ, space_name):
     store.put(private_recipe)
 
 
-def _validate_space_name(name):
+def _validate_space_name(environ, name):
     """
     Determine if space name can be used.
     We've already checked if the space exists.
     """
-    if name.islower(): # just a stub for now
-        return
-    else:
+    if not name.islower(): # just a stub for now
+        raise HTTP409('Invalid space name, lowercase required: %s' % name)
+    # XXX this reserved list should/could be built up from multiple
+    # sources.
+    reserved_space_names = environ['tiddlyweb.config'].get(
+            'socialusers.reserved_names', [])
+    if name in reserved_space_names:
         raise HTTP409('Invalid space name: %s' % name)
 
 
