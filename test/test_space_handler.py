@@ -325,7 +325,6 @@ def test_blacklisted_subscription():
 
 
 def test_list_my_spaces():
-# XXX not ready 
     http = httplib2.Http()
     response, content = http.request('http://0.0.0.0:8080/spaces?mine',
             method='GET')
@@ -333,5 +332,3 @@ def test_list_my_spaces():
 
     info = simplejson.loads(content)
     print info
-
-
