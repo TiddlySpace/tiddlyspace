@@ -1,4 +1,4 @@
-.PHONY: clean purge test remotes jslib dist release deploy pypi dev
+.PHONY: clean purge test remotes jslib qunit dist release deploy pypi dev
 
 clean:
 	find . -name "*.pyc" | xargs rm || true
@@ -9,7 +9,7 @@ clean:
 	rm src/frontpage/*.tid || true
 
 purge: clean
-	cat .gitignore | while read -r entry; do rm "$$entry"; done || true
+	cat .gitignore | while read -r entry; do rm -r "$$entry"; done || true
 
 test:
 	py.test -x test
@@ -17,7 +17,7 @@ test:
 remotes: jslib
 	./cacher
 
-jslib:
+jslib: qunit
 	mkdir -p "src/lib"
 	curl -o "src/lib/chrjs.js" \
 		"http://github.com/tiddlyweb/chrjs/raw/master/main.js"
@@ -30,6 +30,13 @@ jslib:
 		"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"
 	curl -o "src/lib/jquery-json.min.js" \
 		"http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js"
+
+qunit:
+	mkdir -p src/test/qunit
+	curl -o "src/test/qunit/qunit.js" \
+		"http://github.com/jquery/qunit/raw/master/qunit/qunit.js"
+	curl -o "src/test/qunit/qunit.css" \
+		"http://github.com/jquery/qunit/raw/master/qunit/qunit.css"
 
 dist: clean remotes test
 	python setup.py sdist

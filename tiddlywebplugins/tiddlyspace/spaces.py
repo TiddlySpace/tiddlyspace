@@ -275,7 +275,7 @@ def _make_space(environ, space_name):
     member = environ['tiddlyweb.usersign']['name']
 
     # XXX stub out the clumsy way for now
-    # can make this much more delcarative
+    # can make this much more declarative
 
     private_bag = Bag('%s_private' % space_name)
     public_bag = Bag('%s_public' % space_name)
