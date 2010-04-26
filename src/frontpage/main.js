@@ -11,8 +11,10 @@ var main = function() {
 var register = function(username, password) {
 	var userCallback = function(resource, status, xhr) {
 		notify("user created: " + username);
-		var space = new tiddlyweb.Space(username, [username], host);
-		space.put(spaceCallback, errback);
+		login(username, password, function(data, status, xhr) {
+			var space = new tiddlyweb.Space(username, host);
+			space.create(spaceCallback, errback);
+		});
 	};
 	var spaceCallback = function(resource, status, xhr) {
 		notify("space created: " + username);
@@ -26,21 +28,24 @@ var register = function(username, password) {
 	user.create(userCallback, errback);
 };
 
-var login = function(username, password) {
+var login = function(username, password, callback) {
 	var challenger = "tiddlywebplugins.tiddlyspace.challenger"; // XXX: hardcoded
 	var uri = host + "/challenge/" + challenger;
 	var data = {
 		user: username,
 		password: password
 	};
+	if(!callback) {
+		callback = function(data, status, xhr) {
+			var spaceUri = host.replace("://", "://" + username + "."); // XXX: hacky?
+			window.location = spaceUri;
+		};
+	}
 	$.ajax({
 		url: uri,
 		type: "POST",
 		data: data,
-		success: function(data, status, xhr) {
-			var spaceUri = host.replace("://", "://" + username + "."); // XXX: hacky?
-			window.location = spaceUri;
-		},
+		success: callback,
 		error: function(xhr, error, exc) {
 			notify("error logging in", error);
 		}
