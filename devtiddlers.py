@@ -13,3 +13,8 @@ instance_tiddlers = {
 def update_config(config):
     for bag, uris in instance_tiddlers.items():
         config['local_instance_tiddlers'][bag] = uris
+    config['server_host'] = {
+        'scheme': 'http',
+        'host': 'localhost',
+        'port': '8080'
+    }
