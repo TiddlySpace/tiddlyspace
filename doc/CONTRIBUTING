@@ -6,8 +6,8 @@
 * create development instance:
     $ make dev
     $ cd dev_instance
-    $ twanager server
-    # open http://0.0.0.0:8080 in web browser
+    $ twanager server 0.0.0.0 8080
+    # open http://localhost:8080 in web browser
 * changes to *.js within the repository files are reflected directly in the
   browser (after a page reload)
 * deploy: $ make deploy
