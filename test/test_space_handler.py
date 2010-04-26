@@ -33,6 +33,7 @@ def setup_module(module):
     def app_fn():
         return serve.load_app()
     httplib2_intercept.install()
+    config['blacklisted_spaces'] = ['scrappy']
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('cdent.0.0.0.0', 8080, app_fn)
     module.store = Store(config['server_store'][0],
@@ -287,3 +288,23 @@ def test_subscription():
     assert response['status'] == '204'
 
 
+def test_blacklisted_subscription():
+    cookie = get_auth('cdent', 'cow')
+    http = httplib2.Http()
+    response, content = http.request('http://0.0.0.0:8080/spaces/scrappy',
+            method='PUT',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            )
+    assert response['status'] == '201'
+
+    subscriptions = simplejson.dumps({'subscriptions': ['scrappy']})
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/cdent',
+            method='POST',
+            headers={
+                'Content-Type': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"' % cookie,
+                },
+            body=subscriptions)
+    assert response['status'] == '409'
+    assert 'Subscription not allowed to space: scrappy' in content

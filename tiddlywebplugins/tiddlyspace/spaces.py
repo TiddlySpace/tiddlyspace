@@ -203,6 +203,7 @@ def subscribe_space(environ, start_response):
     public_recipe_list = public_recipe.get_recipe()
     private_recipe_list = private_recipe.get_recipe()
     for space in subscriptions:
+        _validate_subscription(environ, space)
         try:
             subscribed_recipe = store.get(Recipe('%s_public' % space))
             for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
@@ -301,3 +302,13 @@ def _validate_space_name(name):
         return
     else:
         raise HTTP409('Invalid space name: %s' % name)
+
+
+def _validate_subscription(environ, name):
+    """
+    Determine if this space can be subscribed to. We know that
+    the space exists, what we want to determine here is if it
+    has been blacklisted or something similar.
+    """
+    if name in environ['tiddlyweb.config'].get('blacklisted_spaces', []):
+        raise HTTP409('Subscription not allowed to space: %s' % name)
