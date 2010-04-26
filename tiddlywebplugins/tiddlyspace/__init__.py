@@ -26,6 +26,7 @@ def init(config):
     import tiddlywebwiki
     import tiddlywebplugins.logout
     import tiddlywebplugins.virtualhosting # calling init not required
+    import tiddlywebplugins.magicuser
     import tiddlywebplugins.socialusers
     import tiddlywebplugins.mselect
 
@@ -33,6 +34,7 @@ def init(config):
 
     tiddlywebwiki.init(config)
     tiddlywebplugins.logout.init(config)
+    tiddlywebplugins.magicuser.init(config)
     tiddlywebplugins.socialusers.init(config)
     tiddlywebplugins.mselect.init(config)
 

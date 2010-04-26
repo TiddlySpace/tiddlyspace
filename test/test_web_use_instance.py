@@ -95,11 +95,11 @@ def test_space_has_limited_view():
     assert 'thing_' in content, content
 
     response, content = http.request(
-            'http://thing.0.0.0.0:8080/bags/thing_public',
+            'http://thing.0.0.0.0:8080/bags/thing_public/tiddlers',
             method='GET')
     assert response['status'] == '200', content
 
     response, content = http.request(
-            'http://thing.0.0.0.0:8080/bags/other_public',
+            'http://thing.0.0.0.0:8080/bags/other_public/tiddlers',
             method='GET')
     assert response['status'] == '404', content

@@ -36,6 +36,12 @@ def add_spaces_routes(selector):
 
 
 def add_space_member(environ, start_response):
+    """
+    Add a member to a space if they are not already a member.
+    If they are already a member, nothing happens. If the username
+    given does not exist, raise 409. If the space does not exist
+    raise 404.
+    """
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     user_name = environ['wsgiorg.routing_args'][1]['user_name']
@@ -67,6 +73,10 @@ def add_space_member(environ, start_response):
 
 
 def confirm_space(environ, start_response):
+    """
+    Confirm a spaces exists. If it does, raise 204. If
+    not, raise 404.
+    """
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     try:
@@ -80,6 +90,10 @@ def confirm_space(environ, start_response):
 
 @require_any_user()
 def create_space(environ, start_response):
+    """
+    Create a space if it does not yet exists. If it does
+    raise 409.
+    """
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     try:
@@ -90,6 +104,11 @@ def create_space(environ, start_response):
 
 
 def delete_space_member(environ, start_response):
+    """
+    Remove a member from a space. If the space does not exist
+    raise 404. If the named member is not in the space, do
+    nothing.
+    """
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     user_name = environ['wsgiorg.routing_args'][1]['user_name']
@@ -116,22 +135,39 @@ def delete_space_member(environ, start_response):
 
 
 def list_spaces(environ, start_response):
+    """
+    List all the spaces on the service, as a JSON list.
+    """
     store = environ['tiddlyweb.store']
-    spaces = [recipe.name.rstrip('_public') for
-            recipe in store.list_recipes() if
-            recipe.name.endswith('_public')]
+    mine = environ['tiddlyweb.query'].get('mine', [None])[0]
+    current_user = environ['tiddlyweb.usersign']['name']
+    if mine:
+        spaces = [recipe.name.rstrip('_public') for
+                recipe in store.list_recipes() if
+                recipe.name.endswith('_public') and
+                current_user in recipe.policy.manage
+                ]
+    else:
+        spaces = [recipe.name.rstrip('_public') for
+                recipe in store.list_recipes() if
+                recipe.name.endswith('_public')]
     start_response('200 OK', [
         ('Content-Type', 'application/json; charset=UTF-8')
         ])
     return simplejson.dumps(spaces)
 
 
-@require_any_user()
 def list_space_members(environ, start_response):
+    """
+    List the members of the named space. You must be a member
+    to list the members.
+    """
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
+    current_user = environ['tiddlyweb.usersign']
     try:
         private_space_bag = store.get(Bag('%s_private' % space_name))
+        private_space_bag.policy.allows(current_user, 'manage')
         members = [member for member in private_space_bag.policy.manage if
                 not member.startswith('R:')]
     except NoBagError:
@@ -143,13 +179,20 @@ def list_space_members(environ, start_response):
 
 
 def subscribe_space(environ, start_response):
+    """
+    Subscribe the spaces named in the JSON content of
+    the request to the space named in the URI. The current
+    user must be a member of the space. Raise 409 if the
+    JSON is no good. Raise 404 if the space does not exist.
+    Raise 409 if a space in the JSON does not exist.
+    """
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     current_user = environ['tiddlyweb.usersign']
     try:
         public_name = '%s_public' % space_name
         private_name = '%s_private' % space_name
-        public_bag = store.get(Bag(public_name))
+        store.get(Bag(public_name)) # checked for existence, but not used
         private_bag = store.get(Bag(private_name))
         public_recipe = store.get(Recipe(public_name))
         private_recipe = store.get(Recipe(private_name))
@@ -169,13 +212,14 @@ def subscribe_space(environ, start_response):
     public_recipe_list = public_recipe.get_recipe()
     private_recipe_list = private_recipe.get_recipe()
     for space in subscriptions:
+        _validate_subscription(environ, space)
         try:
             subscribed_recipe = store.get(Recipe('%s_public' % space))
-            for bag, filter in subscribed_recipe.get_recipe()[2:]:
-                if (bag, filter) not in public_recipe_list:
-                    public_recipe_list.insert(-1, (bag, filter))
-                if (bag, filter) not in private_recipe_list:
-                    private_recipe_list.insert(-2, (bag, filter))
+            for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
+                if (bag, filter_string) not in public_recipe_list:
+                    public_recipe_list.insert(-1, (bag, filter_string))
+                if (bag, filter_string) not in private_recipe_list:
+                    private_recipe_list.insert(-2, (bag, filter_string))
         except NoRecipeError, exc:
             raise HTTP409('Invalid content for subscription: %s' % exc)
     public_recipe.set_recipe(public_recipe_list)
@@ -188,13 +232,19 @@ def subscribe_space(environ, start_response):
 
 
 def _create_space(environ, start_response, space_name):
+    """
+    Create the space named by space_name. Raise 201 on success.
+    """
     _validate_space_name(space_name)
-    space = _make_space(environ, space_name)
+    _make_space(environ, space_name)
     start_response('201 Created', [])
     return ['']
 
 
 def _make_policy(member):
+    """
+    Make a new private policy with the named member.
+    """
     policy = Policy()
     policy.owner = member
     for constraint in ('read', 'write', 'create', 'delete', 'manage'):
@@ -204,6 +254,10 @@ def _make_policy(member):
 
 
 def _update_policy(policy, add=None, subtract=None):
+    """
+    Update the policy adding or subtracting the user named in
+    add or subtract.
+    """
     for constraint in ('read', 'write', 'create', 'delete', 'manage'):
         constraint_values = getattr(policy, constraint)
         if add and add not in constraint_values:
@@ -214,6 +268,9 @@ def _update_policy(policy, add=None, subtract=None):
 
 
 def _make_space(environ, space_name):
+    """
+    The details of creating the bags and recipes that make up a space.
+    """
     store = environ['tiddlyweb.store']
     member = environ['tiddlyweb.usersign']['name']
 
@@ -241,6 +298,9 @@ def _make_space(environ, space_name):
         (public_recipe.name, ''),
         (private_recipe.name, '')
         ])
+    private_recipe.policy = _make_policy(member)
+    public_recipe.policy = _make_policy(member)
+    public_recipe.policy.read = []
     store.put(public_recipe)
     store.put(private_recipe)
 
@@ -254,3 +314,13 @@ def _validate_space_name(name):
         return
     else:
         raise HTTP409('Invalid space name: %s' % name)
+
+
+def _validate_subscription(environ, name):
+    """
+    Determine if this space can be subscribed to. We know that
+    the space exists, what we want to determine here is if it
+    has been blacklisted or something similar.
+    """
+    if name in environ['tiddlyweb.config'].get('blacklisted_spaces', []):
+        raise HTTP409('Subscription not allowed to space: %s' % name)
