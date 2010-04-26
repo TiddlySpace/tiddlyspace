@@ -39,7 +39,7 @@ $.extend(MemberCollection.prototype, {
 	},
 	remove: function(username, callback, errback) {
 		var member = new Member(username, this);
-		member.delete(callback, errback);
+		member["delete"](callback, errback);
 	}
 });
 
