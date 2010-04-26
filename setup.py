@@ -31,7 +31,7 @@ setup(
         'tiddlywebplugins.logout',
         'tiddlywebplugins.virtualhosting',
         'tiddlywebplugins.socialusers',
-        'tiddlywebplugins.magicuser',
+        'tiddlywebplugins.magicuser>=0.2',
         'tiddlywebplugins.mselect',
     ],
     include_package_data = True,
