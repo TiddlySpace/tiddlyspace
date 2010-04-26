@@ -30,7 +30,7 @@ setup(
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout',
         'tiddlywebplugins.virtualhosting',
-        'tiddlywebplugins.socialusers',
+        'tiddlywebplugins.socialusers>=0.3',
         'tiddlywebplugins.magicuser>=0.2',
         'tiddlywebplugins.mselect',
     ],
