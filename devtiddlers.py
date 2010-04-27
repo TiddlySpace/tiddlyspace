@@ -15,6 +15,6 @@ def update_config(config):
         config['local_instance_tiddlers'][bag] = uris
     config['server_host'] = {
         'scheme': 'http',
-        'host': 'localhost',
+        'host': 'tiddlyspace.org',
         'port': '8080'
     }
