@@ -19,22 +19,33 @@
 //{{{
 (function($) {
 
-var host = config.defaultCustomFields["server.host"].replace(/\/$/, ""); // TODO: should be cached globally!?
+// TODO: should be provided in a global namespace
+var host = config.defaultCustomFields["server.host"].replace(/\/$/, "");
+var anonUser = function() {
+	return config.options.txtUserName == "GUEST"; // TODO: should ensure TiddlyWebConfig's /status call is complete
+};
 
 var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
 		label: "Login",
+		logoutLabel: "Log out",
 		success: "logged in as %0",
 		error: "error logging in %0: %1"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		$(this.formTemplate).
-			find("legend").text(this.locale.label).end().
-			find("input[name=password_confirm]").remove().end().
-			find("input[type=submit]").val(this.locale.label).click(this.onSubmit).end().
-			appendTo(place);
+		var msg = this.locale;
+		if(anonUser()) {
+			$(this.formTemplate).
+				find("legend").text(msg.label).end().
+				find("input[name=password_confirm]").remove().end().
+				find("input[type=submit]").val(msg.label).click(this.onSubmit).end().
+				appendTo(place);
+		} else {
+			$("<a />").attr("href", host + "/logout").text(msg.logoutLabel).
+				appendTo(place);
+		}
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
@@ -80,10 +91,13 @@ var tsr = config.macros.TiddlySpaceRegister = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		$(this.formTemplate).
-			find("legend").text(this.locale.label).end().
-			find("input[type=submit]").val(this.locale.label).click(this.onSubmit).end().
-			appendTo(place);
+		if(anonUser()) {
+			$(this.formTemplate).
+				find("legend").text(this.locale.label).end().
+				find("input[type=submit]").val(this.locale.label).
+					click(this.onSubmit).end().
+				appendTo(place);
+		}
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
