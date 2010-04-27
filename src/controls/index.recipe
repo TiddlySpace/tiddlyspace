@@ -1,6 +1,6 @@
-tiddler: TiddlySpaceSidebar.js
-tiddler: TiddlySpaceBackstage.js
+tiddler: TiddlySpaceUserControls.js
 tiddler: TiddlySpaceMembers.js
+tiddler: TiddlySpaceBackstage.js
+tiddler: TiddlySpaceSidebar.js
 tiddler: TiddlySpaceVisualization.js
-tiddler: register.js
 recipe: backstage/index.recipe

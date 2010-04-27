@@ -8,4 +8,4 @@ Hi <<option txtUserName>>!  You are a member of the following spaces:
 * [[TiddlySlidy|http://tiddlyslidy.tiddlyspace.com]]
 * [[TiddlySpace|http://tiddlyspace.tiddlyspace.com]]
 
-<html><button type="button">Logout</button></html>
+[[log out|/logout]]
