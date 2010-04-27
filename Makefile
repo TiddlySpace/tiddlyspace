@@ -6,7 +6,6 @@ clean:
 	rm -r build || true
 	rm -r *.egg-info || true
 	rm -r tiddlywebplugins/tiddlyspace/resources || true
-	rm src/frontpage/*.tid || true
 
 purge: clean
 	cat .gitignore | while read -r entry; do rm -r "$$entry"; done || true
@@ -23,13 +22,6 @@ jslib: qunit
 		"http://github.com/tiddlyweb/chrjs/raw/master/main.js"
 	curl -o "src/lib/users.js" \
 		"http://github.com/tiddlyweb/chrjs/raw/master/users.js"
-	# front page
-	curl -o "src/lib/loadScript.js" \
-		"http://github.com/FND/jsutil/raw/master/loadScript.js"
-	curl -o "src/lib/jquery.min.js" \
-		"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"
-	curl -o "src/lib/jquery-json.min.js" \
-		"http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js"
 
 qunit:
 	mkdir -p src/test/qunit
