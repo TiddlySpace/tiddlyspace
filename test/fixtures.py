@@ -12,7 +12,7 @@ from tiddlyweb.model.recipe import Recipe
 def get_auth(username, password):
     http = httplib2.Http()
     response, content = http.request(
-            'http://0.0.0.0:8080/challenge/tiddlywebplugins.tiddlyspace.challenger',
+            'http://0.0.0.0:8080/challenge/cookie_form',
             body='user=%s&password=%s' % (username, password),
             method='POST',
             headers={'Content-Type': 'application/x-www-form-urlencoded'})

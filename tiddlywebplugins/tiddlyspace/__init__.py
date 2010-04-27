@@ -29,6 +29,7 @@ def init(config):
     import tiddlywebplugins.magicuser
     import tiddlywebplugins.socialusers
     import tiddlywebplugins.mselect
+    import tiddlywebplugins.cookiedomain
 
     merge_config(config, space_config)
 
@@ -37,6 +38,7 @@ def init(config):
     tiddlywebplugins.magicuser.init(config)
     tiddlywebplugins.socialusers.init(config)
     tiddlywebplugins.mselect.init(config)
+    tiddlywebplugins.cookiedomain.init(config)
 
     if 'selector' in config: # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
