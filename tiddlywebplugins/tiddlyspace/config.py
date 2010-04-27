@@ -8,7 +8,7 @@ PACKAGE_NAME = 'tiddlywebplugins.tiddlyspace'
 
 config = {
     'instance_tiddlers': get_tiddler_locations(store_contents, PACKAGE_NAME),
-    'auth_systems': ['%s.challenger' % PACKAGE_NAME, 'tiddlywebplugins.openid2'],
+    'auth_systems': ['cookie_form', 'tiddlywebplugins.openid2'],
     'bag_create_policy': 'ANY',
     'recipe_create_policy': 'ANY',
     'socialusers.reserved_names': ['www', 'about', 'help', 'announcements', 'info'],
