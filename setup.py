@@ -32,6 +32,7 @@ setup(
         'tiddlywebplugins.virtualhosting',
         'tiddlywebplugins.socialusers>=0.3',
         'tiddlywebplugins.magicuser>=0.2',
+        'tiddlywebplugins.openid2',
         'tiddlywebplugins.mselect',
     ],
     include_package_data = True,
