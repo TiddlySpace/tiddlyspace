@@ -7,6 +7,6 @@ Username:
 Password: 
 <<edit password "" "******">>
 
-<html><button type="button">Login</button></html> //you already have a space and would like to login//
+<<TiddlySpaceLogin>>
 
-<<TiddlySpaceRegister>> //all you need is a username and password//
+<<TiddlySpaceRegister>>
