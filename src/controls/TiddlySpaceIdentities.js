@@ -1,6 +1,6 @@
 //{{{
 /***
-|''Requires''|TiddlyWebConfig|
+|''Requires''|TiddlyWebConfig chrjs|
 !HTMLForm
 <form action="#">
 	<fieldset>
@@ -26,13 +26,15 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		if(!config.extensions.TiddlyWeb.anonUser()) {
-			$(this.formTemplate).
-				find("legend").text(msg.label).end().
-				find("input[type=submit]").val(this.locale.label).
-					click(this.onSubmit).end().
-				appendTo(place);
-		}
+		config.extensions.TiddlyWeb.getUserInfo(function(user) {
+			if(!user.anon) {
+				$(macro.formTemplate).
+					find("legend").text(macro.locale.label).end().
+					find("input[type=submit]").val(macro.locale.label).
+						click(macro.onSubmit).end().
+					appendTo(place);
+			}
+		});
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");

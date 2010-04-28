@@ -50,11 +50,13 @@ var _show = backstage.show;
 backstage.show = function() {
 	// selectively hide backstage tasks based on user status
 	var tasks = $("#backstageToolbar .backstageTask").show();
-	if(config.extensions.TiddlyWeb.anonUser()) {
-		tasks.slice(1, 3).hide();
-	} else {
-		tasks.eq(0).hide();
-	}
+	config.extensions.TiddlyWeb.getUserInfo(function(user) {
+		if(user.anon) {
+			tasks.slice(1, 3).hide();
+		} else {
+			tasks.eq(0).hide();
+		}
+	});
 	// add AutoSave option
 	var place = $('<span task="autoSave"></span>').
 		replaceAll("#backstageToolbar [task=autoSave]")[0];

@@ -31,17 +31,19 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var msg = this.locale;
-		if(config.extensions.TiddlyWeb.anonUser()) {
-			$(this.formTemplate).
-				find("legend").text(msg.label).end().
-				find("input[name=password_confirm]").remove().end().
-				find("input[type=submit]").val(msg.label).click(this.onSubmit).end().
-				appendTo(place);
-		} else {
-			$("<a />").attr("href", host + "/logout").text(msg.logoutLabel).
-				appendTo(place);
-		}
+		var msg = tsl.locale;
+		config.extensions.TiddlyWeb.getUserInfo(function(user) {
+			if(user.anon) {
+				$(tsl.formTemplate).
+					find("legend").text(msg.label).end().
+					find("input[name=password_confirm]").remove().end().
+					find("input[type=submit]").val(msg.label).click(tsl.onSubmit).end().
+					appendTo(place);
+			} else {
+				$("<a />").attr("href", host + "/logout").text(msg.logoutLabel).
+					appendTo(place);
+			}
+		});
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
@@ -87,13 +89,15 @@ var tsr = config.macros.TiddlySpaceRegister = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		if(config.extensions.TiddlyWeb.anonUser()) {
-			$(this.formTemplate).
-				find("legend").text(this.locale.label).end().
-				find("input[type=submit]").val(this.locale.label).
-					click(this.onSubmit).end().
-				appendTo(place);
-		}
+		config.extensions.TiddlyWeb.getUserInfo(function(user) {
+			if(user.anon) {
+				$(tsr.formTemplate).
+					find("legend").text(tsr.locale.label).end().
+					find("input[type=submit]").val(tsr.locale.label).
+						click(tsr.onSubmit).end().
+					appendTo(place);
+			}
+		});
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
