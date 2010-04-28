@@ -28,7 +28,7 @@ setup(
         'tiddlywebwiki>=0.27',
         'tiddlywebplugins.twimport>=0.9.4', # XXX: temporary, until latest version is included in tiddlywebwiki (via instancer)
         'tiddlywebplugins.utils>=1.0',
-        'tiddlywebplugins.logout',
+        'tiddlywebplugins.logout>=0.2',
         'tiddlywebplugins.virtualhosting',
         'tiddlywebplugins.socialusers>=0.3',
         'tiddlywebplugins.magicuser>=0.2',
