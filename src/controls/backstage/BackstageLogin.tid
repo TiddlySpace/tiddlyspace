@@ -1,12 +1,5 @@
 modifier: psd
 tags: excludeLists
 
-Username: 
-<<edit username "" "username">>
-
-Password: 
-<<edit password "" "******">>
-
 <<TiddlySpaceLogin>>
-
 <<TiddlySpaceRegister>>
