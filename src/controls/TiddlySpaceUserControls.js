@@ -19,11 +19,7 @@
 //{{{
 (function($) {
 
-// TODO: should be provided in a global namespace
-var host = config.defaultCustomFields["server.host"].replace(/\/$/, "");
-var anonUser = function() {
-	return config.options.txtUserName == "GUEST"; // TODO: should ensure TiddlyWebConfig's /status call is complete
-};
+var host = config.extensions.TiddlyWeb.host;
 
 var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -36,7 +32,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var msg = this.locale;
-		if(anonUser()) {
+		if(config.extensions.TiddlyWeb.anonUser()) {
 			$(this.formTemplate).
 				find("legend").text(msg.label).end().
 				find("input[name=password_confirm]").remove().end().
@@ -74,7 +70,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		});
 	},
 	redirect: function(spaceName) {
-		var spaceUri = host.replace("://", "://" + spaceName + "."); // XXX: hacky?
+		var spaceUri = host.replace("://", "://" + spaceName + "."); // XXX: brittle (e.g. if already in a space)
 		window.location = spaceUri;
 	}
 };
@@ -91,7 +87,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		if(anonUser()) {
+		if(config.extensions.TiddlyWeb.anonUser()) {
 			$(this.formTemplate).
 				find("legend").text(this.locale.label).end().
 				find("input[type=submit]").val(this.locale.label).

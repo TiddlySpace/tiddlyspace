@@ -25,7 +25,7 @@ setup(
     install_requires = [
         'setuptools',
         'tiddlyweb>=1.1.0',
-        'tiddlywebwiki>=0.27',
+        'tiddlywebwiki>=0.28',
         'tiddlywebplugins.twimport>=0.9.4', # XXX: temporary, until latest version is included in tiddlywebwiki (via instancer)
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout>=0.2',
