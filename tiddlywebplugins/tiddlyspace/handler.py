@@ -118,6 +118,7 @@ class ControlView(object):
 
             template = control.recipe_template(environ)
             bags = [bag for bag, _ in recipe.get_recipe(template)]
+            bags.insert(0, "MAPUSER")
 
             filter_string = None
             if req_uri == '/recipes':
