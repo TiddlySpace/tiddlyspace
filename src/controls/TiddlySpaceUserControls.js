@@ -1,7 +1,7 @@
 /***
 |''Requires''|TiddlyWebConfig|
 !HTMLForm
-<form id="userForm" action="#">
+<form action="#">
 	<fieldset>
 		<legend />
 		<dl>
