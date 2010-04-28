@@ -51,9 +51,9 @@ backstage.show = function() {
 	// selectively hide backstage tasks based on user status -- XXX: unsafe in backstage.show, due to unknown time of evaluation
 	var tasks = $("#backstageToolbar .backstageTask").show();
 	if(config.options.txtUserName == "GUEST") {
-		tasks.slice(2, 4).hide();
+		tasks.slice(1, 3).hide();
 	} else {
-		tasks.eq(1).hide();
+		tasks.eq(0).hide();
 	}
 	// add AutoSave option
 	var place = $('<span task="autoSave"></span>').
