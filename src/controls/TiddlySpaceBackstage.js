@@ -48,7 +48,7 @@ config.backstageTasks.push("options");
 // initialize state
 var _show = backstage.show;
 backstage.show = function() {
-	// selectively hide backstage tasks based on user status -- XXX: unsafe in backstage.show, due to unknown time of evaluation
+	// selectively hide backstage tasks based on user status
 	var tasks = $("#backstageToolbar .backstageTask").show();
 	if(config.extensions.TiddlyWeb.anonUser()) {
 		tasks.slice(1, 3).hide();
