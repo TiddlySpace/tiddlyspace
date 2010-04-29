@@ -38,14 +38,12 @@ class Challenger(OpenID):
         uri = urlparse.urljoin(server_host_url(environ),
                 environ['tiddlyweb.query'].get('tiddlyweb_redirect', ['/'])[0])
 
-        print 'uri', uri
         cookie_name = 'tiddlyweb_user'
         cookie_age = environ['tiddlyweb.config'].get('cookie_age', None)
         try:
             fragment = uri.rsplit('#', 1)[1]
         except (ValueError, IndexError):
             fragment = None
-        print 'fragment', fragment
         if fragment and fragment == FRAGMENT_VALUE:
             cookie_name = 'tiddlyweb_secondary_user'
             cookie_age = None

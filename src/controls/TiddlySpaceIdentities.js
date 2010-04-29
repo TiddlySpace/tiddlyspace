@@ -7,7 +7,7 @@
 		<legend />
 		<dl>
 			<dt>Username:</dt>
-			<input type="text" name="identity" />
+			<dd><input type="text" name="identity" /></dd>
 		</dl>
 		<input type="submit" />
 	</fieldset>

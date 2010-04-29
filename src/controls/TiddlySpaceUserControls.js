@@ -6,10 +6,12 @@
 		<legend />
 		<dl>
 			<dt>Username:</dt>
-			<input type="text" name="username" />
+			<dd><input type="text" name="username" /></dd>
 			<dt>Password:</dt>
-			<input type="password" name="password" />
-			<input type="password" name="password_confirm" />
+			<dd>
+				<input type="password" name="password" />
+				<input type="password" name="password_confirm" />
+			</dd>
 		</dl>
 		<input type="submit" />
 	</fieldset>
