@@ -2,7 +2,7 @@
 /***
 |''Requires''|TiddlyWebConfig chrjs|
 !HTMLForm
-<form action="#">
+<form method="POST" action="#">
 	<fieldset>
 		<legend />
 		<dl>
@@ -12,12 +12,16 @@
 					<option>OpenID</option>
 				</select>
 			</dd>
-			<dt>Username:</dt>
-			<dd><input type="text" name="identity" /></dd>
+			<dt>Identity:</dt>
+			<dd><input type="text" name="openid" /></dd>
 		</dl>
+		<input type="hidden" name="tiddlyweb_redirect" />
 		<input type="submit" />
 	</fieldset>
 </form>
+!TODO
+* i18n (form labels)
+* process config.extensions.TiddlyWeb.challengers instead of hardcoding OpenID
 !Code
 ***/
 //{{{
@@ -31,31 +35,21 @@ var macro = config.macros.TiddlySpaceIdentities = {
 		label: "Add Identity",
 		success: "successfully added identity %0",
 		error: "error adding identity %0: %1",
-		authError: "error authenticating identity %0: %1"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		config.extensions.TiddlyWeb.getUserInfo(function(user) {
 			if(!user.anon) {
-				$(macro.formTemplate).
+				var challenger = "tiddlywebplugins.tiddlyspace.openid";
+				var redirect = host + "/#auth:OpenID";
+				var uri = "%0/challenge/%1".format([host, challenger]);
+				$(macro.formTemplate).attr("action", uri).
 					find("legend").text(macro.locale.label).end().
-					find("input[type=submit]").val(macro.locale.label).
-						click(macro.onSubmit).end().
+					find("input[name=tiddlyweb_redirect]").val(redirect).end().
+					find("input[type=submit]").val(macro.locale.label).end().
 					appendTo(place);
 			}
 		});
-	},
-	onSubmit: function(ev) {
-		var form = $(this).closest("form");
-		var identity = form.find("input[name=identity]").val();
-		macro.authenticate(identity);
-		return false;
-	},
-	authenticate: function(identity) {
-		var challenger = "tiddlywebplugins.tiddlyspace.openid"; // XXX: hardcoded
-		var redirect = host + "/#auth:OpenID";
-		window.location = "%0/challenge/%1?tiddlyweb_redirect=%2".format([host,
-			challenger, encodeURIComponent(redirect)]);
 	},
 	addIdentity: function(name) {
 		var tiddler = new tiddlyweb.Tiddler(name);
