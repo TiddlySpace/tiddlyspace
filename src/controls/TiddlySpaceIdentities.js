@@ -32,9 +32,7 @@ var host = config.extensions.TiddlyWeb.host;
 var macro = config.macros.TiddlySpaceIdentities = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
-		label: "Add Identity",
-		success: "successfully added identity %0",
-		error: "error adding identity %0: %1",
+		label: "Add Identity"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -50,17 +48,36 @@ var macro = config.macros.TiddlySpaceIdentities = {
 					appendTo(place);
 			}
 		});
+	}
+};
+
+config.paramifiers.auth = {
+	locale: {
+		success: "successfully added identity %0",
+		error: "error adding identity %0: %1"
+	},
+
+	onstart: function(v) {
+		var identity = document.cookie.split("tiddlyweb_secondary_user=")[1];
+		console.log("auth", v, identity);
+		if(identity) {
+			var name = identity.split(':')[0]; // XXX: brittle; name must not contain colon
+			name = name.replace('"', ''); // XXX: hacky!?
+			this.addIdentity(name);
+		}
 	},
 	addIdentity: function(name) {
+		var msg = config.paramifiers.auth.locale;
 		var tiddler = new tiddlyweb.Tiddler(name);
 		tiddler.bag = new tiddlyweb.Bag("MAPUSER", host);
 		var callback = function(data, status, xhr) {
-			displayMessage(macro.locale.success.format([identity]));
+			displayMessage(msg.success.format([identity]));
 		};
 		var errback = function(xhr, error, exc) {
-			displayMessage(macro.locale.error.format([identity, error]));
+			displayMessage(msg.error.format([identity, error]));
 		};
 		tiddler.put(callback, errback);
+		// TODO: remove auth paramifier from window.location
 	}
 };
 
