@@ -9,12 +9,8 @@ repository: http://github.com/TiddlySpace/tiddlyspace
 __version__ = '0.2.2'
 
 
-import Cookie
-
-from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.web.extractor import UserExtract
-from tiddlyweb.web.validator import TIDDLER_VALIDATORS, InvalidTiddlerError
-from tiddlyweb.util import merge_config, sha
+from tiddlyweb.util import merge_config
 
 from tiddlywebplugins.utils import replace_handler
 
@@ -32,6 +28,7 @@ def init(config):
     import tiddlywebplugins.socialusers
     import tiddlywebplugins.mselect
     import tiddlywebplugins.cookiedomain
+    import tiddlywebplugins.tiddlyspace.validator
 
     merge_config(config, space_config)
 
@@ -50,42 +47,3 @@ def init(config):
             config['server_request_filters'].insert(
                     config['server_request_filters'].
                     index(UserExtract) + 1, ControlView)
-
-
-def validate_mapuser(tiddler, environ):
-    """
-    If a tiddler is put to the MAPUSER bag clear
-    out the tiddler and set fields['mapped_user']
-    to the current username. There will always be
-    a current username because the create policy
-    for the bag is set to ANY.
-    """
-    if tiddler.bag == 'MAPUSER':
-        try:
-            user_cookie = environ['HTTP_COOKIE']
-            cookie = Cookie.SimpleCookie()
-            cookie.load(user_cookie)
-            cookie_value = cookie['tiddlyweb_secondary_user'].value
-            secret = environ['tiddlyweb.config']['secret']
-            usersign, cookie_secret = cookie_value.rsplit(':', 1)
-        except KeyError:
-            raise InvalidTiddlerError('secondary cookie not present')
-
-        if cookie_secret != sha('%s%s' % (usersign, secret)).hexdigest():
-            raise InvalidTiddlerError('secondary cookie invalid')
-
-        if usersign != tiddler.title:
-            raise InvalidTiddlerError('secondary cookie mismatch')
-
-        store = environ['tiddlyweb.store']
-        # XXX this is a potentially expensive operation but let's not
-        # early optimize
-        if tiddler.title in (user.usersign for user in store.list_users()):
-            raise InvalidTiddlerError('username exists')
-        tiddler.text = ''
-        tiddler.tags = []
-        tiddler.fields = {}
-        tiddler.fields['mapped_user'] = environ['tiddlyweb.usersign']['name']
-    return tiddler
-
-TIDDLER_VALIDATORS.append(validate_mapuser)
