@@ -21,12 +21,15 @@ from tiddlyweb.store import Store
 from tiddlyweb.model.user import User
 from tiddlyweb.model.tiddler import Tiddler
 
+from tiddlyweb.web.util import make_cookie
+
 AUTH_COOKIE = None
 
 def setup_module(module):
     make_test_env()
     from tiddlyweb.config import config
     from tiddlyweb.web import serve
+    module.secret = config['secret']
     # we have to have a function that returns the callable,
     # Selector just _is_ the callable
     def app_fn():
@@ -74,11 +77,49 @@ def test_create_map_uses_user():
     cookie.load(user_cookie)
     AUTH_COOKIE = cookie['tiddlyweb_user'].value
 
+    bad_second_cookie = make_cookie('tiddlyweb_secondary_user',
+            'x.auth.thing', mac_key='slippy')
+    mismatch_second_cookie = make_cookie('tiddlyweb_secondary_user',
+            'y.auth.thing', mac_key=secret)
+    second_cookie = make_cookie('tiddlyweb_secondary_user',
+            'x.auth.thing', mac_key=secret)
+
+# we must have the second cookie
     response, content = http.request(
             'http://0.0.0.0:8080/bags/MAPUSER/tiddlers/x.auth.thing',
             method='PUT',
             headers={'Content-Type': 'application/json',
                 'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE},
+            body='{"text":"house"}')
+    assert response['status'] == '409', content
+    assert 'secondary cookie not present' in content
+
+    response, content = http.request(
+            'http://0.0.0.0:8080/bags/MAPUSER/tiddlers/x.auth.thing',
+            method='PUT',
+            headers={'Content-Type': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"; %s' % (
+                    AUTH_COOKIE, bad_second_cookie)},
+            body='{"text":"house"}')
+    assert response['status'] == '409', content
+    assert 'secondary cookie invalid' in content
+
+    response, content = http.request(
+            'http://0.0.0.0:8080/bags/MAPUSER/tiddlers/x.auth.thing',
+            method='PUT',
+            headers={'Content-Type': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"; %s' % (
+                    AUTH_COOKIE, mismatch_second_cookie)},
+            body='{"text":"house"}')
+    assert response['status'] == '409', content
+    assert 'secondary cookie mismatch' in content
+
+    response, content = http.request(
+            'http://0.0.0.0:8080/bags/MAPUSER/tiddlers/x.auth.thing',
+            method='PUT',
+            headers={'Content-Type': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"; %s' % (
+                    AUTH_COOKIE, second_cookie)},
             body='{"text":"house"}')
     assert response['status'] == '204'
 

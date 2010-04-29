@@ -9,10 +9,12 @@ repository: http://github.com/TiddlySpace/tiddlyspace
 __version__ = '0.2.2'
 
 
+import Cookie
+
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.web.extractor import UserExtract
 from tiddlyweb.web.validator import TIDDLER_VALIDATORS, InvalidTiddlerError
-from tiddlyweb.util import merge_config
+from tiddlyweb.util import merge_config, sha
 
 from tiddlywebplugins.utils import replace_handler
 
@@ -59,6 +61,22 @@ def validate_mapuser(tiddler, environ):
     for the bag is set to ANY.
     """
     if tiddler.bag == 'MAPUSER':
+        try:
+            user_cookie = environ['HTTP_COOKIE']
+            cookie = Cookie.SimpleCookie()
+            cookie.load(user_cookie)
+            cookie_value = cookie['tiddlyweb_secondary_user'].value
+            secret = environ['tiddlyweb.config']['secret']
+            usersign, cookie_secret = cookie_value.rsplit(':', 1)
+        except KeyError:
+            raise InvalidTiddlerError('secondary cookie not present')
+
+        if cookie_secret != sha('%s%s' % (usersign, secret)).hexdigest():
+            raise InvalidTiddlerError('secondary cookie invalid')
+
+        if usersign != tiddler.title:
+            raise InvalidTiddlerError('secondary cookie mismatch')
+
         store = environ['tiddlyweb.store']
         # XXX this is a potentially expensive operation but let's not
         # early optimize
