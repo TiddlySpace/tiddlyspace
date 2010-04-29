@@ -58,7 +58,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	},
 	login: function(username, password, callback) {
 		var challenger = "cookie_form"; // XXX: hardcoded
-		var uri = host + "/challenge/" + challenger;
+		var uri = "%0/challenge/%1".format([host, challenger]);
 		$.ajax({
 			url: uri,
 			type: "POST",

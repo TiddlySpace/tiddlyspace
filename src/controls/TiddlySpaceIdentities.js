@@ -48,26 +48,14 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
 		var identity = form.find("input[name=identity]").val();
-		macro.authenticate(identity, function(data, status, xhr) {
-			window.location = xhr.getResponseHeader("Location");
-		});
+		macro.authenticate(identity);
 		return false;
 	},
-	authenticate: function(identity, callback) {
+	authenticate: function(identity) {
 		var challenger = "tiddlywebplugins.tiddlyspace.openid"; // XXX: hardcoded
-		var uri = host + "/challenge/" + challenger;
-		$.ajax({
-			url: uri,
-			type: "POST",
-			data: { // XXX: hardcoded
-				openid: identity,
-				tiddlyweb_redirect: host + "%0/#auth:OpenID"
-			},
-			success: callback,
-			error: function(xhr, error, exc) {
-				displayMessage(macro.locale.authError.format([identity, error]));
-			}
-		});
+		var redirect = host + "/#auth:OpenID";
+		window.location = "%0/challenge/%1?tiddlyweb_redirect=%2".format([host,
+			challenger, encodeURIComponent(redirect)]);
 	},
 	addIdentity: function(name) {
 		var tiddler = new tiddlyweb.Tiddler(name);
