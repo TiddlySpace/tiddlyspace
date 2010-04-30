@@ -59,7 +59,6 @@ config.paramifiers.auth = {
 
 	onstart: function(v) {
 		var identity = document.cookie.split("tiddlyweb_secondary_user=")[1];
-		console.log("auth", v, identity);
 		if(identity) {
 			var name = identity.split(':')[0]; // XXX: brittle; name must not contain colon
 			name = name.replace('"', ''); // XXX: hacky!?
