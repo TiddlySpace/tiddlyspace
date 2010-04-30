@@ -19,14 +19,12 @@
 //{{{
 (function($) {
 
-// hijack displayTiddler to add private/public class to story tiddlers
-var _displayTiddler = Story.prototype.displayTiddler;
-Story.prototype.displayTiddler = function(srcElement, tiddler, template,
-	animate, unused, customFields, toggle, animationSrc) {
-	var el = _displayTiddler.apply(this, arguments);
-	if(!(tiddler instanceof Tiddler)) {
-		tiddler = store.getTiddler(tiddler);
-	}
+// hijack refreshTiddler to add private/public/external class to story tiddlers
+var _refreshTiddler = Story.prototype.refreshTiddler;
+Story.prototype.refreshTiddler = function(title, template, force, customFields,
+	defaultText) {
+	var el = _refreshTiddler.apply(this, arguments);
+	var tiddler = store.getTiddler(title);
 	if(tiddler) {
 		var container = tiddler.fields["server.bag"];
 		if(!container) { // new tiddler
@@ -37,9 +35,10 @@ Story.prototype.displayTiddler = function(srcElement, tiddler, template,
 			var cfg = config.extensions.tiddlyspace;
 			var space = cfg.determineSpace(container);
 			var type = space && space.name == cfg.currentSpace ? space.type : "external";
-			$(el).addClass(type);
+			$(el).removeClass("private public external").addClass(type);
 		}
 	}
+	return el;
 };
 
 config.shadowTiddlers.StyleSheetTiddlySpace = store.getTiddlerText(tiddler.title + "##StyleSheet");

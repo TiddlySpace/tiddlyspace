@@ -9,7 +9,7 @@ test("cached values", function() {
 });
 
 test("determineSpace", function() {
-	var space
+	var space;
 	
 	space = ns.determineSpace("foo");
 	strictEqual(space, false);
