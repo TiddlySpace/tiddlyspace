@@ -32,7 +32,7 @@ setup(
         'tiddlywebplugins.virtualhosting',
         'tiddlywebplugins.socialusers>=0.3',
         'tiddlywebplugins.magicuser>=0.2',
-        'tiddlywebplugins.openid2>=0.3',
+        'tiddlywebplugins.openid2>=0.4',
         'tiddlywebplugins.cookiedomain>=0.2',
         'tiddlywebplugins.mselect',
     ],
