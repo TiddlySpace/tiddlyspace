@@ -21,13 +21,13 @@
 </form>
 !TODO
 * i18n (form labels)
-* process config.extensions.TiddlyWeb.challengers instead of hardcoding OpenID
+* process config.extensions.tiddlyweb.challengers instead of hardcoding OpenID
 !Code
 ***/
 //{{{
 (function($) {
 
-var host = config.extensions.TiddlyWeb.host;
+var cfg = config.extensions.tiddlyweb;
 
 var macro = config.macros.TiddlySpaceIdentities = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -36,11 +36,11 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		config.extensions.TiddlyWeb.getUserInfo(function(user) {
+		cfg.getUserInfo(function(user) {
 			if(!user.anon) {
 				var challenger = "tiddlywebplugins.tiddlyspace.openid";
-				var redirect = host + "/#auth:OpenID";
-				var uri = "%0/challenge/%1".format([host, challenger]);
+				var redirect = cfg.host + "/#auth:OpenID";
+				var uri = "%0/challenge/%1".format([cfg.host, challenger]);
 				$(macro.formTemplate).attr("action", uri).
 					find("legend").text(macro.locale.label).end().
 					find("input[name=tiddlyweb_redirect]").val(redirect).end().
@@ -68,7 +68,7 @@ config.paramifiers.auth = {
 	addIdentity: function(name) {
 		var msg = config.paramifiers.auth.locale;
 		var tiddler = new tiddlyweb.Tiddler(name);
-		tiddler.bag = new tiddlyweb.Bag("MAPUSER", host);
+		tiddler.bag = new tiddlyweb.Bag("MAPUSER", cfg.host);
 		var callback = function(data, status, xhr) {
 			displayMessage(msg.success.format([identity]));
 		};

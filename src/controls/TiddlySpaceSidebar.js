@@ -15,7 +15,7 @@ shadows.SideBarOptions = shadows.SideBarOptions.replace("<<saveChanges>>",
 
 shadows.TiddlySpaceControls = $.map(["public", "private"], function(item, i) {
 	var label = plugin.btnLabel.format([item]); // XXX: i18n?!
-	var space = config.extensions.TiddlyWeb.tiddlyspace.currentSpace;
+	var space = config.extensions.tiddlyweb.tiddlyspace.currentSpace;
 	return plugin.btnTemplate.format([space, item, label]);
 }).join("");
 

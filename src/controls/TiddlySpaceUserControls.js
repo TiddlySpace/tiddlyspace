@@ -21,7 +21,7 @@
 //{{{
 (function($) {
 
-var host = config.extensions.TiddlyWeb.host;
+var cfg = config.extensions.tiddlyweb;
 
 var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -34,7 +34,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var msg = tsl.locale;
-		config.extensions.TiddlyWeb.getUserInfo(function(user) {
+		cfg.getUserInfo(function(user) {
 			if(user.anon) {
 				$(tsl.formTemplate).
 					find("legend").text(msg.label).end().
@@ -42,7 +42,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 					find("input[type=submit]").val(msg.label).click(tsl.onSubmit).end().
 					appendTo(place);
 			} else {
-				$("<a />").attr("href", host + "/logout").text(msg.logoutLabel).
+				$("<a />").attr("href", cfg.host + "/logout").text(msg.logoutLabel).
 					appendTo(place);
 			}
 		});
@@ -58,14 +58,14 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	},
 	login: function(username, password, callback) {
 		var challenger = "cookie_form"; // XXX: hardcoded
-		var uri = "%0/challenge/%1".format([host, challenger]);
+		var uri = "%0/challenge/%1".format([cfg.host, challenger]);
 		$.ajax({
 			url: uri,
 			type: "POST",
 			data: {
 				user: username,
 				password: password,
-				tiddlyweb_redirect: host + "/status" // XXX: ugly workaround to marginalize automatic subsequent GET
+				tiddlyweb_redirect: cfg.host + "/status" // XXX: ugly workaround to marginalize automatic subsequent GET
 			},
 			success: callback,
 			error: function(xhr, error, exc) {
@@ -74,7 +74,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		});
 	},
 	redirect: function(spaceName) {
-		var spaceUri = host.replace("://", "://" + spaceName + "."); // XXX: brittle (e.g. if already in a space)
+		var spaceUri = cfg.host.replace("://", "://" + spaceName + "."); // XXX: brittle (e.g. if already in a space)
 		window.location = spaceUri;
 	}
 };
@@ -91,7 +91,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		config.extensions.TiddlyWeb.getUserInfo(function(user) {
+		cfg.getUserInfo(function(user) {
 			if(user.anon) {
 				$(tsr.formTemplate).
 					find("legend").text(tsr.locale.label).end().
@@ -118,7 +118,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		var userCallback = function(resource, status, xhr) {
 			displayMessage(msg.userSuccess.format([username])); // XXX: redundant?
 			tsl.login(username, password, function(data, status, xhr) {
-				var space = new tiddlyweb.Space(username, host);
+				var space = new tiddlyweb.Space(username, cfg.host);
 				space.create(spaceCallback, spaceErrback);
 			});
 		};
@@ -132,7 +132,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		var spaceErrback = function(xhr, error, exc) {
 			displayMessage(msg.spaceError.format([username, xhr.statusText]));
 		};
-		var user = new tiddlyweb.User(username, password, host);
+		var user = new tiddlyweb.User(username, password, cfg.host);
 		user.create(userCallback, userErrback);
 	}
 };

@@ -16,7 +16,7 @@
 //{{{
 (function($) {
 
-var cfg = config.extensions.TiddlyWeb;
+var cfg = config.extensions.tiddlyweb;
 
 var macro = config.macros.TiddlySpaceMembers = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),

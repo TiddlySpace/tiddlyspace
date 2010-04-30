@@ -50,7 +50,7 @@ var _show = backstage.show;
 backstage.show = function() {
 	// selectively hide backstage tasks based on user status
 	var tasks = $("#backstageToolbar .backstageTask").show();
-	config.extensions.TiddlyWeb.getUserInfo(function(user) {
+	config.extensions.tiddlyweb.getUserInfo(function(user) {
 		if(user.anon) {
 			tasks.slice(1, 3).hide();
 		} else {
