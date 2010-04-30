@@ -2,9 +2,21 @@
 |''Requires''|TiddlyWebConfig|
 ***/
 //{{{
-config.extensions.tiddlyspace = {
-	currentSpace: config.defaultCustomFields["server.workspace"].
-		split("recipes/")[1]. // XXX: brittle?
-		split("_")[0] // XXX: brittle (space name must not contain underscores)
+(function() {
+
+var plugin = config.extensions.tiddlyspace = {
+	currentSpace: null,
+
+	determineSpace: function(containerName) {
+		var arr = containerName.split("_");
+		var type = arr.pop();
+		return ["public", "private"].contains(type) ?
+			{ name: arr.join("_"), type: type } : false;
+	}
 };
+var recipe = config.defaultCustomFields["server.workspace"].
+	split("recipes/")[1];
+plugin.currentSpace = plugin.determineSpace(recipe).name;
+
+})();
 //}}}

@@ -1,4 +1,5 @@
 /***
+|''Requires''|TiddlySpaceConfig|
 !StyleSheet
 .public,
 .private,
@@ -18,23 +19,6 @@
 //{{{
 (function($) {
 
-var determineSpace = function(container_name) { // TODO: should be globally available
-	var container = container_name.split("_"); // XXX: brittle (space name must not contain underscores)
-	if(container.length == 1) {
-		return false;
-	} else {
-		return {
-			name: container[0],
-			type: container[1]
-		};
-	}
-};
-
-// determine current space -- TODO: should be cached globally!?
-var workspace = config.defaultCustomFields["server.workspace"];
-var container = workspace ? workspace.split("/")[1] : null;
-var current_space = container ? determineSpace(container): null;
-
 // hijack displayTiddler to add private/public class to story tiddlers
 var _displayTiddler = Story.prototype.displayTiddler;
 Story.prototype.displayTiddler = function(srcElement, tiddler, template,
@@ -50,8 +34,9 @@ Story.prototype.displayTiddler = function(srcElement, tiddler, template,
 			container = workspace ? workspace.split("/")[1] : null;
 		}
 		if(container) {
-			var space = determineSpace(container);
-			var type = space && space.name == current_space.name ? space.type : "external";
+			var cfg = config.extensions.tiddlyspace;
+			var space = cfg.determineSpace(container);
+			var type = space && space.name == cfg.currentSpace ? space.type : "external";
 			$(el).addClass(type);
 		}
 	}
