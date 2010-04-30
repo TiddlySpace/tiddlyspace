@@ -24,7 +24,11 @@ var macro = config.macros.TiddlySpaceMembers = {
 		listError: "error retrieving members for space %0: %1",
 		addLabel: "Add member",
 		addSuccess: "added member %0",
-		addError: "error adding member %0: %1"
+		addError: "error adding member %0: %1",
+		delTooltip: "click to remove member",
+		delPrompt: "Are you sure you want to remove member %0?",
+		delSuccess: "removed member %0",
+		delError: "error removing member %0: %1"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -44,7 +48,10 @@ var macro = config.macros.TiddlySpaceMembers = {
 	},
 	displayMembers: function(members, container) {
 		var items = $.map(members, function(item, i) {
-			return $("<li />").text(item)[0];
+			var btn = $('<a href="javascript:;" />').text(item).
+				attr("title", macro.locale.delTooltip).
+				click(macro.onClick);
+			return $("<li />").append(btn)[0];
 		});
 		$("<ul />").append(items).appendTo(container);
 		macro.generateForm().appendTo(container);
@@ -55,7 +62,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 			find("input[type=submit]").val(macro.locale.addLabel).
 				click(macro.onSubmit).end();
 	},
-	onSubmit: function(ev) {
+	onSubmit: function(ev) { // XXX: ambiguous; rename
 		var form = $(this).closest("form");
 		var username = form.find("input[name=username]").val();
 		var callback = function(resource, status, xhr) {
@@ -68,6 +75,22 @@ var macro = config.macros.TiddlySpaceMembers = {
 		};
 		macro.space.members().add(username, callback, errback);
 		return false;
+	},
+	onClick: function(ev) { // XXX: ambiguous; rename
+		var btn = $(this);
+		var username = btn.text();
+		var msg = macro.locale.delPrompt.format([username]);
+		var callback = function(resource, status, xhr) {
+			displayMessage(macro.locale.delSuccess.format([username]));
+			var container = btn.closest("div");
+			macro.refresh(container);
+		};
+		var errback = function(xhr, error, exc) {
+			displayMessage(macro.locale.delError.format([username, error]));
+		};
+		if(confirm(msg)) {
+			macro.space.members().remove(username, callback, errback);
+		}
 	}
 };
 
