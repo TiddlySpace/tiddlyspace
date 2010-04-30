@@ -9,7 +9,7 @@ var plugin = config.extensions.tiddlyspace = {
 
 	determineSpace: function(containerName) {
 		var arr = containerName.split("_");
-		var type = arr.pop();
+		var type = arr.length > 1 ? arr.pop() : null;
 		return ["public", "private"].contains(type) ?
 			{ name: arr.join("_"), type: type } : false;
 	}
