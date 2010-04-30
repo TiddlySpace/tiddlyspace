@@ -16,8 +16,6 @@
 //{{{
 (function($) {
 
-var cfg = config.extensions.tiddlyweb;
-
 var macro = config.macros.TiddlySpaceMembers = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
@@ -32,7 +30,9 @@ var macro = config.macros.TiddlySpaceMembers = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		macro.space = new tiddlyweb.Space(cfg.tiddlyspace.currentSpace, cfg.host);
+		var space = config.extensions.tiddlyspace.currentSpace;
+		var host = config.extensions.tiddlyweb.host;
+		macro.space = new tiddlyweb.Space(space, host);
 		var container = $("<div />").appendTo(place);
 		this.refresh(container);
 	},
