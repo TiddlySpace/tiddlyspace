@@ -10,7 +10,7 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
 from tiddlyweb.model.policy import Policy
 from tiddlyweb.store import NoRecipeError, NoBagError, NoUserError
-from tiddlyweb.web.http import HTTP404, HTTP409
+from tiddlyweb.web.http import HTTP403, HTTP404, HTTP409
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -61,7 +61,7 @@ def add_space_member(environ, start_response):
     try:
         store.get(User(user_name))
     except NoUserError:
-        raise HTTP409('attemp to add non-existent user: %s' % user_name)
+        raise HTTP409('attempt to add non-existent user: %s' % user_name)
 
     for entity in [public_bag, private_bag, public_recipe, private_recipe]:
         new_policy = _update_policy(entity.policy, add=user_name)
@@ -124,6 +124,8 @@ def delete_space_member(environ, start_response):
         raise HTTP404('space %s does not exist' % space_name)
 
     private_bag.policy.allows(current_user, 'manage')
+    if len(private_bag.policy.manage) == 1:
+        raise HTTP403('must not remove the last member from a space')
 
     for entity in [public_bag, private_bag, public_recipe, private_recipe]:
         new_policy = _update_policy(entity.policy, subtract=user_name)
