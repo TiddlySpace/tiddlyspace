@@ -2,8 +2,8 @@ modifier: psd
 tags: excludeLists
 
 About this space:
-*<<TiddlySpaceMembers>>
-*Subscriptions
+* members: <<TiddlySpaceMembers>>
+* subscriptions: [TBD]
 
 Do stuff with this space:
 *Clone
