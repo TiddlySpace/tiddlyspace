@@ -4,19 +4,19 @@
 //{{{
 (function() {
 
-var plugin = config.extensions.tiddlyspace = {
-	currentSpace: null,
+var recipe = config.defaultCustomFields["server.workspace"].split("recipes/")[1];
 
-	determineSpace: function(containerName) {
-		var arr = containerName.split("_");
-		var type = arr.length > 1 ? arr.pop() : null;
-		return ["public", "private"].contains(type) ?
-			{ name: arr.join("_"), type: type } : false;
-	}
+var determineSpace = function(containerName) {
+	var arr = containerName.split("_");
+	var type = arr.length > 1 ? arr.pop() : null;
+	return ["public", "private"].contains(type) ?
+		{ name: arr.join("_"), type: type } : false;
 };
-var recipe = config.defaultCustomFields["server.workspace"].
-	split("recipes/")[1];
-plugin.currentSpace = plugin.determineSpace(recipe).name;
+
+var plugin = config.extensions.tiddlyspace = {
+	currentSpace: determineSpace(recipe).name,
+	determineSpace: determineSpace
+};
 
 })();
 //}}}
