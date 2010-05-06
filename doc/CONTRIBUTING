@@ -1,5 +1,23 @@
+Source Code
+===========
+
+* server-side Python code located in tiddlywebplugins/tiddlyspace directory
+* client-side JavaScript code located in src directory
+
+also see STYLE guide
+
+Unit Tests
+==========
+
+* Python: test directory (using py.test; http://pytest.org)
+* JavaScript: src/test directory (using QUnit; http://docs.jquery.com/QUnit)
+
+Development Instance
+====================
+
 * install dependencies
 ** components listed in setup.py's install_requires
+   (for tiddlyweb 1.1, it might be easiest to use a symlink to the repository)
 ** tiddlywebplugins.devstore
 * extend hosts file (e.g. /etc/hosts) to include one or more subdomains, e.g.:
     127.0.1.1 tiddlyspace.org foo.tiddlyspace.org bar.tiddlyspace.org
@@ -11,5 +29,3 @@
 * changes to *.js within the repository files are reflected directly in the
   browser (after a page reload)
 * deploy: $ make deploy
-
-also see STYLE guide

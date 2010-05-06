@@ -2,7 +2,7 @@
 
 var ns = config.extensions.tiddlyspace;
 
-module("TiddlySpaceConfig");
+module("config");
 
 test("settings", function() {
 	// XXX: relies on fixtures/tiddlyweb.js due to evaluation timing
