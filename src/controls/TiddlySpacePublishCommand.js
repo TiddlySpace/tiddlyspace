@@ -11,7 +11,7 @@ config.commands.publishTiddlerRevision = {
 		if(store.isShadowTiddler(title) && !store.tiddlerExists(title)) {
 			return false;
 		}
-		var space = this.determineSpace(tiddler);
+		var space = config.extensions.tiddlyspace.determineSpace(tiddler);
 		return space && space.type == "private";
 	},
 	handler: function(ev, src, title) {
@@ -24,13 +24,6 @@ config.commands.publishTiddlerRevision = {
 		adaptor.putTiddler(tiddler, null, null, function(context, userParams) {
 			story.refreshTiddler(context.tiddler.title, null, true);
 		});
-	},
-	determineSpace: function(tiddler) { // TODO: merge into config.extensions.tiddlyspace.determineSpace
-		var bag = tiddler.fields["server.bag"];
-		var recipe = tiddler.fields["server.recipe"];
-		var container = bag || recipe;
-		return container ?
-			config.extensions.tiddlyspace.determineSpace(container) : null;
 	}
 };
 //}}}
