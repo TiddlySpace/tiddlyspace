@@ -3,6 +3,6 @@ tiddler: TiddlySpaceUserControls.js
 tiddler: TiddlySpaceIdentities.js
 tiddler: TiddlySpaceMembers.js
 tiddler: TiddlySpaceBackstage.js
-tiddler: TiddlySpaceSidebar.js
+tiddler: TiddlySpacePublishCommand.js
 tiddler: TiddlySpaceVisualization.js
 recipe: backstage/index.recipe

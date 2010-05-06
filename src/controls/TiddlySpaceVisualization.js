@@ -29,7 +29,7 @@ Story.prototype.refreshTiddler = function(title, template, force, customFields,
 		var container = tiddler.fields["server.bag"];
 		if(!container) { // new tiddler
 			var workspace = tiddler.fields["server.workspace"];
-			container = workspace ? workspace.split("/")[1] : null;
+			container = workspace ? workspace.split("/")[1] : null; // XXX: brittle
 		}
 		if(container) {
 			var cfg = config.extensions.tiddlyspace;

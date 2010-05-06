@@ -18,5 +18,8 @@ var plugin = config.extensions.tiddlyspace = {
 	determineSpace: determineSpace
 };
 
+config.shadowTiddlers.ToolbarCommands = config.shadowTiddlers.ToolbarCommands.
+	replace("revisions ", "publishTiddlerRevision revisions ");
+
 })();
 //}}}
