@@ -4,8 +4,14 @@ var ns = config.extensions.tiddlyspace;
 
 module("TiddlySpaceConfig");
 
-test("cached values", function() {
-	strictEqual(ns.currentSpace, "foo"); // XXX: relies on fixtures/tiddlyweb.js due to evaluation timing
+test("settings", function() {
+	// XXX: relies on fixtures/tiddlyweb.js due to evaluation timing
+	var toolbarCommands = config.shadowTiddlers.ToolbarCommands;
+
+	strictEqual(toolbarCommands.length, 185);
+	strictEqual(toolbarCommands.indexOf(" publishTiddlerRevision "), 60);
+
+	strictEqual(ns.currentSpace, "foo");
 });
 
 test("determineSpace", function() {
