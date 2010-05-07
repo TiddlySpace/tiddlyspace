@@ -42,7 +42,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 					find("input[type=submit]").val(msg.label).end().
 					appendTo(place);
 			} else {
-				$("<a />").attr("href", cfg.host + "/logout").text(msg.logoutLabel).
+				$("<a />", { href: cfg.host + "/logout", text: msg.logoutLabel }).
 					appendTo(place);
 			}
 		});

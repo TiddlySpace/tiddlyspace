@@ -58,10 +58,10 @@ backstage.show = function() {
 		}
 	});
 	// add AutoSave option
-	var place = $('<span task="autoSave"></span>').
+	var place = $('<span task="autoSave" />').
 		replaceAll("#backstageToolbar [task=autoSave]")[0];
 	invokeMacro(place, "option", "chkAutoSave");
-	$("<span>autosave</span>").appendTo(place);
+	$("<span>autosave</span>").appendTo(place); // TODO: i18n
 	// display backstage
 	return _show.apply(this, arguments);
 };
