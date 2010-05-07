@@ -36,10 +36,10 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		var msg = tsl.locale;
 		cfg.getUserInfo(function(user) {
 			if(user.anon) {
-				$(tsl.formTemplate).
+				$(tsl.formTemplate).submit(tsl.onSubmit).
 					find("legend").text(msg.label).end().
 					find("input[name=password_confirm]").remove().end().
-					find("input[type=submit]").val(msg.label).click(tsl.onSubmit).end().
+					find("input[type=submit]").val(msg.label).end().
 					appendTo(place);
 			} else {
 				$("<a />").attr("href", cfg.host + "/logout").text(msg.logoutLabel).
@@ -93,10 +93,9 @@ var tsr = config.macros.TiddlySpaceRegister = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		cfg.getUserInfo(function(user) {
 			if(user.anon) {
-				$(tsr.formTemplate).
+				$(tsr.formTemplate).submit(tsr.onSubmit).
 					find("legend").text(tsr.locale.label).end().
-					find("input[type=submit]").val(tsr.locale.label).
-						click(tsr.onSubmit).end().
+					find("input[type=submit]").val(tsr.locale.label).end().
 					appendTo(place);
 			}
 		});
