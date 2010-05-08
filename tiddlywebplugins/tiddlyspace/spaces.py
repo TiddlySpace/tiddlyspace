@@ -263,7 +263,10 @@ def _update_policy(policy, add=None, subtract=None):
     for constraint in ('read', 'write', 'create', 'delete', 'manage'):
         constraint_values = getattr(policy, constraint)
         if add and add not in constraint_values:
-            constraint_values.append(add)
+            if constraint == 'read' and constraint_values == []:
+                pass
+            else:
+                constraint_values.append(add)
         if subtract and subtract in constraint_values:
             constraint_values.remove(subtract)
     return policy

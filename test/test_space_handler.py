@@ -237,6 +237,15 @@ def test_add_a_member():
     assert bag.policy.create == ['cdent', 'fnd']
     assert bag.policy.delete == ['cdent', 'fnd']
 
+    bag = store.get(Bag('extra_public'))
+    assert bag.policy.owner == 'cdent'
+    assert bag.policy.read == []
+    assert bag.policy.accept == ['NONE']
+    assert bag.policy.manage == ['cdent', 'fnd']
+    assert bag.policy.write == ['cdent', 'fnd']
+    assert bag.policy.create == ['cdent', 'fnd']
+    assert bag.policy.delete == ['cdent', 'fnd']
+
     # authed user not in space may not add people
     cookie = get_auth('psd', 'cat')
     response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/psd',
