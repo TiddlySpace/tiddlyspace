@@ -32,7 +32,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var space = config.extensions.tiddlyspace.currentSpace;
 		var host = config.extensions.tiddlyweb.host;
-		macro.space = new tiddlyweb.Space(space, host);
+		this.space = new tiddlyweb.Space(space, host);
 		var container = $("<div />").appendTo(place);
 		this.refresh(container);
 	},
@@ -44,22 +44,22 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var errback = function(xhr, error, exc) {
 			displayMessage(macro.locale.listError.format([macro.space.name, error]));
 		};
-		macro.space.members().get(callback, errback);
+		this.space.members().get(callback, errback);
 	},
 	displayMembers: function(members, container) {
 		var items = $.map(members, function(item, i) {
 			var btn = $('<a href="javascript:;" />').text(item).
 				attr("title", macro.locale.delTooltip).
-				click(macro.onClick);
+				click(this.onClick);
 			return $("<li />").append(btn)[0];
 		});
 		$("<ul />").append(items).appendTo(container);
-		macro.generateForm().appendTo(container);
+		this.generateForm().appendTo(container);
 	},
 	generateForm: function() {
-		return $(macro.formTemplate).submit(macro.onSubmit).
-			find("legend").text(macro.locale.addLabel).end().
-			find("input[type=submit]").val(macro.locale.addLabel).end();
+		return $(this.formTemplate).submit(this.onSubmit).
+			find("legend").text(this.locale.addLabel).end().
+			find("input[type=submit]").val(this.locale.addLabel).end();
 	},
 	onSubmit: function(ev) { // XXX: ambiguous; rename
 		var form = $(this).closest("form");
