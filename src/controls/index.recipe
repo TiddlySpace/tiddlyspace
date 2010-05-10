@@ -2,6 +2,7 @@ tiddler: TiddlySpaceConfig.js
 tiddler: TiddlySpaceUserControls.js
 tiddler: TiddlySpaceIdentities.js
 tiddler: TiddlySpaceMembers.js
+tiddler: TiddlySpaceSubscription.js
 tiddler: TiddlySpaceBackstage.js
 tiddler: TiddlySpacePublishCommand.js
 tiddler: TiddlySpaceVisualization.js
