@@ -43,8 +43,8 @@ var macro = config.macros.TiddlySpaceIdentities = {
 				var uri = "%0/challenge/%1".format([cfg.host, challenger]);
 				$(macro.formTemplate).attr("action", uri).
 					find("legend").text(macro.locale.label).end().
-					find("input[name=tiddlyweb_redirect]").val(redirect).end().
-					find("input[type=submit]").val(macro.locale.label).end().
+					find("[name=tiddlyweb_redirect]").val(redirect).end().
+					find("[type=submit]").val(macro.locale.label).end().
 					appendTo(place);
 			}
 		});

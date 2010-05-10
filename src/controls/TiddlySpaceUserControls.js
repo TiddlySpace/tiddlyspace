@@ -38,8 +38,8 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			if(user.anon) {
 				$(tsl.formTemplate).submit(tsl.onSubmit).
 					find("legend").text(msg.label).end().
-					find("input[name=password_confirm]").remove().end().
-					find("input[type=submit]").val(msg.label).end().
+					find("[name=password_confirm]").remove().end().
+					find("[type=submit]").val(msg.label).end().
 					appendTo(place);
 			} else {
 				$("<a />", { href: cfg.host + "/logout", text: msg.logoutLabel }).
@@ -49,8 +49,8 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
-		var username = form.find("input[name=username]").val();
-		var password = form.find("input[name=password]").val();
+		var username = form.find("[name=username]").val();
+		var password = form.find("[name=password]").val();
 		tsl.login(username, password, function() {
 			tsl.redirect(username);
 		});
@@ -95,16 +95,16 @@ var tsr = config.macros.TiddlySpaceRegister = {
 			if(user.anon) {
 				$(tsr.formTemplate).submit(tsr.onSubmit).
 					find("legend").text(tsr.locale.label).end().
-					find("input[type=submit]").val(tsr.locale.label).end().
+					find("[type=submit]").val(tsr.locale.label).end().
 					appendTo(place);
 			}
 		});
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
-		var username = form.find("input[name=username]").val();
-		var password = form.find("input[name=password]").val();
-		var passwordConfirm = form.find("input[name=password_confirm]").val();
+		var username = form.find("[name=username]").val();
+		var password = form.find("[name=password]").val();
+		var passwordConfirm = form.find("[name=password_confirm]").val();
 		if(password && password == passwordConfirm) { // TODO: check password length
 			tsr.register(username, password);
 		} else {

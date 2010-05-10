@@ -59,11 +59,11 @@ var macro = config.macros.TiddlySpaceMembers = {
 	generateForm: function() {
 		return $(this.formTemplate).submit(this.onSubmit).
 			find("legend").text(this.locale.addLabel).end().
-			find("input[type=submit]").val(this.locale.addLabel).end();
+			find("[type=submit]").val(this.locale.addLabel).end();
 	},
 	onSubmit: function(ev) { // XXX: ambiguous; rename
 		var form = $(this).closest("form");
-		var username = form.find("input[name=username]").val();
+		var username = form.find("[name=username]").val();
 		var callback = function(resource, status, xhr) {
 			displayMessage(macro.locale.addSuccess.format([username]));
 			var container = form.closest("div");
