@@ -27,7 +27,7 @@ fi
 host="${log_name}tiddlyspace.com"
 base_dir="/data/vhost/tiddlyspace.labs.osmosoft.com"
 instance_dir="$base_dir/tiddlyweb"
-temp_dir="/tmp/dev"
+temp_dir="/tmp/dev/$$"
 
 package_name="tiddlywebplugins.tiddlyspace"
 
@@ -39,5 +39,5 @@ filename=`ls dist/$package_name*.tar.gz | tail -n1 | sed -e "s/dist\///"` # XXX:
 ssh $host "mkdir -p $temp_dir"
 scp "dist/$filename" "$host:$temp_dir/"
 ssh $host "sudo pip install -U $pip_options $temp_dir/$filename && " \
-    "cd $instance_dir && twanager update && " \
-    "echo INFO: deployment complete"
+    "cd $instance_dir && twanager update && rm -rf $temp_dir && " \
+    "sudo apache2ctl restart && echo INFO: deployment complete"
