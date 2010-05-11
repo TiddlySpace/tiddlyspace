@@ -37,6 +37,20 @@ fi
 filename=`ls dist/$package_name*.tar.gz | tail -n1 | sed -e "s/dist\///"` # XXX: brittle!?
 
 ssh $host "mkdir -p $temp_dir"
+
+# build TiddlyWeb nightly
+if [ -z $pip_options ]; then # XXX: hacky
+	if [ ! -d tiddlyweb-core ]; then
+		git clone git://github.com/tiddlyweb/tiddlyweb.git tiddlyweb-core
+	fi
+	cd tiddlyweb-core
+	git pull origin master
+	rm -rf dist; python setup.py sdist # avoiding `make clean dist` to skip tests
+	scp dist/tiddlyweb-*.tar.gz "$host:$temp_dir/"
+	pip_options="$temp_dir/tiddlyweb-*.tar.gz" # XXX: hacky!!!
+	cd -
+fi
+
 scp "dist/$filename" "$host:$temp_dir/"
 ssh $host "sudo pip install -U $pip_options $temp_dir/$filename && " \
     "cd $instance_dir && twanager update && rm -rf $temp_dir && " \
