@@ -15,6 +15,12 @@ from tiddlyweb.web.http import HTTP403, HTTP404, HTTP409
 from tiddlywebplugins.utils import require_any_user
 
 
+try:
+    JSONDecodeError = simplejson.decoder.JSONDecodeError
+except AttributeError: # Python 2.6+
+    JSONDecodeError = ValueError
+
+
 def add_spaces_routes(selector):
     """
     Set up the routes and handlers used by spaces.
@@ -208,7 +214,7 @@ def subscribe_space(environ, start_response):
         content = environ['wsgi.input'].read(int(length))
         info = simplejson.loads(content)
         subscriptions = info['subscriptions']
-    except (simplejson.decoder.JSONDecodeError, KeyError), exc:
+    except (JSONDecodeError, KeyError), exc:
         raise HTTP409('Invalid content for subscription: %s' % exc)
 
     public_recipe_list = public_recipe.get_recipe()

@@ -304,6 +304,7 @@ def test_subscription():
     cookie = get_auth('cdent', 'cow')
     http = httplib2.Http()
     subscriptions = simplejson.dumps({'subscriptions': ['extra']})
+
     response, content = http.request('http://0.0.0.0:8080/spaces/cdent',
             method='POST',
             headers={
@@ -311,6 +312,15 @@ def test_subscription():
                 },
             body=subscriptions)
     assert response['status'] == '403'
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/cdent',
+            method='POST',
+            headers={
+                'Content-Type': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"' % cookie,
+                },
+            body='')
+    assert response['status'] == '409'
 
     response, content = http.request('http://0.0.0.0:8080/spaces/cdent',
             method='POST',
