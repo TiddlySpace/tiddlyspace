@@ -12,6 +12,13 @@
 				<input type="password" name="password" />
 				<input type="password" name="password_confirm" />
 			</dd>
+			<dt>Method:</dt>
+			<dd>
+				<select>
+					<option value="password">username &amp; password</option>
+					<option value="openid">OpenID</option>
+				</select>
+			</dd>
 		</dl>
 		<input type="submit" />
 	</fieldset>
@@ -38,6 +45,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			if(user.anon) {
 				$(tsl.formTemplate).submit(tsl.onSubmit).
 					find("legend").text(msg.label).end().
+					find("select").change(tsl.onSelect).end().
 					find("[name=password_confirm]").remove().end().
 					find("[type=submit]").val(msg.label).end().
 					appendTo(place);
@@ -46,6 +54,24 @@ var tsl = config.macros.TiddlySpaceLogin = {
 					appendTo(place);
 			}
 		});
+	},
+	onSelect: function(ev) {
+		var el = $(this);
+		if(el.val() == "openid") {
+			var host = config.extensions.tiddlyweb.host;
+			var challenger = "tiddlywebplugins.tiddlyspace.openid";
+			var uri = "%0/challenge/%1".format([cfg.host, challenger]);
+			el.closest("form").unbind("submit", tsl.submit). // XXX: hacky, due to excessive reuse!?
+				attr("action", uri).attr("method", "POST").
+				find("[name=username]").closest("dd").
+					prev().text("OpenID").end(). // TODO: i18n?
+					end().end().
+				find("[name=username]").attr("name", "openid").end().
+				find("[name=password]").closest("dd").
+					prev().remove().end().
+					remove().end().end();
+			// TODO: redirect to personal space
+		} // TODO: restore password functionality as required
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
@@ -94,6 +120,9 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		cfg.getUserInfo(function(user) {
 			if(user.anon) {
 				$(tsr.formTemplate).submit(tsr.onSubmit).
+					find("select").closest("dd"). // XXX: hacky, due to excessive reuse!?
+						prev().remove().end().
+						remove().end().end().
 					find("legend").text(tsr.locale.label).end().
 					find("[type=submit]").val(tsr.locale.label).end().
 					appendTo(place);
