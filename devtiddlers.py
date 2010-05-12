@@ -4,7 +4,7 @@ instance_tiddlers = {
         '../src/lib/index.recipe',
         '../src/model/index.recipe'
     ],
-    'frontpage': [
+    'frontpage_public': [
         '../src/frontpage/index.recipe'
     ]
 }

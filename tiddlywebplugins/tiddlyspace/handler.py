@@ -39,7 +39,7 @@ def serve_frontpage(environ, start_response):
     """
     serves front page generated from tiddlers in frontpage bag
     """
-    environ['wsgiorg.routing_args'][1]['recipe_name'] = 'frontpage'
+    environ['wsgiorg.routing_args'][1]['recipe_name'] = 'frontpage_public'
     environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return get_tiddlers(environ, start_response)
 
