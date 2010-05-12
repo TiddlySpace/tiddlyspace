@@ -5,17 +5,19 @@
 	<fieldset>
 		<legend />
 		<dl>
-			<dt>Username:</dt>
-			<dd><input type="text" name="username" /></dd>
-			<dt>Password:</dt>
-			<dd>
+			<dt class="_basic">Username:</dt>
+			<dd class="_basic"><input type="text" name="username" /></dd>
+			<dt class="_basic">Password:</dt>
+			<dd class="_basic">
 				<input type="password" name="password" />
-				<input type="password" name="password_confirm" />
+				<input type="password" name="password_confirm" class="_register" />
 			</dd>
-			<dt>Method:</dt>
-			<dd>
+			<dt class="_openid">OpenID:</dt>
+			<dd class="_openid"><input type="text" name="openid" /></dd>
+			<dt class="_login">Method:</dt>
+			<dd class="_login">
 				<select>
-					<option value="password">username &amp; password</option>
+					<option value="basic">username &amp; password</option>
 					<option value="openid">OpenID</option>
 				</select>
 			</dd>
@@ -40,50 +42,48 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var msg = tsl.locale;
+		var type = params[0];
+		this.name = macroName;
+		var container = $("<div />", { className: this.name }).appendTo(place);
+		this.refresh(container, type);
+	},
+	refresh: function(container, type) {
+		var msg = this.locale;
+		type = type || "basic";
+		var selector = type == "openid" ? "._basic" : "._openid";
+		var handler = function(ev) {
+			var form = $(this).closest("form");
+			return tsl[type + "Login"](form);
+		};
+		container.empty();
 		cfg.getUserInfo(function(user) {
 			if(user.anon) {
-				$(tsl.formTemplate).submit(tsl.onSubmit).
+				$(tsl.formTemplate).submit(handler).
 					find("legend").text(msg.label).end().
 					find("select").change(tsl.onSelect).end().
-					find("[name=password_confirm]").remove().end().
+					find("option[value=" + type + "]").
+						attr("selected", "selected").end().
+					find("._register, " + selector).remove().end().
 					find("[type=submit]").val(msg.label).end().
-					appendTo(place);
+					appendTo(container);
 			} else {
-				$("<a />", { href: cfg.host + "/logout", text: msg.logoutLabel }).
-					appendTo(place);
+				$("<a />", {
+					href: cfg.host + "/logout",
+					text: msg.logoutLabel
+				}).appendTo(container);
 			}
 		});
 	},
 	onSelect: function(ev) {
 		var el = $(this);
-		if(el.val() == "openid") {
-			var host = config.extensions.tiddlyweb.host;
-			var challenger = "tiddlywebplugins.tiddlyspace.openid";
-			var uri = "%0/challenge/%1".format([cfg.host, challenger]);
-			el.closest("form").unbind("submit", tsl.submit). // XXX: hacky, due to excessive reuse!?
-				attr("action", uri).attr("method", "POST").
-				find("[name=username]").closest("dd").
-					prev().text("OpenID").end(). // TODO: i18n?
-					end().end().
-				find("[name=username]").attr("name", "openid").end().
-				find("[name=password]").closest("dd").
-					prev().remove().end().
-					remove().end().end();
-			// TODO: redirect to personal space
-		} // TODO: restore password functionality as required
+		var type = el.val();
+		var container = el.closest("." + tsl.name);
+		tsl.refresh(container, type);
 	},
-	onSubmit: function(ev) {
-		var form = $(this).closest("form");
+	basicLogin: function(form) {
 		var username = form.find("[name=username]").val();
 		var password = form.find("[name=password]").val();
-		tsl.login(username, password, function() {
-			tsl.redirect(username);
-		});
-		return false;
-	},
-	login: function(username, password, callback) {
-		var challenger = "cookie_form"; // XXX: hardcoded
+		var challenger = "cookie_form";
 		var uri = "%0/challenge/%1".format([cfg.host, challenger]);
 		$.ajax({
 			url: uri,
@@ -91,17 +91,27 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			data: {
 				user: username,
 				password: password,
-				tiddlyweb_redirect: cfg.host + "/status" // XXX: ugly workaround to marginalize automatic subsequent GET
+				tiddlyweb_redirect: cfg.host + "/status" // workaround to marginalize automatic subsequent GET
 			},
-			success: callback,
+			success: function(data, status, xhr) {
+				tsl.redirect(username);
+			},
 			error: function(xhr, error, exc) {
 				displayMessage(tsl.locale.error.format([username, error]));
 			}
 		});
+		return false;
+	},
+	openidLogin: function(form) {
+		var openid = form.find("[name=openid]").val();
+		var host = config.extensions.tiddlyweb.host;
+		var challenger = "tiddlywebplugins.tiddlyspace.openid";
+		var uri = "%0/challenge/%1".format([cfg.host, challenger]);
+		form.attr("action", uri).attr("method", "POST");
+		return true; // TODO: redirect to personal space
 	},
 	redirect: function(spaceName) {
-		var spaceUri = cfg.host.replace("://", "://" + spaceName + "."); // XXX: brittle (e.g. if already in a space)
-		window.location = spaceUri;
+		window.location = cfg.host.replace("://", "://" + spaceName + "."); // XXX: brittle (e.g. if already in a space)
 	}
 };
 
@@ -120,9 +130,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		cfg.getUserInfo(function(user) {
 			if(user.anon) {
 				$(tsr.formTemplate).submit(tsr.onSubmit).
-					find("select").closest("dd"). // XXX: hacky, due to excessive reuse!?
-						prev().remove().end().
-						remove().end().end().
+					find("._login, ._openid").remove().end().
 					find("legend").text(tsr.locale.label).end().
 					find("[type=submit]").val(tsr.locale.label).end().
 					appendTo(place);
