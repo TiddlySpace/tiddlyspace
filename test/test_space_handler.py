@@ -11,18 +11,19 @@ POST /spaces/{space_name}: Handle subscription, the data package is
   JSON as {"subscriptions": ["space1", "space2", "space3"]}
 """
 
-
-from test.fixtures import make_test_env, make_fake_space, get_auth
+import simplejson
+import httplib2
+import wsgi_intercept
 
 from wsgi_intercept import httplib2_intercept
-import wsgi_intercept
-import httplib2
-import simplejson
 
 from tiddlyweb.store import Store
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
+
+from test.fixtures import make_test_env, make_fake_space, get_auth
+
 
 def setup_module(module):
     make_test_env()
