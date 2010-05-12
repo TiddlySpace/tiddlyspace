@@ -52,6 +52,6 @@ if [ -z $pip_options ]; then # XXX: hacky
 fi
 
 scp "dist/$filename" "$host:$temp_dir/"
-ssh $host "sudo pip install -U $pip_options $temp_dir/$filename && " \
+ssh $host "sudo pip install --upgrade --timeout=120 $pip_options $temp_dir/$filename && " \
     "cd $instance_dir && twanager update && rm -rf $temp_dir && " \
     "sudo apache2ctl restart && echo INFO: deployment complete"
