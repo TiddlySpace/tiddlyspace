@@ -30,6 +30,7 @@ def setup_module(module):
             config['server_store'][1], {'tiddlyweb.config': config})
     make_fake_space(module.store, 'fnd')
     make_fake_space(module.store, 'cdent')
+    make_fake_space(module.store, 'psd')
 
     users = {
         'fnd': 'foo',
@@ -84,3 +85,16 @@ def test_subscription():
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
     assert len(recipe) == 5
+
+    response, content = add_subscription('psd', 'fnd')
+    assert response['status'] == '204'
+
+    recipe = Recipe('fnd_public')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 5
+
+    recipe = Recipe('fnd_private')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 6
