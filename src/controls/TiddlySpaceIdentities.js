@@ -71,12 +71,12 @@ config.paramifiers.auth = {
 		tiddler.bag = new tiddlyweb.Bag("MAPUSER", cfg.host);
 		var callback = function(data, status, xhr) {
 			displayMessage(msg.success.format([identity]));
+			window.location = window.location.toString().split("#")[0] + "#";
 		};
 		var errback = function(xhr, error, exc) {
 			displayMessage(msg.error.format([identity, error]));
 		};
 		tiddler.put(callback, errback);
-		// TODO: remove auth paramifier from window.location
 	}
 };
 
