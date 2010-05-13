@@ -109,8 +109,9 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		var host = config.extensions.tiddlyweb.host;
 		var challenger = "tiddlywebplugins.tiddlyspace.openid";
 		var uri = "%0/challenge/%1".format([ns.host, challenger]);
+		var redirect = ns.serverPrefix || "/"; // must not be empty string
 		form.attr("action", uri).attr("method", "POST").
-			find("[name=tiddlyweb_redirect]").val(ns.serverPrefix);
+			find("[name=tiddlyweb_redirect]").val(redirect);
 		return true;
 	},
 	redirect: function() {
