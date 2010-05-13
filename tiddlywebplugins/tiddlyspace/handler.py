@@ -5,7 +5,7 @@ from tiddlyweb.store import NoBagError, NoRecipeError
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
-from tiddlyweb.web.http import HTTP404
+from tiddlyweb.web.http import HTTP302, HTTP404
 
 
 def home(environ, start_response):
@@ -17,8 +17,14 @@ def home(environ, start_response):
     """
     http_host, host_url = _determine_host(environ)
     if http_host == host_url:
-        return serve_frontpage(environ, start_response)
-    else:
+        usersign = environ['tiddlyweb.usersign']['name']
+        if usersign == 'GUEST':
+            return serve_frontpage(environ, start_response)
+        else: # authenticated user
+            scheme = environ['tiddlyweb.config']['server_host']['scheme']
+            uri = '%s://%s.%s' % (scheme, usersign, host_url)
+            raise HTTP302(uri)
+    else: # subdomain
         return serve_space(environ, start_response, http_host)
 
 

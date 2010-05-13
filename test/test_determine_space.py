@@ -1,5 +1,5 @@
-
 from tiddlywebplugins.tiddlyspace.handler import _determine_space
+
 
 config = {
         'server_host': {
@@ -9,6 +9,7 @@ config = {
             },
         }
 environ = {'tiddlyweb.config': config}
+
 
 def test_simple_space():
     space = _determine_space(environ, 'foo.0.0.0.0:8080')
