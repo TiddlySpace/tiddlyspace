@@ -70,11 +70,11 @@ config.paramifiers.auth = {
 		var tiddler = new tiddlyweb.Tiddler(name);
 		tiddler.bag = new tiddlyweb.Bag("MAPUSER", ns.host);
 		var callback = function(data, status, xhr) {
-			displayMessage(msg.success.format([identity]));
+			displayMessage(msg.success.format([name]));
 			window.location = window.location.toString().split("#")[0] + "#";
 		};
 		var errback = function(xhr, error, exc) {
-			displayMessage(msg.error.format([identity, error]));
+			displayMessage(msg.error.format([name, error]));
 		};
 		tiddler.put(callback, errback);
 	}
