@@ -84,6 +84,10 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	basicLogin: function(form) {
 		var username = form.find("[name=username]").val();
 		var password = form.find("[name=password]").val();
+		this.login(username, password, tsl.redirect);
+		return false;
+	},
+	login: function(username, password, callback) {
 		var challenger = "cookie_form";
 		var uri = "%0/challenge/%1".format([ns.host, challenger]);
 		$.ajax({
@@ -94,12 +98,11 @@ var tsl = config.macros.TiddlySpaceLogin = {
 				password: password,
 				tiddlyweb_redirect: ns.serverPrefix + "/status" // workaround to marginalize automatic subsequent GET
 			},
-			success: tsl.redirect,
+			success: callback,
 			error: function(xhr, error, exc) {
 				displayMessage(tsl.locale.error.format([username, error]));
 			}
 		});
-		return false;
 	},
 	openidLogin: function(form) {
 		var openid = form.find("[name=openid]").val();
