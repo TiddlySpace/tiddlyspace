@@ -1,5 +1,5 @@
 /***
-|''Requires''|TiddlyWebConfig|
+|''Requires''|TiddlySpaceConfig|
 !HTMLForm
 <form action="#">
 	<fieldset>
@@ -92,7 +92,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			data: {
 				user: username,
 				password: password,
-				tiddlyweb_redirect: cfg.host + "/status" // workaround to marginalize automatic subsequent GET
+				tiddlyweb_redirect: cfg.serverPrefix + "/status" // workaround to marginalize automatic subsequent GET
 			},
 			success: tsl.redirect,
 			error: function(xhr, error, exc) {
@@ -107,7 +107,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		var challenger = "tiddlywebplugins.tiddlyspace.openid";
 		var uri = "%0/challenge/%1".format([cfg.host, challenger]);
 		form.attr("action", uri).attr("method", "POST").
-			find("[name=tiddlyweb_redirect]").val(cfg.host);
+			find("[name=tiddlyweb_redirect]").val(cfg.serverPrefix);
 		return true;
 	},
 	redirect: function() {

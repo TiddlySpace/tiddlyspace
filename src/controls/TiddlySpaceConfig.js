@@ -54,6 +54,9 @@ var plugin = config.extensions.tiddlyspace = {
 	determineSpace: determineSpace
 };
 
+var ns = config.extensions.tiddlyweb;
+ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
+
 config.shadowTiddlers.ToolbarCommands = config.shadowTiddlers.ToolbarCommands.
 	replace("revisions ", "publishTiddlerRevision revisions ");
 
