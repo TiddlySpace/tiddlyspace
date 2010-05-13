@@ -39,7 +39,7 @@ var macro = config.macros.TiddlySpaceIdentities = {
 		cfg.getUserInfo(function(user) {
 			if(!user.anon) {
 				var challenger = "tiddlywebplugins.tiddlyspace.openid";
-				var redirect = cfg.host + "/#auth:OpenID";
+				var redirect = cfg.host + "#auth:OpenID";
 				var uri = "%0/challenge/%1".format([cfg.host, challenger]);
 				$(macro.formTemplate).attr("action", uri).
 					find("legend").text(macro.locale.label).end().

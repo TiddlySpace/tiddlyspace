@@ -22,6 +22,7 @@
 				</select>
 			</dd>
 		</dl>
+		<input type="hidden" name="tiddlyweb_redirect" class="_openid" />
 		<input type="submit" />
 	</fieldset>
 </form>
@@ -93,9 +94,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 				password: password,
 				tiddlyweb_redirect: cfg.host + "/status" // workaround to marginalize automatic subsequent GET
 			},
-			success: function(data, status, xhr) {
-				tsl.redirect(username);
-			},
+			success: tsl.redirect,
 			error: function(xhr, error, exc) {
 				displayMessage(tsl.locale.error.format([username, error]));
 			}
@@ -107,11 +106,12 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		var host = config.extensions.tiddlyweb.host;
 		var challenger = "tiddlywebplugins.tiddlyspace.openid";
 		var uri = "%0/challenge/%1".format([cfg.host, challenger]);
-		form.attr("action", uri).attr("method", "POST");
-		return true; // TODO: redirect to personal space
+		form.attr("action", uri).attr("method", "POST").
+			find("[name=tiddlyweb_redirect]").val(cfg.host);
+		return true;
 	},
-	redirect: function(spaceName) {
-		window.location = cfg.host.replace("://", "://" + spaceName + "."); // XXX: brittle (e.g. if already in a space)
+	redirect: function() {
+		window.location = cfg.host;
 	}
 };
 
@@ -163,7 +163,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		};
 		var spaceCallback = function(resource, status, xhr) {
 			displayMessage(msg.spaceSuccess.format([username]));
-			tsl.redirect(username);
+			tsl.redirect();
 		};
 		var spaceErrback = function(xhr, error, exc) {
 			displayMessage(msg.spaceError.format([username, xhr.statusText]));
