@@ -31,7 +31,7 @@
 //{{{
 (function($) {
 
-var cfg = config.extensions.tiddlyweb;
+var ns = config.extensions.tiddlyweb;
 
 var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -57,7 +57,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			return tsl[type + "Login"](form);
 		};
 		container.empty();
-		cfg.getUserInfo(function(user) {
+		ns.getUserInfo(function(user) {
 			if(user.anon) {
 				$(tsl.formTemplate).submit(handler).
 					find("legend").text(msg.label).end().
@@ -69,7 +69,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 					appendTo(container);
 			} else {
 				$("<a />", {
-					href: cfg.host + "/logout",
+					href: ns.host + "/logout",
 					text: msg.logoutLabel
 				}).appendTo(container);
 			}
@@ -85,14 +85,14 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		var username = form.find("[name=username]").val();
 		var password = form.find("[name=password]").val();
 		var challenger = "cookie_form";
-		var uri = "%0/challenge/%1".format([cfg.host, challenger]);
+		var uri = "%0/challenge/%1".format([ns.host, challenger]);
 		$.ajax({
 			url: uri,
 			type: "POST",
 			data: {
 				user: username,
 				password: password,
-				tiddlyweb_redirect: cfg.serverPrefix + "/status" // workaround to marginalize automatic subsequent GET
+				tiddlyweb_redirect: ns.serverPrefix + "/status" // workaround to marginalize automatic subsequent GET
 			},
 			success: tsl.redirect,
 			error: function(xhr, error, exc) {
@@ -105,13 +105,13 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		var openid = form.find("[name=openid]").val();
 		var host = config.extensions.tiddlyweb.host;
 		var challenger = "tiddlywebplugins.tiddlyspace.openid";
-		var uri = "%0/challenge/%1".format([cfg.host, challenger]);
+		var uri = "%0/challenge/%1".format([ns.host, challenger]);
 		form.attr("action", uri).attr("method", "POST").
-			find("[name=tiddlyweb_redirect]").val(cfg.serverPrefix);
+			find("[name=tiddlyweb_redirect]").val(ns.serverPrefix);
 		return true;
 	},
 	redirect: function() {
-		window.location = cfg.host;
+		window.location = ns.host;
 	}
 };
 
@@ -127,7 +127,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		cfg.getUserInfo(function(user) {
+		ns.getUserInfo(function(user) {
 			if(user.anon) {
 				$(tsr.formTemplate).submit(tsr.onSubmit).
 					find("._login, ._openid").remove().end().
@@ -154,7 +154,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		var userCallback = function(resource, status, xhr) {
 			displayMessage(msg.userSuccess.format([username])); // XXX: redundant?
 			tsl.login(username, password, function(data, status, xhr) {
-				var space = new tiddlyweb.Space(username, cfg.host);
+				var space = new tiddlyweb.Space(username, ns.host);
 				space.create(spaceCallback, spaceErrback);
 			});
 		};
@@ -168,7 +168,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		var spaceErrback = function(xhr, error, exc) {
 			displayMessage(msg.spaceError.format([username, xhr.statusText]));
 		};
-		var user = new tiddlyweb.User(username, password, cfg.host);
+		var user = new tiddlyweb.User(username, password, ns.host);
 		user.create(userCallback, userErrback);
 	}
 };

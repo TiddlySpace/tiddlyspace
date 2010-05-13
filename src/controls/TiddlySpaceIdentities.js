@@ -27,7 +27,7 @@
 //{{{
 (function($) {
 
-var cfg = config.extensions.tiddlyweb;
+var ns = config.extensions.tiddlyweb;
 
 var macro = config.macros.TiddlySpaceIdentities = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -36,11 +36,11 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		cfg.getUserInfo(function(user) {
+		ns.getUserInfo(function(user) {
 			if(!user.anon) {
 				var challenger = "tiddlywebplugins.tiddlyspace.openid";
-				var redirect = cfg.serverPrefix + "#auth:OpenID";
-				var uri = "%0/challenge/%1".format([cfg.host, challenger]);
+				var redirect = ns.serverPrefix + "#auth:OpenID";
+				var uri = "%0/challenge/%1".format([ns.host, challenger]);
 				$(macro.formTemplate).attr("action", uri).
 					find("legend").text(macro.locale.label).end().
 					find("[name=tiddlyweb_redirect]").val(redirect).end().
@@ -68,7 +68,7 @@ config.paramifiers.auth = {
 	addIdentity: function(name) {
 		var msg = config.paramifiers.auth.locale;
 		var tiddler = new tiddlyweb.Tiddler(name);
-		tiddler.bag = new tiddlyweb.Bag("MAPUSER", cfg.host);
+		tiddler.bag = new tiddlyweb.Bag("MAPUSER", ns.host);
 		var callback = function(data, status, xhr) {
 			displayMessage(msg.success.format([identity]));
 			window.location = window.location.toString().split("#")[0] + "#";
