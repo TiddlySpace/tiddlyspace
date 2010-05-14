@@ -4,7 +4,7 @@
 //{{{
 (function() {
 
-var determineSpace = config.extensions.tiddlyspace.determineSpace;
+var ns = config.extensions.tiddlyspace;
 
 var cmd = config.commands.publishTiddlerRevision = {
 	text: "publish",
@@ -16,12 +16,12 @@ var cmd = config.commands.publishTiddlerRevision = {
 		if(store.isShadowTiddler(title) && !store.tiddlerExists(title)) {
 			return false;
 		}
-		var space = determineSpace(tiddler);
-		return space && space.type == "private";
+		var space = ns.determineSpace(tiddler, true);
+		return space && space.name == ns.currentSpace && space.type == "private";
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
-		var space = determineSpace(tiddler);
+		var space = ns.determineSpace(tiddler);
 		// XXX: changes to tiddler object need to be reverted on error!?
 		tiddler.fields["server.workspace"] = "bags/%0_public".format([space.name]);
 		tiddler.fields["server.page.revision"] = "false";
