@@ -40,7 +40,6 @@ def friendly_uri(environ, start_response):
         return get_tiddler(environ, start_response)
 
 
-
 def serve_frontpage(environ, start_response):
     """
     serves front page generated from tiddlers in frontpage bag
