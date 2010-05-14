@@ -150,11 +150,12 @@ def list_spaces(environ, start_response):
     mine = environ['tiddlyweb.query'].get('mine', [None])[0]
     current_user = environ['tiddlyweb.usersign']['name']
     if mine:
-        spaces = [recipe.name.rstrip('_public') for
-                recipe in store.list_recipes() if
-                recipe.name.endswith('_public') and
-                current_user in recipe.policy.manage
-                ]
+        spaces = []
+        for recipe in store.list_recipes():
+            if recipe.name.endswith('_public'):
+                recipe = store.get(recipe)
+                if current_user in recipe.policy.manage:
+                    spaces.append(recipe.name.rstrip('_public'))
     else:
         spaces = [recipe.name.rstrip('_public') for
                 recipe in store.list_recipes() if

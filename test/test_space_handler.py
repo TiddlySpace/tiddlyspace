@@ -63,7 +63,7 @@ def test_spaces_list():
     assert response['status'] == '200'
 
     info = simplejson.loads(content)
-    assert info == ['frontpage', 'cdent']
+    assert sorted(info) == ['cdent', 'frontpage']
 
     make_fake_space(store, 'fnd')
     response, content = http.request('http://0.0.0.0:8080/spaces',
