@@ -4,5 +4,6 @@ tags: excludeLists
 !Members
 <<TiddlySpaceMembers>>
 !Subscriptions
+<<TiddlySpaceSubscription list>>
 <<TiddlySpaceSubscription passive>>
 <<TiddlySpaceSubscription active>>
