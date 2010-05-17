@@ -104,7 +104,9 @@ class ControlView(object):
     def __call__(self, environ, start_response):
         req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
 
-        if req_uri.startswith('/bags') or req_uri.startswith('/recipes'):
+        if (req_uri.startswith('/bags') or
+                req_uri.startswith('/recipes') or
+                req_uri.startswith('/search')):
             return self._handle_core_request(
                     environ, start_response, req_uri)
         else:
@@ -137,6 +139,12 @@ class ControlView(object):
                 filter_parts = []
                 for bag in bags:
                     filter_parts.append('name:%s' % bag)
+                filter_string += ','.join(filter_parts)
+            elif req_uri == '/search':
+                filter_string = 'mselect='
+                filter_parts = []
+                for bag in bags:
+                    filter_parts.append('bag:%s' % bag)
                 filter_string += ','.join(filter_parts)
             else:
                 entity_name = req_uri.split('/')[2]

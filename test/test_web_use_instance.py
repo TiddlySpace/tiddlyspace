@@ -4,8 +4,10 @@ from test.fixtures import make_test_env, make_fake_space
 from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
 import httplib2
+import simplejson
 
 from tiddlyweb.store import Store
+from tiddlyweb.model.tiddler import Tiddler
 
 
 def setup_module(module):
@@ -103,3 +105,38 @@ def test_space_has_limited_view():
             'http://thing.0.0.0.0:8080/bags/other_public/tiddlers',
             method='GET')
     assert response['status'] == '404', content
+
+    tiddler1 = Tiddler('tiddler1', 'thing_public')
+    tiddler2 = Tiddler('tiddler2', 'other_public')
+    tiddler1.text = tiddler2.text = 'ohhai'
+    store.put(tiddler1)
+    store.put(tiddler2)
+
+    response, content = http.request(
+            'http://thing.0.0.0.0:8080/search?q=ohhai',
+            headers={'Accept': 'application/json'},
+            method='GET')
+    assert response['status'] == '200', content
+
+    info = simplejson.loads(content)
+    assert len(info) == 1
+    assert info[0]['title'] == tiddler1.title
+
+    response, content = http.request(
+            'http://other.0.0.0.0:8080/search?q=ohhai',
+            headers={'Accept': 'application/json'},
+            method='GET')
+    assert response['status'] == '200', content
+
+    info = simplejson.loads(content)
+    assert len(info) == 1
+    assert info[0]['title'] == tiddler2.title
+
+    response, content = http.request(
+            'http://0.0.0.0:8080/search?q=ohhai',
+            headers={'Accept': 'application/json'},
+            method='GET')
+    assert response['status'] == '200', content
+
+    info = simplejson.loads(content)
+    assert len(info) == 2
