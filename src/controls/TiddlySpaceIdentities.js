@@ -9,7 +9,7 @@
 			<dt>Type:</dt>
 			<dd>
 				<select>
-					<option>OpenID</option>
+					<option value="openid">OpenID</option>
 				</select>
 			</dd>
 			<dt>Identity:</dt>

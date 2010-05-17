@@ -16,6 +16,8 @@
 //{{{
 (function($) {
 
+var ns = config.extensions;
+
 var macro = config.macros.TiddlySpaceSubscription = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
@@ -33,24 +35,26 @@ var macro = config.macros.TiddlySpaceSubscription = {
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
 		var space = form.find("[name=space]").val();
-		var ns = config.extensions;
-		var uri = ns.tiddlyweb.host + "/spaces/" + ns.tiddlyspace.currentSpace;
-		var data = { subscriptions: [space] };
+		macro.subscribe(space, ns.tiddlyspace.currentSpace);
+		return false;
+	},
+	subscribe: function(provider, subscriber) {
+		var uri = ns.tiddlyweb.host + "/spaces/" + subscriber;
+		var data = { subscriptions: [provider] };
 		$.ajax({ // TODO: add to model/space.js?
 			url: uri,
 			type: "POST",
 			contentType: "application/json",
 			data: $.toJSON(data),
 			success: function(data, status, xhr) {
-				displayMessage(macro.locale.addSuccess.format([space,
-					ns.tiddlyspace.currentSpace]));
+				displayMessage(macro.locale.addSuccess.format([provider,
+					subscriber]));
 			},
 			error: function(xhr, error, exc) {
-				displayMessage(macro.locale.addError.format([space,
-					ns.tiddlyspace.currentSpace, error]));
+				displayMessage(macro.locale.addError.format([provider,
+					subscriber, error]));
 			}
 		});
-		return false;
 	}
 };
 
