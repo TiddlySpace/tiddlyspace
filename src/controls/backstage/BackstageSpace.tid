@@ -1,12 +1,8 @@
 modifier: psd
 tags: excludeLists
 
-About this space:
-* members: <<TiddlySpaceMembers>>
-* subscriptions: <<TiddlySpaceSubscription>>
-
-Do stuff with this space:
-*Clone
-*Copy
-*//Subscribe//
-*//Follow//
+!Members
+<<TiddlySpaceMembers>>
+!Subscriptions
+<<TiddlySpaceSubscription passive>>
+<<TiddlySpaceSubscription active>>
