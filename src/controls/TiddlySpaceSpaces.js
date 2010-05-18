@@ -1,5 +1,5 @@
 /***
-|''Requires''|TiddlyWebConfig|
+|''Requires''|TiddlyWebConfig TiddlySpaceSubscription|
 !HTMLForm
 <form action="#">
 	<fieldset>
@@ -8,6 +8,10 @@
 			<dt>Name:</dt>
 			<dd><input type="text" name="space" /></dd>
 		</dl>
+		<p>
+			<input type="checkbox" name="subscribe" />
+			Subscribe the new space to the current space
+		</p>
 		<input type="submit" />
 	</fieldset>
 </form>
@@ -60,8 +64,13 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var form = $(this).closest("form");
 		var container = form.closest("div");
 		var space = form.find("[name=space]").val();
+		var subscribe = form.find("[name=subscribe]").attr("checked");
 		space = new tiddlyweb.Space(space, host);
 		var callback = function(resource, status, xhr) {
+			if(subscribe) {
+				config.macros.TiddlySpaceSubscription.subscribe(
+					config.extensions.tiddlyspace.currentSpace, space.name);
+			}
 			macro.refresh(container);
 			displayMessage(macro.locale.addSuccess.format([space.name]));
 		};
