@@ -130,6 +130,7 @@ def test_create_space():
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             )
     assert response['status'] == '201'
+    assert response['location'] == 'http://extra.0.0.0.0:8080/'
 
     response, content = http.request('http://0.0.0.0:8080/spaces/extra/members',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},

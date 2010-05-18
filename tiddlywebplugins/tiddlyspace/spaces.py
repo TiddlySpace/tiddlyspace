@@ -4,6 +4,7 @@ listing, creation, subscription, etc.
 """
 
 import simplejson
+import urllib
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
@@ -240,13 +241,23 @@ def subscribe_space(environ, start_response):
     return ['']
 
 
+def _alien_domain(space_name):
+    """
+    Detect if a space_name is in an alien domain.
+    Alien means not in the server_host subdomain.
+    """
+    return False
+
+
 def _create_space(environ, start_response, space_name):
     """
     Create the space named by space_name. Raise 201 on success.
     """
     _validate_space_name(environ, space_name)
     _make_space(environ, space_name)
-    start_response('201 Created', [])
+    start_response('201 Created', [
+        ('Location', _space_uri(environ, space_name)),
+        ])
     return ['']
 
 
@@ -260,6 +271,24 @@ def _make_policy(member):
         setattr(policy, constraint, [member])
     policy.accept = ['NONE']
     return policy
+
+
+def _space_uri(environ, space_name):
+    """
+    Determine the uri of a space based on its name.
+    """
+    if not _alien_domain(space_name):
+        host = environ['tiddlyweb.config']['server_host']['host']
+        port = environ['tiddlyweb.config']['server_host']['port']
+        if port is not '443' or port is not '80':
+            uri = 'http://%s.%s:%s/' % (urllib.quote(space_name.encode(
+                'utf-8')), host, port)
+        else:
+            uri = 'http://%s.%s/' % (urllib.quote(space_name.encode(
+                'utf-8')), host)
+    else:
+        uri = 'http://%s/' % space_name # XXX This is a stub
+    return uri
 
 
 def _update_policy(policy, add=None, subtract=None):
