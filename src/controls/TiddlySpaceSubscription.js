@@ -87,7 +87,7 @@ var macro = config.macros.TiddlySpaceSubscription = {
 			type: "GET",
 			success: function(data, status, xhr) {
 				var spaces = $.map(data, function(item, i) {
-					return $("<option />", { value: item }).text(item)[0];
+					return $("<option />", { value: item.name }).text(item.name)[0];
 				});
 				$("select", form).append(spaces);
 			} // TODO: error handling?

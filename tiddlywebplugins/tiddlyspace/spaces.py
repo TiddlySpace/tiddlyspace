@@ -164,7 +164,8 @@ def list_spaces(environ, start_response):
     start_response('200 OK', [
         ('Content-Type', 'application/json; charset=UTF-8')
         ])
-    return simplejson.dumps(spaces)
+    return simplejson.dumps([{'name': space, 'uri': _space_uri(environ, space)}
+        for space in spaces])
 
 
 def list_space_members(environ, start_response):
@@ -241,11 +242,15 @@ def subscribe_space(environ, start_response):
     return ['']
 
 
-def _alien_domain(space_name):
+def _alien_domain(environ, space_name):
     """
     Detect if a space_name is in an alien domain.
-    Alien means not in the server_host subdomain.
+    Alien means not in the server_host subdomain or
+    _the_ main domain.
     """
+    # Some other things.
+    if space_name == 'frontpage':
+        return True
     return False
 
 
@@ -277,9 +282,9 @@ def _space_uri(environ, space_name):
     """
     Determine the uri of a space based on its name.
     """
-    if not _alien_domain(space_name):
-        host = environ['tiddlyweb.config']['server_host']['host']
-        port = environ['tiddlyweb.config']['server_host']['port']
+    host = environ['tiddlyweb.config']['server_host']['host']
+    port = environ['tiddlyweb.config']['server_host']['port']
+    if not _alien_domain(environ, space_name):
         if port is not '443' or port is not '80':
             uri = 'http://%s.%s:%s/' % (urllib.quote(space_name.encode(
                 'utf-8')), host, port)
@@ -287,7 +292,13 @@ def _space_uri(environ, space_name):
             uri = 'http://%s.%s/' % (urllib.quote(space_name.encode(
                 'utf-8')), host)
     else:
-        uri = 'http://%s/' % space_name # XXX This is a stub
+        if space_name == 'frontpage':
+            if port is not '443' or port is not '80':
+                uri = 'http://%s:%s/' % (host, port)
+            else:
+                uri = 'http://%s/' % host
+        else:
+            uri = 'http://%s/' % space_name # XXX This is a stub
     return uri
 
 

@@ -43,8 +43,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			success: function(data, status, xhr) {
 				var spaces = $.map(data, function(item, i) {
 					var link = $("<a />", {
-						href: "http://%0.tiddlyspace.com".format([item]), // XXX: hardcoded
-						text: item
+						href: item.uri,
+						text: item.name
 					});
 					return $("<li />").append(link)[0];
 				});

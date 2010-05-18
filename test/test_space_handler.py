@@ -63,7 +63,10 @@ def test_spaces_list():
     assert response['status'] == '200'
 
     info = simplejson.loads(content)
-    assert sorted(info) == ['cdent', 'frontpage']
+    uris = [uri for _, uri in [item.values() for item in info]]
+    names = [name for name, _ in [item.values() for item in info]]
+    assert sorted(uris) == ['http://0.0.0.0:8080/', 'http://cdent.0.0.0.0:8080/']
+    assert sorted(names) == ['cdent', 'frontpage']
 
     make_fake_space(store, 'fnd')
     response, content = http.request('http://0.0.0.0:8080/spaces',
@@ -71,8 +74,9 @@ def test_spaces_list():
     assert response['status'] == '200'
 
     info = simplejson.loads(content)
-    assert 'cdent' in info
-    assert 'fnd' in info
+    uris = [uri for _, uri in [item.values() for item in info]]
+    assert 'http://cdent.0.0.0.0:8080/' in uris
+    assert 'http://fnd.0.0.0.0:8080/' in uris
 
 
 def test_space_exist():
