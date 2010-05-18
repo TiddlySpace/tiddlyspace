@@ -28,10 +28,11 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var container = $("<div />").
-			append("<ul />").
-			append(this.generateForm()).
-			appendTo(place);
+		var container = $("<div />").appendTo(place);
+		this.refresh(container);
+	},
+	refresh: function(container) {
+		container.empty().append("<ul />").append(this.generateForm());
 		$.ajax({ // XXX: DRY; cf. TiddlySpaceSubscription
 			url: host + "/spaces?mine=1",
 			type: "GET",
@@ -57,11 +58,12 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
+		var container = form.closest("div");
 		var space = form.find("[name=space]").val();
 		space = new tiddlyweb.Space(space, host);
 		var callback = function(resource, status, xhr) {
+			macro.refresh(container);
 			displayMessage(macro.locale.addSuccess.format([space.name]));
-			// TODO: redirect
 		};
 		var errback = function(xhr, error, exc) {
 			displayMessage(macro.locale.addError.format([space.name, error]));
