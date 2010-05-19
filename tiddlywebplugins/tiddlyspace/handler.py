@@ -66,7 +66,7 @@ def get_identities(environ, start_response):
         mapped_bag = store.get(Bag('MAPUSER'))
         tiddlers = store.list_bag_tiddlers(mapped_bag)
         matched_tiddlers = control.filter_tiddlers(tiddlers,
-                'mapped_user=%s' % username, environ)
+            'select=mapped_user:%s' % username, environ)
         identities = [tiddler.title for tiddler in matched_tiddlers]
     except NoBagError:
         pass
