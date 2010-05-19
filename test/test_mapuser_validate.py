@@ -16,6 +16,7 @@ from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
 import httplib2
 import Cookie
+import simplejson
 
 from tiddlyweb.store import Store
 from tiddlyweb.model.user import User
@@ -157,3 +158,23 @@ def test_user_may_not_map_user():
                 'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE},
             body='{}')
     assert response['status'] == '409'
+
+
+def test_user_maps_info():
+    """User can get their own identities at /users/{username}/identities"""
+    global AUTH_COOKIE
+    http = httplib2.Http()
+    response, content = http.request(
+            'http://0.0.0.0:8080/users/cdent/identities',
+            method='GET')
+    assert response['status'] == '401'
+
+    response, content = http.request(
+            'http://0.0.0.0:8080/users/cdent/identities',
+            method='GET',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
+
+    assert response['status'] == '200', content
+
+    info = simplejson.loads(content)
+    assert 'x.auth.thing' in info, info

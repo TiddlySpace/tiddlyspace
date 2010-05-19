@@ -1,3 +1,7 @@
+
+import simplejson
+
+
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.filters import parse_for_filters
@@ -5,7 +9,9 @@ from tiddlyweb.store import NoBagError, NoRecipeError
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
-from tiddlyweb.web.http import HTTP302, HTTP404
+from tiddlyweb.web.http import HTTP302, HTTP403, HTTP404
+
+from tiddlywebplugins.utils import require_any_user
 
 
 def home(environ, start_response):
@@ -38,6 +44,37 @@ def friendly_uri(environ, start_response):
         # tiddler_name already in uri
         environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
         return get_tiddler(environ, start_response)
+
+
+@require_any_user()
+def get_identities(environ, start_response):
+    """
+    Get a list of the identities associated with the named user.
+    That named user must match the current user or the current
+    user must be an admin.
+    """
+    store = environ['tiddlyweb.store']
+    username = environ['wsgiorg.routing_args'][1]['username']
+    usersign = environ['tiddlyweb.usersign']['name']
+    roles = environ['tiddlyweb.usersign']['roles']
+
+    if username != usersign and 'ADMIN' not in roles:
+        raise HTTP403('Bad user for action')
+
+    identities = []
+    try:
+        mapped_bag = store.get(Bag('MAPUSER'))
+        tiddlers = store.list_bag_tiddlers(mapped_bag)
+        matched_tiddlers = control.filter_tiddlers(tiddlers,
+                'mapped_user=%s' % username, environ)
+        identities = [tiddler.title for tiddler in matched_tiddlers]
+    except NoBagError:
+        pass
+
+    start_response('200 OK', [
+        ('Content-Type', 'application/json; charset=UTF-8')
+        ])
+    return [simplejson.dumps(identities)]
 
 
 def serve_frontpage(environ, start_response):
