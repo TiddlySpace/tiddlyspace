@@ -15,7 +15,7 @@ from tiddlywebplugins.tiddlyspace.config import config as init_config
 
 
 def main(args):
-    args = [unicode(arg, 'UTF-8') for arg in args]
+    args = [unicode(arg, 'utf-8') for arg in args]
     instance_path = args[1]
 
     spawn(instance_path, init_config, instance_module)
