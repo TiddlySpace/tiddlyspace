@@ -1,5 +1,6 @@
 tags: excludeLists
 
 Hi <<option txtUserName>>!
+<<TiddlySpaceLogin>>
 
 <<TiddlySpaceIdentities>>
