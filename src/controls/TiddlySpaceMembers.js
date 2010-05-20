@@ -8,6 +8,7 @@
 			<dt>Username:</dt>
 			<dd><input type="text" name="username" /></dd>
 		</dl>
+		<p class="annotation" />
 		<input type="submit" />
 	</fieldset>
 </form>
@@ -22,7 +23,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 		listError: "error retrieving members for space %0: %1",
 		addLabel: "Add member",
 		addSuccess: "added member %0",
-		addError: "error adding member %0: %1",
+		noUserError: "user %0 does not exist",
 		delTooltip: "click to remove member",
 		delPrompt: "Are you sure you want to remove member %0?",
 		delSuccess: "removed member %0",
@@ -50,7 +51,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var items = $.map(members, function(item, i) {
 			var btn = $('<a href="javascript:;" />').text(item).
 				attr("title", macro.locale.delTooltip).
-				click(this.onClick);
+				click(macro.onClick);
 			return $("<li />").append(btn)[0];
 		});
 		$("<ul />").append(items).appendTo(container);
@@ -59,7 +60,8 @@ var macro = config.macros.TiddlySpaceMembers = {
 	generateForm: function() {
 		return $(this.formTemplate).submit(this.onSubmit).
 			find("legend").text(this.locale.addLabel).end().
-			find("[type=submit]").val(this.locale.addLabel).end();
+			find("[type=submit]").val(this.locale.addLabel).end().
+			find(".annotation").hide().end();
 	},
 	onSubmit: function(ev) { // XXX: ambiguous; rename
 		var form = $(this).closest("form");
@@ -70,7 +72,19 @@ var macro = config.macros.TiddlySpaceMembers = {
 			macro.refresh(container);
 		};
 		var errback = function(xhr, error, exc) {
-			displayMessage(macro.locale.addError.format([username, error]));
+			switch(xhr.status) {
+				case 409:
+					error = macro.locale.noUserError.format([username]);
+					break;
+				default:
+					error = "%0:\n%1".format([xhr.statusText, xhr.responseText]);
+					break;
+			}
+			form.find("[name=username]").addClass("error").focus(function(ev) {
+				$(this).removeClass("error").
+					closest("form").find(".annotation").slideUp();
+			});
+			form.find(".annotation").text(error).slideDown();
 		};
 		macro.space.members().add(username, callback, errback);
 		return false;
