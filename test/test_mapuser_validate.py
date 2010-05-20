@@ -10,21 +10,23 @@ information is used by the extractor. Just the proper
 creation of the tiddlers.
 """
 
-from test.fixtures import make_test_env
-
-from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
 import httplib2
 import Cookie
 import simplejson
 
-from tiddlyweb.store import Store
+from wsgi_intercept import httplib2_intercept
+
 from tiddlyweb.model.user import User
 from tiddlyweb.model.tiddler import Tiddler
-
+from tiddlyweb.store import Store
 from tiddlyweb.web.util import make_cookie
 
+from test.fixtures import make_test_env
+
+
 AUTH_COOKIE = None
+
 
 def setup_module(module):
     make_test_env()
@@ -164,6 +166,7 @@ def test_user_maps_info():
     """User can get their own identities at /users/{username}/identities"""
     global AUTH_COOKIE
     http = httplib2.Http()
+
     response, content = http.request(
             'http://0.0.0.0:8080/users/cdent/identities',
             method='GET')
@@ -173,8 +176,25 @@ def test_user_maps_info():
             'http://0.0.0.0:8080/users/cdent/identities',
             method='GET',
             headers={'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
-
     assert response['status'] == '200', content
 
     info = simplejson.loads(content)
     assert 'x.auth.thing' in info, info
+
+    tiddler = Tiddler('fnd.example.org', 'MAPUSER')
+    tiddler.fields['mapped_user'] = 'fnd'
+    tiddler = store.put(tiddler)
+    tiddler = Tiddler('cdent.example.com', 'MAPUSER')
+    tiddler.fields['mapped_user'] = 'cdent'
+    tiddler = store.put(tiddler)
+
+    response, content = http.request(
+            'http://0.0.0.0:8080/users/cdent/identities',
+            method='GET',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
+    identities = simplejson.loads(content)
+    assert response['status'] == '200', content
+    assert len(identities) == 2
+    assert 'x.auth.thing' in identities
+    assert 'cdent.example.com' in identities
+    assert 'fnd.example.org' not in identities
