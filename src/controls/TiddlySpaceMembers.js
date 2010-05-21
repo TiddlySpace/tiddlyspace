@@ -60,8 +60,8 @@ var macro = config.macros.TiddlySpaceMembers = {
 	generateForm: function() {
 		return $(this.formTemplate).submit(this.onSubmit).
 			find("legend").text(this.locale.addLabel).end().
-			find("[type=submit]").val(this.locale.addLabel).end().
-			find(".annotation").hide().end();
+			find(".annotation").hide().end().
+			find("[type=submit]").val(this.locale.addLabel).end();
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
@@ -82,7 +82,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 					break;
 			}
 			form.find("[name=username]").addClass("error").focus(function(ev) {
-				$(this).removeClass("error").unbind("focus"). // XXX: unbind too indiscriminate
+				$(this).removeClass("error").unbind(ev.originalEvent.type).
 					closest("form").find(".annotation").slideUp();
 			});
 			form.find(".annotation").html(error).slideDown();
