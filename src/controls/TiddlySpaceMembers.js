@@ -82,7 +82,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 					break;
 			}
 			form.find("[name=username]").addClass("error").focus(function(ev) {
-				$(this).removeClass("error").
+				$(this).removeClass("error").unbind("focus"). // XXX: unbind too indiscriminate
 					closest("form").find(".annotation").slideUp();
 			});
 			form.find(".annotation").html(error).slideDown();
