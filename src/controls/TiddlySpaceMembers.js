@@ -23,7 +23,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 		listError: "error retrieving members for space %0: %1",
 		addLabel: "Add member",
 		addSuccess: "added member %0",
-		noUserError: "user %0 does not exist",
+		noUserError: "user <em>%0</em> does not exist",
 		delTooltip: "click to remove member",
 		delPrompt: "Are you sure you want to remove member %0?",
 		delSuccess: "removed member %0",
@@ -63,7 +63,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 			find("[type=submit]").val(this.locale.addLabel).end().
 			find(".annotation").hide().end();
 	},
-	onSubmit: function(ev) { // XXX: ambiguous; rename
+	onSubmit: function(ev) {
 		var form = $(this).closest("form");
 		var username = form.find("[name=username]").val();
 		var callback = function(resource, status, xhr) {
@@ -77,14 +77,15 @@ var macro = config.macros.TiddlySpaceMembers = {
 					error = macro.locale.noUserError.format([username]);
 					break;
 				default:
-					error = "%0:\n%1".format([xhr.statusText, xhr.responseText]);
+					error = "%0: %1".format([xhr.statusText, xhr.responseText]).
+						htmlEncode();
 					break;
 			}
 			form.find("[name=username]").addClass("error").focus(function(ev) {
 				$(this).removeClass("error").
 					closest("form").find(".annotation").slideUp();
 			});
-			form.find(".annotation").text(error).slideDown();
+			form.find(".annotation").html(error).slideDown();
 		};
 		macro.space.members().add(username, callback, errback);
 		return false;
