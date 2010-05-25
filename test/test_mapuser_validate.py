@@ -192,11 +192,13 @@ def test_user_maps_info():
     global AUTH_COOKIE
     http = httplib2.Http()
 
+# auth required
     response, content = http.request(
             'http://0.0.0.0:8080/users/cdent/identities',
             method='GET')
     assert response['status'] == '401'
 
+# user can get own identities
     response, content = http.request(
             'http://0.0.0.0:8080/users/cdent/identities',
             method='GET',
@@ -223,3 +225,23 @@ def test_user_maps_info():
     assert 'x.auth.thing' in identities
     assert 'cdent.example.com' in identities
     assert 'fnd.example.org' not in identities
+
+# user can't get other identities
+    response, content = http.request(
+            'http://0.0.0.0:8080/users/fnd/identities',
+            method='GET',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
+    assert response['status'] == '403'
+    assert 'Bad user for action' in content
+
+# admin can get other identities
+    user = store.get(User('cdent'))
+    user.add_role('ADMIN')
+    store.put(user)
+    response, content = http.request(
+            'http://0.0.0.0:8080/users/fnd/identities',
+            method='GET',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
+    assert response['status'] == '200'
+    identities = simplejson.loads(content)
+    assert identities == ['fnd.example.org']
