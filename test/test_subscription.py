@@ -48,18 +48,19 @@ def teardown_module(module):
     os.chdir('..')
 
 
-def test_subscription():
-    cookie = get_auth('fnd', 'foo')
+def add_subscription(subscribed, subscriber, cookie=None):
+    if not cookie:
+        cookie = get_auth('fnd', 'foo')
     http = httplib2.Http()
+    subscriptions = simplejson.dumps({'subscriptions': [subscribed]})
+    return http.request('http://0.0.0.0:8080/spaces/%s' % subscriber,
+        method='POST', headers={
+            'Content-Type': 'application/json',
+            'Cookie': 'tiddlyweb_user="%s"' % cookie,
+        }, body=subscriptions)
 
-    def add_subscription(subscribed, subscriber):
-        subscriptions = simplejson.dumps({'subscriptions': [subscribed]})
-        return http.request('http://0.0.0.0:8080/spaces/%s' % subscriber,
-            method='POST', headers={
-                'Content-Type': 'application/json',
-                'Cookie': 'tiddlyweb_user="%s"' % cookie,
-            }, body=subscriptions)
 
+def test_subscription():
     response, content = add_subscription('cdent', 'fnd')
     assert response['status'] == '204'
 
@@ -98,3 +99,16 @@ def test_subscription():
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
     assert len(recipe) == 6
+
+
+def test_mutual_subscription():
+    """
+    Subscription should not result in the same bag showing up more than once.
+    """
+    response, content = add_subscription('fnd', 'cdent', cookie=get_auth('cdent', 'bar'))
+    assert response['status'] == '204'
+    
+    recipe = store.get(Recipe('cdent_public'))
+    bags = [bag for bag, filter in recipe.get_recipe()]
+    unique_bags = list(set(bags))
+    assert len(bags) == len(unique_bags)

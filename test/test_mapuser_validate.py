@@ -130,8 +130,10 @@ def test_create_map_uses_user():
             'http://0.0.0.0:8080/bags/MAPUSER/tiddlers/x.auth.thing',
             method='GET',
             headers={'Accept': 'application/json',
-                'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
+                'Cookie': 'tiddlyweb_user="%s"; %s' % (
+                    AUTH_COOKIE, second_cookie)})
     assert response['status'] == '403'
+    assert 'may not read' in content 
 
     tiddler = Tiddler('x.auth.thing', 'MAPUSER')
     tiddler = store.get(tiddler)
@@ -144,22 +146,45 @@ def test_create_map_uses_user():
             'http://0.0.0.0:8080/bags/MAPUSER/tiddlers/x.auth.thing',
             method='PUT',
             headers={'Content-Type': 'application/json',
-                'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE},
+                'Cookie': 'tiddlyweb_user="%s"; %s' % (
+                    AUTH_COOKIE, second_cookie)},
             body='{}')
     assert response['status'] == '403'
+    assert 'may not write' in content
 
 
 def test_user_may_not_map_user():
     """Make user X can't map user Y to themselves."""
     global AUTH_COOKIE
+    second_cookie = make_cookie('tiddlyweb_secondary_user',
+            'fnd', mac_key=secret)
     http = httplib2.Http()
     response, content = http.request(
             'http://0.0.0.0:8080/bags/MAPUSER/tiddlers/fnd',
             method='PUT',
             headers={'Content-Type': 'application/json',
-                'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE},
+                'Cookie': 'tiddlyweb_user="%s"; %s' % (
+                    AUTH_COOKIE, second_cookie)},
             body='{}')
     assert response['status'] == '409'
+    assert 'username exists' in content
+
+
+def test_user_may_not_map_self():
+    """Make user X can't map user Y to themselves."""
+    global AUTH_COOKIE
+    second_cookie = make_cookie('tiddlyweb_secondary_user',
+            'cdent', mac_key=secret)
+    http = httplib2.Http()
+    response, content = http.request(
+            'http://0.0.0.0:8080/bags/MAPUSER/tiddlers/cdent',
+            method='PUT',
+            headers={'Content-Type': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"; %s' % (
+                    AUTH_COOKIE, second_cookie)},
+            body='{}')
+    assert response['status'] == '409'
+    assert 'username exists' in content
 
 
 def test_user_maps_info():
@@ -167,11 +192,13 @@ def test_user_maps_info():
     global AUTH_COOKIE
     http = httplib2.Http()
 
+# auth required
     response, content = http.request(
             'http://0.0.0.0:8080/users/cdent/identities',
             method='GET')
     assert response['status'] == '401'
 
+# user can get own identities
     response, content = http.request(
             'http://0.0.0.0:8080/users/cdent/identities',
             method='GET',
@@ -198,3 +225,23 @@ def test_user_maps_info():
     assert 'x.auth.thing' in identities
     assert 'cdent.example.com' in identities
     assert 'fnd.example.org' not in identities
+
+# user can't get other identities
+    response, content = http.request(
+            'http://0.0.0.0:8080/users/fnd/identities',
+            method='GET',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
+    assert response['status'] == '403'
+    assert 'Bad user for action' in content
+
+# admin can get other identities
+    user = store.get(User('cdent'))
+    user.add_role('ADMIN')
+    store.put(user)
+    response, content = http.request(
+            'http://0.0.0.0:8080/users/fnd/identities',
+            method='GET',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
+    assert response['status'] == '200'
+    identities = simplejson.loads(content)
+    assert identities == ['fnd.example.org']

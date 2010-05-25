@@ -1,3 +1,8 @@
+"""
+Base configuration for TiddlySpace.
+
+This provides the basics which may be changed in tidlywebconfig.py.
+"""
 from tiddlywebplugins.instancer.util import get_tiddler_locations
 
 from tiddlywebplugins.tiddlyspace.instance import store_contents
@@ -11,5 +16,6 @@ config = {
     'auth_systems': ['cookie_form', 'tiddlywebplugins.tiddlyspace.openid'],
     'bag_create_policy': 'ANY',
     'recipe_create_policy': 'ANY',
-    'socialusers.reserved_names': ['www', 'about', 'help', 'announcements', 'info'],
+    'socialusers.reserved_names': ['www', 'about', 'help', 'announcements',
+        'info'],
 }

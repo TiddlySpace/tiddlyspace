@@ -21,6 +21,9 @@ __version__ = '0.2.2'
 
 
 def init(config):
+    """
+    Establish required plugins and HTTP routes.
+    """
     import tiddlywebwiki
     import tiddlywebplugins.logout
     import tiddlywebplugins.virtualhosting # calling init not required

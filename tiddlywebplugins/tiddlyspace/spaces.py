@@ -162,8 +162,7 @@ def list_spaces(environ, start_response):
                 recipe in store.list_recipes() if
                 recipe.name.endswith('_public')]
     start_response('200 OK', [
-        ('Content-Type', 'application/json; charset=UTF-8')
-        ])
+        ('Content-Type', 'application/json; charset=UTF-8')])
     return simplejson.dumps([{'name': space, 'uri': _space_uri(environ, space)}
         for space in spaces])
 
@@ -184,8 +183,7 @@ def list_space_members(environ, start_response):
     except NoBagError:
         raise HTTP404('No space for %s' % space_name)
     start_response('200 OK', [
-        ('Content-Type', 'application/json; charset=UTF-8')
-        ])
+        ('Content-Type', 'application/json; charset=UTF-8')])
     return simplejson.dumps(members)
 
 
@@ -227,9 +225,9 @@ def subscribe_space(environ, start_response):
         try:
             subscribed_recipe = store.get(Recipe('%s_public' % space))
             for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
-                if (bag, filter_string) not in public_recipe_list:
+                if [bag, filter_string] not in public_recipe_list:
                     public_recipe_list.insert(-1, (bag, filter_string))
-                if (bag, filter_string) not in private_recipe_list:
+                if [bag, filter_string] not in private_recipe_list:
                     private_recipe_list.insert(-2, (bag, filter_string))
         except NoRecipeError, exc:
             raise HTTP409('Invalid content for subscription: %s' % exc)
@@ -341,14 +339,14 @@ def _make_space(environ, space_name):
     public_recipe.set_recipe([
         ('system', ''),
         ('tiddlyspace', ''),
-        (public_recipe.name, '')
+        (public_recipe.name, ''),
         ])
     private_recipe = Recipe('%s_private' % space_name)
     private_recipe.set_recipe([
         ('system', ''),
         ('tiddlyspace', ''),
         (public_recipe.name, ''),
-        (private_recipe.name, '')
+        (private_recipe.name, ''),
         ])
     private_recipe.policy = _make_policy(member)
     public_recipe.policy = _make_policy(member)

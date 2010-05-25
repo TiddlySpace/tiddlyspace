@@ -14,13 +14,13 @@ instance_config['twanager_plugins'] = ['tiddlywebplugins.tiddlyspace']
 store_contents['tiddlyspace'] = [
     'src/controls/index.recipe',
     'src/lib/index.recipe',
-    'src/model/index.recipe'
+    'src/model/index.recipe',
 ]
 store_contents['frontpage_public'] = ['src/frontpage/index.recipe']
 
 store_structure['bags']['tiddlyspace'] = {
     'desc': 'TiddlySpace client',
-    'policy': store_structure['bags']['system']['policy']
+    'policy': store_structure['bags']['system']['policy'],
 }
 store_structure['recipes']['default']['recipe'].insert(1, ('tiddlyspace', ''))
 
@@ -33,8 +33,8 @@ store_structure['bags']['frontpage_public'] = {
         'delete': ['R:ADMIN'],
         'manage': ['R:ADMIN'],
         'accept': ['NONE'],
-        'owner': 'administrator'
-    }
+        'owner': 'administrator',
+    },
 }
 store_structure['bags']['frontpage_private'] = deepcopy(
     store_structure['bags']['frontpage_public'])
@@ -44,15 +44,15 @@ store_structure['recipes']['frontpage_public'] = {
     'recipe': [
         ('system', ''),
         ('tiddlyspace', ''),
-        ('frontpage_public', '')
+        ('frontpage_public', ''),
     ],
     'policy': {
         'read': [],
         'write': ['R:ADMIN'],
         'manage': ['R:ADMIN'],
         'delete': ['R:ADMIN'],
-        'owner': 'administrator'
-    }
+        'owner': 'administrator',
+    },
 }
 store_structure['recipes']['frontpage_private'] = deepcopy(
     store_structure['recipes']['frontpage_public'])
@@ -69,6 +69,6 @@ store_structure['bags']['MAPUSER'] = {
         'delete': ['NONE'],
         'manage': ['NONE'],
         'accept': ['NONE'],
-        'owner': 'administrator'
-    }
+        'owner': 'administrator',
+    },
 }

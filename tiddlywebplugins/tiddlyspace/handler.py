@@ -1,3 +1,9 @@
+"""
+HTTP route handlers for TiddlySpace.
+
+The extensions and modifications to the default TiddlyWeb routes.
+"""
+
 import simplejson
 
 from tiddlyweb.model.bag import Bag
@@ -33,6 +39,11 @@ def home(environ, start_response):
 
 
 def friendly_uri(environ, start_response):
+    """
+    Transform a not alread mapped request at the root of a space
+    into a request for a tiddler in the public or private recipe
+    of the current space.
+    """
     http_host, host_url = _determine_host(environ)
     if http_host == host_url:
         raise HTTP404('No resource found')
@@ -70,14 +81,13 @@ def get_identities(environ, start_response):
         pass
 
     start_response('200 OK', [
-        ('Content-Type', 'application/json; charset=UTF-8')
-        ])
+        ('Content-Type', 'application/json; charset=UTF-8')])
     return [simplejson.dumps(identities)]
 
 
 def serve_frontpage(environ, start_response):
     """
-    serves front page generated from tiddlers in frontpage bag
+    Serve TiddlySpace front page from the special frontpage_public recipe.
     """
     environ['wsgiorg.routing_args'][1]['recipe_name'] = 'frontpage_public'
     environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
@@ -85,6 +95,10 @@ def serve_frontpage(environ, start_response):
 
 
 def serve_space(environ, start_response, http_host):
+    """
+    Serve a space determined from the current virtual host and user.
+    The user determines whether the recipe uses is public or private.
+    """
     space_name = _determine_space(environ, http_host)
     recipe_name = _determine_space_recipe(environ, space_name)
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
@@ -93,6 +107,12 @@ def serve_space(environ, start_response, http_host):
 
 
 def _determine_host(environ):
+    """
+    Extract the current HTTP host from the environment.
+    Return that plus the server_host from config. This is
+    used to help calculate what space we are in when HTTP
+    requests are made.
+    """
     server_host = environ['tiddlyweb.config']['server_host']
     port = int(server_host['port'])
     if port == 80 or port == 443:
@@ -105,6 +125,10 @@ def _determine_host(environ):
 
 
 def _determine_space_recipe(environ, space_name):
+    """
+    Given a space name, check if the current user is a member of that
+    named space. If so, use the private recipe.
+    """
     store = environ['tiddlyweb.store']
     user = environ['tiddlyweb.usersign']['name']
     bag = Bag("%s_private" % space_name)
@@ -121,7 +145,7 @@ def _determine_space_recipe(environ, space_name):
 
 def _determine_space(environ, http_host):
     """
-    calculates the space associated with a subdomain
+    Calculate the space associated with a subdomain.
     """
     # XXX: This is broken for spaces which are not a subdomain
     # of the main tiddlyspace domain.
@@ -132,6 +156,12 @@ def _determine_space(environ, http_host):
 
 
 class ControlView(object):
+    """
+    WSGI Middleware which adapts an incoming request to restrict what
+    entities from the store are visible to the requestor. The effective
+    result is that only those bags and recipes contained in the current
+    space are visible in the HTTP routes.
+    """
 
     def __init__(self, application):
         self.application = application
@@ -147,7 +177,12 @@ class ControlView(object):
         else:
             return self.application(environ, start_response)
 
+    # XXX too long!
     def _handle_core_request(self, environ, start_response, req_uri):
+        """
+        Override a core request, adding filters or sending 404s where
+        necessary to limit the view of entities.
+        """
         http_host, host_url = _determine_host(environ)
         if http_host != host_url:
             space_name = _determine_space(environ, http_host)
@@ -165,8 +200,9 @@ class ControlView(object):
             filter_string = None
             if req_uri == '/recipes':
                 if recipe_name.endswith('_private'):
-                    filter_string = 'mselect=name:%s_private,name:%s_public' % (
-                            space_name, space_name)
+                    filter_string = (
+                            'mselect=name:%s_private,name:%s_public' % (
+                            space_name, space_name))
                 else:
                     filter_string = 'select=name:%s_public' % space_name
             elif req_uri == '/bags':
