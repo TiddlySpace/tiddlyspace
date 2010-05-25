@@ -1,3 +1,8 @@
+"""
+Base configuration for TiddlySpace.
+
+This provides the basics which may be changed in tidlywebconfig.py.
+"""
 from tiddlywebplugins.instancer.util import get_tiddler_locations
 
 from tiddlywebplugins.tiddlyspace.instance import store_contents
