@@ -35,7 +35,9 @@ deploy: dist
 pypi: test
 	python setup.py sdist upload
 
-dev: remotes
+dev: remotes dev_local
+
+dev_local:
 	@twinstance_dev tiddlywebplugins.tiddlyspace dev_instance
 	@echo "from devtiddlers import update_config; update_config(config)" \
 		>> dev_instance/tiddlywebconfig.py
