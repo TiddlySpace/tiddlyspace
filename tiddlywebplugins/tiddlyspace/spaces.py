@@ -225,9 +225,9 @@ def subscribe_space(environ, start_response):
         try:
             subscribed_recipe = store.get(Recipe('%s_public' % space))
             for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
-                if (bag, filter_string) not in public_recipe_list:
+                if [bag, filter_string] not in public_recipe_list:
                     public_recipe_list.insert(-1, (bag, filter_string))
-                if (bag, filter_string) not in private_recipe_list:
+                if [bag, filter_string] not in private_recipe_list:
                     private_recipe_list.insert(-2, (bag, filter_string))
         except NoRecipeError, exc:
             raise HTTP409('Invalid content for subscription: %s' % exc)
