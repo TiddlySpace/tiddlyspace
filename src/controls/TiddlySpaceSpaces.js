@@ -12,6 +12,7 @@
 			<input type="checkbox" name="subscribe" />
 			Subscribe the new space to the current space
 		</p>
+		<p class="annotation" />
 		<input type="submit" />
 	</fieldset>
 </form>
@@ -28,7 +29,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		listError: "error listing spaces: %0",
 		addLabel: "Create space",
 		addSuccess: "created space %0",
-		addError: "error creating space %0: %1"
+		conflictError: "space <em>%0</em> already exists"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -58,6 +59,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 	generateForm: function() {
 		return $(this.formTemplate).submit(this.onSubmit).
 			find("legend").text(this.locale.addLabel).end().
+			find(".annotation").hide().end().
 			find("[type=submit]").val(this.locale.addLabel).end();
 	},
 	onSubmit: function(ev) {
@@ -74,8 +76,21 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			macro.refresh(container);
 			displayMessage(macro.locale.addSuccess.format([space.name]));
 		};
-		var errback = function(xhr, error, exc) {
-			displayMessage(macro.locale.addError.format([space.name, error]));
+		var errback = function(xhr, error, exc) { // TODO: DRY (cf. TiddlySpaceLogin)
+			switch(xhr.status) {
+				case 409:
+					error = macro.locale.conflictError.format([space.name]);
+					break;
+				default:
+					error = "%0: %1".format([xhr.statusText, xhr.responseText]).
+						htmlEncode();
+					break;
+			}
+			var el = $("[name=space]", form).addClass("error").focus(function(ev) {
+				el.removeClass("error").unbind(ev.originalEvent.type).
+					closest("form").find(".annotation").slideUp();
+			});
+			$(".annotation", form).html(error).slideDown();
 		};
 		space.create(callback, errback);
 		return false;

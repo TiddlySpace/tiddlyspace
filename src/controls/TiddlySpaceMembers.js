@@ -71,7 +71,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 			var container = form.closest("div");
 			macro.refresh(container);
 		};
-		var errback = function(xhr, error, exc) {
+		var errback = function(xhr, error, exc) { // TODO: DRY (cf. TiddlySpaceLogin)
 			switch(xhr.status) {
 				case 409:
 					error = macro.locale.noUserError.format([username]);
@@ -81,11 +81,11 @@ var macro = config.macros.TiddlySpaceMembers = {
 						htmlEncode();
 					break;
 			}
-			form.find("[name=username]").addClass("error").focus(function(ev) {
-				$(this).removeClass("error").unbind(ev.originalEvent.type).
+			var el = $("[name=username]", form).addClass("error").focus(function(ev) {
+				el.removeClass("error").unbind(ev.originalEvent.type).
 					closest("form").find(".annotation").slideUp();
 			});
-			form.find(".annotation").html(error).slideDown();
+			$(".annotation", form).html(error).slideDown();
 		};
 		macro.space.members().add(username, callback, errback);
 		return false;

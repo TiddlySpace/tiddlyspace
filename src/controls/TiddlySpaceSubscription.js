@@ -1,10 +1,10 @@
 /***
-|''Requires''|TiddlySpaceConfig chrjs|
+|''Requires''|TiddlySpaceConfig TiddlySpaceUserControls chrjs|
 !HTMLForm
 <form action="#">
 	<fieldset>
 		<legend />
-		<p />
+		<p class="description" />
 		<dl>
 			<dt class="_passive">Space Name:</dt>
 			<dd class="_passive"><input type="text" name="space" /></dd>
@@ -15,6 +15,7 @@
 				</select>
 			</dd>
 		</dl>
+		<p class="annotation" />
 		<input type="submit" />
 	</fieldset>
 </form>
@@ -35,26 +36,29 @@ var macro = config.macros.TiddlySpaceSubscription = {
 		activeDesc: "Subscribe current space to existing space",
 		addSuccess: "added subscription for %0 to %1",
 		listError: "error retrieving subscriptions for space %0: %1",
-		addError: "error subscribing %0 to %1: %2"
+		forbiddenError: "unauthorized to modify space <em>%0</em>",
+		noSpaceError: "space <em>%0</em> does not exist",
+		conflictError: "space <em>%0</em> is already subscribed to <em>%1</em>"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		// passive mode means subscribing given space to current space
 		// active mode means subscribing current space to given space
 		var mode = params[0] || "list";
-		var form = $(this.formTemplate);
+		var form = $(this.formTemplate).
+			find(".annotation").hide().end();
 		if(mode == "passive") {
-			form.submit(this.onPassiveSubmit).
+			form.submit(function(ev) { return macro.onSubmit(this, mode); }).
 				find("._active").remove().end().
 				find("legend").text(this.locale.addPassiveLabel).end().
-				find("p").text(this.locale.passiveDesc).end().
+				find(".description").text(this.locale.passiveDesc).end().
 				find("[type=submit]").val(this.locale.addPassiveLabel).end().
 				appendTo(place);
 		} else if(mode == "active") {
-			form.submit(this.onActiveSubmit).
+			form.submit(function(ev) { return macro.onSubmit(this, mode); }).
 				find("._passive").remove().end().
 				find("legend").text(this.locale.addActiveLabel).end().
-				find("p").text(this.locale.activeDesc).end().
+				find(".description").text(this.locale.activeDesc).end().
 				find("[type=submit]").val(this.locale.addActiveLabel).end().
 				appendTo(place);
 			this.populateSpaces(form);
@@ -93,17 +97,27 @@ var macro = config.macros.TiddlySpaceSubscription = {
 			} // TODO: error handling?
 		});
 	},
-	onPassiveSubmit: function(ev) {
-		var space = $(this).closest("form").find("[name=space]").val();
-		macro.subscribe(space, currentSpace);
+	onSubmit: function(el, mode) {
+		var form = $(el).closest("form");
+		var selector = mode == "passive" ? "[name=space]" : "select";
+		var space = form.find(selector).val();
+		var provider = mode == "passive" ? space : currentSpace;
+		var subscriber = mode == "passive" ? currentSpace : space;
+		this.subscribe(provider, subscriber, function(xhr, error, exc) {
+			var ctx = {
+				msg: {
+					403: macro.locale.forbiddenError.format([subscriber]),
+					404: macro.locale.noSpaceError.format([subscriber]), // XXX: only relevant for passive mode? -- XXX: could also be provider!?
+					409: macro.locale.conflictError.format([subscriber, provider]) // TODO: distinguish between cases non-existing and already subscribed
+				},
+				form: form,
+				selector: selector
+			};
+			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
+		});
 		return false;
 	},
-	onActiveSubmit: function(ev) {
-		var space = $(this).closest("form").find("select").val();
-		macro.subscribe(currentSpace, space);
-		return false;
-	},
-	subscribe: function(provider, subscriber) {
+	subscribe: function(provider, subscriber, errback) {
 		var data = { subscriptions: [provider] };
 		$.ajax({ // TODO: add to model/space.js?
 			url: host + "/spaces/" + subscriber,
@@ -114,10 +128,7 @@ var macro = config.macros.TiddlySpaceSubscription = {
 				displayMessage(macro.locale.addSuccess.format([provider,
 					subscriber]));
 			},
-			error: function(xhr, error, exc) {
-				displayMessage(macro.locale.addError.format([provider,
-					subscriber, error]));
-			}
+			error: errback
 		});
 	}
 };

@@ -23,6 +23,7 @@
 			</dd>
 		</dl>
 		<input type="hidden" name="tiddlyweb_redirect" class="_openid" />
+		<p class="annotation" />
 		<input type="submit" />
 	</fieldset>
 </form>
@@ -39,7 +40,8 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		label: "Login",
 		logoutLabel: "Log out",
 		success: "logged in as %0",
-		error: "error logging in %0: %1"
+		loginError: "error logging in %0: %1",
+		forbiddenError: "login failed for <em>%0</em>: username and password do not match"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -65,6 +67,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 					find("option[value=" + type + "]").
 						attr("selected", "selected").end().
 					find("._register, " + selector).remove().end().
+					find(".annotation").hide().end().
 					find("[type=submit]").val(msg.label).end().
 					appendTo(container);
 			} else {
@@ -84,10 +87,28 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	basicLogin: function(form) {
 		var username = form.find("[name=username]").val();
 		var password = form.find("[name=password]").val();
-		this.login(username, password, tsl.redirect);
+		this.login(username, password, tsl.redirect, function(xhr, error, exc) { // TODO: DRY (cf. displayMembers)
+			var ctx = {
+				msg: {
+					401: tsl.locale.forbiddenError.format([username])
+				},
+				form: form,
+				selector: "[name=username], [name=password]"
+			};
+			tsl.displayError(xhr, error, exc, ctx);
+		});
 		return false;
 	},
-	login: function(username, password, callback) {
+	displayError: function(xhr, error, exc, ctx) {
+		error = ctx.msg[xhr.status] || // XXX: lacks parameters
+			"%0: %1".format([xhr.statusText, xhr.responseText]).htmlEncode();
+		var el = $(ctx.selector, ctx.form).addClass("error").focus(function(ev) {
+			el.removeClass("error").unbind(ev.originalEvent.type).
+				closest("form").find(".annotation").slideUp();
+		});
+		$(".annotation", ctx.form).html(error).slideDown();
+	},
+	login: function(username, password, callback, errback) {
 		var challenger = "cookie_form";
 		var uri = "%0/challenge/%1".format([ns.host, challenger]);
 		$.ajax({
@@ -100,7 +121,11 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			},
 			success: callback,
 			error: function(xhr, error, exc) {
-				displayMessage(tsl.locale.error.format([username, error]));
+				if(errback) {
+					errback.apply(this, arguments);
+				} else {
+					displayMessage(tsl.locale.loginError.format([username, error]));
+				}
 			}
 		});
 	},
@@ -136,6 +161,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 				$(tsr.formTemplate).submit(tsr.onSubmit).
 					find("._login, ._openid").remove().end().
 					find("legend").text(tsr.locale.label).end().
+					find(".annotation").hide().end().
 					find("[type=submit]").val(tsr.locale.label).end().
 					appendTo(place);
 			}
