@@ -70,8 +70,7 @@ def get_identities(environ, start_response):
         pass
 
     start_response('200 OK', [
-        ('Content-Type', 'application/json; charset=UTF-8')
-        ])
+        ('Content-Type', 'application/json; charset=UTF-8')])
     return [simplejson.dumps(identities)]
 
 
@@ -165,8 +164,9 @@ class ControlView(object):
             filter_string = None
             if req_uri == '/recipes':
                 if recipe_name.endswith('_private'):
-                    filter_string = 'mselect=name:%s_private,name:%s_public' % (
-                            space_name, space_name)
+                    filter_string = (
+                            'mselect=name:%s_private,name:%s_public' % (
+                            space_name, space_name))
                 else:
                     filter_string = 'select=name:%s_public' % space_name
             elif req_uri == '/bags':

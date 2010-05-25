@@ -162,8 +162,7 @@ def list_spaces(environ, start_response):
                 recipe in store.list_recipes() if
                 recipe.name.endswith('_public')]
     start_response('200 OK', [
-        ('Content-Type', 'application/json; charset=UTF-8')
-        ])
+        ('Content-Type', 'application/json; charset=UTF-8')])
     return simplejson.dumps([{'name': space, 'uri': _space_uri(environ, space)}
         for space in spaces])
 
@@ -184,8 +183,7 @@ def list_space_members(environ, start_response):
     except NoBagError:
         raise HTTP404('No space for %s' % space_name)
     start_response('200 OK', [
-        ('Content-Type', 'application/json; charset=UTF-8')
-        ])
+        ('Content-Type', 'application/json; charset=UTF-8')])
     return simplejson.dumps(members)
 
 
@@ -341,14 +339,14 @@ def _make_space(environ, space_name):
     public_recipe.set_recipe([
         ('system', ''),
         ('tiddlyspace', ''),
-        (public_recipe.name, '')
+        (public_recipe.name, ''),
         ])
     private_recipe = Recipe('%s_private' % space_name)
     private_recipe.set_recipe([
         ('system', ''),
         ('tiddlyspace', ''),
         (public_recipe.name, ''),
-        (private_recipe.name, '')
+        (private_recipe.name, ''),
         ])
     private_recipe.policy = _make_policy(member)
     public_recipe.policy = _make_policy(member)
