@@ -84,9 +84,11 @@ var plugin = config.extensions.tiddlyspace = {
 ns = config.extensions.tiddlyweb;
 ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
 
-config.shadowTiddlers.ToolbarCommands = config.shadowTiddlers.ToolbarCommands.
+var shadows = config.shadowTiddlers;
+shadows.ToolbarCommands = shadows.ToolbarCommands.
 	replace("editTiddler ", "editTiddler cloneTiddler ").
 	replace("revisions ", "publishTiddlerRevision revisions ");
+shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace, shadows.WindowTitle]);
 
 })();
 //}}}
