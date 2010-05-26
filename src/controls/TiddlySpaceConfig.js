@@ -59,7 +59,8 @@ var ns = config.extensions.tiddlyweb;
 ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
 
 config.shadowTiddlers.ToolbarCommands = config.shadowTiddlers.ToolbarCommands.
-	replace("revisions ", "publishTiddlerRevision cloneTiddler revisions ");
+	replace("editTiddler ", "editTiddler cloneTiddler ").
+	replace("revisions ", "publishTiddlerRevision revisions ");
 
 })();
 //}}}
