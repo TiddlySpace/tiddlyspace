@@ -5,6 +5,7 @@
 //{{{
 (function() {
 
+var ns;
 var recipe = config.defaultCustomFields["server.workspace"].split("recipes/")[1];
 
 // arg is either a container name or a tiddler object
@@ -44,6 +45,27 @@ var determineContainer = function(tiddler, fuzzy) { // TODO: expose?
 	}
 };
 
+// hijack removeTiddlerCallback to restore tiddler from recipe cascade
+ns = config.extensions.ServerSideSavingPlugin;
+var _removeTiddlerCallback = ns.removeTiddlerCallback;
+ns.removeTiddlerCallback = function(context, userParams) {
+	var title = context.tiddler.title;
+	var recipe = context.tiddler.fields["server.recipe"];
+	_removeTiddlerCallback.apply(this, arguments);
+	if(recipe) {
+		context.workspace = "recipes/" + recipe;
+		var callback = function(context, userParams) {
+			if(context.status) {
+				var t = context.tiddler;
+				store.saveTiddler(t.title, t.title, t.text, t.modifier,
+					t.modified, t.tags, t.fields, false, t.created, t.creator);
+				// TODO: (re-)display tiddler?
+			}
+		};
+		context.adaptor.getTiddler(title, context, null, callback);
+	}
+};
+
 // splits a string once using delimiter
 // mode "l" splits at the first, "r" at the last occurrence
 // returns an object with members type and name
@@ -59,7 +81,7 @@ var plugin = config.extensions.tiddlyspace = {
 	determineSpace: determineSpace
 };
 
-var ns = config.extensions.tiddlyweb;
+ns = config.extensions.tiddlyweb;
 ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
 
 config.shadowTiddlers.ToolbarCommands = config.shadowTiddlers.ToolbarCommands.

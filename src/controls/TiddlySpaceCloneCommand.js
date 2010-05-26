@@ -18,7 +18,7 @@ var cmd = config.commands.cloneTiddler = {
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
 		tiddler.fields["server.workspace"] = "bags/%0_private".format([ns.currentSpace]);
-		$.each(["bag", "recipe", "permissions", "page.revision"], function(i, item) {
+		$.each(["bag", "permissions", "page.revision"], function(i, item) {
 			delete tiddler.fields["server." + item];
 		});
 		config.commands.editTiddler.handler.apply(this, arguments);
