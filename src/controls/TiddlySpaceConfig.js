@@ -33,8 +33,12 @@ var determineContainer = function(tiddler, fuzzy) { // TODO: expose?
 		return { type: "recipe", name: recipe };
 	} else if(fuzzy) { // new tiddler
 		var workspace = tiddler.fields["server.workspace"];
-		var container = split(workspace, "/", "l");
-		return ["bags", "recipes"].contains(container.type) ? container : false;
+		if(workspace) {
+			var container = split(workspace, "/", "l");
+			return ["bags", "recipes"].contains(container.type) ? container : false;
+		} else {
+			return false;
+		}
 	} else {
 		return false;
 	}
