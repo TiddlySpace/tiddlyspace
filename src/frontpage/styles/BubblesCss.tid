@@ -1,0 +1,89 @@
+modifier: Osmosoft
+
+.public {
+	position: relative;
+	border: 2px solid red;
+	background-color: #C7EAFF;
+	border: 4px solid #86B2CC;
+	-webkit-border-radius: 20em;
+	-moz-border-radius: 20em;
+	border-radius: 20em;
+}
+
+.private {
+	background-color: #FFCAE9;
+	border: 4px solid #E48CBF;
+	margin: 0 auto;
+	padding: 1em;
+	text-align: center;
+	-webkit-border-radius: 20em;
+	-moz-border-radius: 20em;
+	border-radius: 20em;
+}
+
+.bubble {
+	position: absolute;
+	z-index: 10;
+	padding: 3em;
+	-webkit-transition: -webkit-transform 1.0s ease-in-out;
+}
+
+.bubble:hover {
+	-webkit-transform: rotate(0deg) scale(2.0);
+	-moz-transform: rotate(0deg) scale(2.0);
+	transform: rotate(0deg) scale(2.0);
+}
+
+.bubble .private {
+	height: 1em;
+	width: 1em;
+}
+
+.small {
+	padding: 1.5em;
+}
+
+.small .private {
+	height: 0.1em;
+	width: 0.1em;
+}
+
+.medium {
+	padding: 2em;
+}
+
+.medium .private {
+	height: 0.5em;
+	width: 0.5em;
+}
+
+#space1.public { top: 24em; left: 30em; }
+#space2.public { top: 6em; left: 24em; }
+#space3.public { bottom: 20em; left: 4em; }
+#space4.public { top: 3em; right: 76em; }
+#space5.public { bottom: 14em; left: 4em; }
+#space6.public { top: 28em; right: 77em; }
+#space7.public { top: 9em; right: 25em; }
+#space8.public { top: -3em; right: 39em; }
+#space9.public { bottom: 9em; right: 5em; }
+#space10.public { bottom: 29em; left: 35em; }
+#space11.public { bottom: 22em; left: 8em; }
+#space12.public { bottom: 7em; right: 12em; }
+#space13.public { bottom: 13em; left: 33em; }
+#space14.public { top: 19em; right: 35em; }
+#space15.public { bottom: 23em; left: 33em; }
+#space16.public { bottom: 15em; right: 9em; }
+#space17.public { top: 12em; left: 10em; }
+#space18.public { top: 9em; left: 36em; }
+#space19.public { top: 20em; left: 25em; }
+#space20.public { bottom: 34em; right: 59em; }
+#space21.public { top: 20em; right: 81em; }
+#space22.public { bottom: 4em; left: -3em; }
+#space23.public { bottom: 14em; left: 28em; }
+#space24.public { top: 16em; right: 51em; }
+#space25.public { top: 20em; right: 49em; }
+#space26.public { bottom: 25em; right: 2em; }
+#space27.public { bottom: 30em; right: 46em; }
+#space28.public { top: 24em; left: 22em; }
+#space29.public { top: 22em; right: 85em; }
+#space30.public { top: 18em; left: 33em; }

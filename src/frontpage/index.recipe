@@ -1,5 +1,3 @@
-tiddler: DefaultTiddlers.tid
-tiddler: SiteTitle.tid
-tiddler: SiteSubtitle.tid
-tiddler: user.tid
-tiddler: warning.tid
+recipe: content/split.recipe
+recipe: shadows/split.recipe
+recipe: styles/split.recipe
