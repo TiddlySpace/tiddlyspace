@@ -48,11 +48,18 @@ def teardown_module(module):
     os.chdir('..')
 
 
-def add_subscription(subscribed, subscriber, cookie=None):
+def remove_subscription(subscribed, subscriber, cookie=None):
+    return add_subscription(subscribed, subscriber, cookie=cookie,
+            unsubscribe=True)
+
+def add_subscription(subscribed, subscriber, cookie=None, unsubscribe=False):
     if not cookie:
         cookie = get_auth('fnd', 'foo')
     http = httplib2.Http()
-    subscriptions = simplejson.dumps({'subscriptions': [subscribed]})
+    if unsubscribe:
+        subscriptions = simplejson.dumps({'unsubscriptions': [subscribed]})
+    else:
+        subscriptions = simplejson.dumps({'subscriptions': [subscribed]})
     return http.request('http://0.0.0.0:8080/spaces/%s' % subscriber,
         method='POST', headers={
             'Content-Type': 'application/json',
@@ -112,3 +119,92 @@ def test_mutual_subscription():
     bags = [bag for bag, filter in recipe.get_recipe()]
     unique_bags = list(set(bags))
     assert len(bags) == len(unique_bags)
+
+
+def test_unsubscribe():
+    """
+    Remove a space from a subscription list.
+    XXX What happens when there's additional bags (other than public
+    and private) from the recipe of the subscribed space and the subscribed
+    space has changed since we first subscribed. How do we know what to remove
+    from the recipe?
+    XXX And what happens with subscription in general if a space is subscribed
+    to another space that then goes away? (A non-existent bag in a recipe will
+    cause an error)
+    """
+    response, content = remove_subscription('psd', 'fnd')
+    assert response['status'] == '204'
+
+    recipe = Recipe('fnd_public')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 4
+
+    recipe = Recipe('fnd_private')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 5
+
+    # do it again, should be idempotent
+    response, content = remove_subscription('psd', 'fnd')
+    assert response['status'] == '204'
+
+    recipe = Recipe('fnd_public')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 4
+
+    recipe = Recipe('fnd_private')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 5
+
+    # do it with non-existent space
+    response, content = remove_subscription('spanner', 'fnd')
+    assert response['status'] == '409'
+    assert 'Invalid content for unsubscription' in content
+
+    recipe = Recipe('fnd_public')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 4
+
+    recipe = Recipe('fnd_private')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 5
+
+    # unsubscribe self?
+    response, content = remove_subscription('fnd', 'fnd')
+    assert response['status'] == '409'
+    assert 'Attempt to unsubscribe self' in content
+
+    recipe = Recipe('fnd_public')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 4
+
+    recipe = Recipe('fnd_private')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 5
+
+    # unsubscribe mutuality
+    # We don't want a subscribed-to space which has subscribed to the 
+    # subscribing space to cause removal of one's own bags
+    # In this test cdent is subscribed to fnd and fnd is subscribed
+    # to cdent. We only want to remove the cdent bags.
+    # The solution in code is not perfect because we only
+    # make the match based on bag.name, not [bag, filter].
+    response, content = remove_subscription('cdent', 'fnd')
+    assert response['status'] == '204'
+
+    recipe = Recipe('fnd_public')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 3
+
+    recipe = Recipe('fnd_private')
+    recipe = store.get(recipe)
+    recipe = recipe.get_recipe()
+    assert len(recipe) == 4

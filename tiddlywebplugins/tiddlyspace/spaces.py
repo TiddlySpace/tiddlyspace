@@ -189,8 +189,8 @@ def list_space_members(environ, start_response):
 
 def subscribe_space(environ, start_response):
     """
-    Subscribe the spaces named in the JSON content of
-    the request to the space named in the URI. The current
+    Subscribe and/or unsubscribe the spaces named in the JSON
+    content of the request to the space named in the URI. The current
     user must be a member of the space. Raise 409 if the
     JSON is no good. Raise 404 if the space does not exist.
     Raise 409 if a space in the JSON does not exist.
@@ -214,7 +214,8 @@ def subscribe_space(environ, start_response):
         length = environ['CONTENT_LENGTH']
         content = environ['wsgi.input'].read(int(length))
         info = simplejson.loads(content)
-        subscriptions = info['subscriptions']
+        subscriptions = info.get('subscriptions', [])
+        unsubscriptions = info.get('unsubscriptions', [])
     except (JSONDecodeError, KeyError), exc:
         raise HTTP409('Invalid content for subscription: %s' % exc)
 
@@ -231,6 +232,21 @@ def subscribe_space(environ, start_response):
                     private_recipe_list.insert(-2, (bag, filter_string))
         except NoRecipeError, exc:
             raise HTTP409('Invalid content for subscription: %s' % exc)
+    for space in unsubscriptions:
+        if space == space_name:
+            raise HTTP409('Attempt to unsubscribe self')
+        try:
+            subscribed_recipe = store.get(Recipe('%s_public' % space))
+            for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
+                if bag == '%s_public' % space_name:
+                    continue
+                try:
+                    public_recipe_list.remove([bag, filter_string])
+                    private_recipe_list.remove([bag, filter_string])
+                except ValueError:
+                    pass
+        except NoRecipeError, exc:
+            raise HTTP409('Invalid content for unsubscription: %s' % exc)
     public_recipe.set_recipe(public_recipe_list)
     store.put(public_recipe)
     private_recipe.set_recipe(private_recipe_list)
