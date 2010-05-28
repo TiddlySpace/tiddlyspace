@@ -45,6 +45,13 @@ config.tasks.options = {
 };
 config.backstageTasks.push("options");
 
+merge(config.tasks,{
+	tweak: {text: "tweak", tooltip: "Tweak the appearance and behaviour of TiddlyWiki", content: '<<options>>'},
+	plugins: {text: "plugins", tooltip: "Manage installed plugins", content: '<<plugins>>'}
+});
+config.backstageTasks.push("tweak");
+config.backstageTasks.push("plugins");
+
 // initialize state
 var _show = backstage.show;
 backstage.show = function() {
