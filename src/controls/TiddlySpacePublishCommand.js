@@ -17,7 +17,7 @@ var cmd = config.commands.publishTiddlerRevision = {
 			return false;
 		}
 		var space = ns.determineSpace(tiddler, true);
-		return space && space.name == ns.currentSpace && space.type == "private";
+		return space && space.name == ns.currentSpace.name && space.type == "private";
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);

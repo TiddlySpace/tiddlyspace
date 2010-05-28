@@ -25,7 +25,7 @@
 (function($) {
 
 var host = config.extensions.tiddlyweb.host;
-var currentSpace = config.extensions.tiddlyspace.currentSpace;
+var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
 
 var macro = config.macros.TiddlySpaceSubscription = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),

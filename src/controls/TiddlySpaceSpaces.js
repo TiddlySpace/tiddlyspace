@@ -71,7 +71,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var callback = function(resource, status, xhr) {
 			if(subscribe) {
 				config.macros.TiddlySpaceSubscription.subscribe(
-					config.extensions.tiddlyspace.currentSpace, space.name);
+					config.extensions.tiddlyspace.currentSpace.name, space.name);
 			}
 			macro.refresh(container);
 			displayMessage(macro.locale.addSuccess.format([space.name]));

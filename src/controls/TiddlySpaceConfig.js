@@ -77,7 +77,7 @@ var split = function(str, sep, mode) {
 };
 
 var plugin = config.extensions.tiddlyspace = {
-	currentSpace: determineSpace(recipe).name,
+	currentSpace: determineSpace(recipe),
 	determineSpace: determineSpace
 };
 
@@ -88,7 +88,7 @@ var shadows = config.shadowTiddlers;
 shadows.ToolbarCommands = shadows.ToolbarCommands.
 	replace("editTiddler ", "editTiddler cloneTiddler ").
 	replace("revisions ", "publishTiddlerRevision revisions ");
-shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace, shadows.WindowTitle]);
+shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace.name, shadows.WindowTitle]);
 
 })();
 //}}}

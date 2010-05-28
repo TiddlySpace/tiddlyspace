@@ -31,7 +31,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var space = config.extensions.tiddlyspace.currentSpace;
+		var space = config.extensions.tiddlyspace.currentSpace.name;
 		var host = config.extensions.tiddlyweb.host;
 		this.space = new tiddlyweb.Space(space, host);
 		var container = $("<div />").appendTo(place);

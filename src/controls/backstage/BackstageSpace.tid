@@ -3,16 +3,14 @@ tags: excludeLists
 
 !This Space
 !!Members
-The following people are members of <<message extensions.tiddlyspace.currentSpace>>'s tiddlyspace. Members can edit the existing space.
+The following people are members of <<message extensions.tiddlyspace.currentSpace.name>>'s tiddlyspace. Members can edit the existing space.
 <<TiddlySpaceMembers>>
 !!Subscriptions
 !!!This Space
-This tiddlyspace (<<message extensions.tiddlyspace.currentSpace>>) is currently subscribed to the following spaces. Any public tiddlers in these spaces will be inherited into this space.
+This tiddlyspace (<<message extensions.tiddlyspace.currentSpace.name>>) is currently subscribed to the following spaces. Any public tiddlers in these spaces will be inherited into this space.
 <<TiddlySpaceSubscription list>>
-
 To include another space in this list type the name of the space in the box below. For example to include ''example''.tiddlyspace.com type ''example'' and hit ''add subscription''.
 <<TiddlySpaceSubscription passive>>
-
 !!!Include this space
 To include ''this space'' into another select a space from the menu below and click subscribe. That space will then inherit tiddlers from here.
 <<TiddlySpaceSubscription active>>

@@ -28,7 +28,7 @@ Story.prototype.refreshTiddler = function(title, template, force, customFields,
 	if(tiddler) {
 		var ns = config.extensions.tiddlyspace;
 		var space = ns.determineSpace(tiddler, true);
-		var type = space && space.name == ns.currentSpace ? space.type : "external";
+		var type = space && space.name == ns.currentSpace.name ? space.type : "external";
 		$(el).removeClass("private public external").addClass(type);
 	}
 	return el;

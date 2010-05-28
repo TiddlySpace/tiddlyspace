@@ -14,11 +14,12 @@ cmd.cloneTiddler = {
 
 	isEnabled: function(tiddler) {
 		var space = ns.determineSpace(tiddler, false);
-		return space && space.name != ns.currentSpace;
+		return space && space.name != ns.currentSpace.name;
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
-		tiddler.fields["server.workspace"] = "bags/%0_private".format([ns.currentSpace]);
+		tiddler.fields["server.workspace"] = "bags/%0_private".
+			format([ns.currentSpace.name]);
 		$.each(["bag", "permissions", "page.revision"], function(i, item) {
 			delete tiddler.fields["server." + item];
 		});
