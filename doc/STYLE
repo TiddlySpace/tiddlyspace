@@ -7,6 +7,7 @@ cf. http://www.kernel.org/pub/software/scm/git/docs/git-commit.html#_discussion
 JavaScript code:
 * tabs for indentation
 * double quotes
+* trailing (rather than leading) dot for line continuation in chained operations
 * JSLint compliance
 
 Python code:
