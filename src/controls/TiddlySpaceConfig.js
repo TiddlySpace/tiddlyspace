@@ -3,7 +3,7 @@
 |''Requires''|TiddlyWebConfig|
 ***/
 //{{{
-(function() {
+(function($) {
 
 var ns;
 var recipe = config.defaultCustomFields["server.workspace"].split("recipes/")[1];
@@ -91,5 +91,16 @@ shadows.ToolbarCommands = shadows.ToolbarCommands.
 	replace("revisions ", "publishTiddlerRevision revisions ");
 shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace.name, shadows.WindowTitle]);
 
-})();
+//hijack search macro to add a couple of attributes turning
+//off autocorrect and autocapitalize
+config.macros.search.oldSearchMacro = config.macros.search.handler;
+config.macros.search.handler = function(place, macroName, params) {
+    this.oldSearchMacro(place, macroName, params);
+
+    $('.searchField:input', place)
+        .attr('autocapitalize', 'off')
+        .attr('autocorrect', 'off');
+}
+
+})(jQuery);
 //}}}

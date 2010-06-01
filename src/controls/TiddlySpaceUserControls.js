@@ -6,14 +6,14 @@
 		<legend />
 		<dl>
 			<dt class="_basic">Username:</dt>
-			<dd class="_basic"><input type="text" name="username" /></dd>
+			<dd class="_basic"><input type="text" name="username" autocapitalize="off" autocorrect="off" /></dd>
 			<dt class="_basic">Password:</dt>
 			<dd class="_basic">
 				<input type="password" name="password" />
 				<input type="password" name="password_confirm" class="_register" />
 			</dd>
 			<dt class="_openid">OpenID:</dt>
-			<dd class="_openid"><input type="text" name="openid" /></dd>
+			<dd class="_openid"><input type="text" name="openid" autocapitalize="off" autocorrect="off" /></dd>
 			<dt class="_login">Method:</dt>
 			<dd class="_login">
 				<select>
