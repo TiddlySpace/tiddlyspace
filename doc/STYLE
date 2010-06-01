@@ -1,6 +1,7 @@
 JavaScript code:
 * tabs for indentation
 * double quotes
+* JSLint compliance
 
 Python code:
 * spaces for indentation (four per level)
