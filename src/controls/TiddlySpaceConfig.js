@@ -95,11 +95,11 @@ shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace.name, shadows.Window
 //off autocorrect and autocapitalize
 config.macros.search.oldSearchMacro = config.macros.search.handler;
 config.macros.search.handler = function(place, macroName, params) {
-    this.oldSearchMacro(place, macroName, params);
+	this.oldSearchMacro(place, macroName, params);
 
-    $('.searchField:input', place)
-        .attr('autocapitalize', 'off')
-        .attr('autocorrect', 'off');
+	$(".searchField:input", place)
+		.attr("autocapitalize", "off")
+		.attr("autocorrect", "off");
 }
 
 })(jQuery);
