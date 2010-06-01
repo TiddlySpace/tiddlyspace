@@ -15,7 +15,8 @@ from tiddlywebplugins.utils import replace_handler, get_store
 from tiddlywebplugins.tiddlyspace.config import config as space_config
 from tiddlywebplugins.tiddlyspace.handler import (home,
         friendly_uri, get_identities, ControlView)
-from tiddlywebplugins.tiddlyspace.spaces import add_spaces_routes, change_space_member
+from tiddlywebplugins.tiddlyspace.spaces import (
+        add_spaces_routes, change_space_member)
 
 
 __version__ = '0.2.2'

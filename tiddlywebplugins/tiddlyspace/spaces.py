@@ -11,7 +11,7 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
 from tiddlyweb.model.policy import Policy
 from tiddlyweb.store import NoRecipeError, NoBagError, NoUserError
-from tiddlyweb.web.http import HTTP403, HTTP404, HTTP409
+from tiddlyweb.web.http import HTTP404, HTTP409
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -55,7 +55,8 @@ def add_space_member(environ, start_response):
     current_user = environ['tiddlyweb.usersign']
 
     try:
-        change_space_member(store, space_name, add=user_name, current_user=current_user)
+        change_space_member(store, space_name, add=user_name,
+                current_user=current_user)
     except (NoBagError, NoRecipeError):
         raise HTTP404('space %s does not exist' % space_name)
     except NoUserError:
@@ -63,9 +64,10 @@ def add_space_member(environ, start_response):
 
     start_response('204 No Content', [])
     return ['']
-    
 
-def change_space_member(store, space_name, add=None, remove=None, current_user=None):
+
+def change_space_member(store, space_name, add=None, remove=None,
+        current_user=None):
     """
     The guts of adding a member to space.
     """
@@ -131,7 +133,8 @@ def delete_space_member(environ, start_response):
     current_user = environ['tiddlyweb.usersign']
 
     try:
-        change_space_member(store, space_name, remove=user_name, current_user=current_user)
+        change_space_member(store, space_name, remove=user_name,
+                current_user=current_user)
     except (NoBagError, NoRecipeError):
         raise HTTP404('space %s does not exist' % space_name)
 
@@ -206,17 +209,11 @@ def subscribe_space(environ, start_response):
 
     private_bag.policy.allows(current_user, 'manage')
 
-    try:
-        length = environ['CONTENT_LENGTH']
-        content = environ['wsgi.input'].read(int(length))
-        info = simplejson.loads(content)
-        subscriptions = info.get('subscriptions', [])
-        unsubscriptions = info.get('unsubscriptions', [])
-    except (JSONDecodeError, KeyError), exc:
-        raise HTTP409('Invalid content for subscription: %s' % exc)
+    subscriptions, unsubscriptions = _get_subscription_info(environ)
 
     public_recipe_list = public_recipe.get_recipe()
     private_recipe_list = private_recipe.get_recipe()
+
     for space in subscriptions:
         _validate_subscription(environ, space, private_recipe_list)
         try:
@@ -228,6 +225,7 @@ def subscribe_space(environ, start_response):
                     private_recipe_list.insert(-2, (bag, filter_string))
         except NoRecipeError, exc:
             raise HTTP409('Invalid content for subscription: %s' % exc)
+
     for space in unsubscriptions:
         if space == space_name:
             raise HTTP409('Attempt to unsubscribe self')
@@ -243,6 +241,7 @@ def subscribe_space(environ, start_response):
                     pass
         except NoRecipeError, exc:
             raise HTTP409('Invalid content for unsubscription: %s' % exc)
+
     public_recipe.set_recipe(public_recipe_list)
     store.put(public_recipe)
     private_recipe.set_recipe(private_recipe_list)
@@ -274,6 +273,21 @@ def _create_space(environ, start_response, space_name):
         ('Location', _space_uri(environ, space_name)),
         ])
     return ['']
+
+
+def _get_subscription_info(environ):
+    """
+    Extract subscription info from the JSON posted to a space.
+    """
+    try:
+        length = environ['CONTENT_LENGTH']
+        content = environ['wsgi.input'].read(int(length))
+        info = simplejson.loads(content)
+        subscriptions = info.get('subscriptions', [])
+        unsubscriptions = info.get('unsubscriptions', [])
+    except (JSONDecodeError, KeyError), exc:
+        raise HTTP409('Invalid content for subscription: %s' % exc)
+    return subscriptions, unsubscriptions
 
 
 def _make_policy(member):
@@ -374,7 +388,7 @@ def _validate_space_name(environ, name):
     """
     if not name.islower(): # just a stub for now
         raise HTTP409('Invalid space name, lowercase required: %s' % name)
-    # XXX this reserved list should/could be built up from multiple
+    # This reserved list should/could be built up from multiple
     # sources.
     reserved_space_names = environ['tiddlyweb.config'].get(
             'socialusers.reserved_names', [])
