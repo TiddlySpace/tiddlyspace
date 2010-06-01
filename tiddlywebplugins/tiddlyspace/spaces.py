@@ -53,30 +53,39 @@ def add_space_member(environ, start_response):
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     user_name = environ['wsgiorg.routing_args'][1]['user_name']
     current_user = environ['tiddlyweb.usersign']
+
     try:
-        public_name = '%s_public' % space_name
-        private_name = '%s_private' % space_name
-        public_bag = store.get(Bag(public_name))
-        private_bag = store.get(Bag(private_name))
-        public_recipe = store.get(Recipe(public_name))
-        private_recipe = store.get(Recipe(private_name))
+        change_space_member(store, space_name, add=user_name, current_user=current_user)
     except (NoBagError, NoRecipeError):
         raise HTTP404('space %s does not exist' % space_name)
-
-    private_bag.policy.allows(current_user, 'manage')
-
-    try:
-        store.get(User(user_name))
     except NoUserError:
         raise HTTP409('attempt to add non-existent user: %s' % user_name)
 
-    for entity in [public_bag, private_bag, public_recipe, private_recipe]:
-        new_policy = _update_policy(entity.policy, add=user_name)
-        entity.policy = new_policy
-        store.put(entity)
-
     start_response('204 No Content', [])
     return ['']
+    
+
+def change_space_member(store, space_name, add=None, remove=None, current_user=None):
+    """
+    The guts of adding a member to space.
+    """
+    public_name = '%s_public' % space_name
+    private_name = '%s_private' % space_name
+    public_bag = store.get(Bag(public_name))
+    private_bag = store.get(Bag(private_name))
+    public_recipe = store.get(Recipe(public_name))
+    private_recipe = store.get(Recipe(private_name))
+
+    if current_user:
+        private_bag.policy.allows(current_user, 'manage')
+
+    if add:
+        store.get(User(add))
+
+    for entity in [public_bag, private_bag, public_recipe, private_recipe]:
+        new_policy = _update_policy(entity.policy, add=add, subtract=remove)
+        entity.policy = new_policy
+        store.put(entity)
 
 
 def confirm_space(environ, start_response):
@@ -120,24 +129,11 @@ def delete_space_member(environ, start_response):
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     user_name = environ['wsgiorg.routing_args'][1]['user_name']
     current_user = environ['tiddlyweb.usersign']
+
     try:
-        public_name = '%s_public' % space_name
-        private_name = '%s_private' % space_name
-        public_bag = store.get(Bag(public_name))
-        private_bag = store.get(Bag(private_name))
-        public_recipe = store.get(Recipe(public_name))
-        private_recipe = store.get(Recipe(private_name))
+        change_space_member(store, space_name, remove=user_name, current_user=current_user)
     except (NoBagError, NoRecipeError):
         raise HTTP404('space %s does not exist' % space_name)
-
-    private_bag.policy.allows(current_user, 'manage')
-    if len(private_bag.policy.manage) == 1:
-        raise HTTP403('must not remove the last member from a space')
-
-    for entity in [public_bag, private_bag, public_recipe, private_recipe]:
-        new_policy = _update_policy(entity.policy, subtract=user_name)
-        entity.policy = new_policy
-        store.put(entity)
 
     start_response('204 No Content', [])
     return ['']
