@@ -59,7 +59,8 @@ ns.removeTiddlerCallback = function(context, userParams) {
 				var t = context.tiddler;
 				store.saveTiddler(t.title, t.title, t.text, t.modifier,
 					t.modified, t.tags, t.fields, false, t.created, t.creator);
-				// TODO: (re-)display tiddler?
+			} else {
+				store.notify(title, true);
 			}
 		};
 		context.adaptor.getTiddler(title, context, null, callback);
