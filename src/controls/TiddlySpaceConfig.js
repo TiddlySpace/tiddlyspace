@@ -100,7 +100,7 @@ config.macros.search.handler = function(place, macroName, params) {
 	$(".searchField:input", place)
 		.attr("autocapitalize", "off")
 		.attr("autocorrect", "off");
-}
+};
 
 })(jQuery);
 //}}}
