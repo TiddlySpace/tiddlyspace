@@ -8,4 +8,5 @@ tiddler: TiddlySpaceBackstage.js
 tiddler: TiddlySpacePublishCommand.js
 tiddler: TiddlySpaceCloneCommand.js
 tiddler: TiddlySpaceVisualization.js
+tiddler: TiddlySpaceChangePassword.js
 recipe: backstage/index.recipe
