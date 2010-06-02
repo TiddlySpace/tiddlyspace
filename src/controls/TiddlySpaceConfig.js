@@ -64,9 +64,7 @@ ns.removeTiddlerCallback = function(context, userParams) {
 		context.workspace = "recipes/" + recipe;
 		var callback = function(context, userParams) {
 			if(context.status) {
-				var t = context.tiddler;
-				store.saveTiddler(t.title, t.title, t.text, t.modifier,
-					t.modified, t.tags, t.fields, false, t.created, t.creator);
+				store.saveTiddler(context.tiddler);
 			} else {
 				store.notify(title, true);
 			}
@@ -83,6 +81,20 @@ var split = function(str, sep, mode) {
 	var arr = str.split(sep);
 	var type = arr.length > 1 ? arr[mode]() : null;
 	return { type: type, name: arr.join(sep) };
+};
+
+// hijack saveTiddler to accept Tiddler instance
+var _saveTiddler = TiddlyWiki.prototype.saveTiddler;
+TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
+		modified, tags, fields, clearChangeCount, created, creator) {
+	if(title instanceof Tiddler) { // overloading first argument
+		var t = $.extend({}, title);
+		t.fields = $.extend({}, title.fields);
+		_saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
+			t.modified, t.tags, t.fields, false, t.created, t.creator]);
+	} else {
+		_saveTiddler.apply(this, arguments);
+	}
 };
 
 var plugin = config.extensions.tiddlyspace = {
