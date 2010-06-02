@@ -14,7 +14,7 @@ var plugin = config.extensions.recentChanges = {
 	getRecentChanges: function(callback, errback) {
 		var host = config.extensions.tiddlyweb.host;
 		var currentSpace = config.extensions.tiddlyspace.currentSpace;
-		var recipe = "%0_%1".format([currentSpace.name, currentSpace.type]);
+		var recipe = "%0_%1".format([currentSpace.name, currentSpace.type]); // XXX: could as well be default workspace!?
 		var threshold = this.lastCheck || this.getLastModified();
 		var filter = "select=modified:>" + threshold.convertToYYYYMMDDHHMM(); // XXX: correct?
 		recipe = new tiddlyweb.Recipe(recipe, host);
@@ -26,12 +26,14 @@ var plugin = config.extensions.recentChanges = {
 		recipe.tiddlers().get(callback, errback, filter);
 	},
 	onClick: function(ev) {
-		$(this).slideUp();
+		$(this).data("tiddlers"), function(i, item) {
+			// TODO: GET tiddler
+		}).slideUp();
 	},
 	callback: function(data, status, xhr) {
 		if(data.length) {
 			var text = plugin.locale.newItems.format([data.length]);
-			notificationArea.text(text).slideDown();
+			notificationArea.text(text).data("tiddlers", data).slideDown();
 		}
 	},
 	errback: function(xhr, error, exc) {

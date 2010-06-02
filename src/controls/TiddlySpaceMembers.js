@@ -66,7 +66,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
 		var username = form.find("[name=username]").val();
-		var callback = function(resource, status, xhr) {
+		var callback = function(data, status, xhr) {
 			displayMessage(macro.locale.addSuccess.format([username]));
 			var container = form.closest("div");
 			macro.refresh(container);
@@ -94,7 +94,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var btn = $(this);
 		var username = btn.text();
 		var msg = macro.locale.delPrompt.format([username]);
-		var callback = function(resource, status, xhr) {
+		var callback = function(data, status, xhr) {
 			displayMessage(macro.locale.delSuccess.format([username]));
 			var container = btn.closest("div");
 			macro.refresh(container);
