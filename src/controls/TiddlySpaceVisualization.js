@@ -34,8 +34,9 @@ Story.prototype.refreshTiddler = function(title, template, force, customFields,
 	return el;
 };
 
-config.shadowTiddlers.StyleSheetTiddlySpace = store.getTiddlerText(tiddler.title + "##StyleSheet");
-store.addNotification("StyleSheetTiddlySpace", refreshStyles);
+var name = "StyleSheetTiddlySpace";
+config.shadowTiddlers[name] = store.getTiddlerText(tiddler.title + "##StyleSheet");
+store.addNotification(name, refreshStyles);
 
 })(jQuery);
 //}}}

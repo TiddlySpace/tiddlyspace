@@ -19,6 +19,7 @@ Development Instance
 ** components listed in setup.py's install_requires
    (for tiddlyweb 1.1, it might be easiest to use a symlink to the repository)
 ** tiddlywebplugins.devstore
+** httplib2
 * extend hosts file (e.g. /etc/hosts) to include one or more subdomains, e.g.:
     127.0.1.1 tiddlyspace.org foo.tiddlyspace.org bar.tiddlyspace.org
 * create development instance:

@@ -6,6 +6,7 @@ tiddler: TiddlySpaceSpaces.js
 tiddler: TiddlySpaceSubscription.js
 tiddler: TiddlySpaceBackstage.js
 tiddler: TiddlySpacePublishCommand.js
+tiddler: TiddlySpacePubRevCommand.js
 tiddler: TiddlySpaceCloneCommand.js
 tiddler: TiddlySpaceVisualization.js
 recipe: backstage/index.recipe

@@ -7,14 +7,16 @@ repository: http://github.com/TiddlySpace/tiddlyspace
 """
 
 from tiddlyweb.web.extractor import UserExtract
+from tiddlyweb.manage import make_command
 from tiddlyweb.util import merge_config
 
-from tiddlywebplugins.utils import replace_handler
+from tiddlywebplugins.utils import replace_handler, get_store
 
 from tiddlywebplugins.tiddlyspace.config import config as space_config
 from tiddlywebplugins.tiddlyspace.handler import (home,
         friendly_uri, get_identities, ControlView)
-from tiddlywebplugins.tiddlyspace.spaces import add_spaces_routes
+from tiddlywebplugins.tiddlyspace.spaces import (
+        add_spaces_routes, change_space_member)
 
 
 __version__ = '0.2.2'
@@ -32,6 +34,22 @@ def init(config):
     import tiddlywebplugins.mselect
     import tiddlywebplugins.cookiedomain
     import tiddlywebplugins.tiddlyspace.validator
+
+    @make_command()
+    def addmember(args):
+        """Add a member to a space. <space name> <user name>"""
+        store = get_store(config)
+        space_name, username = args
+        change_space_member(store, space_name, add=username)
+        return True
+
+    @make_command()
+    def delmember(args):
+        """Delete a member from a space. <space name> <user name>"""
+        store = get_store(config)
+        space_name, username = args
+        change_space_member(store, space_name, remove=username)
+        return True
 
     merge_config(config, space_config)
 

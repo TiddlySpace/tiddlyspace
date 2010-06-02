@@ -1,6 +1,14 @@
+commit messages:
+* first line provides short summary, followed by a blank line
+* subsequent lines provide rationale for the change and further details
+* max. line length of 72 characters
+cf. http://www.kernel.org/pub/software/scm/git/docs/git-commit.html#_discussion
+
 JavaScript code:
 * tabs for indentation
 * double quotes
+* trailing (rather than leading) dot for line continuation in chained operations
+* JSLint compliance
 
 Python code:
 * spaces for indentation (four per level)

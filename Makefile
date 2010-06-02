@@ -7,7 +7,6 @@ remotes: jslib
 	./cacher
 
 jslib: qunit
-	mkdir -p src/lib
 	curl -o src/lib/chrjs.js \
 		http://github.com/tiddlyweb/chrjs/raw/master/main.js
 	curl -o src/lib/users.js \

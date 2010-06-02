@@ -8,6 +8,14 @@
 var ns;
 var recipe = config.defaultCustomFields["server.workspace"].split("recipes/")[1];
 
+// hijack search macro to add custom attributes for mobile devices
+var _search = config.macros.search.handler;
+config.macros.search.handler = function(place, macroName, params) {
+	_search.apply(this, arguments);
+	$(".searchField:input", place).
+		attr({ autocapitalize: "off", autocorrect: "off" });
+};
+
 // arg is either a container name or a tiddler object
 // if fuzzy is truthy, space may be inferred from workspace (for new tiddlers)
 // returns space object or false
@@ -56,9 +64,7 @@ ns.removeTiddlerCallback = function(context, userParams) {
 		context.workspace = "recipes/" + recipe;
 		var callback = function(context, userParams) {
 			if(context.status) {
-				var t = context.tiddler;
-				store.saveTiddler(t.title, t.title, t.text, t.modifier,
-					t.modified, t.tags, t.fields, false, t.created, t.creator);
+				store.saveTiddler(context.tiddler);
 			} else {
 				store.notify(title, true);
 			}
@@ -77,6 +83,20 @@ var split = function(str, sep, mode) {
 	return { type: type, name: arr.join(sep) };
 };
 
+// hijack saveTiddler to accept Tiddler instance
+var _saveTiddler = TiddlyWiki.prototype.saveTiddler;
+TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
+		modified, tags, fields, clearChangeCount, created, creator) {
+	if(title instanceof Tiddler) { // overloading first argument
+		var t = $.extend({}, title);
+		t.fields = $.extend({}, title.fields);
+		_saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
+			t.modified, t.tags, t.fields, false, t.created, t.creator]);
+	} else {
+		_saveTiddler.apply(this, arguments);
+	}
+};
+
 var plugin = config.extensions.tiddlyspace = {
 	currentSpace: determineSpace(recipe),
 	determineSpace: determineSpace
@@ -87,20 +107,9 @@ ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
 
 var shadows = config.shadowTiddlers;
 shadows.ToolbarCommands = shadows.ToolbarCommands.
-	replace("editTiddler ", "editTiddler cloneTiddler ").
+	replace("editTiddler ", "editTiddler cloneTiddler pubRev ").
 	replace("revisions ", "publishTiddlerRevision revisions ");
 shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace.name, shadows.WindowTitle]);
-
-//hijack search macro to add a couple of attributes turning
-//off autocorrect and autocapitalize
-config.macros.search.oldSearchMacro = config.macros.search.handler;
-config.macros.search.handler = function(place, macroName, params) {
-	this.oldSearchMacro(place, macroName, params);
-
-	$(".searchField:input", place)
-		.attr("autocapitalize", "off")
-		.attr("autocorrect", "off");
-};
 
 })(jQuery);
 //}}}
