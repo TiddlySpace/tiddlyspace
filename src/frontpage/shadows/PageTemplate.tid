@@ -1,0 +1,9 @@
+modifier: Osmosoft
+
+<!--{{{-->
+<div id='displayArea'>
+<div id='tiddlerDisplay'>
+</div>
+</div>
+<div id='footer' refresh='content' tiddler='Footer'></div>
+<!--}}}-->
