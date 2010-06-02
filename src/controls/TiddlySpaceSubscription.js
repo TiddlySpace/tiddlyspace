@@ -35,6 +35,9 @@ var macro = config.macros.TiddlySpaceSubscription = {
 		passiveDesc: "Add subscription to current space",
 		activeDesc: "Subscribe current space to existing space",
 		addSuccess: "added subscription for %0 to %1",
+		delPrompt: "Are you sure you want to remove subscription %0?",
+		delTooltip: "click to remove subscription",
+		delError: "error removing subscription %0: %1",
 		listError: "error retrieving subscriptions for space %0: %1",
 		forbiddenError: "unauthorized to modify space <em>%0</em>",
 		noSpaceError: "space <em>%0</em> does not exist",
@@ -75,9 +78,9 @@ var macro = config.macros.TiddlySpaceSubscription = {
 				return (arr[0] != currentSpace && arr[1] === "") ? arr[0] : null;
 			});
 			var items = $.map(subscriptions, function(item, i) { // TODO: DRY (cf. displayMembers)
-				var btn = $('<a href="javascript:;" />').text(item);
-					//attr("title", macro.locale.delTooltip). // TODO
-					//click(this.onClick); // TODO
+				var btn = $('<a href="javascript:;" />').text(item).
+					attr("title", macro.locale.delTooltip).
+					click(macro.onClick);
 				return $("<li />").append(btn)[0];
 			});
 			$("<ul />").append(items).appendTo(container);
@@ -103,7 +106,11 @@ var macro = config.macros.TiddlySpaceSubscription = {
 		var space = form.find(selector).val();
 		var provider = mode == "passive" ? space : currentSpace;
 		var subscriber = mode == "passive" ? currentSpace : space;
-		this.subscribe(provider, subscriber, function(xhr, error, exc) {
+		var callback = function(data, status, xhr) {
+			displayMessage(macro.locale.addSuccess.format([provider, subscriber]));
+			// TODO: refresh list or reload page
+		};
+		var errback = function(xhr, error, exc) {
 			var ctx = {
 				msg: {
 					403: macro.locale.forbiddenError.format([subscriber]),
@@ -114,20 +121,34 @@ var macro = config.macros.TiddlySpaceSubscription = {
 				selector: selector
 			};
 			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
-		});
+		};
+		this.subscribe(provider, subscriber, callback, errback);
 		return false;
 	},
-	subscribe: function(provider, subscriber, errback) {
-		var data = { subscriptions: [provider] };
+	onClick: function(ev) { // XXX: ambiguous; rename
+		var btn = $(this);
+		var provider = btn.text();
+		var msg = macro.locale.delPrompt.format([provider]);
+		var callback = function(data, status, xhr) {
+			btn.closest("li").slideUp(function(ev) { $(this).remove(); });
+		};
+		var errback = function(xhr, error, exc) { // XXX: doesn't actually happen
+			displayMessage(macro.locale.delError.format([username, error]));
+		};
+		if(confirm(msg)) {
+			macro.subscribe(provider, currentSpace, callback, errback, true);
+		}
+	},
+	subscribe: function(provider, subscriber, callback, errback, unsubscribe) {
+		var data = {};
+		var key = unsubscribe ? "unsubscriptions" : "subscriptions";
+		data[key] = [provider];
 		$.ajax({ // TODO: add to model/space.js?
 			url: host + "/spaces/" + subscriber,
 			type: "POST",
 			contentType: "application/json",
 			data: $.toJSON(data),
-			success: function(data, status, xhr) {
-				displayMessage(macro.locale.addSuccess.format([provider,
-					subscriber]));
-			},
+			success: callback,
 			error: errback
 		});
 	}
