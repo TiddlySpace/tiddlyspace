@@ -1,9 +1,13 @@
 modifier: Osmosoft
 
 <!--{{{-->
+<div id='bubbleGraphic'> 
+    <div macro='tiddler Warning wikified' class='warning'></div>
+    <div macro='tiddler About wikified' class='about'></div>
+    <div macro='tiddler Bubbles'></div>
+</div>
 <div id='displayArea'>
-<div id='tiddlerDisplay'>
+    <div id='footer' refresh='content' tiddler='Footer'></div>
+    <div id='tiddlerDisplay'></div>
 </div>
-</div>
-<div id='footer' refresh='content' tiddler='Footer'></div>
 <!--}}}-->

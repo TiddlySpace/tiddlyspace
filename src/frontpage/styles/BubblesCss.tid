@@ -1,6 +1,6 @@
 modifier: Osmosoft
 
-.public {
+.public_bubble {
 	position: relative;
 	border: 2px solid red;
 	background-color: #C7EAFF;
@@ -10,7 +10,7 @@ modifier: Osmosoft
 	border-radius: 20em;
 }
 
-.private {
+.private_bubble {
 	background-color: #FFCAE9;
 	border: 4px solid #E48CBF;
 	margin: 0 auto;
@@ -34,7 +34,7 @@ modifier: Osmosoft
 	transform: rotate(0deg) scale(2.0);
 }
 
-.bubble .private {
+.bubble .private_bubble {
 	height: 1em;
 	width: 1em;
 }
@@ -43,7 +43,7 @@ modifier: Osmosoft
 	padding: 1.5em;
 }
 
-.small .private {
+.small .private_bubble {
 	height: 0.1em;
 	width: 0.1em;
 }
@@ -52,38 +52,38 @@ modifier: Osmosoft
 	padding: 2em;
 }
 
-.medium .private {
+.medium .private_bubble {
 	height: 0.5em;
 	width: 0.5em;
 }
 
-#space1.public { top: 24em; left: 30em; }
-#space2.public { top: 6em; left: 24em; }
-#space3.public { bottom: 20em; left: 4em; }
-#space4.public { top: 3em; right: 76em; }
-#space5.public { bottom: 14em; left: 4em; }
-#space6.public { top: 28em; right: 77em; }
-#space7.public { top: 9em; right: 25em; }
-#space8.public { top: -3em; right: 39em; }
-#space9.public { bottom: 9em; right: 5em; }
-#space10.public { bottom: 29em; left: 35em; }
-#space11.public { bottom: 22em; left: 8em; }
-#space12.public { bottom: 7em; right: 12em; }
-#space13.public { bottom: 13em; left: 33em; }
-#space14.public { top: 19em; right: 35em; }
-#space15.public { bottom: 23em; left: 33em; }
-#space16.public { bottom: 15em; right: 9em; }
-#space17.public { top: 12em; left: 10em; }
-#space18.public { top: 9em; left: 36em; }
-#space19.public { top: 20em; left: 25em; }
-#space20.public { bottom: 34em; right: 59em; }
-#space21.public { top: 20em; right: 81em; }
-#space22.public { bottom: 4em; left: -3em; }
-#space23.public { bottom: 14em; left: 28em; }
-#space24.public { top: 16em; right: 51em; }
-#space25.public { top: 20em; right: 49em; }
-#space26.public { bottom: 25em; right: 2em; }
-#space27.public { bottom: 30em; right: 46em; }
-#space28.public { top: 24em; left: 22em; }
-#space29.public { top: 22em; right: 85em; }
-#space30.public { top: 18em; left: 33em; }
+#space1.public_bubble { top: 24em; left: 30em; z-index: 1; }
+#space2.public_bubble { top: 6em; left: 24em; z-index: 1; }
+#space3.public_bubble { bottom: 20em; left: 4em; z-index: 1; }
+#space4.public_bubble { top: 3em; right: 76em; z-index: 1; }
+#space5.public_bubble { bottom: 14em; left: 4em; z-index: 1; }
+#space6.public_bubble { top: 28em; right: 77em; z-index: 1; }
+#space7.public_bubble { top: 9em; right: 25em; z-index: 1; }
+#space8.public_bubble { top: -3em; right: 39em; z-index: 1; }
+#space9.public_bubble { bottom: 9em; right: 5em; z-index: 1; }
+#space10.public_bubble { bottom: 29em; left: 35em; z-index: 1; }
+#space11.public_bubble { bottom: 22em; left: 8em; z-index: 1; }
+#space12.public_bubble { bottom: 7em; right: 12em; z-index: 1; }
+#space13.public_bubble { bottom: 13em; left: 33em; z-index: 1; }
+#space14.public_bubble { top: 19em; right: 35em; z-index: 1; }
+#space15.public_bubble { bottom: 23em; left: 33em; z-index: 1; }
+#space16.public_bubble { bottom: 15em; right: 9em; z-index: 1; }
+#space17.public_bubble { top: 12em; left: 10em; z-index: 1; }
+#space18.public_bubble { top: 9em; left: 36em; z-index: 1; }
+#space19.public_bubble { top: 20em; left: 25em; z-index: 1; }
+#space20.public_bubble { bottom: 34em; right: 59em; z-index: 1; }
+#space21.public_bubble { top: 20em; right: 81em; z-index: 1; }
+#space22.public_bubble { bottom: 4em; left: -3em; z-index: 1; }
+#space23.public_bubble { bottom: 14em; left: 28em; z-index: 1; }
+#space24.public_bubble { top: 16em; right: 51em; z-index: 1; }
+#space25.public_bubble { top: 20em; right: 49em; z-index: 1; }
+#space26.public_bubble { bottom: 25em; right: 2em; z-index: 1; }
+#space27.public_bubble { bottom: 30em; right: 46em; z-index: 1; }
+#space28.public_bubble { top: 24em; left: 22em; z-index: 1; }
+#space29.public_bubble { top: 22em; right: 85em; z-index: 1; }
+#space30.public_bubble { top: 18em; left: 33em; z-index: 1; }

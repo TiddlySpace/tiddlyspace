@@ -1,17 +1,14 @@
 modifier: Osmosoft
 
-<html>
-<div id="about" class="public">
-	<div class="private">
-		<span class="siteTitle">TiddlySpace</span> <!-- XXX: should be H1 -->
-		<p class="siteSubtitle"> <!-- XXX: should be H2 -->
-			<a href="http://www.osmosoft.com/~jermolene/tiddlyspace/tiddlyspace.pdf">discoursive, social</a>
-			<a href="http://tiddlywiki.com">TiddlyWiki</a>
-		</p>
-		<p class="login">
-			<a href="#register">Sign up</a> or
-			<a href="#login">Log in</a>
-		</p>
-	</div>
-</div>
-</html>
+{{public_bubble{
+    {{private_bubble{
+        {{siteTitle{TiddlySpace}}}
+        {{siteSubtitle{
+            [[discoursive, social|http://www.osmosoft.com/~jermolene/tiddlyspace/tiddlyspace.pdf]]    
+            [[TiddlyWiki|http://tiddlywiki.com]]
+        }}}   
+        {{login{
+            [[Sign up]], or [[Log in]]
+        }}}
+    }}}
+}}}
