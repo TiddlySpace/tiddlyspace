@@ -8,7 +8,8 @@ import simplejson
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
-from tiddlyweb.store import NoBagError, NoRecipeError
+from tiddlyweb.model.user import User
+from tiddlyweb.store import NoBagError, NoRecipeError, NoUserError
 from tiddlyweb.filters import parse_for_filters
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
@@ -28,6 +29,11 @@ def home(environ, start_response):
     http_host, host_url = _determine_host(environ)
     if http_host == host_url:
         usersign = environ['tiddlyweb.usersign']['name']
+        try:
+            store = environ['tiddlyweb.store']
+            user = store.get(User(usersign))
+        except NoUserError:
+            usersign = 'GUEST'
         if usersign == 'GUEST':
             return serve_frontpage(environ, start_response)
         else: # authenticated user
