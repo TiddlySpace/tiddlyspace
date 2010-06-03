@@ -65,7 +65,6 @@ var tsp = config.macros.TiddlySpaceChangePassword = {
 		};
 		var user = new tiddlyweb.User(username, password, ns.host);
 		user.setPassword(npassword, pwCallback, pwErrback);
-	
 	}
 };
 
