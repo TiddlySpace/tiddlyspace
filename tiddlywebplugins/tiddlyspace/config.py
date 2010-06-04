@@ -16,6 +16,7 @@ config = {
     'auth_systems': ['cookie_form', 'tiddlywebplugins.tiddlyspace.openid'],
     'bag_create_policy': 'ANY',
     'recipe_create_policy': 'ANY',
+    'css_uri': 'http://peermore.com/tiddlyweb.css',
     'socialusers.reserved_names': ['www', 'about', 'help', 'announcements',
         'info'],
 }
