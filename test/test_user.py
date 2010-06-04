@@ -81,6 +81,7 @@ def test_register_user():
             method='PUT')
     assert response['status'] == '409'
 
+
 def test_space_exist_no_user():
     cookie = get_auth('cdent', 'cowpig')
     response, content = http.request('http://0.0.0.0:8080/spaces/monkey',
@@ -96,3 +97,32 @@ def test_space_exist_no_user():
             body=body)
     assert response['status'] == '409'
     assert 'monkey already exists as space' in content
+
+
+def test_username_bad_form():
+    data = {'username': 'FatBoy', 'password': 'cowpig'}
+    body = simplejson.dumps(data)
+    response, content = http.request('http://0.0.0.0:8080/users',
+            method='POST',
+            headers={'Content-Type': 'application/json'},
+            body=body)
+    assert response['status'] == '409'
+    assert 'lowercase required' in content
+
+    data = {'username': 'fat.boy', 'password': 'cowpig'}
+    body = simplejson.dumps(data)
+    response, content = http.request('http://0.0.0.0:8080/users',
+            method='POST',
+            headers={'Content-Type': 'application/json'},
+            body=body)
+    assert response['status'] == '409'
+    assert 'alphanumeric required' in content
+
+    data = {'username': 'fat boy', 'password': 'cowpig'}
+    body = simplejson.dumps(data)
+    response, content = http.request('http://0.0.0.0:8080/users',
+            method='POST',
+            headers={'Content-Type': 'application/json'},
+            body=body)
+    assert response['status'] == '409'
+    assert 'alphanumeric required' in content

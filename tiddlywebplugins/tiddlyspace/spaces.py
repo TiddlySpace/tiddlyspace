@@ -385,6 +385,8 @@ def _validate_space_name(environ, name):
     store = environ['tiddlyweb.store']
     if not name.islower(): # just a stub for now
         raise HTTP409('Invalid space name, lowercase required: %s' % name)
+    if not name.isalnum():
+        raise HTTP409('Invalid space name, alphanumeric required: %s' % name)
     # This reserved list should/could be built up from multiple
     # sources.
     reserved_space_names = environ['tiddlyweb.config'].get(
