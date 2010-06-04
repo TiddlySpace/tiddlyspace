@@ -114,11 +114,8 @@ def create_space(environ, start_response):
     """
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
-    try:
-        store.get(Recipe('%s_private' % space_name))
-    except NoRecipeError:
-        return _create_space(environ, start_response, space_name)
-    raise HTTP409('%s already exists' % space_name)
+    _validate_space_name(environ, space_name)
+    return _create_space(environ, start_response, space_name)
 
 
 def delete_space_member(environ, start_response):
@@ -267,7 +264,6 @@ def _create_space(environ, start_response, space_name):
     """
     Create the space named by space_name. Raise 201 on success.
     """
-    _validate_space_name(environ, space_name)
     _make_space(environ, space_name)
     start_response('201 Created', [
         ('Location', _space_uri(environ, space_name)),
@@ -386,6 +382,7 @@ def _validate_space_name(environ, name):
     Determine if space name can be used.
     We've already checked if the space exists.
     """
+    store = environ['tiddlyweb.store']
     if not name.islower(): # just a stub for now
         raise HTTP409('Invalid space name, lowercase required: %s' % name)
     # This reserved list should/could be built up from multiple
@@ -394,6 +391,27 @@ def _validate_space_name(environ, name):
             'socialusers.reserved_names', [])
     if name in reserved_space_names:
         raise HTTP409('Invalid space name: %s' % name)
+    try:
+        store.get(Recipe('%s_private' % name))
+        raise HTTP409('%s already exists as space' % name)
+    except NoRecipeError:
+        pass
+
+
+import tiddlywebplugins.socialusers
+original_validate_user = tiddlywebplugins.socialusers._validate_user
+
+
+def _validate_user_name(environ, user_info):
+    """
+    Override socialusers _validate_user.
+    """
+    username = user_info['username']
+    _validate_space_name(environ, username)
+    return original_validate_user(environ, user_info)
+
+
+tiddlywebplugins.socialusers._validate_user = _validate_user_name
 
 
 def _validate_subscription(environ, name, recipe):
