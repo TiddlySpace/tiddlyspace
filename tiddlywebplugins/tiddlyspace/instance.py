@@ -27,6 +27,7 @@ store_contents['tiddlyspace'] = [
     'src/controls/index.recipe',
     'src/lib/index.recipe',
     'src/model/index.recipe',
+    'src/external.recipe'
 ]
 store_contents['frontpage_public'] = ['src/frontpage/index.recipe']
 
