@@ -178,10 +178,14 @@ class ControlView(object):
         if (req_uri.startswith('/bags') or
                 req_uri.startswith('/recipes') or
                 req_uri.startswith('/search')):
-            return self._handle_core_request(
-                    environ, start_response, req_uri)
-        else:
-            return self.application(environ, start_response)
+            self._handle_core_request(environ, start_response, req_uri)
+
+        def replacement_start_response(status, headers, exc_info=None):
+            if environ['REQUEST_METHOD'] == 'GET':
+                headers.append(('Access-Control-Allow-Origin', '*'))
+            return start_response(status, headers, exc_info)
+
+        return self.application(environ, replacement_start_response)
 
     # XXX too long!
     def _handle_core_request(self, environ, start_response, req_uri):
@@ -204,20 +208,20 @@ class ControlView(object):
             bags.insert(0, "MAPUSER")
 
             filter_string = None
-            if req_uri == '/recipes':
+            if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
                 if recipe_name.endswith('_private'):
                     filter_string = (
                             'mselect=name:%s_private,name:%s_public' % (
                             space_name, space_name))
                 else:
                     filter_string = 'select=name:%s_public' % space_name
-            elif req_uri == '/bags':
+            elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
                 filter_string = 'mselect='
                 filter_parts = []
                 for bag in bags:
                     filter_parts.append('name:%s' % bag)
                 filter_string += ','.join(filter_parts)
-            elif req_uri == '/search':
+            elif req_uri.startswith('/search') and req_uri.count('/') == 1:
                 filter_string = 'mselect='
                 filter_parts = []
                 for bag in bags:
@@ -238,5 +242,3 @@ class ControlView(object):
                 filters, _ = parse_for_filters(filter_string)
                 for single_filter in filters:
                     environ['tiddlyweb.filters'].insert(0, single_filter)
-
-        return self.application(environ, start_response)

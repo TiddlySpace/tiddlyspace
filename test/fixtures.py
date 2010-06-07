@@ -29,7 +29,7 @@ def make_test_env():
         shutil.rmtree('test_instance')
     except OSError:
         pass
-    exit = os.system('twinstance_dev tiddlywebplugins.tiddlyspace test_instance')
+    exit = os.system('PYTHONPATH="." twinstance_dev tiddlywebplugins.tiddlyspace test_instance')
     if exit == 0:
         os.chdir('test_instance')
         sys.path.insert(0, os.getcwd())

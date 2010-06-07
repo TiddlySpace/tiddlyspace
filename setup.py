@@ -34,6 +34,7 @@ setup(
         'tiddlywebplugins.openid2>=0.4',
         'tiddlywebplugins.cookiedomain>=0.2',
         'tiddlywebplugins.mselect',
+        'tiddlywebplugins.prettyerror',
     ],
     include_package_data = True,
     zip_safe = False
