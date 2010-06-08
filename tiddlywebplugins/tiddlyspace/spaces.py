@@ -114,6 +114,7 @@ def create_space(environ, start_response):
     """
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
+    space_name = urllib.unquote(space_name).decode('UTF-8')
     _validate_space_name(environ, space_name)
     return _create_space(environ, start_response, space_name)
 
@@ -383,6 +384,11 @@ def _validate_space_name(environ, name):
     We've already checked if the space exists.
     """
     store = environ['tiddlyweb.store']
+    try:
+        name = str(name)
+    except UnicodeEncodeError:
+        raise HTTP409('Invalid space name, ascii required: %s' %
+                name.encode('UTF-8'))
     if not name.islower(): # just a stub for now
         raise HTTP409('Invalid space name, lowercase required: %s' % name)
     if not name.isalnum():

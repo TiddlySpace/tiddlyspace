@@ -16,7 +16,9 @@
   data: '{"username": "cdënt", "password": "cöwpig"}'
   request_headers:
     content-type: application/json
-  status: 201
+  status: 409
+  expected:
+  - Invalid space name, ascii required
 
 # Create a unicorn (unicode!) user
 - name: Create one unicorn 2
@@ -28,7 +30,7 @@
     content-type: application/json
   status: 409
   expected:
-  - lowercase
+  - Invalid space name, ascii required
 
 - name: Attempt invalide user
   desc: POST to create a user with a bad name
@@ -46,7 +48,6 @@
   desc: Get the list of all the users
   expected: 
   - cdent
-  - cdënt
   url: /users
   request_headers:
     authorization: Basic Y2RlbnQ6Y293cGln
@@ -93,3 +94,126 @@
   method: PUT
   data: '{"password": "cowpig"}'
   status: 403
+
+# Confirm non-existent space
+- name: Confirm space
+  url: /spaces/flatpig
+  status: 404
+
+# Create space
+- name: Create space
+  url: /spaces/flatpig
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+  method: PUT
+  status: 201
+
+# Create same space
+- name: Create same space
+  desc: unable to create space when it exists
+  url: /spaces/flatpig
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+  method: PUT
+  status: 409
+  expected:
+  - exists
+
+# Create user with space name fail
+- name: Create user space name
+  url: /users
+  method: POST
+  data: '{"username": "flatpig", "password": "cowpig"}'
+  request_headers:
+    content-type: application/json
+  status: 409
+  expected:
+  - already exists as space
+
+# Create second space
+- name: Create space 2
+  url: /spaces/tallpig
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+  method: PUT
+  status: 201
+
+# Create unicode space
+- name: Create unicode space
+  url: /spaces/smΩkey
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+  method: PUT
+  status: 409
+  expected:
+  - Invalid space name, ascii required
+
+# Create caps space
+- name: Create caps space fail
+  url: /spaces/FOGHorN
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+  method: PUT
+  status: 409
+  expected:
+  - Invalid space name, lowercase required
+
+# Create badname space
+- name: Create spaced space fail
+  url: /spaces/this%20space
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+  method: PUT
+  status: 409
+  expected:
+  - Invalid space name, alphanumeric required
+
+# Create reserved space
+- name: Create reserved space fail
+  url: /spaces/help
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+  method: PUT
+  status: 409
+  expected:
+  - Invalid space name
+
+- name : Subscribe space
+  url: /spaces/flatpig
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+    content-type: application/json
+  method: POST
+  data: '{"subscriptions": ["tallpig"]}'
+  status: 204
+ 
+- name : Subscribe non-exist
+  url: /spaces/flatpig
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+    content-type: application/json
+  method: POST
+  data: '{"subscriptions": ["skinnypig"]}'
+  status: 409
+  expected:
+  - Invalid content for subscription
+
+- name : Unsubscribe non-exist
+  url: /spaces/flatpig
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+    content-type: application/json
+  method: POST
+  data: '{"unsubscriptions": ["skinnypig"]}'
+  status: 409
+  expected:
+  - Invalid content for unsubscription
+
+- name : Unsubscribe exist
+  url: /spaces/flatpig
+  request_headers:
+    authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
+    content-type: application/json
+  method: POST
+  data: '{"unsubscriptions": ["tallpig"]}'
+  status: 204
