@@ -36,6 +36,7 @@ setup(
         'tiddlywebplugins.cookiedomain>=0.2',
         'tiddlywebplugins.mselect',
         'tiddlywebplugins.prettyerror',
+        'tiddlywebplugins.form==dev',
     ],
     include_package_data = True,
     zip_safe = False
