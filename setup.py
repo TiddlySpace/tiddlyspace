@@ -26,7 +26,6 @@ setup(
         'setuptools',
         'tiddlyweb>=1.1.0',
         'tiddlywebwiki>=0.29',
-        'tiddlywebplugins.twimport>=0.9.4', # XXX: temporary, until latest version is included in tiddlywebwiki (via instancer)
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout>=0.2',
         'tiddlywebplugins.virtualhosting',
@@ -35,6 +34,7 @@ setup(
         'tiddlywebplugins.openid2>=0.4',
         'tiddlywebplugins.cookiedomain>=0.2',
         'tiddlywebplugins.mselect',
+        'tiddlywebplugins.prettyerror',
     ],
     include_package_data = True,
     zip_safe = False

@@ -9,7 +9,6 @@ var ns = config.extensions.tiddlyspace;
 var cmd = config.commands.pubRev = { // TODO: rename
 	text: "public",
 	tooltip: "view public version",
-	pubSuffix: " [public]",
 	loadingMsg: "retrieving public version of <em>%0</em>",
 	noPubError: "<em>%0</em> has not been published",
 
@@ -30,19 +29,11 @@ var cmd = config.commands.pubRev = { // TODO: rename
 		popup = $(popup).html(msg);
 		Popup.show(); // XXX: can be irritating if it just flashes quickly
 		var callback = function(context, userParams) {
-			var tid = context.tiddler;
 			if(context.status) {
-				tid.fields.doNotSave = "true";
-				tid.title = tid.title + cmd.pubSuffix;
-				store.addTiddler(tid); // overriding existing allows updating
-				var refresh = story.getTiddler(tid.title);
-				story.displayTiddler(src, tid.title);
-				if(refresh) {
-					story.refreshTiddler(tid.title, null, true);
-				}
+				ns.spawnPublicTiddler(context.tiddler, src);
 				Popup.remove();
 			} else {
-				var msg = cmd.noPubError.format([tid.title]);
+				var msg = cmd.noPubError.format([context.tiddler.title]);
 				msg = $('<div class="annotation" />').html(msg);
 				popup.empty().append(msg);
 			}
@@ -52,4 +43,20 @@ var cmd = config.commands.pubRev = { // TODO: rename
 	}
 };
 
+// adds a Tiddler instance to the store as temporary tiddler and displays it
+// src is passed to Story's displayTiddler as srcElement
+ns.spawnPublicTiddler = function(tiddler, src) { // XXX: rename!?
+	tiddler.fields.doNotSave = "true";
+	tiddler.title = tiddler.title + this.spawnPublicTiddler.pubSuffix;
+	store.addTiddler(tiddler); // overriding existing allows updating
+	var refresh = story.getTiddler(tiddler.title);
+	var el = story.displayTiddler(src || null, tiddler.title);
+	if(refresh) {
+		story.refreshTiddler(tiddler.title, null, true);
+	}
+	return el;
+};
+ns.spawnPublicTiddler.pubSuffix = " [public]"; // XXX: hacky?
+
 })(jQuery);
+//}}}

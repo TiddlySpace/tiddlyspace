@@ -34,6 +34,7 @@ def init(config):
     import tiddlywebplugins.mselect
     import tiddlywebplugins.cookiedomain
     import tiddlywebplugins.tiddlyspace.validator
+    import tiddlywebplugins.prettyerror
 
     @make_command()
     def addmember(args):
@@ -59,6 +60,7 @@ def init(config):
     tiddlywebplugins.socialusers.init(config)
     tiddlywebplugins.mselect.init(config)
     tiddlywebplugins.cookiedomain.init(config)
+    tiddlywebplugins.prettyerror.init(config)
 
     if 'selector' in config: # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))

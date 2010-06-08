@@ -1,0 +1,95 @@
+# Create a user
+- name: Create one user
+  desc: POST to create a user
+  url: /users
+  method: POST
+  data: '{"username": "cdent", "password": "cowpig"}'
+  request_headers:
+    content-type: application/json
+  status: 201
+
+# Create a unicorn (unicode!) user
+- name: Create one unicorn
+  desc: POST to create a user
+  url: /users
+  method: POST
+  data: '{"username": "cdënt", "password": "cöwpig"}'
+  request_headers:
+    content-type: application/json
+  status: 201
+
+# Create a unicorn (unicode!) user
+- name: Create one unicorn 2
+  desc: POST to create a user
+  url: /users
+  method: POST
+  data: '{"username": "ㅀㅂㅃㅆㅇ", "password": "ㄻㄼㄾㅏ"}'
+  request_headers:
+    content-type: application/json
+  status: 409
+  expected:
+  - lowercase
+
+- name: Attempt invalide user
+  desc: POST to create a user with a bad name
+  url: /users
+  method: POST
+  data: '{"username": "www", "password": "cowpig"}'
+  request_headers:
+    content-type: application/json
+  status: 409
+  expected:
+  - Invalid space name
+
+# The list of users
+- name: List of Users
+  desc: Get the list of all the users
+  expected: 
+  - cdent
+  - cdënt
+  url: /users
+  request_headers:
+    authorization: Basic Y2RlbnQ6Y293cGln
+  response_headers:
+    content-type: text/plain
+
+# Specific user
+- name: Individual User
+  desc: Get one user
+  request_headers:
+    authorization: Basic Y2RlbnQ6Y293cGln
+  expected:
+  - cdent
+  url: /users/cdent
+
+# Put a user's new password
+- name: Put a user password
+  desc: Set a user password
+  url: /users/cdent
+  request_headers:
+    authorization: Basic Y2RlbnQ6Y293cGln
+    content-type: application/json
+  method: PUT
+  data: '{"password": "newpass"}'
+  status: 204
+
+# Put a user's new password
+- name: Put a user password unicode
+  desc: Set a user password unicode
+  url: /users/cdent
+  request_headers:
+    authorization: Basic Y2RlbnQ6bmV3cGFzcw==
+    content-type: application/json
+  method: PUT
+  data: '{"password": "貳肆柒阡"}'
+  status: 204
+
+# Fail setting password
+- name: Put a user password unicode 2
+  desc: Set a user password unicode 2
+  url: /users/cdent
+  request_headers:
+    content-type: application/json
+  method: PUT
+  data: '{"password": "cowpig"}'
+  status: 403

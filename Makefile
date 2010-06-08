@@ -37,7 +37,7 @@ pypi: test
 dev: remotes dev_local
 
 dev_local:
-	@twinstance_dev tiddlywebplugins.tiddlyspace dev_instance
+	@PYTHONPATH="." twinstance_dev tiddlywebplugins.tiddlyspace dev_instance
 	@echo "from devtiddlers import update_config; update_config(config)" \
 		>> dev_instance/tiddlywebconfig.py
 	@echo "INFO development instance created in dev_instance," \

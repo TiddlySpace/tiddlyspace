@@ -4,9 +4,21 @@ structure and contents of a default TiddlySpace instance
 
 from copy import deepcopy
 
+from tiddlywebplugins.instancer.util import get_tiddler_locations
+
+from tiddlyweb.util import merge_config
+
 from tiddlywebwiki.instance import (instance_config, store_contents,
     store_structure)
 
+from tiddlywebplugins.prettyerror.instance import (
+         store_contents as prettyerror_store_contents,
+         store_structure as prettyerror_store_structure)
+
+store_contents.update(get_tiddler_locations(
+    prettyerror_store_contents, 'tiddlywebplugins.prettyerror'))
+store_structure['bags'].update(prettyerror_store_structure['bags'])
+store_structure['recipes'].update(prettyerror_store_structure['recipes'])
 
 instance_config['system_plugins'] = ['tiddlywebplugins.tiddlyspace']
 instance_config['twanager_plugins'] = ['tiddlywebplugins.tiddlyspace']
@@ -15,6 +27,7 @@ store_contents['tiddlyspace'] = [
     'src/controls/index.recipe',
     'src/lib/index.recipe',
     'src/model/index.recipe',
+    'src/external.recipe'
 ]
 store_contents['frontpage_public'] = ['src/frontpage/index.recipe']
 
