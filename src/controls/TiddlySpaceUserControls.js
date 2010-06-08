@@ -151,6 +151,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		userError: "error creating user %0: %1",
 		spaceSuccess: "created space %0",
 		spaceError: "error creating space %0: %1",
+		charError: "error: invalid username - must be alphanumeric (lowercase)",
 		passwordError: "error: passwords do not match"
 	},
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -172,10 +173,18 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		var username = form.find("[name=username]").val();
 		var password = form.find("[name=password]").val();
 		var passwordConfirm = form.find("[name=password_confirm]").val();
-		if(password && password == passwordConfirm) { // TODO: check password length
+		var specialChars = username.match(/[^0-9a-z]/) ? true : false;
+		if(!specialChars && password && password == passwordConfirm) { // TODO: check password length?
 			tsr.register(username, password);
 		} else {
-			alert(tsr.locale.passwordError); // XXX: alert is evil
+			var xhr = { status: 409 }; // XXX: hacky
+			var msg = specialChars ? "charError" : "passwordError";
+			var ctx = {
+				msg: { 409: tsr.locale[msg] },
+				form: form,
+				selector: specialChars ? "[name=username]" : "[type=password]"
+			};
+			tsl.displayError(xhr, null, null, ctx);
 		}
 		return false;
 	},
