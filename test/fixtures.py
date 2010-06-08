@@ -33,6 +33,9 @@ def make_test_env():
     if exit == 0:
         os.chdir('test_instance')
         sys.path.insert(0, os.getcwd())
+        f = open('tiddlywebconfig.py', 'a')
+        f.write('from devtiddlers import update_config; update_config(config, set_host=False)')
+        f.close()
     else:
         assert False is True, 'unable to create test env'
 

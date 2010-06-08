@@ -11,11 +11,12 @@ instance_tiddlers = {
 }
 
 
-def update_config(config):
+def update_config(config, set_host=True):
     for bag, uris in instance_tiddlers.items():
         config['local_instance_tiddlers'][bag] = uris
-    config['server_host'] = {
-        'scheme': 'http',
-        'host': 'tiddlyspace.org',
-        'port': '8080'
-    }
+    if set_host:
+        config['server_host'] = {
+            'scheme': 'http',
+            'host': 'tiddlyspace.org',
+            'port': '8080'
+        }
