@@ -130,7 +130,6 @@ a:hover {
 #displayArea {
 	width: 100%;
 	margin: 0;
-	height: 100%;
 	position: absolute;
 	bottom: 1;
 }
