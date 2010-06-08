@@ -2,7 +2,7 @@
 |''Requires''|TiddlySpaceConfig|
 ***/
 //{{{
-(function() {
+(function($) {
 
 var ns = config.extensions.tiddlyspace;
 
@@ -20,15 +20,17 @@ var cmd = config.commands.publishTiddlerRevision = {
 		return space && space.name == ns.currentSpace.name && space.type == "private";
 	},
 	handler: function(ev, src, title) {
-		var tiddler = store.getTiddler(title);
-		var space = ns.determineSpace(tiddler);
-		// XXX: changes to tiddler object need to be reverted on error!?
-		tiddler.fields["server.workspace"] = "bags/%0_public".format([space.name]);
-		tiddler.fields["server.page.revision"] = "false";
+		var original = store.getTiddler(title);
+		var space = ns.determineSpace(original);
+		var tiddler = $.extend(new Tiddler(title), original);
+		tiddler.fields = $.extend({}, original.fields, {
+			"server.workspace": "bags/%0_public".format([space.name]),
+			"server.page.revision": "false"
+		});
 		var adaptor = tiddler.getAdaptor();
 		adaptor.putTiddler(tiddler, null, null, function(context, userParams) {
 			if(context.status) {
-				story.refreshTiddler(context.tiddler.title, null, true);
+				ns.spawnPublicTiddler(context.tiddler, src);
 			} else {
 				displayMessage(cmd.errorMsg.format([title, context.statusText]));
 			}
@@ -36,5 +38,5 @@ var cmd = config.commands.publishTiddlerRevision = {
 	}
 };
 
-})();
+})(jQuery);
 //}}}
