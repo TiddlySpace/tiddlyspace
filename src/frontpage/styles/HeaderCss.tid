@@ -6,7 +6,7 @@ html, body, #container {
 	margin: 0;
 	color: #003355;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	background-color: #A2F7A2;
+	background-color: #DBDBDB;
 }
 
 body > #container {
@@ -58,13 +58,13 @@ body > #container {
 	min-height: 5em;
 	min-width: 43em;
 	text-align: center;
-	background-color: #A2F7A2;
-	border-top: 0.1em solid #85AB87;
+	background-color: #9E9E9E;
+	border-top: 0.1em solid black;
 	padding-top: 1em;
 	margin-top: -5.1em;
 	z-index: 100;
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E2FFE2), to(#A2F7A2));
-	background: -moz-linear-gradient(0% 100% 90deg, #A2F7A2, #E2FFE2);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#9E9E9E));
+	background: -moz-linear-gradient(0% 100% 90deg, #9E9E9E, white);
 }
 
 #footer * {
@@ -76,7 +76,6 @@ body > #container {
 	color: #337788;
 	position: relative;
 	top: -2.7em;
-	left: -0.5em;
 	line-height: 3em;
 	font-size: 3em;
 	font-weight: bold;
@@ -131,6 +130,7 @@ a:hover {
 	width: 100%;
 	margin: 0;
 	position: absolute;
+	background-color: #9E9E9E;
 	bottom: 1;
 }
 
@@ -141,13 +141,15 @@ a:hover {
 
 .tiddler {
 	background-color: white;
-	border: 0.1em solid #85AB87 !important;
-	-moz-border-radius: 2em;
-	-webkit-border-radius: 2em;
-	border-radius: 2em;
-	padding: 1em;
+	border: 0.1em solid black !important;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	padding: 1em 2em 1em 2em;
 	margin-top: 1em;
 	margin-bottom: 1em;
+	-webkit-box-shadow: 2px 2px 4px #444;
+	-mox-box-shadow: 2px 2px 4px #444;
 }
 
 .viewer {
