@@ -150,7 +150,6 @@ def list_spaces(environ, start_response):
     if mine:
         spaces = []
         for recipe in store.list_recipes():
-            print 'recipe', recipe.name
             if recipe.name.endswith('_public'):
                 recipe = store.get(recipe)
                 if current_user in recipe.policy.manage:
@@ -159,7 +158,6 @@ def list_spaces(environ, start_response):
         spaces = [_recipe_space_name(recipe.name) for
                 recipe in store.list_recipes() if
                 recipe.name.endswith('_public')]
-    print 'spaces', spaces
     start_response('200 OK', [
         ('Content-Type', 'application/json; charset=UTF-8')])
     return simplejson.dumps([{'name': space, 'uri': _space_uri(environ, space)}
@@ -307,7 +305,6 @@ def _space_uri(environ, space_name):
     """
     host = environ['tiddlyweb.config']['server_host']['host']
     port = environ['tiddlyweb.config']['server_host']['port']
-    print space_name
     if not _alien_domain(environ, space_name):
         if port is not '443' or port is not '80':
             uri = 'http://%s.%s:%s/' % (urllib.quote(space_name.encode(
@@ -323,7 +320,6 @@ def _space_uri(environ, space_name):
                 uri = 'http://%s/' % host
         else:
             uri = 'http://%s/' % space_name # XXX This is a stub
-    print uri
     return uri
 
 
