@@ -2,10 +2,9 @@ modifier: Osmosoft
 
 <html>
 <p class="colophon">
-	<a href="http://osmosoft.com">osmosoft</a> &middot;
-	<a href="http://tiddlywiki.com">tiddlywiki</a> &middot;
-	<a href="http://tiddlyspace.com">tiddlyspace</a> &middot;
-	<a href="http://github.com/FND/tiddlyspace">source</a> &middot;
-	<a href="dashboard">dashboard</a>
+	<a href="http://tiddlyspace.com">TiddlySpace</a> &middot;
+	<a href="http://tiddlywiki.com">TiddlyWiki</a> &middot;
+	<a href="http://osmosoft.com">Osmosoft</a> &middot;
+	<a href="http://github.com/TiddlySpace/tiddlyspace">source</a>
 </p>
 </html>

@@ -13,12 +13,12 @@ Scroller = function(targetElement) {
 	var offset = 50;
 	var endPoint = ensureVisible(targetElement);
 	var minScroll = $("#footer").offset().top - offset;
-	if (endPoint < minScroll) {
+	if(endPoint < minScroll) {
 		endPoint = minScroll;
 	}
 	// make sure the page has enough space to scroll into
 	var tiddlerDisplay = $("#tiddlerDisplay");
-	if ($(tiddlerDisplay).height() < (screen.height - offset)) {
+	if($(tiddlerDisplay).height() < (screen.height - offset)) {
 		$(tiddlerDisplay).height(screen.height - offset);
 	}
 
