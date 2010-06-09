@@ -4,9 +4,9 @@ modifier: Osmosoft
     {{private_bubble{
         {{siteTitle{TiddlySpace}}}
         {{siteSubtitle{
-            [[discoursive, social|http://www.osmosoft.com/~jermolene/tiddlyspace/tiddlyspace.pdf]]    
+            [[discoursive, social|http://www.osmosoft.com/~jermolene/tiddlyspace/tiddlyspace.pdf]]
             [[TiddlyWiki|http://tiddlywiki.com]]
-        }}}   
+        }}}
         {{login{
             [[Sign up]], or [[Log in]]
         }}}
