@@ -305,21 +305,24 @@ def _space_uri(environ, space_name):
     """
     host = environ['tiddlyweb.config']['server_host']['host']
     port = environ['tiddlyweb.config']['server_host']['port']
+    scheme = environ['tiddlyweb.config']['server_host']['scheme']
     if not _alien_domain(environ, space_name):
-        if port is not '443' or port is not '80':
-            uri = 'http://%s.%s:%s/' % (urllib.quote(space_name.encode(
-                'utf-8')), host, port)
+        if port is not '443' and port is not '80':
+            uri = '%s://%s.%s:%s/' % (scheme,
+                    urllib.quote(space_name.encode('utf-8')),
+                    host, port)
         else:
-            uri = 'http://%s.%s/' % (urllib.quote(space_name.encode(
-                'utf-8')), host)
+            uri = '%s://%s.%s/' % (scheme,
+                    urllib.quote(space_name.encode('utf-8')),
+                    host)
     else:
         if space_name == 'frontpage':
-            if port is not '443' or port is not '80':
-                uri = 'http://%s:%s/' % (host, port)
+            if port is not '443' and port is not '80':
+                uri = '%s://%s:%s/' % (scheme, host, port)
             else:
-                uri = 'http://%s/' % host
+                uri = '%s://%s/' % (scheme, host)
         else:
-            uri = 'http://%s/' % space_name # XXX This is a stub
+            uri = '%s://%s/' % (scheme, space_name) # XXX This is a stub
     return uri
 
 
