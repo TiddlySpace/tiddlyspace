@@ -1,8 +1,3 @@
-/***
-|TableViewPlugin|
-|Version|0.1|
-|Author|Ben Gillies|
-***/
 //{{{
 (function($) {
 

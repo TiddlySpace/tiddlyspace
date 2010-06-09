@@ -127,7 +127,7 @@ a:hover {
 	margin: 0;
 	overflow: hidden;
 	position: relative;
-	background-color: #DBDBDB
+	background-color: #DBDBDB;
 }
 
 #displayArea {
