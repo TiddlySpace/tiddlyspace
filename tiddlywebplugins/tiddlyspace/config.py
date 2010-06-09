@@ -18,5 +18,5 @@ config = {
     'recipe_create_policy': 'ANY',
     'css_uri': 'http://peermore.com/tiddlyweb.css',
     'socialusers.reserved_names': ['www', 'about', 'help', 'announcements',
-        'info'],
+        'info', 'api'],
 }
