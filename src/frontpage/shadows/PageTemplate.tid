@@ -1,6 +1,8 @@
 modifier: Osmosoft
 
 <!--{{{-->
+<div class='annotation'
+	macro='tiddler {{ config.options.txtUsername != "GUEST" ? "Unknown user": ""; }}'></div>
 <div id='bubbleGraphic'>
 	<div macro='tiddler Warning wikified' class='warning'></div>
 	<div macro='tiddler About wikified' class='about'></div>
