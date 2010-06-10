@@ -45,7 +45,7 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	},
 	refresh: function(container) {
 		container.empty().append("<ul />").append(this.generateForm());
-		$.ajax({  // TODO: add (dynamically) to chrjs user extension?
+		$.ajax({ // TODO: add (dynamically) to chrjs user extension?
 			url: "%0/users/%1/identities".format([ns.host, ns.username]),
 			type: "GET",
 			success: function(data, status, xhr) {

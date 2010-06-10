@@ -110,7 +110,7 @@ a:hover {
 
 .warning {
 	z-index: 101;
-    background: none !important;
+	background: none !important;
 	width: 50em;
 	margin: 5em auto 1em auto;
 	position: relative;
