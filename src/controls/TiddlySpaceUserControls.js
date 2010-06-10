@@ -148,9 +148,9 @@ var tsr = config.macros.TiddlySpaceRegister = {
 	locale: {
 		label: "Register",
 		userSuccess: "created user %0",
-		userError: "error creating user %0: %1",
+		userError: "user <em>%0</em> already exists",
 		spaceSuccess: "created space %0",
-		spaceError: "error creating space %0: %1",
+		spaceError: "space <em>%0</em> already exists",
 		charError: "error: invalid username - must be alphanumeric (lowercase)",
 		passwordError: "error: passwords do not match"
 	},
@@ -175,7 +175,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		var passwordConfirm = form.find("[name=password_confirm]").val();
 		var specialChars = username.match(/[^0-9a-z]/) ? true : false;
 		if(!specialChars && password && password == passwordConfirm) { // TODO: check password length?
-			tsr.register(username, password);
+			tsr.register(username, password, form);
 		} else {
 			var xhr = { status: 409 }; // XXX: hacky
 			var msg = specialChars ? "charError" : "passwordError";
@@ -188,7 +188,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		}
 		return false;
 	},
-	register: function(username, password) {
+	register: function(username, password, form) {
 		var msg = tsr.locale;
 		var userCallback = function(resource, status, xhr) {
 			displayMessage(msg.userSuccess.format([username])); // XXX: redundant?
@@ -198,14 +198,24 @@ var tsr = config.macros.TiddlySpaceRegister = {
 			});
 		};
 		var userErrback = function(xhr, error, exc) {
-			displayMessage(msg.userError.format([username, xhr.statusText]));
+			var ctx = {
+				msg: { 409: msg.userError.format([username]) },
+				form: form,
+				selector: "[name=username]"
+			};
+			tsl.displayError(xhr, error, exc, ctx);
 		};
 		var spaceCallback = function(resource, status, xhr) {
 			displayMessage(msg.spaceSuccess.format([username]));
 			tsl.redirect();
 		};
 		var spaceErrback = function(xhr, error, exc) {
-			displayMessage(msg.spaceError.format([username, xhr.statusText]));
+			var ctx = {
+				msg: { 409: msg.spaceError.format([username]) }, // XXX: 409 should not ever occur at this point
+				form: form,
+				selector: "[name=username]"
+			};
+			tsl.displayError(xhr, error, exc, ctx);
 		};
 		var user = new tiddlyweb.User(username, password, ns.host);
 		user.create(userCallback, userErrback);
