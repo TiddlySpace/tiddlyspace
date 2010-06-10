@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Requires''|TiddlyWebConfig|
+|''Requires''|TiddlyWebConfig RandomColorPalettePlugin|
 ***/
 //{{{
 (function($) {
@@ -99,9 +99,34 @@ TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 
 var plugin = config.extensions.tiddlyspace = {
 	currentSpace: determineSpace(recipe),
-	determineSpace: determineSpace
-};
+	determineSpace: determineSpace,
+	firstRunTiddler: {
+		title: "TiddlySpace",
+		text: "This TiddlySpace was created lovingly at %0 on behalf of %1.",
+		annotation: "This tiddler is used as part of the TiddlySpace setup. Deleting this tiddler may have unexpected consequences on your TiddlySpace"
+	},
+	setup: function(){
+		var firstRunTiddler = config.extensions.tiddlyspace.firstRunTiddler;
+		config.annotations[firstRunTiddler.title] = firstRunTiddler.annotation;
+		var space= store.getTiddler(firstRunTiddler.title);
+		if(!space && !readOnly){ //in private mode and have not setup yet so setup
+				var tid = new Tiddler(firstRunTiddler.title);
+				tid.tags = ['excludeLists','excludeSearch']; //make it hard for accidential deletions
 
+				var text = firstRunTiddler.text;
+				text = text.replace("%0",tid.modified.formatString(config.views.wikified.dateFormat));
+				text = text.replace("%1",config.options.txtUserName);
+				tid.text = text;
+
+				//record this activity so it doesn't happen again.
+				store.saveTiddler(tid.title,tid.title, tid.text, tid.modifier,tid.modified,tid.tags,merge(tid.fields,config.defaultCustomFields),false,tid.created,'');
+				saveChanges();
+
+				//perform initialisation of space here
+				config.macros.RandomColorPalette.handler();
+		}
+	}
+};
 ns = config.extensions.tiddlyweb;
 ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
 
@@ -111,5 +136,10 @@ shadows.ToolbarCommands = shadows.ToolbarCommands.
 	replace("revisions ", "publishTiddlerRevision revisions ");
 shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace.name, shadows.WindowTitle]);
 
+var _restart = restart;
+restart = function(){
+	_restart();
+	plugin.setup(); //initialize the tiddlyspace if needed
+}
 })(jQuery);
 //}}}
