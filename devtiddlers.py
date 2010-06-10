@@ -3,8 +3,8 @@ instance_tiddlers = {
         '../src/controls/index.recipe',
         '../src/lib/index.recipe',
         '../src/model/index.recipe',
-        '../src/external.recipe',
-        '../src/shadows/index.recipe'
+        '../src/shadows/index.recipe',
+        '../src/external.recipe'
     ],
     'frontpage_public': [
         '../src/frontpage/index.recipe'
