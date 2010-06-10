@@ -190,6 +190,10 @@ var tsr = config.macros.TiddlySpaceRegister = {
 	},
 	register: function(username, password, form) {
 		var msg = tsr.locale;
+		var ctx = {
+			form: form,
+			selector: "[name=username]"
+		};
 		var userCallback = function(resource, status, xhr) {
 			displayMessage(msg.userSuccess.format([username])); // XXX: redundant?
 			tsl.login(username, password, function(data, status, xhr) {
@@ -198,11 +202,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 			});
 		};
 		var userErrback = function(xhr, error, exc) {
-			var ctx = {
-				msg: { 409: msg.userError.format([username]) },
-				form: form,
-				selector: "[name=username]"
-			};
+			ctx.msg = { 409: msg.userError.format([username]) };
 			tsl.displayError(xhr, error, exc, ctx);
 		};
 		var spaceCallback = function(resource, status, xhr) {
@@ -210,11 +210,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 			tsl.redirect();
 		};
 		var spaceErrback = function(xhr, error, exc) {
-			var ctx = {
-				msg: { 409: msg.spaceError.format([username]) }, // XXX: 409 should not ever occur at this point
-				form: form,
-				selector: "[name=username]"
-			};
+			ctx.msg = { 409: msg.spaceError.format([username]) }; // XXX: 409 unlikely to occur at this point
 			tsl.displayError(xhr, error, exc, ctx);
 		};
 		var user = new tiddlyweb.User(username, password, ns.host);
