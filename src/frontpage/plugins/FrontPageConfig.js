@@ -22,5 +22,18 @@ Scroller = function(targetElement) {
 	return new Morpher(targetElement, config.animDuration, p);
 };
 
+// add a macro to set the appropriate login form to open by default before
+// loading the login tiddler
+config.macros.TiddlySpaceLoginLoader = {
+	handler: function(place, macro, params, wikifier, paramString, tiddler) {
+		var cookie = "taggedTabs";
+		createTiddlyButton(place, params[1], params[1], function() {
+			config.options[cookie] = params[1];
+			refreshDisplay();
+			story.displayTiddler(place, params[0]);
+		}, "tiddlyLinkExisting");
+	}
+};
+
 })(jQuery);
 //}}}
