@@ -1,19 +1,5 @@
-modifier: psd
 tags: excludeLists
 
-!This Space
-!!Members
-The following people are members of <<message extensions.tiddlyspace.currentSpace.name>>'s tiddlyspace. Members can edit the existing space.
-<<TiddlySpaceMembers>>
-!!Subscriptions
-!!!This Space
-This tiddlyspace (<<message extensions.tiddlyspace.currentSpace.name>>) is currently subscribed to the following spaces. Any public tiddlers in these spaces will be inherited into this space.
-<<TiddlySpaceSubscription list>>
-To include another space in this list type the name of the space in the box below. For example to include ''example''.tiddlyspace.com type ''example'' and hit ''add subscription''.
-<<TiddlySpaceSubscription passive>>
-!!!Include this space
-To include ''this space'' into another select a space from the menu below and click subscribe. That space will then inherit tiddlers from here.
-<<TiddlySpaceSubscription active>>
-!New Space
-You currently own the following spaces.
-<<TiddlySpaceSpaces>>
+Hi <<message options.txtUserName>>! Welcome to the space section of your backstage. Here you can admin, explore and tweak the currently viewed space.
+
+<<tabs txtSpaceTab "members" "Members" BackstageSpaceMembers "inclusions" "include spaces" BackstageSpaceInclusionsTab "tiddlers" "tiddlers control panel" BackstageTiddlers "plugins" "Manage installed plugins" PluginManager "options" "TiddlyWiki options" BackstageOptions "tweak" "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions>>
