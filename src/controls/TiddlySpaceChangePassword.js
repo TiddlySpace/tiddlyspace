@@ -23,7 +23,7 @@
 
 var ns = config.extensions.tiddlyweb;
 
-var tsp = config.macros.TiddlySpaceChangePassword = {
+var macro = config.macros.TiddlySpaceChangePassword = {
 	locale: {
 		label: "Change password",
 		cpwSuccess: "Password changed",
@@ -34,9 +34,9 @@ var tsp = config.macros.TiddlySpaceChangePassword = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		$(tsp.formTemplate).submit(tsp.onSubmit).
-			find("legend").text(tsp.locale.label).end().
-			find("[type=submit]").val(tsp.locale.label).end().
+		$(macro.formTemplate).submit(macro.onSubmit).
+			find("legend").text(macro.locale.label).end().
+			find("[type=submit]").val(macro.locale.label).end().
 			appendTo(place);
 	},
 
@@ -46,17 +46,17 @@ var tsp = config.macros.TiddlySpaceChangePassword = {
 		var npassword = form.find("[name=new_password]").val();
 		var npasswordConfirm = form.find("[name=new_password_confirm]").val();
 		if(!password) {
-			displayMessage(tsp.locale.noPasswordError);
+			displayMessage(macro.locale.noPasswordError);
 		} else if(npassword == npasswordConfirm) { // TODO: check password length
-			tsp.changePassword(ns.username, password, npassword);
+			macro.changePassword(ns.username, password, npassword);
 		} else {
-			alert(tsp.locale.passwordError); // XXX: alert is evil
+			alert(macro.locale.passwordError); // XXX: alert is evil
 		}
 		return false;
 	},
 
 	changePassword: function(username, password, npassword) {
-		var msg = tsp.locale;
+		var msg = macro.locale;
 		var pwCallback = function(resource, status, xhr) {
 			displayMessage(msg.cpwSuccess); // XXX: redundant?
 		};
