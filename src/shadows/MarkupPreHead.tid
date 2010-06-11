@@ -1,3 +1,6 @@
-tags: 
+tags: excludeLists
 
-<link rel="shortcut icon" href="/bags/tiddlyspace/tiddlers/favicon.ico" />
+<!--{{{-->
+<link rel='alternate' type='application/rss+xml' title='RSS' href='index.xml' />
+<link rel='shortcut icon' href='/bags/tiddlyspace/tiddlers/favicon.ico' />
+<!--}}}-->
