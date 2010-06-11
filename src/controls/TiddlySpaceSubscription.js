@@ -41,7 +41,8 @@ var macro = config.macros.TiddlySpaceSubscription = {
 		listError: "error retrieving subscriptions for space %0: %1",
 		forbiddenError: "unauthorized to modify space <em>%0</em>",
 		noSpaceError: "space <em>%0</em> does not exist",
-		conflictError: "space <em>%0</em> is already subscribed to <em>%1</em>"
+		conflictError: "space <em>%0</em> is already subscribed to <em>%1</em>",
+		noSubscriptions: "no spaces are included"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -83,7 +84,12 @@ var macro = config.macros.TiddlySpaceSubscription = {
 					click(macro.onClick);
 				return $("<li />").append(btn)[0];
 			});
-			$("<ul />").append(items).appendTo(container);
+			if(items.length > 0){
+				$("<ul />").append(items).appendTo(container);
+			}
+			else{	
+				$("<div class='noSpacesMessage'>"+macro.locale.noSubscriptions+"</div>").appendTo(container);
+			}
 		}, function(xhr, error, exc) {
 			displayMessage(macro.locale.listError.format([currentSpace, error]));
 		});
