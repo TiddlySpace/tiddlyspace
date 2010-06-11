@@ -10,4 +10,5 @@ tiddler: TiddlySpacePubRevCommand.js
 tiddler: TiddlySpaceCloneCommand.js
 tiddler: TiddlySpaceVisualization.js
 tiddler: TiddlySpaceChangePassword.js
+tiddler: TiddlySpaceToolbar.js
 recipe: backstage/index.recipe
