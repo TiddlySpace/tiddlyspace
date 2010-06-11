@@ -11,6 +11,10 @@
 		this._TSoldHandler(place,macroName,params,wikifier,paramString,tiddler);
 
 		if(config.macros.image){ //only do this for people who have this macro available!
+			var cancelTiddlerButton =jQuery(".command_cancelTiddler",place);
+			cancelTiddlerButton.empty();
+			wikify("<<image cancelTiddler.svg>>",cancelTiddlerButton[0]);
+
 			var closeTiddlerButton =jQuery(".command_closeTiddler",place);
 			closeTiddlerButton.empty();
 			wikify("<<image closeTiddler.svg>>",closeTiddlerButton[0]);
@@ -18,6 +22,14 @@
 			var editTiddlerButton = jQuery(".command_editTiddler",place);
 			editTiddlerButton.empty();
 			wikify("<<image editTiddler.svg>>",editTiddlerButton[0]);
+
+			var deleteTiddlerButton =jQuery(".command_deleteTiddler",place);
+			deleteTiddlerButton.empty();
+			wikify("<<image deleteTiddler.svg>>",deleteTiddlerButton[0]);
+
+			var saveTiddlerButton =jQuery(".command_saveTiddler",place);
+			saveTiddlerButton.empty();
+			wikify("<<image saveTiddler.svg>>",saveTiddlerButton[0]);
 
 			var moreTiddlerButton = jQuery("a.moreCommand",place);
 			moreTiddlerButton.empty();
