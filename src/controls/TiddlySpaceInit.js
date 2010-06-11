@@ -6,6 +6,8 @@
 (function($) {
 
 var macro = config.macros.TiddlySpaceInit = {
+	SiteTitle: "%0",
+	SiteSubtitle: "a TiddlySpace",
 	flagTitle: "_init_%0", // XXX: rename variable and tiddler
 	flagWarning: "Please do not modify this tiddler; it was created " +
 		"automatically to indicate initialization status.",
@@ -23,7 +25,20 @@ var macro = config.macros.TiddlySpaceInit = {
 			this.dispatch();
 		}
 	},
-	dispatch: function(args) {
+	dispatch: function() {
+		// generate Site*itle
+		var space = config.extensions.tiddlyspace.currentSpace;
+		$.each(["SiteTitle", "SiteSubtitle"], function(i, item) {
+			var tid = new Tiddler(item);
+			tid.tags = ["excludeLists", "excludeSearch"];
+			tid.fields = $.extend({}, config.defaultCustomFields, {
+				"server.workspace": "bags/%0_public".format([space.name])
+			});
+			tid.text = macro[item].format([space.name]);
+			store.saveTiddler(tid);
+			autoSaveChanges(null, [tid]);
+		});
+		// generate ColorPalette
 		invokeMacro(null, "RandomColorPalette", "", null, null);
 	}
 };
