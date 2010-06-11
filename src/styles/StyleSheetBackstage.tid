@@ -10,24 +10,23 @@ tags: excludeLists
 #backstageShow {margin-right:-3px;margin-top:-3px;}
 #backstageShow svg {left:4px;position:relative;top:-3px;}
 #messageArea {top:50px;}
-#backstageArea a.backstageSelTab {padding-bottom:12px;}
 body #backstageArea {z-index:49;color:white;background-color:black;position:fixed;width:100%;}
 #backstageToolbar {margin-right:10px;position:relative;margin-bottom:10px;margin-left:10px;}
-#backstageArea a {color:white;background:none;}
+#backstageArea a {padding:0px;color:white;background:none;}
 #backstageArea a:hover {color:black;background-color:white;}
 #backstageButton {position:fixed;}
-#backstage {top:40px;position:fixed;}
+#backstage {top:25px;position:fixed;}
 #backstage .tabContents ol, #backstage .tabContents ul {padding:auto;}
 #backstageButton a {margin:0;}
 .backstagePanelBody,.backstagePanelBody .tabContents ul {padding:5px;margin:5px;}
 #backstage #backstagePanel {width:100%;margin-left:0;padding:0;}
 #backstageToolbar a {position:relative;}
-#backstageToolbar a[task=space] {float:left;}
+#backstageToolbar a[task=space] {margin-top:3px;float:left;}
 #backstageToolbar a[task=user],#backstageToolbar a[task=login] {float:right;right:30px;}
 #backstageToolbar a[task=space] svg, #backstageToolbar a[task=space] img {float:left;z-index:2;}
-#backstageToolbar a .userPath {stroke:#C0E5FC;}
-#backstageToolbar a.backstageSelTab .userPath {stroke:black;}
+
 .textRight {text-align:right;}
 #backstage .deleteButton {font-weight:bold;color:red;font-size:1.6em;}
 #backstage .deleteButton:hover {background:none;}
 #backstagePanel .TiddlySpaceLogin {display:inline;}
+#backstageToolbar img {height:18px;}
