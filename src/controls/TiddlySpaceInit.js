@@ -6,6 +6,7 @@
 (function($) {
 
 var macro = config.macros.TiddlySpaceInit = {
+	version: "0.1",
 	SiteTitle: "%0",
 	SiteSubtitle: "a TiddlySpace",
 	flagTitle: "_init_%0", // XXX: rename variable and tiddler
@@ -20,6 +21,8 @@ var macro = config.macros.TiddlySpaceInit = {
 			var tid = new Tiddler(title);
 			tid.tags = ["excludeLists", "excludeSearch"];
 			tid.fields = $.extend({}, config.defaultCustomFields);
+			var versionField = "%0_version".format([macroName]);
+			tid.fields[versionField] = this.version;
 			store.saveTiddler(tid);
 			autoSaveChanges(null, [tid]);
 			this.dispatch();
