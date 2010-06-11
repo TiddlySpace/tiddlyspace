@@ -32,19 +32,24 @@ var macro = config.macros.TiddlySpaceInit = {
 		}
 	},
 	dispatch: function() {
-		// generate Site*itle
 		var space = config.extensions.tiddlyspace.currentSpace;
+		var pubWorkspace = "bags/%0_public".format([space.name]);
+		// generate Site*itle
 		$.each(["SiteTitle", "SiteSubtitle"], function(i, item) {
 			var tid = new Tiddler(item);
 			tid.tags = ["excludeLists", "excludeSearch"];
 			tid.fields = $.extend({}, config.defaultCustomFields, {
-				"server.workspace": "bags/%0_public".format([space.name])
+				"server.workspace": pubWorkspace
 			});
 			tid.text = macro[item].format([space.name]);
 			store.saveTiddler(tid);
 		});
-		// generate ColorPalette
+		// generate ColorPalette (ensuring it's public)
+		var wfield = "server.workspace";
+		var workspace = config.defaultCustomFields[wfield];
+		config.defaultCustomFields[wfield] = pubWorkspace;
 		invokeMacro(null, "RandomColorPalette", "", null, null);
+		config.defaultCustomFields[wfield] = workspace;
 	}
 };
 
