@@ -24,8 +24,11 @@ var macro = config.macros.TiddlySpaceInit = {
 			var versionField = "%0_version".format([macroName]);
 			tid.fields[versionField] = this.version;
 			store.saveTiddler(tid);
-			autoSaveChanges(null, [tid]);
+			var autoSave = config.options.chkAutoSave;
+			config.options.chkAutoSave = false;
 			this.dispatch();
+			config.options.chkAutoSave = autoSave;
+			autoSaveChanges();
 		}
 	},
 	dispatch: function() {
@@ -39,7 +42,6 @@ var macro = config.macros.TiddlySpaceInit = {
 			});
 			tid.text = macro[item].format([space.name]);
 			store.saveTiddler(tid);
-			autoSaveChanges(null, [tid]);
 		});
 		// generate ColorPalette
 		invokeMacro(null, "RandomColorPalette", "", null, null);
