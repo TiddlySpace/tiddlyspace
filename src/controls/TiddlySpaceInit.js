@@ -9,9 +9,9 @@ var macro = config.macros.TiddlySpaceInit = {
 	version: "0.1",
 	SiteTitle: "%0",
 	SiteSubtitle: "a TiddlySpace",
-	flagTitle: "_init_%0", // XXX: rename variable and tiddler
+	flagTitle: "%0SetupFlag",
 	flagWarning: "Please do not modify this tiddler; it was created " +
-		"automatically to indicate initialization status.",
+		"automatically upon space creation.",
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var space = config.extensions.tiddlyspace.currentSpace;
@@ -23,6 +23,7 @@ var macro = config.macros.TiddlySpaceInit = {
 			tid.fields = $.extend({}, config.defaultCustomFields);
 			var versionField = "%0_version".format([macroName]);
 			tid.fields[versionField] = this.version;
+			tid.text = "@@%0@@".format([this.flagWarning]);
 			store.saveTiddler(tid);
 			var autoSave = config.options.chkAutoSave;
 			config.options.chkAutoSave = false;
