@@ -29,7 +29,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		listError: "error listing spaces: %0",
 		addLabel: "Create space",
 		addSuccess: "created space %0",
-		conflictError: "space <em>%0</em> already exists"
+		conflictError: "space <em>%0</em> already exists",
+		noSpaces: "you have no spaces"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -37,7 +38,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		this.refresh(container);
 	},
 	refresh: function(container) {
-		container.empty().append("<ul />").append(this.generateForm());
+		container.empty().append("<div />").append(this.generateForm());
 		$.ajax({ // XXX: DRY; cf. TiddlySpaceSubscription
 			url: host + "/spaces?mine=1",
 			type: "GET",
@@ -49,7 +50,12 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 					});
 					return $("<li />").append(link)[0];
 				});
-				$("ul", container).append(spaces);
+				if(data.length >0){	
+					$("div", container).append("<ul/>").append(spaces);
+				}
+				else{
+					$("div", container).append("<span class='noSpacesMessage'>"+macro.locale.noSpaces+"</span>");
+				}
 			},
 			error: function(xhr, error, exc) {
 				displayMessage(macro.locale.listError.format([error]));

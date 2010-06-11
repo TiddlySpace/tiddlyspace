@@ -1,7 +1,7 @@
 tags: excludeLists
 
-Hi <<option txtUserName>>!
-<<TiddlySpaceLogin>>
-!Identities
-You can associate your account with multiple identities. If you have an open id for example you could log into TiddlySpace with that as well as a TiddlySpace user account.
-<<TiddlySpaceIdentities>>
+{{textRight{
+Hi <<message options.txtUserName>>! Welcome to the user section of your backstage.
+Here you can manage your identities, and manage your TiddlySpace account. You can also <<TiddlySpaceLogin>>.
+<<tabs txtUserTab 'Your Identities' 'Manage your identities' BackstageIdentities 'Your Spaces' 'Maintain your spaces and create new ones' BackstageUserSpaces>>
+}}}
