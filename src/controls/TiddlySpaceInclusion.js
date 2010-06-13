@@ -27,22 +27,22 @@
 var host = config.extensions.tiddlyweb.host;
 var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
 
-var macro = config.macros.TiddlySpaceSubscription = {
+var macro = config.macros.TiddlySpaceInclusion = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
-		addPassiveLabel: "Add subscription",
-		addActiveLabel: "Subscribe",
-		passiveDesc: "Add subscription to current space",
-		activeDesc: "Subscribe current space to existing space",
-		addSuccess: "added subscription for %0 to %1",
-		delPrompt: "Are you sure you want to remove subscription %0?",
-		delTooltip: "click to remove subscription",
-		delError: "error removing subscription %0: %1",
-		listError: "error retrieving subscriptions for space %0: %1",
+		addPassiveLabel: "Include space",
+		addActiveLabel: "Include into space",
+		passiveDesc: "Include a space into the current space",
+		activeDesc: "Include another space in the current space",
+		addSuccess: "included %0 in %1",
+		delPrompt: "Are you sure you want to exclude %0 from the current space?",
+		delTooltip: "click to exclude from the space",
+		delError: "error excluding %0: %1",
+		listError: "error retrieving spaces included in space %0: %1",
 		forbiddenError: "unauthorized to modify space <em>%0</em>",
 		noSpaceError: "space <em>%0</em> does not exist",
-		conflictError: "space <em>%0</em> is already subscribed to <em>%1</em>",
-		noSubscriptions: "no spaces are included"
+		conflictError: "space <em>%0</em> is already included in <em>%1</em>",
+		noInclusions: "no spaces are included"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -68,17 +68,17 @@ var macro = config.macros.TiddlySpaceSubscription = {
 			this.populateSpaces(form);
 		} else {
 			var container = $("<div />").appendTo(place);
-			this.listSubscriptions(container);
+			this.listInclusions(container);
 		}
 	},
-	listSubscriptions: function(container) {
+	listInclusions: function(container) {
 		var recipe = new tiddlyweb.Recipe(currentSpace + "_public", host);
 		recipe.get(function(recipe, status, xhr) {
-			var subscriptions = $.map(recipe.recipe, function(item, i) { // TODO: refactor to canonicalize; move to TiddlySpaceConfig!?
+			var inclusions = $.map(recipe.recipe, function(item, i) { // TODO: refactor to canonicalize; move to TiddlySpaceConfig!?
 				var arr = item[0].split("_public");
 				return (arr[0] != currentSpace && arr[1] === "") ? arr[0] : null;
 			});
-			var items = $.map(subscriptions, function(item, i) { // TODO: DRY (cf. displayMembers)
+			var items = $.map(inclusions, function(item, i) { // TODO: DRY (cf. displayMembers)
 				var btn = $('<a href="javascript:;" />').text(item).
 					attr("title", macro.locale.delTooltip).
 					click(macro.onClick);
@@ -88,7 +88,7 @@ var macro = config.macros.TiddlySpaceSubscription = {
 				$("<ul />").append(items).appendTo(container);
 			}
 			else{	
-				$("<div class='noSpacesMessage'>"+macro.locale.noSubscriptions+"</div>").appendTo(container);
+				$("<div class='noSpacesMessage'>"+macro.locale.noInclusions+"</div>").appendTo(container);
 			}
 		}, function(xhr, error, exc) {
 			displayMessage(macro.locale.listError.format([currentSpace, error]));
@@ -128,7 +128,7 @@ var macro = config.macros.TiddlySpaceSubscription = {
 			};
 			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
 		};
-		this.subscribe(provider, subscriber, callback, errback);
+		this.include(provider, subscriber, callback, errback);
 		return false;
 	},
 	onClick: function(ev) { // XXX: ambiguous; rename
@@ -142,10 +142,10 @@ var macro = config.macros.TiddlySpaceSubscription = {
 			displayMessage(macro.locale.delError.format([username, error]));
 		};
 		if(confirm(msg)) {
-			macro.subscribe(provider, currentSpace, callback, errback, true);
+			macro.include(provider, currentSpace, callback, errback, true);
 		}
 	},
-	subscribe: function(provider, subscriber, callback, errback, unsubscribe) {
+	include: function(provider, subscriber, callback, errback, unsubscribe) {
 		var data = {};
 		var key = unsubscribe ? "unsubscriptions" : "subscriptions";
 		data[key] = [provider];
