@@ -92,7 +92,7 @@ backstage.init = function(){
 	//show avatar in the users public bag
 	jQuery("[task=user]","#backstageArea").append('<span><img src="'+tsHost+'/recipes/'+config.options.txtUserName+'_public/tiddlers/SiteIcon"/></span><br/>');
 	//show default avatar for the login button
-	jQuery("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/recipes/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
+	jQuery("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
 	
 }
 
