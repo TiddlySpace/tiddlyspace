@@ -10,7 +10,7 @@
 		
 		this._TSoldHandler(place,macroName,params,wikifier,paramString,tiddler);
 
-		if(config.macros.image){ //only do this for people who have this macro available!
+		if(config.macros.image && config.macros.image.svgAvailable){ //only do this for people who have this macro available!
 			var cancelTiddlerButton =jQuery(".command_cancelTiddler",place);
 			cancelTiddlerButton.empty();
 			wikify("<<image cancelTiddler.svg>>",cancelTiddlerButton[0]);
