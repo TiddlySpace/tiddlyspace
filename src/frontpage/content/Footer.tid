@@ -1,10 +1,3 @@
 modifier: Osmosoft
 
-<html>
-<p class="colophon">
-	<a href="http://tiddlyspace.com">TiddlySpace</a> &middot;
-	<a href="http://tiddlywiki.com">TiddlyWiki</a> &middot;
-	<a href="http://osmosoft.com">Osmosoft</a> &middot;
-	<a href="http://github.com/TiddlySpace/tiddlyspace">source</a>
-</p>
-</html>
+[[About|TiddlySpace]] &middot; [[FAQ]] &middot; [[Contact|http://osmosoft.com]] &middot; [[Source|http://github.com/TiddlySpace/tiddlyspace]]
