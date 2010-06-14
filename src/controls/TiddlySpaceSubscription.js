@@ -84,11 +84,11 @@ var macro = config.macros.TiddlySpaceSubscription = {
 					click(macro.onClick);
 				return $("<li />").append(btn)[0];
 			});
-			if(items.length > 0){
+			if(items.length) {
 				$("<ul />").append(items).appendTo(container);
-			}
-			else{	
-				$("<div class='noSpacesMessage'>"+macro.locale.noSubscriptions+"</div>").appendTo(container);
+			} else {
+				$('<div class="annotation" />')
+					text(macro.locale.noSubscriptions).appendTo(container);
 			}
 		}, function(xhr, error, exc) {
 			displayMessage(macro.locale.listError.format([currentSpace, error]));
