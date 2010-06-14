@@ -36,7 +36,7 @@ backstage.show = function() {
 	var tasks = $("#backstageToolbar .backstageTask").show();
 	config.extensions.tiddlyweb.getUserInfo(function(user) {
 		if(user.anon) {
-			tasks.slice(1, 3).hide();
+			tasks.slice(1, 2).hide();
 		} else {
 			tasks.eq(0).hide();
 		}
