@@ -1,4 +1,4 @@
 type: None
 
-The following people are members of <<message extensions.tiddlyspace.currentSpace.name>>'s tiddlyspace. Members can edit the existing space.
+The following people are members of the space ''<<message extensions.tiddlyspace.currentSpace.name>>''. Only members have access to the private tiddlers in a space.
 <<TiddlySpaceMembers>>
