@@ -18,6 +18,8 @@ from tiddlyweb.web.http import HTTP302, HTTP403, HTTP404
 
 from tiddlywebplugins.utils import require_any_user
 
+import tiddlywebplugins.status
+
 
 def home(environ, start_response):
     """
@@ -159,6 +161,18 @@ def _determine_space(environ, http_host):
     if '.%s' % server_host in http_host:
         return http_host.rsplit('.', server_host.count('.') + 1)[0]
     return None
+
+
+original_gather_data = tiddlywebplugins.status._gather_data
+
+
+def _status_gather_data(environ):
+    data = original_gather_data(environ)
+    data['server_host'] = environ['tiddlyweb.config']['server_host']
+    return data
+
+
+tiddlywebplugins.status._gather_data = _status_gather_data
 
 
 class ControlView(object):
