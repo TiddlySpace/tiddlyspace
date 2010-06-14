@@ -20,9 +20,9 @@ body #backstageArea {z-index:49;color:white;background-color:black;width:100%;}
 #backstage #backstagePanel {width:100%;margin-left:0;padding:0;}
 #backstageToolbar a {position:relative;}
 #backstageToolbar a[task=space] {margin-top:3px;float:left;}
-#backstageToolbar a[task=user],#backstageToolbar a[task=login] {float:right;right:30px;}
+#backstageToolbar a[task=user],#backstageToolbar a[task=login] {margin-top:1px;float:right;right:30px;}
 #backstageToolbar a[task=space] svg, #backstageToolbar a[task=space] img {float:left;z-index:2;}
-
+#backstage {top:-5px;}
 .textRight {text-align:right;}
 #backstage .deleteButton {margin-left:0.3em;font-weight:bold;color:red;font-size:1.6em;}
 #backstage .deleteButton:hover {background:none;}
