@@ -45,10 +45,10 @@ dev_local:
 
 clean:
 	find . -name "*.pyc" | xargs rm || true
-	rm -r dist || true
-	rm -r build || true
-	rm -r *.egg-info || true
-	rm -r tiddlywebplugins/tiddlyspace/resources || true
+	rm -rf dist || true
+	rm -rf build || true
+	rm -rf *.egg-info || true
+	rm -rf tiddlywebplugins/tiddlyspace/resources || true
 
 purge: clean
 	cat .gitignore | while read -r entry; do rm -r $$entry; done || true
