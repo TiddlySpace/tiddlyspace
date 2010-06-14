@@ -112,28 +112,5 @@ backstage.hidePanel = function(e){
 	_hidePanel();
 }
 
-var timeout,mouseover;
-//keep a record of when the user has their mouse over the backstage to prevent annoying them
-jQuery("#backstageArea").mouseover(function(e){mouseover = true;})
-.mouseout(function(e){mouseover=false;});
-
-//setup a scroll event to give backstage certain behaviours
-jQuery(window).scroll(function(e){
-	if(window.scrollY > 0){ //if scrolling away from the top prepare to hide backstage after given time
-		window.clearTimeout(timeout);
-		timeout = window.setTimeout(function(){
-			if(!backstage.isPanelVisible() && !mouseover)backstage.hide();
-			actionInProgress = false;
-		},1000);
-	}
-	else if(window.scrollY === 0){ //if at top of screen show the backstage after given time
-		window.clearTimeout(timeout);
-		timeout = window.setTimeout(function(){
-			if(!backstage.isVisible())backstage.show();
-			actionInProgress = false;
-		},400);
-	}
-});
-
 })(jQuery);
 //}}}
