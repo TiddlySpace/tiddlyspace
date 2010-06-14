@@ -28,3 +28,4 @@ body #backstageArea {z-index:49;color:white;background-color:black;width:100%;}
 #backstage .deleteButton:hover {background:none;}
 #backstagePanel .TiddlySpaceLogin {display:inline;}
 #backstageToolbar img {height:18px;}
+.backstagePanelBody .tabContents .button {display:block;}
