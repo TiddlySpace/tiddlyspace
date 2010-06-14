@@ -1,5 +1,3 @@
 tags: excludeLists
 
-Hi <<message options.txtUserName>>! Welcome to the space section of your backstage. Here you can admin, explore and tweak the currently viewed space.
-
-<<tabs txtSpaceTab "members" "Members" BackstageSpaceMembers "inclusions" "include spaces" BackstageSpaceInclusions "tiddlers" "tiddlers control panel" BackstageTiddlers "plugins" "Manage installed plugins" PluginManager "options" "TiddlyWiki options" BackstageOptions "tweak" "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions>>
+<<tabs txtSpaceTab "members" "Members" BackstageSpaceMembers "includes" "include spaces" BackstageSpaceInclusions "tiddlers" "tiddlers control panel" BackstageTiddlers "plugins" "Manage installed plugins" PluginManager "options" "TiddlyWiki options" BackstageOptions "tweaks" "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions>>

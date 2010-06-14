@@ -36,7 +36,7 @@ backstage.show = function() {
 	var tasks = $("#backstageToolbar .backstageTask").show();
 	config.extensions.tiddlyweb.getUserInfo(function(user) {
 		if(user.anon) {
-			tasks.slice(1, 3).hide();
+			tasks.slice(1, 2).hide();
 		} else {
 			tasks.eq(0).hide();
 		}
@@ -81,7 +81,7 @@ backstage.init = function(){
 	
 	var backstageToolbar = $("#backstageToolbar")[0];
 	$("<div id='backstageLogo'></div>").prependTo(backstageToolbar);
-	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}} {{publicLightText{space}}}''",$("#backstageLogo",backstageToolbar)[0]);
+	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",$("#backstageLogo",backstageToolbar)[0]);
 	
 	var siteIcon =store.getTiddler("SiteIcon") 
 	if(siteIcon){
@@ -99,41 +99,6 @@ backstage.init = function(){
 	jQuery("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
 	
 }
-
-var _showPanel = backstage.showPanel;
-backstage.showPanel = function(){
-	jQuery("#backstageArea,#backstage,#backstageButton").css({position:"absolute"});	
-	_showPanel();	
-}
-
-var _hidePanel = backstage.hidePanel;
-backstage.hidePanel = function(e){
-	jQuery("#backstageArea,#backstage,#backstageButton").css({position:"fixed"});	
-	_hidePanel();
-}
-
-var timeout,mouseover;
-//keep a record of when the user has their mouse over the backstage to prevent annoying them
-jQuery("#backstageArea").mouseover(function(e){mouseover = true;})
-.mouseout(function(e){mouseover=false;});
-
-//setup a scroll event to give backstage certain behaviours
-jQuery(window).scroll(function(e){
-	if(window.scrollY > 0){ //if scrolling away from the top prepare to hide backstage after given time
-		window.clearTimeout(timeout);
-		timeout = window.setTimeout(function(){
-			if(!backstage.isPanelVisible() && !mouseover)backstage.hide();
-			actionInProgress = false;
-		},1000);
-	}
-	else if(window.scrollY === 0){ //if at top of screen show the backstage after given time
-		window.clearTimeout(timeout);
-		timeout = window.setTimeout(function(){
-			if(!backstage.isVisible())backstage.show();
-			actionInProgress = false;
-		},400);
-	}
-});
 
 })(jQuery);
 //}}}

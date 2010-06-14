@@ -1,4 +1,5 @@
 type: None
 
+body {font-size:1.0em;font-family:helvetica,arial;}
 [[StyleSheetToolbar]]
 [[StyleSheetBackstage]]
