@@ -10,12 +10,10 @@ tags: excludeLists
 #backstageShow {margin-right:-3px;margin-top:-3px;}
 #backstageShow svg {left:4px;position:relative;top:-3px;}
 #messageArea {top:50px;}
-body #backstageArea {z-index:49;color:white;background-color:black;position:fixed;width:100%;}
+body #backstageArea {z-index:49;color:white;background-color:black;width:100%;}
 #backstageToolbar {margin-right:10px;position:relative;margin-bottom:10px;margin-left:10px;}
 #backstageArea a {padding:0px;color:white;background:none;}
 #backstageArea a:hover {color:black;background-color:white;}
-#backstageButton {position:fixed;}
-#backstage {top:25px;position:fixed;}
 #backstage .tabContents ol, #backstage .tabContents ul {padding:auto;}
 #backstageButton a {margin:0;}
 .backstagePanelBody,.backstagePanelBody .tabContents ul {padding:5px;margin:5px;}

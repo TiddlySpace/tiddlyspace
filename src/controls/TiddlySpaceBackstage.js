@@ -100,17 +100,5 @@ backstage.init = function(){
 	
 }
 
-var _showPanel = backstage.showPanel;
-backstage.showPanel = function(){
-	jQuery("#backstageArea,#backstage,#backstageButton").css({position:"absolute"});	
-	_showPanel();	
-}
-
-var _hidePanel = backstage.hidePanel;
-backstage.hidePanel = function(e){
-	jQuery("#backstageArea,#backstage,#backstageButton").css({position:"fixed"});	
-	_hidePanel();
-}
-
 })(jQuery);
 //}}}
