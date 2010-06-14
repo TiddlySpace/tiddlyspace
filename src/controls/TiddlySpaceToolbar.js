@@ -21,7 +21,8 @@
 
 			var editTiddlerButton = jQuery(".command_editTiddler",place);
 			editTiddlerButton.empty();
-			wikify("<<image editTiddler.svg>>",editTiddlerButton[0]);
+			var img = tiddler.isReadOnly() ? "viewTiddler.svg" : "editTiddler.svg";
+			wikify("<<image %0>>".format([img]),editTiddlerButton[0]);
 
 			var deleteTiddlerButton =jQuery(".command_deleteTiddler",place);
 			deleteTiddlerButton.empty();
