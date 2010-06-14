@@ -28,8 +28,14 @@ config.macros.TiddlySpaceLoginLoader = {
 	handler: function(place, macro, params, wikifier, paramString, tiddler) {
 		var cookie = "taggedTabs";
 		createTiddlyButton(place, params[1], params[1], function() {
-			config.options[cookie] = params[1];
-			refreshDisplay();
+			var tabbedSignUp = $('.taggedTabs');
+			if (tabbedSignUp.length) { // it is already visible
+				console.log('in if');
+				config.macros.tabs.switchTab(tabbedSignUp[0], params[1]);
+			} else {
+				console.log('in else');
+				config.options[cookie] = params[1];
+			}
 			story.displayTiddler(place, params[0]);
 		}, "tiddlyLinkExisting");
 	}
