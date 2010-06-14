@@ -8,7 +8,7 @@ modifier: Osmosoft
 			[[TiddlyWiki|http://tiddlywiki.com]]
 		}}}
 		{{login{
-			[[Sign up]], or [[Log in]]
+			<<TiddlySpaceLoginLoader "LogIn" "Sign Up">>, or <<TiddlySpaceLoginLoader "LogIn" "Log In">>
 		}}}
 	}}}
 }}}

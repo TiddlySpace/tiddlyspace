@@ -22,5 +22,24 @@ Scroller = function(targetElement) {
 	return new Morpher(targetElement, config.animDuration, p);
 };
 
+// add a macro to set the appropriate login form to open by default before
+// loading the login tiddler
+config.macros.TiddlySpaceLoginLoader = {
+	handler: function(place, macro, params, wikifier, paramString, tiddler) {
+		var cookie = "taggedTabs";
+		createTiddlyButton(place, params[1], params[1], function() {
+			var tabbedSignUp = $('.taggedTabs');
+			if (tabbedSignUp.length) { // it is already visible
+				console.log('in if');
+				config.macros.tabs.switchTab(tabbedSignUp[0], params[1]);
+			} else {
+				console.log('in else');
+				config.options[cookie] = params[1];
+			}
+			story.displayTiddler(place, params[0]);
+		}, "tiddlyLinkExisting");
+	}
+};
+
 })(jQuery);
 //}}}
