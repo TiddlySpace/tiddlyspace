@@ -1,5 +1,9 @@
 type: None
 
-body {font-size:1.0em;font-family:helvetica,arial;}
+body {
+	font-size: 1.0em;
+	font-family: helvetica, arial, sans-serif;
+}
+
 [[StyleSheetToolbar]]
 [[StyleSheetBackstage]]
