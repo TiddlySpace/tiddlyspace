@@ -104,6 +104,23 @@ var plugin = config.extensions.tiddlyspace = {
 ns = config.extensions.tiddlyweb;
 ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
 
+// set global read-only mode depending on space membership
+readOnly = true;
+ns.getUserInfo(function(user) {
+	var callback = function(members, status, xhr) {
+		readOnly = !members.contains(ns.username);
+		var anim = config.options.chkAnimate;
+		config.options.chkAnimate = false;
+		refreshDisplay();
+		config.options.chkAnimate = anim;
+	};
+	var errback = function(xhr, error, exc) {}; // assumes read-only
+	if(!user.anon) {
+		var space = new tiddlyweb.Space(plugin.currentSpace.name, ns.host);
+		space.members().get(callback, errback);
+	}
+});
+
 var shadows = config.shadowTiddlers;
 shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace.name, shadows.WindowTitle]);
 
