@@ -3,7 +3,6 @@
 ***/
 //{{{
 (function($) {
-
 config.options.chkBackstage = true;
 config.backstageTasks = [];
 
@@ -15,7 +14,7 @@ config.tasks.login = {
 config.backstageTasks.push("login");
 
 config.tasks.user = {
-	text: "user: "+config.options.txtUserName,
+	text: "user: ",
 	tooltip: "user control panel",
 	content: "<<tiddler BackstageUser>>"
 };
@@ -49,6 +48,11 @@ backstage.show = function() {
 var _init = backstage.init;
 backstage.init = function(){
 	var result = _init.apply(this, arguments);
+	
+	//update usernames
+	var userButton = $(".backstageTask[task=user]").
+	html(config.tasks.user.text+ "<span class='txtUserName'></span>"+ glyph("downTriangle"));
+	config.macros.option.handler($(".txtUserName",userButton)[0],null,["txtUserName"]);
 	
 	//make the backstage become visible when you mouseover it
 	var _revealBackstageArea;
