@@ -26,7 +26,7 @@ body #backstageArea {z-index:49;color:white;background-color:black;position:fixe
 #backstageToolbar a[task=space] svg, #backstageToolbar a[task=space] img {float:left;z-index:2;}
 
 .textRight {text-align:right;}
-#backstage .deleteButton {font-weight:bold;color:red;font-size:1.6em;}
+#backstage .deleteButton {margin-left:0.3em;font-weight:bold;color:red;font-size:1.6em;}
 #backstage .deleteButton:hover {background:none;}
 #backstagePanel .TiddlySpaceLogin {display:inline;}
 #backstageToolbar img {height:18px;}

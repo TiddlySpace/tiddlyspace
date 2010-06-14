@@ -79,15 +79,17 @@ var macro = config.macros.TiddlySpaceInclusion = {
 				return (arr[0] != currentSpace && arr[1] === "") ? arr[0] : null;
 			});
 			var items = $.map(inclusions, function(item, i) { // TODO: DRY (cf. displayMembers)
-				var btn = $('<a href="javascript:;" />').text(item).
+				var link = $('<a href="javascript:;" />').text(item); // TODO: link to space
+				var btn = $('<a class="deleteButton" href="javascript:;" />').
+					text("x"). // TODO: i18n (use icon!?)
 					attr("title", macro.locale.delTooltip).
-					click(macro.onClick);
-				return $("<li />").append(btn)[0];
+					data("space", item).click(macro.onClick);
+				return $("<li />").append(link).append(btn)[0];
 			});
 			if(items.length) {
 				$("<ul />").append(items).appendTo(container);
 			} else {
-				$('<div class="annotation" />')
+				$('<div class="annotation" />').
 					text(macro.locale.noInclusions).appendTo(container);
 			}
 		}, function(xhr, error, exc) {
@@ -133,7 +135,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 	},
 	onClick: function(ev) { // XXX: ambiguous; rename
 		var btn = $(this);
-		var provider = btn.text();
+		var provider = btn.data("space");
 		var msg = macro.locale.delPrompt.format([provider]);
 		var callback = function(data, status, xhr) {
 			btn.closest("li").slideUp(function(ev) { $(this).remove(); });
