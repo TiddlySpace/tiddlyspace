@@ -150,12 +150,17 @@ a:hover {
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
 	border-radius: 6px;
-	padding: 1em 2em 1em 2em;
+	padding: 2em 2em 1em 2em;
 	margin-top: 1em;
 	margin-bottom: 1em;
 	-webkit-box-shadow: 2px 2px 4px #444;
 	-mox-box-shadow: 2px 2px 4px #444;
+	position: relative;
 }
+
+.toolbar {position:absolute;top:3px;right:3px;}
+.tiddler .toolbar .button {float:left;display:block;}
+.tiddler .button.command_closeTiddler {float:right;}
 
 .viewer {
 	padding: 0.5em;
