@@ -1,3 +1,10 @@
+# Check status includes server_host
+- name: check /status
+  url: /status
+  expected:
+  - server_host
+  - scheme
+
 # Create a user
 - name: Create one user
   desc: POST to create a user
