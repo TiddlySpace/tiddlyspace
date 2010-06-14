@@ -157,16 +157,12 @@ var tsr = config.macros.TiddlySpaceRegister = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		ns.getUserInfo(function(user) {
-			if(user.anon) {
-				$(tsr.formTemplate).submit(tsr.onSubmit).
-					find("._login, ._openid").remove().end().
-					find("legend").text(tsr.locale.label).end().
-					find(".annotation").hide().end().
-					find("[type=submit]").val(tsr.locale.label).end().
-					appendTo(place);
-			}
-		});
+		$(this.formTemplate).submit(this.onSubmit).
+			find("._login, ._openid").remove().end().
+			find("legend").text(this.locale.label).end().
+			find(".annotation").hide().end().
+			find("[type=submit]").val(this.locale.label).end().
+			appendTo(place);
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
