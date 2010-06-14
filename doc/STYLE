@@ -5,10 +5,12 @@ commit messages:
 cf. http://www.kernel.org/pub/software/scm/git/docs/git-commit.html#_discussion
 
 JavaScript code:
+* max. line length of 80 characters
 * tabs for indentation
 * double quotes
 * trailing (rather than leading) dot for line continuation in chained operations
 * JSLint compliance
+* consistency with existing code (e.g. regarding whitespace)
 
 Python code:
 * spaces for indentation (four per level)

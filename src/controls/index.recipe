@@ -1,13 +1,15 @@
 tiddler: TiddlySpaceConfig.js
+tiddler: TiddlySpaceInit.js
 tiddler: TiddlySpaceUserControls.js
 tiddler: TiddlySpaceIdentities.js
 tiddler: TiddlySpaceMembers.js
 tiddler: TiddlySpaceSpaces.js
-tiddler: TiddlySpaceSubscription.js
+tiddler: TiddlySpaceInclusion.js
 tiddler: TiddlySpaceBackstage.js
 tiddler: TiddlySpacePublishCommand.js
 tiddler: TiddlySpacePubRevCommand.js
 tiddler: TiddlySpaceCloneCommand.js
 tiddler: TiddlySpaceVisualization.js
 tiddler: TiddlySpaceChangePassword.js
+tiddler: TiddlySpaceToolbar.js
 recipe: backstage/index.recipe

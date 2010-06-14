@@ -3,6 +3,8 @@
 # Usage:
 #   $ ./deploy.sh [nodist] [quick] [logname]
 
+REMOTE_SUDO_ID=tiddlyweb
+
 set -e
 set -x
 
@@ -25,9 +27,9 @@ if [ -n "$1" ]; then
 fi
 
 host="${log_name}tiddlyspace.com"
-base_dir="/data/vhost/tiddlyspace.labs.osmosoft.com"
-instance_dir="$base_dir/tiddlyweb"
-temp_dir="/tmp/dev/$$"
+base_dir="/home/tiddlyweb/tiddlywebs/tiddlyspace.com"
+instance_dir="$base_dir"
+temp_dir="/tmp/tiddlyspace_dev.$$"
 
 package_name="tiddlywebplugins.tiddlyspace"
 
@@ -53,5 +55,5 @@ fi
 
 scp "dist/$filename" "$host:$temp_dir/"
 ssh $host "sudo pip install --upgrade --timeout=120 $pip_options $temp_dir/$filename && " \
-    "cd $instance_dir && twanager update && rm -rf $temp_dir && " \
+    "cd $instance_dir && sudo -u $REMOTE_SUDO_ID twanager update && rm -rf $temp_dir && " \
     "sudo apache2ctl restart && echo INFO: deployment complete"

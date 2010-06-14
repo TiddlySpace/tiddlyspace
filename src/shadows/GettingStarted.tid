@@ -1,5 +1,6 @@
 type: None
 
+<<TiddlySpaceInit>>
 Welcome to your brand new TiddlySpace.
 You are now ready to import an existing TiddlyWiki or start a new TiddlyWiki.
 To manage this new space, you will need to make use of the backstage bar located at the top of the page. You can toggle it on or off using the backstage button in the very top corner of the screen. Here you will be able to allow other TiddlySpace users to edit your space by adding them as members, manage your account, create new spaces, subscribe to other spaces and other more advanced actions.

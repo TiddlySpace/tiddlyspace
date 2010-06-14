@@ -4,6 +4,8 @@ instance_tiddlers = {
         '../src/lib/index.recipe',
         '../src/model/index.recipe',
         '../src/shadows/index.recipe',
+        '../src/styles/index.recipe',
+        '../src/icons/tiddlyspace.recipe',
         '../src/external.recipe'
     ],
     'frontpage_public': [

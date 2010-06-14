@@ -1,0 +1,6 @@
+type: None
+
+This tiddlyspace (<<message extensions.tiddlyspace.currentSpace.name>>) currently includes the following spaces. Any public tiddlers in these spaces are included in this space.
+<<TiddlySpaceInclusion list>>
+To include another space in this list type the name of the space in the box below. For example to include ''example''.tiddlyspace.com type ''example'' and hit ''include space''.
+<<TiddlySpaceInclusion passive>>

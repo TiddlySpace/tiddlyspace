@@ -1,5 +1,5 @@
 /***
-|''Requires''|TiddlyWebConfig TiddlySpaceSubscription|
+|''Requires''|TiddlyWebConfig TiddlySpaceInclusion|
 !HTMLForm
 <form action="#">
 	<fieldset>
@@ -10,7 +10,7 @@
 		</dl>
 		<p>
 			<input type="checkbox" name="subscribe" />
-			Subscribe the new space to the current space
+			Include the current space in the new space.
 		</p>
 		<p class="annotation" />
 		<input type="submit" />
@@ -29,7 +29,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		listError: "error listing spaces: %0",
 		addLabel: "Create space",
 		addSuccess: "created space %0",
-		conflictError: "space <em>%0</em> already exists"
+		conflictError: "space <em>%0</em> already exists",
+		noSpaces: "you have no spaces"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -37,8 +38,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		this.refresh(container);
 	},
 	refresh: function(container) {
-		container.empty().append("<ul />").append(this.generateForm());
-		$.ajax({ // XXX: DRY; cf. TiddlySpaceSubscription
+		container.empty().append("<div />").append(this.generateForm());
+		$.ajax({ // XXX: DRY; cf. TiddlySpaceInclusion
 			url: host + "/spaces?mine=1",
 			type: "GET",
 			success: function(data, status, xhr) {
@@ -49,7 +50,12 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 					});
 					return $("<li />").append(link)[0];
 				});
-				$("ul", container).append(spaces);
+				if(data.length >0){	
+					$("div", container).append("<ul/>").append(spaces);
+				}
+				else{
+					$("div", container).append("<span class='noSpacesMessage'>"+macro.locale.noSpaces+"</span>");
+				}
 			},
 			error: function(xhr, error, exc) {
 				displayMessage(macro.locale.listError.format([error]));
@@ -70,7 +76,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		space = new tiddlyweb.Space(space, host);
 		var callback = function(resource, status, xhr) {
 			if(subscribe) {
-				config.macros.TiddlySpaceSubscription.subscribe(
+				config.macros.TiddlySpaceInclusion.include(
 					config.extensions.tiddlyspace.currentSpace.name, space.name);
 			}
 			macro.refresh(container);

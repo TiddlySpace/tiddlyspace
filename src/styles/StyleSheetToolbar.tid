@@ -1,0 +1,6 @@
+type: None
+
+.tiddler {position:relative;}
+.toolbar {position:absolute;top:0px;right:0px;}
+.tiddler .toolbar .button {float:left;display:block;}
+.tiddler .button.command_closeTiddler {float:right;}
