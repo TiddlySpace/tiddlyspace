@@ -27,7 +27,7 @@ setup(
         'tiddlyweb>=1.1.0',
         'tiddlywebwiki>=0.30',
         'tiddlywebplugins.utils>=1.0',
-        'tiddlywebplugins.logout>=0.2',
+        'tiddlywebplugins.logout>=0.3',
         'tiddlywebplugins.virtualhosting',
         'tiddlywebplugins.socialusers>=0.3',
         'tiddlywebplugins.magicuser>=0.2',
