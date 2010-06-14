@@ -166,3 +166,7 @@ a:hover {
 #backstageButton, #backstage, #backstageArea, #backstageCloak {
 	display: none !important;
 }
+
+#messageArea {
+	display: none !important;
+}

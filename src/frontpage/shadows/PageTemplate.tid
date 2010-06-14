@@ -8,6 +8,7 @@ modifier: Osmosoft
 	<div macro='tiddler Bubbles'></div>
 </div>
 <div id='displayArea'>
+	<div id='messageArea'></div>
 	<div id='footer' refresh='content' tiddler='Footer'></div>
 	<div id='tiddlerDisplay'></div>
 </div>
