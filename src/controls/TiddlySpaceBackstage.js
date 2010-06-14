@@ -81,7 +81,7 @@ backstage.init = function(){
 	
 	var backstageToolbar = $("#backstageToolbar")[0];
 	$("<div id='backstageLogo'></div>").prependTo(backstageToolbar);
-	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}} {{publicLightText{space}}}''",$("#backstageLogo",backstageToolbar)[0]);
+	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",$("#backstageLogo",backstageToolbar)[0]);
 	
 	var siteIcon =store.getTiddler("SiteIcon") 
 	if(siteIcon){
