@@ -1,7 +1,5 @@
 tags: temporary
 
 {{annotation{
-TiddlySpace is currently under development, and not ready to be used in anger.
-You're welcome to look around, but don't expect everything to work.
-Please share your thoughts on the [[TiddlyWeb group|http://groups.google.com/group/TiddlyWeb/]].
+TiddlySpace is a new [[open source service|Open Source Service]] that lets you publish and share your thoughts. It is being developed by a community of independent developers, supported by Osmosoft, BT's open source innovation unit. It is still in the early stages of development and so should be used in a spirit of experimentation. It works best with the latest versions of Safari, Chrome and Firefox.
 }}}
