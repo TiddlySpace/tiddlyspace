@@ -121,6 +121,14 @@ ns.getUserInfo(function(user) {
 	}
 });
 
+// ensure backstage is always initialized
+// required to circumvent TiddlyWiki's read-only based handling
+config.macros.backstageInit = {
+	init: function() {
+		showBackstage = true;
+	}
+};
+
 var shadows = config.shadowTiddlers;
 shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace.name, shadows.WindowTitle]);
 
