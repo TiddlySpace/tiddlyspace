@@ -58,5 +58,27 @@ ns.spawnPublicTiddler = function(tiddler, src) { // XXX: rename!?
 };
 ns.spawnPublicTiddler.pubSuffix = " [public]"; // XXX: hacky?
 
+// hijack ServerSideSavingPlugin's sync to support virtual public tiddlers
+var _sync = config.extensions.ServerSideSavingPlugin.sync;
+config.extensions.ServerSideSavingPlugin.sync = function(tiddlers) {
+	_sync.apply(this, arguments);
+	store.forEachTiddler(function(title, tiddler) {
+		if(tiddler.fields.doNotSave == "true" &&
+				endsWith(title, ns.spawnPublicTiddler.pubSuffix)) {
+			tid = $.extend(new Tiddler(title), tiddler);
+			tid.fields = $.extend({}, tiddler.fields);
+			tid.title = tid.fields["server.title"];
+			delete tid.fields.doNotSave;
+			delete tid.fields["server.title"];
+			config.extensions.ServerSideSavingPlugin.saveTiddler(tid);
+		}
+	});
+};
+
+var endsWith = function(str, suffix) {
+	return str.length >= suffix.length &&
+		str.substr(str.length - suffix.length) == suffix;
+};
+
 })(jQuery);
 //}}}
