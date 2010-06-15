@@ -129,8 +129,5 @@ config.macros.backstageInit = {
 	}
 };
 
-var shadows = config.shadowTiddlers;
-shadows.WindowTitle = "[%0] %1".format([plugin.currentSpace.name, shadows.WindowTitle]);
-
 })(jQuery);
 //}}}
