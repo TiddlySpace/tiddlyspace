@@ -158,6 +158,11 @@ a:hover {
 	position: relative;
 }
 
+.toolbar {
+	top: 3px !important;
+	right: 3px !important;
+}
+
 .viewer {
 	padding: 0.5em;
 }
