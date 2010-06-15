@@ -95,8 +95,11 @@ backstage.init = function(){
 	var addressStart = host.indexOf("/") + 2;
 	var tsHost = host.substr(0,addressStart)+ host.substr(subdomainStart+1);
 	
-	//show avatar in the users public bag
-	$("[task=user]","#backstageArea").append('<span><img src="'+tsHost+'/recipes/'+config.options.txtUserName+'_public/tiddlers/SiteIcon"/></span><br/>');
+	config.extensions.tiddlyweb.getUserInfo(function(user){
+		//show avatar in the users public bag
+		$("[task=user]","#backstageArea").
+		append("<span><img src=\""+tsHost+"/recipes/"+user.name+"_public/tiddlers/SiteIcon\"/></span><br/>");
+	});
 	//show default avatar for the login button
 	$("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
 	
