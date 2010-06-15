@@ -9,30 +9,31 @@
 	{
 		
 		this._TSoldHandler(place,macroName,params,wikifier,paramString,tiddler);
-
+		if(tiddler.isReadOnly()){
+			$(place).addClass("toolbarReadOnly");
+		}
 		if(config.macros.image && config.macros.image.svgAvailable){ //only do this for people who have this macro available!
-			var cancelTiddlerButton =jQuery(".command_cancelTiddler",place);
+			var cancelTiddlerButton =$(".command_cancelTiddler",place);
 			cancelTiddlerButton.empty();
 			wikify("<<image cancelTiddler.svg>>",cancelTiddlerButton[0]);
 
-			var closeTiddlerButton =jQuery(".command_closeTiddler",place);
+			var closeTiddlerButton =$(".command_closeTiddler",place);
 			closeTiddlerButton.empty();
 			wikify("<<image closeTiddler.svg>>",closeTiddlerButton[0]);
 
-			var editTiddlerButton = jQuery(".command_editTiddler",place);
+			var editTiddlerButton = $(".command_editTiddler",place);
 			editTiddlerButton.empty();
-			var img = tiddler.isReadOnly() ? "viewTiddler.svg" : "editTiddler.svg";
-			wikify("<<image %0>>".format([img]),editTiddlerButton[0]);
+			wikify("<<image editTiddler.svg>>",editTiddlerButton[0]);
 
-			var deleteTiddlerButton =jQuery(".command_deleteTiddler",place);
+			var deleteTiddlerButton =$(".command_deleteTiddler",place);
 			deleteTiddlerButton.empty();
 			wikify("<<image deleteTiddler.svg>>",deleteTiddlerButton[0]);
 
-			var saveTiddlerButton =jQuery(".command_saveTiddler",place);
+			var saveTiddlerButton =$(".command_saveTiddler",place);
 			saveTiddlerButton.empty();
 			wikify("<<image saveTiddler.svg>>",saveTiddlerButton[0]);
 
-			var moreTiddlerButton = jQuery("a.moreCommand",place);
+			var moreTiddlerButton = $("a.moreCommand",place);
 			moreTiddlerButton.empty();
 			wikify("<<image moreCommand.svg>>",moreTiddlerButton[0]);
 		}
