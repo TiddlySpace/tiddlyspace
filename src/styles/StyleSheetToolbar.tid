@@ -4,3 +4,4 @@ type: None
 .toolbar {position:absolute;top:0px;right:0px;}
 .tiddler .toolbar .button {float:left;display:block;}
 .tiddler .button.command_closeTiddler {float:right;}
+.toolbarReadOnly .editCommandStopColor2 {stop-color:#666666;}
