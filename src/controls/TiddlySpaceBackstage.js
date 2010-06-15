@@ -71,13 +71,15 @@ backstage.init = function(){
 	
 	//override show button with an svg image
 	var showButton = $("#backstageShow")[0];
-	$(showButton).html("");
-	wikify("<<image backstage.svg 60 60>>",showButton);
+	var altText = $(showButton).text();
+	$(showButton).empty();
+	wikify("<<image backstage.svg 60 60 alt:\""+altText+"\">>",showButton);
 	
 	//override hide button
 	var hideButton =$("#backstageHide")[0];
-	jQuery(hideButton).html("");
-	wikify("<<image close.svg 25 25>>",hideButton);
+	var altText = $(hideButton).text();
+	$(hideButton).empty();
+	wikify("<<image close.svg 25 25 alt:\""+altText+"\">>",hideButton);
 	
 	var backstageToolbar = $("#backstageToolbar")[0];
 	$("<div id='backstageLogo'></div>").prependTo(backstageToolbar);
@@ -85,7 +87,7 @@ backstage.init = function(){
 	
 	var siteIcon =store.getTiddler("SiteIcon") 
 	if(siteIcon){
-		wikify(siteIcon.text,jQuery("[task=space]","#backstageArea")[0]);
+		wikify(siteIcon.text,$("[task=space]","#backstageArea")[0]);
 	}
 	
 	var host = config.defaultCustomFields['server.host'];
@@ -94,9 +96,9 @@ backstage.init = function(){
 	var tsHost = host.substr(0,addressStart)+ host.substr(subdomainStart+1);
 	
 	//show avatar in the users public bag
-	jQuery("[task=user]","#backstageArea").append('<span><img src="'+tsHost+'/recipes/'+config.options.txtUserName+'_public/tiddlers/SiteIcon"/></span><br/>');
+	$("[task=user]","#backstageArea").append('<span><img src="'+tsHost+'/recipes/'+config.options.txtUserName+'_public/tiddlers/SiteIcon"/></span><br/>');
 	//show default avatar for the login button
-	jQuery("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
+	$("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
 	
 }
 
