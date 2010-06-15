@@ -158,10 +158,6 @@ a:hover {
 	position: relative;
 }
 
-.toolbar {position:absolute;top:3px;right:3px;}
-.tiddler .toolbar .button {float:left;display:block;}
-.tiddler .button.command_closeTiddler {float:right;}
-
 .viewer {
 	padding: 0.5em;
 }
