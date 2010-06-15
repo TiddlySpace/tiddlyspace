@@ -3,5 +3,5 @@ tags: excludeLists
 {{textRight{
 Hi <<message options.txtUserName>>! Welcome to the user section of your backstage.
 Here you can manage your identities, and manage your TiddlySpace account. You can also <<TiddlySpaceLogin>>.
-<<tabs txtUserTab 'Your Identities' 'Manage your identities' BackstageIdentities 'Your Spaces' 'Maintain your spaces and create new ones' BackstageUserSpaces>>
+<<tabs txtUserTab 'Your Password' 'Change your password' BackstagePassword 'Your Identities' 'Manage your identities' BackstageIdentities 'Your Spaces' 'Maintain your spaces and create new ones' BackstageUserSpaces>>
 }}}
