@@ -39,7 +39,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		this.refresh(container);
 	},
 	refresh: function(container) {
-		container.empty().append("<div />").append(this.generateForm());
+		container.empty().append("<ul />").append(this.generateForm());
 		$.ajax({ // XXX: DRY; cf. TiddlySpaceInclusion
 			url: host + "/spaces?mine=1",
 			type: "GET",
@@ -51,11 +51,12 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 					});
 					return $("<li />").append(link)[0];
 				});
-				if(data.length >0){	
-					$("div", container).append("<ul/>").append(spaces);
-				}
-				else{
-					$("div", container).append("<span class='noSpacesMessage'>"+macro.locale.noSpaces+"</span>");
+				var el = $("ul", container);
+				if(data.length > 0) {
+					el.append(spaces);
+				} else { // XXX: should never occur!?
+					$('<p class="annotation" />').text(macro.locale.noSpaces).
+						replaceAll(el);
 				}
 			},
 			error: function(xhr, error, exc) {
