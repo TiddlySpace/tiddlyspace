@@ -76,6 +76,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var subscribe = form.find("[name=subscribe]").attr("checked");
 		space = new tiddlyweb.Space(space, host);
 		var specialChars = space.name.match(/[^0-9a-z]/) ? true : false; // XXX: duplicated from TiddlySpaceRegister
+		var displayError = config.macros.TiddlySpaceLogin.displayError;
 		var callback = function(resource, status, xhr) {
 			if(subscribe) {
 				config.macros.TiddlySpaceInclusion.include(
@@ -85,20 +86,12 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			displayMessage(macro.locale.addSuccess.format([space.name]));
 		};
 		var errback = function(xhr, error, exc) { // TODO: DRY (cf. TiddlySpaceLogin)
-			switch(xhr.status) {
-				case 409:
-					error = macro.locale.conflictError.format([space.name]);
-					break;
-				default:
-					error = "%0: %1".format([xhr.statusText, xhr.responseText]).
-						htmlEncode();
-					break;
-			}
-			var el = $("[name=space]", form).addClass("error").focus(function(ev) {
-				el.removeClass("error").unbind(ev.originalEvent.type).
-					closest("form").find(".annotation").slideUp();
-			});
-			$(".annotation", form).html(error).slideDown();
+			var ctx = {
+				msg: { 409: macro.locale.conflictError.format([space.name]) },
+				form: form,
+				selector: "[name=space]"
+			};
+			displayError(xhr, error, exc, ctx);
 		};
 		if(!specialChars) {
 			space.create(callback, errback);
@@ -109,7 +102,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 				form: form,
 				selector: "[name=space]"
 			};
-			config.macros.TiddlySpaceLogin.displayError(xhr, null, null, ctx);
+			displayError(xhr, null, null, ctx);
 		}
 		return false;
 	}
