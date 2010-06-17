@@ -19,4 +19,5 @@ config = {
     'css_uri': 'http://peermore.com/tiddlyweb.css',
     'socialusers.reserved_names': ['www', 'about', 'help', 'announcements',
         'info', 'api'],
+    'cookie_age': '2592000', # 1 month
 }
