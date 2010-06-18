@@ -20,7 +20,8 @@
 var macro = config.macros.TiddlySpaceMembers = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
-		listError: "error retrieving members for space %0: %1",
+		authError: "list of members is only visible to members of space <em>%0</em>",
+		listError: "error retrieving members for space <em>%0</em>: %1",
 		addLabel: "Add member",
 		addSuccess: "added member %0",
 		noUserError: "user <em>%0</em> does not exist",
@@ -33,7 +34,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var space = config.extensions.tiddlyspace.currentSpace.name;
 		var host = config.extensions.tiddlyweb.host;
-		this.space = new tiddlyweb.Space(space, host);
+		this.space = new tiddlyweb.Space(space, host); // XXX: singleton
 		var container = $("<div />").appendTo(place);
 		this.refresh(container);
 	},
@@ -43,7 +44,10 @@ var macro = config.macros.TiddlySpaceMembers = {
 			macro.displayMembers(data, container);
 		};
 		var errback = function(xhr, error, exc) {
-			displayMessage(macro.locale.listError.format([macro.space.name, error]));
+			var msg = xhr.status == 401 ?
+				macro.locale.authError.format([macro.space.name]) :
+				macro.locale.listError.format([macro.space.name, error]);
+			container.addClass("annotation").html(msg);
 		};
 		this.space.members().get(callback, errback);
 	},
