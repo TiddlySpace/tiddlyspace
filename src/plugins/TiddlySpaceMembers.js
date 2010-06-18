@@ -34,7 +34,12 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var host = config.extensions.tiddlyweb.host;
 		this.space = new tiddlyweb.Space(space, host); // XXX: singleton
 		var container = $("<div />").appendTo(place);
-		this.refresh(container);
+		if(!readOnly) {
+			this.refresh(container);
+		} else {
+			var msg = this.locale.authError.format([this.space.name]);
+			this.notify(msg, container);
+		}
 	},
 	refresh: function(container) {
 		var callback = function(data, status, xhr) {
@@ -42,10 +47,8 @@ var macro = config.macros.TiddlySpaceMembers = {
 			macro.displayMembers(data, container);
 		};
 		var errback = function(xhr, error, exc) {
-			var msg = xhr.status == 401 ?
-				macro.locale.authError.format([macro.space.name]) :
-				macro.locale.listError.format([macro.space.name, error]);
-			container.addClass("annotation").html(msg);
+			var msg = macro.locale.listError.format([macro.space.name, error]);
+			macro.notify(msg, container);
 		};
 		this.space.members().get(callback, errback);
 	},
@@ -107,6 +110,9 @@ var macro = config.macros.TiddlySpaceMembers = {
 		if(confirm(msg)) {
 			macro.space.members().remove(username, callback, errback);
 		}
+	},
+	notify: function(msg, container) {
+		container.addClass("annotation").html(msg);
 	}
 };
 
