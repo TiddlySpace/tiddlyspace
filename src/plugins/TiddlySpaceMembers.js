@@ -52,11 +52,13 @@ var macro = config.macros.TiddlySpaceMembers = {
 		this.space.members().get(callback, errback);
 	},
 	displayMembers: function(members, container) {
-		var items = $.map(members, function(item, i) {
-			var btn = $('&nbsp;<a class="deleteButton" name="'+item+'" href="javascript:;">x</a>').
+		var items = $.map(members, function(member, i) {
+			var link = $('<a href="javascript:;" />').text(member); // TODO: link to space
+			var btn = $('<a class="deleteButton" href="javascript:;" />').
+				text("x"). // TODO: i18n (use icon!?)
 				attr("title", macro.locale.delTooltip).
-				click(macro.onClick);
-			return $("<li />").text(item+" ").append(btn)[0];
+				data("username", member).click(macro.onClick);
+			return $("<li />").append(link).append(btn)[0];
 		});
 		$("<ul />").append(items).appendTo(container);
 		this.generateForm().appendTo(container);
@@ -96,7 +98,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 	},
 	onClick: function(ev) { // XXX: ambiguous; rename
 		var btn = $(this);
-		var username = btn.attr('name');
+		var username = btn.data("username");
 		var msg = macro.locale.delPrompt.format([username]);
 		var callback = function(data, status, xhr) {
 			displayMessage(macro.locale.delSuccess.format([username]));
