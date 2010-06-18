@@ -37,6 +37,7 @@ setup(
         'tiddlywebplugins.prettyerror',
         'tiddlywebplugins.pathinfohack>=0.8',
         'tiddlywebplugins.form==dev',
+        'tiddlywebplugins.reflector',
     ],
     include_package_data = True,
     zip_safe = False
