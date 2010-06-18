@@ -23,11 +23,9 @@ var macro = config.macros.TiddlySpaceMembers = {
 		authError: "list of members is only visible to members of space <em>%0</em>",
 		listError: "error retrieving members for space <em>%0</em>: %1",
 		addLabel: "Add member",
-		addSuccess: "added member %0",
 		noUserError: "user <em>%0</em> does not exist",
 		delTooltip: "click to remove member",
 		delPrompt: "Are you sure you want to remove member %0?",
-		delSuccess: "removed member %0",
 		delError: "error removing member %0: %1"
 	},
 
@@ -73,7 +71,6 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var form = $(this).closest("form");
 		var username = form.find("[name=username]").val();
 		var callback = function(data, status, xhr) {
-			displayMessage(macro.locale.addSuccess.format([username]));
 			var container = form.closest("div");
 			macro.refresh(container);
 		};
@@ -101,7 +98,6 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var username = btn.data("username");
 		var msg = macro.locale.delPrompt.format([username]);
 		var callback = function(data, status, xhr) {
-			displayMessage(macro.locale.delSuccess.format([username]));
 			var container = btn.closest("div");
 			macro.refresh(container);
 		};
