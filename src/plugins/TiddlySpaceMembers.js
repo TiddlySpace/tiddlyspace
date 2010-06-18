@@ -72,26 +72,19 @@ var macro = config.macros.TiddlySpaceMembers = {
 	},
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
-		var username = form.find("[name=username]").val();
+		var selector = "[name=username]";
+		var username = form.find(selector).val();
 		var callback = function(data, status, xhr) {
 			var container = form.closest("div");
 			macro.refresh(container);
 		};
-		var errback = function(xhr, error, exc) { // TODO: DRY (cf. TiddlySpaceLogin)
-			switch(xhr.status) {
-				case 409:
-					error = macro.locale.noUserError.format([username]);
-					break;
-				default:
-					error = "%0: %1".format([xhr.statusText, xhr.responseText]).
-						htmlEncode();
-					break;
-			}
-			var el = $("[name=username]", form).addClass("error").focus(function(ev) {
-				el.removeClass("error").unbind(ev.originalEvent.type).
-					closest("form").find(".annotation").slideUp();
-			});
-			$(".annotation", form).html(error).slideDown();
+		var errback = function(xhr, error, exc) {
+			var ctx = {
+				msg: { 409: macro.locale.noUserError.format([username]) },
+				form: form,
+				selector: selector
+			};
+			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
 		};
 		macro.space.members().add(username, callback, errback);
 		return false;
