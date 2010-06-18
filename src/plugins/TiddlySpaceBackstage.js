@@ -97,8 +97,10 @@ backstage.init = function(){
 	
 	config.extensions.tiddlyweb.getUserInfo(function(user){
 		//show avatar in the users public bag
-		$("[task=user]","#backstageArea").
-		append("<span><img src=\""+tsHost+"/recipes/"+user.name+"_public/tiddlers/SiteIcon\"/></span><br/>");
+		if(!user.anon){	
+			$("[task=user]","#backstageArea").
+			append("<span><img src=\""+tsHost+"/recipes/"+user.name+"_public/tiddlers/SiteIcon\"/></span><br/>");
+		}
 	});
 	//show default avatar for the login button
 	$("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
