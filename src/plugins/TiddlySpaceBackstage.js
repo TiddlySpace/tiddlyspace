@@ -47,8 +47,7 @@ backstage.show = function() {
 
 var _init = backstage.init;
 backstage.init = function(){
-	var result = _init.apply(this, arguments);
-	
+	_init.apply(this, arguments);
 	//update usernames
 	var userButton = $(".backstageTask[task=user]").
 	html(config.tasks.user.text+ "<span class='txtUserName'></span>"+ glyph("downTriangle"));
@@ -59,7 +58,9 @@ backstage.init = function(){
 	$("#backstageButton").mouseover(function(e){ //when mouseover the button set a timeout to show backstage
 		if(!backstage.isVisible()){
 			_revealBackstageArea = window.setTimeout(function(){
-				if(!backstage.isVisible())backstage.show();
+				if(!backstage.isVisible()){
+					backstage.show();
+				}
 			},"600");}
 		}
 	).
@@ -77,7 +78,7 @@ backstage.init = function(){
 	
 	//override hide button
 	var hideButton =$("#backstageHide")[0];
-	var altText = $(hideButton).text();
+	altText = $(hideButton).text();
 	$(hideButton).empty();
 	wikify("<<image close.svg 25 25 alt:\""+altText+"\">>",hideButton);
 	
@@ -85,7 +86,7 @@ backstage.init = function(){
 	$("<div id='backstageLogo'></div>").prependTo(backstageToolbar);
 	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",$("#backstageLogo",backstageToolbar)[0]);
 	
-	var siteIcon =store.getTiddler("SiteIcon") 
+	var siteIcon =store.getTiddler("SiteIcon");
 	if(siteIcon){
 		wikify(siteIcon.text,$("[task=space]","#backstageArea")[0]);
 	}
@@ -105,7 +106,7 @@ backstage.init = function(){
 	//show default avatar for the login button
 	$("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
 	
-}
+};
 
 })(jQuery);
 //}}}
