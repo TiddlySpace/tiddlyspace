@@ -1,3 +1,3 @@
 tags: excludeLists
 
-<<tabs txtSpaceTab "members" "Members" BackstageSpaceMembers "includes" "include spaces" BackstageSpaceInclusions "tiddlers" "tiddlers control panel" BackstageTiddlers "plugins" "Manage installed plugins" PluginManager "options" "TiddlyWiki options" BackstageOptions "tweaks" "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions>>
+<<tabs txtSpaceTab "members" "Members" BackstageSpaceMembers "includes" "include spaces" BackstageSpaceInclusions "tiddlers" "tiddlers control panel" BackstageTiddlers "plugins" "Manage installed plugins" PluginManager "options" "TiddlyWiki options" BackstageOptions "tweaks" "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions "import" "Import tiddlers from a TiddlyWiki" BackstageFileImport>>
