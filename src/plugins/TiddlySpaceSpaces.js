@@ -1,5 +1,5 @@
 /***
-|''Requires''|TiddlyWebConfig TiddlySpaceInclusion|
+|''Requires''|TiddlyWebConfig TiddlySpaceInclusion TiddlySpaceUserControls|
 !HTMLForm
 <form action="#">
 	<fieldset>

@@ -1,4 +1,5 @@
 /***
+|''Name''|TiddlySpaceUserControls|
 |''Requires''|TiddlySpaceConfig|
 !HTMLForm
 <form action="#">
