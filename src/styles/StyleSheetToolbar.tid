@@ -1,6 +1,7 @@
 type: None
 
 .tiddler {position:relative;}
+.tiddler .title {min-height:29pt;}
 .toolbar {position:absolute;top:0px;right:0px;}
 .tiddler .toolbar .button {float:left;display:block;}
 .tiddler .button.command_closeTiddler {float:right;}
