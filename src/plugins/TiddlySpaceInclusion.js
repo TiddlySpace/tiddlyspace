@@ -52,12 +52,14 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		var form = $(this.formTemplate).
 			find(".annotation").hide().end();
 		if(mode == "passive") {
-			form.submit(function(ev) { return macro.onSubmit(this, mode); }).
-				find("._active").remove().end().
-				find("legend").text(this.locale.addPassiveLabel).end().
-				find(".description").text(this.locale.passiveDesc).end().
-				find("[type=submit]").val(this.locale.addPassiveLabel).end().
-				appendTo(place);
+			if(!readOnly) {
+				form.submit(function(ev) { return macro.onSubmit(this, mode); }).
+					find("._active").remove().end().
+					find("legend").text(this.locale.addPassiveLabel).end().
+					find(".description").text(this.locale.passiveDesc).end().
+					find("[type=submit]").val(this.locale.addPassiveLabel).end().
+					appendTo(place);
+			}
 		} else if(mode == "active") {
 			form.submit(function(ev) { return macro.onSubmit(this, mode); }).
 				find("._passive").remove().end().
