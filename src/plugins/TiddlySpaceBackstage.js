@@ -90,22 +90,24 @@ backstage.init = function(){
 	if(siteIcon){
 		wikify(siteIcon.text,$("[task=space]","#backstageArea")[0]);
 	}
-	
-	var host = config.defaultCustomFields['server.host'];
-	var subdomainStart = host.indexOf(".");
-	var addressStart = host.indexOf("/") + 2;
-	var tsHost = host.substr(0,addressStart)+ host.substr(subdomainStart+1);
-	
-	config.extensions.tiddlyweb.getUserInfo(function(user){
-		//show avatar in the users public bag
-		if(!user.anon){	
-			$("[task=user]","#backstageArea").
-			append("<span><img src=\""+tsHost+"/recipes/"+user.name+"_public/tiddlers/SiteIcon\"/></span><br/>");
+
+	var tiddlyweb = config.extensions.tiddlyweb;
+	tiddlyweb.getStatus(function(status){
+		var server_host =status.server_host;
+		var tsHost = server_host.scheme+"://"+server_host.host;
+		if(server_host.port){
+			tsHost += ":"+server_host.port;
 		}
+		tiddlyweb.getUserInfo(function(user){
+			//show avatar in the users public bag
+			if(!user.anon){
+				$("[task=user]","#backstageArea").
+				append("<span><img src=\""+tsHost+"/recipes/"+user.name+"_public/tiddlers/SiteIcon\"/></span><br/>");
+			}
+		});
+		//show default avatar for the login button
+		$("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
 	});
-	//show default avatar for the login button
-	$("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
-	
 };
 
 })(jQuery);
