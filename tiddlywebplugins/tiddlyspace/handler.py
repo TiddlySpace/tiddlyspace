@@ -110,7 +110,8 @@ def serve_space(environ, start_response, http_host):
     space_name = _determine_space(environ, http_host)
     recipe_name = _determine_space_recipe(environ, space_name)
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
-    environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
+    if 'text/html' in environ['tiddlyweb.type']:
+        environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return get_tiddlers(environ, start_response)
 
 
