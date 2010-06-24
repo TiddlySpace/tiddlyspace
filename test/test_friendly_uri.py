@@ -9,7 +9,6 @@ from test.fixtures import make_test_env, make_fake_space
 from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
 import httplib2
-import Cookie
 
 from tiddlyweb.store import Store
 from tiddlyweb.model.user import User
