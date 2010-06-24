@@ -19,6 +19,7 @@ from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
 from tiddlyweb.web.http import HTTP302, HTTP403, HTTP404
 from tiddlyweb.web.sendtiddlers import send_tiddlers
+from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -163,7 +164,8 @@ def safe_mode(environ, start_response):
         tiddler.recipe = recipe.name
         tiddlers_to_send.add(tiddler)
 
-    if 'text/html' in environ['tiddlyweb.type']:
+    _, mime_type = get_serialize_type(environ)
+    if 'text/html' in mime_type:
         environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return send_tiddlers(environ, start_response, tiddlers=tiddlers_to_send)
 
@@ -185,7 +187,8 @@ def serve_space(environ, start_response, http_host):
     space_name = _determine_space(environ, http_host)
     recipe_name = _determine_space_recipe(environ, space_name)
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
-    if 'text/html' in environ['tiddlyweb.type']:
+    _, mime_type = get_serialize_type(environ)
+    if 'text/html' in mime_type:
         environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return get_tiddlers(environ, start_response)
 
