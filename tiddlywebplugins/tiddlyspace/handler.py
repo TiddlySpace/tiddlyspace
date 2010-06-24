@@ -10,6 +10,7 @@ from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
+from tiddlyweb.model.collections import Tiddlers
 from tiddlyweb.store import (NoBagError, NoRecipeError, NoUserError,
         NoTiddlerError)
 from tiddlyweb.filters import parse_for_filters
@@ -17,6 +18,7 @@ from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
 from tiddlyweb.web.http import HTTP302, HTTP403, HTTP404
+from tiddlyweb.web.sendtiddlers import send_tiddlers
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -113,18 +115,21 @@ def safe_mode(environ, start_response):
 
     store = environ['tiddlyweb.store']
 
+    # Get the list of core plugins
     try:
         core_plugin_tiddler_titles = []
         for bag in CORE_BAGS:
             bag = store.get(Bag(bag))
             tiddlers = store.list_bag_tiddlers(bag)
-            tiddlers = [tiddler for tiddler in tiddlers
+            tiddlers = [tiddler.title for tiddler in tiddlers
                     if 'systemConfig' in tiddler.tags]
             core_plugin_tiddler_titles.extend(tiddlers)
         core_plugin_tiddler_titles = set(core_plugin_tiddler_titles)
     except NoBagError, exc:
         raise HTTP404('core bag not found while trying safe mode: %s' % exc)
 
+    # Delete those plugins in the space's recipes which
+    # duplicate the core plugins
     try:
         recipe = store.get(Recipe(recipe_name))
         template = control.recipe_template(environ)
@@ -143,12 +148,26 @@ def safe_mode(environ, start_response):
         raise HTTP404(
                 'space recipe not found while trying safe mode: %s' % exc)
 
+    # Process the recipe. For those tiddlers which do not have a bag
+    # in CORE_BAGS, remove the systemConfig tag.
+    try:
+        candidate_tiddlers = control.get_tiddlers_from_recipe(recipe, environ)
+    except NoBagError, exc:
+        raise HTTP404('recipe %s lists an unknown bag: %s' %
+                (recipe.name, exc))
+    tiddlers_to_send = Tiddlers()
+    for tiddler in candidate_tiddlers:
+        if tiddler.bag not in CORE_BAGS:
+            try:
+                tiddler.tags.remove('systemConfig')
+            except ValueError:
+                pass
+        tiddler.recipe = recipe.name
+        tiddlers_to_send.add(tiddler)
 
-
-    environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
     if 'text/html' in environ['tiddlyweb.type']:
         environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
-    return get_tiddlers(environ, start_response)
+    return send_tiddlers(environ, start_response, tiddlers=tiddlers_to_send)
 
 
 def serve_frontpage(environ, start_response):

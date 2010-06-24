@@ -94,7 +94,7 @@ def test_safe_exists():
 
 
 def test_safe_mode_deletes_bad():
-    tiddler = {'text': 'oh hai', 'tags': ['systemConfig']}
+    tiddler = {'text': 'oh hai', 'tags': ['fun', 'systemConfig']}
     body = simplejson.dumps(tiddler)
 
     response, content = http.request(
@@ -143,4 +143,4 @@ def test_safe_mode_deletes_bad():
 
     our_tiddler = [tiddler for tiddler in tiddlers if tiddler['title'] == 'helloplugin'][0]
 
-    assert our_tiddler['tags'] == []
+    assert our_tiddler['tags'] == ['fun']
