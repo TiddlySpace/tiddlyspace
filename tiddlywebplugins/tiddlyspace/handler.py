@@ -158,10 +158,8 @@ def safe_mode(environ, start_response):
     tiddlers_to_send = Tiddlers()
     for tiddler in candidate_tiddlers:
         if tiddler.bag not in CORE_BAGS:
-            try:
-                tiddler.tags.remove('systemConfig')
-            except ValueError:
-                pass
+            if 'systemConfig' in tiddler.tags:
+                tiddler.tags.append('systemConfigDisable')
         tiddler.recipe = recipe.name
         tiddlers_to_send.add(tiddler)
 
