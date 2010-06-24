@@ -8,8 +8,10 @@ import simplejson
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
+from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
-from tiddlyweb.store import NoBagError, NoRecipeError, NoUserError
+from tiddlyweb.store import (NoBagError, NoRecipeError, NoUserError,
+        NoTiddlerError)
 from tiddlyweb.filters import parse_for_filters
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
@@ -19,6 +21,9 @@ from tiddlyweb.web.http import HTTP302, HTTP403, HTTP404
 from tiddlywebplugins.utils import require_any_user
 
 import tiddlywebplugins.status
+
+
+CORE_BAGS = ['system', 'tiddlyspace']
 
 
 def home(environ, start_response):
@@ -91,6 +96,59 @@ def get_identities(environ, start_response):
     start_response('200 OK', [
         ('Content-Type', 'application/json; charset=UTF-8')])
     return [simplejson.dumps(identities)]
+
+
+def safe_mode(environ, start_response):
+    """
+    Serve up a space in safe mode. Safe mode means that
+    non-required plugins are turned off and plugins that 
+    duplicate those in the core bags (system and tiddlyspace)
+    are deleted from the store of the space in question.
+    """
+    http_host, host_url = _determine_host(environ)
+    space_name = _determine_space(environ, http_host)
+    recipe_name = _determine_space_recipe(environ, space_name)
+    if recipe_name != '%s_private' % space_name:
+        raise HTTP403('membership required for safe mode')
+
+    store = environ['tiddlyweb.store']
+
+    try:
+        core_plugin_tiddler_titles = []
+        for bag in CORE_BAGS:
+            bag = store.get(Bag(bag))
+            tiddlers = store.list_bag_tiddlers(bag)
+            tiddlers = [tiddler for tiddler in tiddlers
+                    if 'systemConfig' in tiddler.tags]
+            core_plugin_tiddler_titles.extend(tiddlers)
+        core_plugin_tiddler_titles = set(core_plugin_tiddler_titles)
+    except NoBagError, exc:
+        raise HTTP404('core bag not found while trying safe mode: %s' % exc)
+
+    try:
+        recipe = store.get(Recipe(recipe_name))
+        template = control.recipe_template(environ)
+        recipe_list = recipe.get_recipe(template)
+        space_bags = [bag for bag, filter in recipe_list
+                if bag.startswith('%s_' % space_name)]
+        for title in core_plugin_tiddler_titles:
+            for bag in space_bags:
+                try:
+                    tiddler = Tiddler(title, bag)
+                    tiddler = store.get(tiddler)
+                except NoTiddlerError:
+                    continue
+                store.delete(tiddler)
+    except NoRecipeError, exc:
+        raise HTTP404(
+                'space recipe not found while trying safe mode: %s' % exc)
+
+
+
+    environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
+    if 'text/html' in environ['tiddlyweb.type']:
+        environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
+    return get_tiddlers(environ, start_response)
 
 
 def serve_frontpage(environ, start_response):
