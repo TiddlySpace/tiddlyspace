@@ -45,11 +45,11 @@ def home(environ, start_response):
             usersign = 'GUEST'
         if usersign == 'GUEST':
             return serve_frontpage(environ, start_response)
-        else: # authenticated user
+        else:  # authenticated user
             scheme = environ['tiddlyweb.config']['server_host']['scheme']
             uri = '%s://%s.%s' % (scheme, usersign, host_url)
             raise HTTP302(uri)
-    else: # subdomain
+    else:  # subdomain
         return serve_space(environ, start_response, http_host)
 
 
@@ -103,7 +103,7 @@ def get_identities(environ, start_response):
 def safe_mode(environ, start_response):
     """
     Serve up a space in safe mode. Safe mode means that
-    non-required plugins are turned off and plugins that 
+    non-required plugins are turned off and plugins that
     duplicate those in the core bags (system and tiddlyspace)
     are deleted from the store of the space in question.
     """
@@ -222,7 +222,7 @@ def _determine_space_recipe(environ, space_name):
         bag = store.get(bag)
     except NoBagError, exc:
         raise HTTP404('Space for %s does not exist' % space_name)
-    members = bag.policy.manage # XXX: authoritative?
+    members = bag.policy.manage  # XXX: authoritative?
 
     space_type = 'private' if user in members else 'public'
     recipe_name = '%s_%s' % (space_name, space_type)
