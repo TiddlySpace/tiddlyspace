@@ -8,17 +8,24 @@ import simplejson
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
+from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
-from tiddlyweb.store import NoBagError, NoRecipeError, NoUserError
+from tiddlyweb.model.collections import Tiddlers
+from tiddlyweb.store import (NoBagError, NoRecipeError, NoUserError,
+        NoTiddlerError)
 from tiddlyweb.filters import parse_for_filters
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
 from tiddlyweb.web.http import HTTP302, HTTP403, HTTP404
+from tiddlyweb.web.sendtiddlers import send_tiddlers
 
 from tiddlywebplugins.utils import require_any_user
 
 import tiddlywebplugins.status
+
+
+CORE_BAGS = ['system', 'tiddlyspace']
 
 
 def home(environ, start_response):
@@ -38,11 +45,11 @@ def home(environ, start_response):
             usersign = 'GUEST'
         if usersign == 'GUEST':
             return serve_frontpage(environ, start_response)
-        else: # authenticated user
+        else:  # authenticated user
             scheme = environ['tiddlyweb.config']['server_host']['scheme']
             uri = '%s://%s.%s' % (scheme, usersign, host_url)
             raise HTTP302(uri)
-    else: # subdomain
+    else:  # subdomain
         return serve_space(environ, start_response, http_host)
 
 
@@ -91,6 +98,74 @@ def get_identities(environ, start_response):
     start_response('200 OK', [
         ('Content-Type', 'application/json; charset=UTF-8')])
     return [simplejson.dumps(identities)]
+
+
+def safe_mode(environ, start_response):
+    """
+    Serve up a space in safe mode. Safe mode means that
+    non-required plugins are turned off and plugins that
+    duplicate those in the core bags (system and tiddlyspace)
+    are deleted from the store of the space in question.
+    """
+    http_host, host_url = _determine_host(environ)
+    space_name = _determine_space(environ, http_host)
+    recipe_name = _determine_space_recipe(environ, space_name)
+    if recipe_name != '%s_private' % space_name:
+        raise HTTP403('membership required for safe mode')
+
+    store = environ['tiddlyweb.store']
+
+    # Get the list of core plugins
+    try:
+        core_plugin_tiddler_titles = []
+        for bag in CORE_BAGS:
+            bag = store.get(Bag(bag))
+            tiddlers = store.list_bag_tiddlers(bag)
+            tiddlers = [tiddler.title for tiddler in tiddlers
+                    if 'systemConfig' in tiddler.tags]
+            core_plugin_tiddler_titles.extend(tiddlers)
+        core_plugin_tiddler_titles = set(core_plugin_tiddler_titles)
+    except NoBagError, exc:
+        raise HTTP404('core bag not found while trying safe mode: %s' % exc)
+
+    # Delete those plugins in the space's recipes which
+    # duplicate the core plugins
+    try:
+        recipe = store.get(Recipe(recipe_name))
+        template = control.recipe_template(environ)
+        recipe_list = recipe.get_recipe(template)
+        space_bags = [bag for bag, filter in recipe_list
+                if bag.startswith('%s_' % space_name)]
+        for title in core_plugin_tiddler_titles:
+            for bag in space_bags:
+                try:
+                    tiddler = Tiddler(title, bag)
+                    tiddler = store.get(tiddler)
+                except NoTiddlerError:
+                    continue
+                store.delete(tiddler)
+    except NoRecipeError, exc:
+        raise HTTP404(
+                'space recipe not found while trying safe mode: %s' % exc)
+
+    # Process the recipe. For those tiddlers which do not have a bag
+    # in CORE_BAGS, remove the systemConfig tag.
+    try:
+        candidate_tiddlers = control.get_tiddlers_from_recipe(recipe, environ)
+    except NoBagError, exc:
+        raise HTTP404('recipe %s lists an unknown bag: %s' %
+                (recipe.name, exc))
+    tiddlers_to_send = Tiddlers()
+    for tiddler in candidate_tiddlers:
+        if tiddler.bag not in CORE_BAGS:
+            if 'systemConfig' in tiddler.tags:
+                tiddler.tags.append('systemConfigDisable')
+        tiddler.recipe = recipe.name
+        tiddlers_to_send.add(tiddler)
+
+    if 'text/html' in environ['tiddlyweb.type']:
+        environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
+    return send_tiddlers(environ, start_response, tiddlers=tiddlers_to_send)
 
 
 def serve_frontpage(environ, start_response):
@@ -145,7 +220,7 @@ def _determine_space_recipe(environ, space_name):
         bag = store.get(bag)
     except NoBagError, exc:
         raise HTTP404('Space for %s does not exist' % space_name)
-    members = bag.policy.manage # XXX: authoritative?
+    members = bag.policy.manage  # XXX: authoritative?
 
     space_type = 'private' if user in members else 'public'
     recipe_name = '%s_%s' % (space_name, space_type)

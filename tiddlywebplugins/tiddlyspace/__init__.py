@@ -13,7 +13,7 @@ from tiddlyweb.util import merge_config
 from tiddlywebplugins.utils import replace_handler, get_store
 
 from tiddlywebplugins.tiddlyspace.config import config as space_config
-from tiddlywebplugins.tiddlyspace.handler import (home,
+from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
         friendly_uri, get_identities, ControlView)
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
@@ -70,6 +70,7 @@ def init(config):
 
     if 'selector' in config: # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
+        config['selector'].add('/_safe', GET=safe_mode)
         add_spaces_routes(config['selector'])
         config['selector'].add('/{tiddler_name:segment', GET=friendly_uri)
         config['selector'].add('/users/{username}/identities',
