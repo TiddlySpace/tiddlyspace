@@ -13,8 +13,13 @@ cmd.cloneTiddler = {
 	errorMsg: "Error publishing %0: %1",
 
 	isEnabled: function(tiddler) {
-		var space = ns.determineSpace(tiddler, false);
-		return space && space.name != ns.currentSpace.name;
+		var bag = tiddler.fields["server.bag"];
+		if(ns.coreBags.contains(bag)) {
+			return true;
+		} else {
+			var space = ns.determineSpace(tiddler, false);
+			return space && space.name != ns.currentSpace.name;
+		}
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
