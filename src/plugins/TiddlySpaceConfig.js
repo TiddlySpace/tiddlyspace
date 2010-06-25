@@ -98,6 +98,8 @@ TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 
 var plugin = config.extensions.tiddlyspace = {
 	currentSpace: determineSpace(recipe),
+	coreBags: ["system", "tiddlyspace"],
+
 	determineSpace: determineSpace
 };
 
