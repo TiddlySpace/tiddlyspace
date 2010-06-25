@@ -96,7 +96,7 @@ backstage.init = function(){
 		var server_host = status.server_host;
 		var tsHost = server_host.scheme +"://" + server_host.host;
 		if(server_host.port && server_host.port != '80' &&
-			 server_host.port != '443'){
+			server_host.port != '443'){
 			tsHost += ":" + server_host.port;
 		}
 		tiddlyweb.getUserInfo(function(user){
