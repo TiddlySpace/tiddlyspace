@@ -107,7 +107,7 @@ backstage.init = function(){
 			}
 		});
 		//show default avatar for the login button
-		$("[task=login]","#backstageArea").append('<span><img src="'+tsHost+'/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
+		$("[task=login]","#backstageArea").append('<span><img src="/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
 	});
 };
 
