@@ -1,68 +1,52 @@
 /***
 |''Name''|TiddlySpaceToolbar|
-|''Description''|Updates the toolbar macro to use svg buttons and a popup for the more menu|
+|''Description''|augments tiddler toolbar commands with SVG icons|
 ***/
 //{{{
 (function($){
-	config.macros.toolbar._TSoldHandler = config.macros.toolbar.handler;
-	config.macros.toolbar.handler = function(place,macroName,params,wikifier,paramString,tiddler)
-	{
-		
-		this._TSoldHandler(place,macroName,params,wikifier,paramString,tiddler);
-		if(tiddler.isReadOnly()){
-			$(place).addClass("toolbarReadOnly");
-		}
-		if(config.macros.image && config.macros.image.svgAvailable){ //only do this for people who have this macro available!
-			var cancelTiddlerButton =$(".command_cancelTiddler",place);
-			cancelTiddlerButton.empty();
-			wikify("<<image cancelTiddler.svg>>",cancelTiddlerButton[0]);
 
-			var closeTiddlerButton =$(".command_closeTiddler",place);
-			closeTiddlerButton.empty();
-			wikify("<<image closeTiddler.svg>>",closeTiddlerButton[0]);
-
-			var editTiddlerButton = $(".command_editTiddler",place);
-			editTiddlerButton.empty();
-			wikify("<<image editTiddler.svg>>",editTiddlerButton[0]);
-
-			var deleteTiddlerButton =$(".command_deleteTiddler",place);
-			deleteTiddlerButton.empty();
-			wikify("<<image deleteTiddler.svg>>",deleteTiddlerButton[0]);
-
-			var saveTiddlerButton =$(".command_saveTiddler",place);
-			saveTiddlerButton.empty();
-			wikify("<<image saveTiddler.svg>>",saveTiddlerButton[0]);
-
-			var moreTiddlerButton = $("a.moreCommand",place);
-			moreTiddlerButton.empty();
-			wikify("<<image moreCommand.svg>>",moreTiddlerButton[0]);
-		}
+var _handler = config.macros.toolbar.handler;
+config.macros.toolbar.handler = function(place, macroName, params, wikifier,
+		paramString, tiddler) {
+	var status = _handler.apply(this, arguments);
+	if(tiddler.isReadOnly()){
+		$(place).addClass("toolbarReadOnly");
 	}
-
-	config.macros.toolbar.onClickMore = function(ev)
-	{
-		var sibling = this.nextSibling;
-		var commands = sibling.childNodes;
-		var popup = Popup.create(this);
-		addClass(popup,"taggedTiddlerList");
-
-		for(var i=0; i < commands.length; i++){
-			var li =createTiddlyElement(popup,"li",null);
-			var oldCommand =commands[i];
-			var command = oldCommand.cloneNode(true);
-			command.onclick = oldCommand.onclick;
-			li.appendChild(command);
-		}
-		Popup.show();
-
-		var e = ev || window.event;
-		e.cancelBubble = true;
-		if(e.stopPropagation) e.stopPropagation();
+	if(config.macros.image && config.macros.image.svgAvailable){
+		var commands = ["closeTiddler", "editTiddler", "moreCommand",
+			"saveTiddler", "cancelTiddler", "deleteTiddler"]; // TODO: should automatically try to find icon for each command button
+		$.each(commands, function(i, cmd) {
+			var selector = ".command_%0".format([cmd]);
+			var btn = $(selector, place).empty();
+			wikify("<<image %0.svg>>".format([cmd]), btn[0]); // XXX: use function call instead of wikification
+		});
+		// XXX: duplication due to special handling; cf. ticket #1234
+		var btn = $("a.moreCommand", place).empty();
+		wikify("<<image moreCommand.svg>>", btn[0]);
 	}
-	
-	var shadows = config.shadowTiddlers;
-	shadows.ToolbarCommands = "|~ViewToolbar|+editTiddler closeTiddler > cloneTiddler pubRev closeOthers fields publishTiddlerRevision revisions syncing permalink references jump|"+
-	"\n|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|";
-	
+	return status
+}
+
+config.macros.toolbar.onClickMore = function(ev) {
+	var sibling = this.nextSibling;
+	var commands = sibling.childNodes;
+	var popup = Popup.create(this);
+	addClass(popup ,"taggedTiddlerList");
+
+	for(var i = 0; i < commands.length; i++){
+		var li = createTiddlyElement(popup, "li", null);
+		var oldCommand = commands[i];
+		var command = oldCommand.cloneNode(true);
+		command.onclick = oldCommand.onclick;
+		li.appendChild(command);
+	}
+	Popup.show();
+	ev.stopPropagation();
+};
+
+// XXX: does not belong here; TiddlySpaceConfig!? -- XXX: overriding is bad (cf. TiddlyWebConfig)
+config.shadowTiddlers.ToolbarCommands = "|~ViewToolbar|+editTiddler closeTiddler > cloneTiddler pubRev closeOthers fields publishTiddlerRevision revisions syncing permalink references jump|"+
+"\n|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|";
+
 })(jQuery);
 //}}}
