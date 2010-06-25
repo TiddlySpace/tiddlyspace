@@ -93,17 +93,20 @@ backstage.init = function(){
 
 	var tiddlyweb = config.extensions.tiddlyweb;
 	tiddlyweb.getStatus(function(status){
-		var server_host =status.server_host;
-		var tsHost = server_host.scheme+"://"+server_host.host;
+		var server_host = status.server_host;
+		var tsHost = server_host.scheme +"://" + server_host.host;
 		if(server_host.port && server_host.port != '80' &&
 			 server_host.port != '443'){
-			tsHost += ":"+server_host.port;
+			tsHost += ":" + server_host.port;
 		}
 		tiddlyweb.getUserInfo(function(user){
 			//show avatar in the users public bag
 			if(!user.anon){
 				$("[task=user]","#backstageArea").
-				append("<span><img src=\""+tsHost+"/recipes/"+user.name+"_public/tiddlers/SiteIcon\"/></span><br/>");
+				append("<span><img src=\""
+					+ tsHost + "/recipes/"
+					+ user.name
+					+ "_public/tiddlers/SiteIcon\"/></span><br/>");
 			}
 		});
 		//show default avatar for the login button
