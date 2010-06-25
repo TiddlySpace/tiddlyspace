@@ -25,7 +25,7 @@ setup(
     install_requires = [
         'setuptools',
         'tiddlyweb>=1.1.0',
-        'tiddlywebwiki>=0.30',
+        'tiddlywebwiki>=0.32',
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout>=0.5',
         'tiddlywebplugins.virtualhosting',
