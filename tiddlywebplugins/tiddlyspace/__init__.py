@@ -70,7 +70,7 @@ def init(config):
 
     if 'selector' in config: # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
-        config['selector'].add('/_safe', GET=safe_mode)
+        config['selector'].add('/_safe', GET=safe_mode, POST=safe_mode)
         add_spaces_routes(config['selector'])
         config['selector'].add('/{tiddler_name:segment', GET=friendly_uri)
         config['selector'].add('/users/{username}/identities',

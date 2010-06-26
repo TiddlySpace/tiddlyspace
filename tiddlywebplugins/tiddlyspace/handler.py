@@ -108,11 +108,15 @@ def safe_mode(environ, start_response):
     duplicate those in the core bags (system and tiddlyspace)
     are deleted from the store of the space in question.
     """
+
     http_host, host_url = _determine_host(environ)
     space_name = _determine_space(environ, http_host)
     recipe_name = _determine_space_recipe(environ, space_name)
     if recipe_name != '%s_private' % space_name:
         raise HTTP403('membership required for safe mode')
+
+    if environ['REQUEST_METHOD'] == 'GET':
+        return _send_safe_mode(environ, start_response)
 
     store = environ['tiddlyweb.store']
 
@@ -165,7 +169,7 @@ def safe_mode(environ, start_response):
         tiddlers_to_send.add(tiddler)
 
     _, mime_type = get_serialize_type(environ)
-    if 'text/html' in mime_type:
+    if 'text/html' in mime_type or 'x-www-form' in environ['tiddlyweb.type']:
         environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return send_tiddlers(environ, start_response, tiddlers=tiddlers_to_send)
 
@@ -240,6 +244,29 @@ def _determine_space(environ, http_host):
     if '.%s' % server_host in http_host:
         return http_host.rsplit('.', server_host.count('.') + 1)[0]
     return None
+
+
+def _send_safe_mode(environ, start_response):
+    """
+    Send a form that initiates safe_mode by asking
+    the user to confirm that they want it and then
+    POSTing back to the same URI.
+    
+    XXX: This should maybe be replaced with a tiddler.
+    However, then that tiddler will be visible in spaces
+    and we don't want that.
+    """
+    environ['tiddlyweb.title'] = 'Confirm Safe Mode'
+    start_response('200 OK', [('Content-Type', 'text/html; charset=UTF-8')])
+    return ["""
+<div id='content'><div class='tiddler'>
+<form method='POST'>
+<p>Are you sure you wish to run safe mode?</p>
+<input type='submit' value='Yes' />
+</form>
+<p><a href='/'>Return to my Space.</a></p>
+</div></div>
+"""]
 
 
 original_gather_data = tiddlywebplugins.status._gather_data

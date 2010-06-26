@@ -51,6 +51,12 @@ def test_safe_403():
     assert response['status'] == '403'
     assert 'membership required' in content
 
+    response, content = http.request('http://cdent.0.0.0.0:8080/_safe',
+            method='POST',
+            headers={'Accept': 'application/json'})
+
+    assert response['status'] == '403'
+    assert 'membership required' in content
 
 def test_safe_exists():
     global AUTH_COOKIE
@@ -69,6 +75,15 @@ def test_safe_exists():
     response, content = http.request('http://cdent.0.0.0.0:8080/_safe',
             method='GET',
             headers={'Accept': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
+
+    assert response['status'] == '200'
+    assert 'form' in content
+    assert 'Are you sure' in content
+
+    response, content = http.request('http://cdent.0.0.0.0:8080/_safe',
+            method='POST',
+            headers={'Content-Type': 'application/json',
                 'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
 
     assert response['status'] == '200'
@@ -128,8 +143,8 @@ def test_safe_mode_deletes_bad():
     assert ('helloplugin', 'cdent_private') in tiddlers_info
 
     response, content = http.request('http://cdent.0.0.0.0:8080/_safe',
-            method='GET',
-            headers={'Accept': 'application/json',
+            method='POST',
+            headers={'Content-Type': 'application/json',
                 'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
 
     assert response['status'] == '200'
