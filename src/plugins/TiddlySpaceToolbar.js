@@ -48,9 +48,5 @@ config.macros.toolbar.onClickMore = function(ev) {
 	ev.stopPropagation();
 };
 
-// XXX: does not belong here; TiddlySpaceConfig!? -- XXX: overriding is bad (cf. TiddlyWebConfig)
-config.shadowTiddlers.ToolbarCommands = "|~ViewToolbar|+editTiddler closeTiddler > cloneTiddler pubRev closeOthers fields publishTiddlerRevision revisions syncing permalink references jump|"+
-"\n|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|";
-
 })(jQuery);
 //}}}
