@@ -9,23 +9,27 @@ var _handler = config.macros.toolbar.handler;
 config.macros.toolbar.handler = function(place, macroName, params, wikifier,
 		paramString, tiddler) {
 	var status = _handler.apply(this, arguments);
+	// TODO: refresh; cf. http://github.com/jdlrobson/tiddlyspace/commit/beb21fd
 	if(tiddler.isReadOnly()){
 		$(place).addClass("toolbarReadOnly");
 	}
 	if(config.macros.image && config.macros.image.svgAvailable){
-		var commands = ["closeTiddler", "editTiddler", "moreCommand",
-			"saveTiddler", "cancelTiddler", "deleteTiddler"]; // TODO: should automatically try to find icon for each command button
-		$.each(commands, function(i, cmd) {
-			var selector = ".command_%0".format([cmd]);
-			var btn = $(selector, place).empty();
-			wikify("<<image %0.svg>>".format([cmd]), btn[0]); // XXX: use function call instead of wikification
-		});
-		// XXX: duplication due to special handling; cf. ticket #1234
-		var btn = $("a.moreCommand", place).empty();
-		wikify("<<image moreCommand.svg>>", btn[0]);
+		augmentToolbar(place);
 	}
-	return status
-}
+	return status;
+};
+
+var augmentToolbar = function(toolbar) { // XXX: should not be private!?
+	$(toolbar).children(".button").each(function(i, el) {
+		var cmd = el.className.match(/\bcommand_([^ ]+?)\b/); // XXX: gratuitous RegEx?
+		cmd = cmd ? cmd[1] : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
+		var title = "%0.svg".format([cmd]);
+		if(store.tiddlerExists(title)) { // XXX: does not support shadow tiddler
+			$(el).empty();
+			wikify("<<image %0>>".format([title]), el); // XXX: use function call instead of wikification
+		}
+	});
+};
 
 config.macros.toolbar.onClickMore = function(ev) {
 	var sibling = this.nextSibling;
