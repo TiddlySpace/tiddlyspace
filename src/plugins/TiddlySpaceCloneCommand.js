@@ -14,7 +14,7 @@ cmd.cloneTiddler = {
 
 	isEnabled: function(tiddler) {
 		var bag = tiddler.fields["server.bag"];
-		if(tiddler.isReadOnly()) {
+		if(readOnly) {
 			return false;
 		} else if(ns.coreBags.contains(bag)) {
 			return true;
