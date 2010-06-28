@@ -14,7 +14,9 @@ cmd.cloneTiddler = {
 
 	isEnabled: function(tiddler) {
 		var bag = tiddler.fields["server.bag"];
-		if(ns.coreBags.contains(bag)) {
+		if(tiddler.isReadOnly()) {
+			return false;
+		} else if(ns.coreBags.contains(bag)) {
 			return true;
 		} else {
 			var space = ns.determineSpace(tiddler, false);

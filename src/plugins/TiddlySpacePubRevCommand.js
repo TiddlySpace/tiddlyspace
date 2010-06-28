@@ -13,6 +13,9 @@ var cmd = config.commands.pubRev = { // TODO: rename
 	noPubError: "<em>%0</em> has not been published",
 
 	isEnabled: function(tiddler) {
+		if(tiddler.isReadOnly()) {
+			return false;
+		}
 		var space = ns.determineSpace(tiddler, false);
 		return space && tiddler.fields["server.bag"] == space.name + "_private";
 	},
