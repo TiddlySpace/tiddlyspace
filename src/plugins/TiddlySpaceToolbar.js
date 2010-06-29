@@ -1,7 +1,24 @@
 /***
 |''Name''|TiddlySpaceToolbar|
 |''Description''|augments tiddler toolbar commands with SVG icons|
+|''Author''|Osmosoft|
+|''Version''|0.5.0|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceToolbar.js|
+|''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
+|''License''|[[BSD|http://www.opensource.org/licenses/bsd-license.php]]|
+|''CoreVersion''|2.5.0|
 |''Requires''|ImageMacroPlugin|
+|''Keywords''|toolbar icons SVG|
+!Description
+replaces tiddler toolbar commands with SVG icons if available
+!Notes
+requires [[ImageMacroPlugin|http://svn.tiddlywiki.org/Trunk/contributors/JonRobson/plugins/ImageMacroPlugin/plugins/ImageMacroPlugin.tid]]
+
+SVG icons are drawn from tiddlers titled {{{<command>.svg}}}
+!TODO
+* rename (IconToolbarPlugin?)
+!Code
 ***/
 //{{{
 (function($) {
