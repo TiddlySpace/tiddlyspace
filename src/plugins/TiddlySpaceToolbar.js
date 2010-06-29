@@ -8,15 +8,26 @@
 var _handler = config.macros.toolbar.handler;
 config.macros.toolbar.handler = function(place, macroName, params, wikifier,
 		paramString, tiddler) {
+	var toolbar = $(place);
+	toolbar.attr({
+		refresh: "macro",
+		macroName: macroName
+	}).data("args", arguments);
 	var status = _handler.apply(this, arguments);
-	// TODO: refresh; cf. http://github.com/jdlrobson/tiddlyspace/commit/beb21fd
-	if(tiddler.isReadOnly()){
-		$(place).addClass("toolbarReadOnly");
+	if(tiddler.isReadOnly()) {
+		toolbar.addClass("toolbarReadOnly");
+	} else {
+		toolbar.removeClass("toolbarReadOnly");
 	}
 	if(config.macros.image && config.macros.image.svgAvailable){
 		augmentToolbar(place);
 	}
 	return status;
+};
+
+config.macros.toolbar.refresh = function(place, params) {
+	var args = $(place).empty().data("args");
+	this.handler.apply(this, args);
 };
 
 var augmentToolbar = function(toolbar) { // XXX: should not be private!?
@@ -31,12 +42,12 @@ var augmentToolbar = function(toolbar) { // XXX: should not be private!?
 	});
 };
 
+// override onClickMore to provide extra commands in a popup
 config.macros.toolbar.onClickMore = function(ev) {
 	var sibling = this.nextSibling;
 	var commands = sibling.childNodes;
 	var popup = Popup.create(this);
 	addClass(popup ,"taggedTiddlerList");
-
 	for(var i = 0; i < commands.length; i++){
 		var li = createTiddlyElement(popup, "li", null);
 		var oldCommand = commands[i];
