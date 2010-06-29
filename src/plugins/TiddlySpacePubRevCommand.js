@@ -16,8 +16,9 @@ var cmd = config.commands.pubRev = { // TODO: rename
 		if(readOnly) {
 			return false;
 		}
-		var space = ns.determineSpace(tiddler, false);
-		return space && tiddler.fields["server.bag"] == space.name + "_private";
+		var space = ns.determineSpace(tiddler, true);
+		var bag = tiddler.fields["server.bag"];
+		return space && (bag ? bag == space.name + "_private" : true);
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
