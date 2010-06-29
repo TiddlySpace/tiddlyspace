@@ -1,9 +1,14 @@
 /***
 |''Name''|TiddlySpaceToolbar|
 |''Description''|augments tiddler toolbar commands with SVG icons|
+|''Requires''|ImageMacroPlugin|
 ***/
 //{{{
-(function($){
+(function($) {
+
+if(!config.macros.image) {
+	throw "Missing dependency: ImageMacroPlugin";
+}
 
 var _handler = config.macros.toolbar.handler;
 config.macros.toolbar.handler = function(place, macroName, params, wikifier,
@@ -19,7 +24,7 @@ config.macros.toolbar.handler = function(place, macroName, params, wikifier,
 	} else {
 		toolbar.removeClass("toolbarReadOnly");
 	}
-	if(config.macros.image && config.macros.image.svgAvailable){
+	if(config.macros.image.svgAvailable) {
 		augmentToolbar(place);
 	}
 	return status;
@@ -48,7 +53,7 @@ config.macros.toolbar.onClickMore = function(ev) {
 	var commands = sibling.childNodes;
 	var popup = Popup.create(this);
 	addClass(popup ,"taggedTiddlerList");
-	for(var i = 0; i < commands.length; i++){
+	for(var i = 0; i < commands.length; i++) {
 		var li = createTiddlyElement(popup, "li", null);
 		var oldCommand = commands[i];
 		var command = oldCommand.cloneNode(true);
