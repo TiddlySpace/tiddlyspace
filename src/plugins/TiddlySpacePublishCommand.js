@@ -12,7 +12,7 @@ var cmd = config.commands.publishTiddlerRevision = {
 	errorMsg: "Error publishing %0: %1",
 
 	isEnabled: function(tiddler) {
-		if(tiddler.isReadOnly() || !store.tiddlerExists(tiddler.title)) {
+		if(readOnly || !store.tiddlerExists(tiddler.title)) {
 			return false;
 		}
 		var space = ns.determineSpace(tiddler, true);
