@@ -27,7 +27,7 @@ setup(
         'tiddlyweb>=1.1.0',
         'tiddlywebwiki>=0.32',
         'tiddlywebplugins.utils>=1.0',
-        'tiddlywebplugins.logout>=0.5',
+        'tiddlywebplugins.logout>=0.6',
         'tiddlywebplugins.virtualhosting',
         'tiddlywebplugins.socialusers>=0.3',
         'tiddlywebplugins.magicuser>=0.2',
@@ -37,7 +37,8 @@ setup(
         'tiddlywebplugins.prettyerror',
         'tiddlywebplugins.pathinfohack>=0.8',
         'tiddlywebplugins.form==dev',
-        'tiddlywebplugins.reflector',
+        'tiddlywebplugins.reflector>=0.2',
+        'tiddlywebplugins.whoosher>=0.92',
     ],
     include_package_data = True,
     zip_safe = False
