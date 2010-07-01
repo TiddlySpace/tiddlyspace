@@ -163,7 +163,7 @@
   method: PUT
   status: 409
   expected:
-  - Invalid space name, lowercase required
+  - Invalid space name, must be valid host name (RFC 1035)
 
 # Create badname space
 - name: Create spaced space fail
@@ -173,7 +173,7 @@
   method: PUT
   status: 409
   expected:
-  - Invalid space name, alphanumeric required
+  - Invalid space name, must be valid host name (RFC 1035)
 
 # Create reserved space
 - name: Create reserved space fail

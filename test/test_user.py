@@ -107,7 +107,7 @@ def test_username_bad_form():
             headers={'Content-Type': 'application/json'},
             body=body)
     assert response['status'] == '409'
-    assert 'lowercase required' in content
+    assert 'must be valid host name' in content
 
     data = {'username': 'fat.boy', 'password': 'cowpig'}
     body = simplejson.dumps(data)
@@ -116,7 +116,7 @@ def test_username_bad_form():
             headers={'Content-Type': 'application/json'},
             body=body)
     assert response['status'] == '409'
-    assert 'alphanumeric required' in content
+    assert 'must be valid host name' in content
 
     data = {'username': 'fat boy', 'password': 'cowpig'}
     body = simplejson.dumps(data)
@@ -125,4 +125,4 @@ def test_username_bad_form():
             headers={'Content-Type': 'application/json'},
             body=body)
     assert response['status'] == '409'
-    assert 'alphanumeric required' in content
+    assert 'must be valid host name' in content
