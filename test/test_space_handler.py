@@ -213,62 +213,26 @@ def test_case_in_space():
 
 
 def test_chars_in_space():
+    testcases = [
+        ('foo', '201'),
+        ('bAr', '409'),
+        ('f0o', '201'),
+        ('fo0', '201'),
+        ('0foo', '409'),
+        ('foo-bar', '201'),
+        ('foo-bar-baz', '201'),
+        ('-foo', '409'),
+        ('foo-', '409')
+    ]
+
     cookie = get_auth('cdent', 'cow')
     http = httplib2.Http()
-
-    response, content = http.request('http://0.0.0.0:8080/spaces/foo',
-            method='PUT',
-            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
-            )
-    assert response['status'] == '201'
-
-    response, content = http.request('http://0.0.0.0:8080/spaces/bAr',
-            method='PUT',
-            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
-            )
-    assert response['status'] == '409'
-
-    response, content = http.request('http://0.0.0.0:8080/spaces/f0o',
-            method='PUT',
-            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
-            )
-    assert response['status'] == '201'
-
-    response, content = http.request('http://0.0.0.0:8080/spaces/fo0',
-            method='PUT',
-            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
-            )
-    assert response['status'] == '201'
-
-    response, content = http.request('http://0.0.0.0:8080/spaces/0foo',
-            method='PUT',
-            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
-            )
-    assert response['status'] == '409'
-
-    response, content = http.request('http://0.0.0.0:8080/spaces/foo-bar',
-            method='PUT',
-            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
-            )
-    assert response['status'] == '201'
-
-    response, content = http.request('http://0.0.0.0:8080/spaces/foo-bar-baz',
-            method='PUT',
-            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
-            )
-    assert response['status'] == '201'
-
-    response, content = http.request('http://0.0.0.0:8080/spaces/-foo',
-            method='PUT',
-            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
-            )
-    assert response['status'] == '409'
-
-    response, content = http.request('http://0.0.0.0:8080/spaces/foo-',
-            method='PUT',
-            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
-            )
-    assert response['status'] == '409'
+    for name, status in testcases:
+        response, content = http.request('http://0.0.0.0:8080/spaces/%s' % name,
+                method='PUT',
+                headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+                )
+        assert response['status'] == status
 
 
 def test_add_a_member():
