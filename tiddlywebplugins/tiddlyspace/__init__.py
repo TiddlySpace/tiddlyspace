@@ -38,7 +38,8 @@ def init(config):
     import tiddlywebplugins.pathinfohack
     import tiddlywebplugins.form
     import tiddlywebplugins.reflector
-    import tiddlywebplugins.whoosher
+    # XXX temporarily on hold
+    #import tiddlywebplugins.whoosher
 
     @make_command()
     def addmember(args):
@@ -68,7 +69,8 @@ def init(config):
     tiddlywebplugins.pathinfohack.init(config)
     tiddlywebplugins.form.init(config)
     tiddlywebplugins.reflector.init(config)
-    tiddlywebplugins.whoosher.init(config)
+    # XXX temporarily on hold
+    #tiddlywebplugins.whoosher.init(config)
 
     if 'selector' in config: # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
