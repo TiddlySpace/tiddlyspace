@@ -28,9 +28,12 @@ var _view = config.macros.view.views.text;
 config.macros.view.views.text = function(value, place, params, wikifier,
 		paramString, tiddler) {
 	if(params[0] == "title") {
-		var ns = config.extensions.tiddlyspace;
-		var space = ns.determineSpace(tiddler, true);
-		var type = space && space.name == ns.currentSpace.name ? space.type : "external";
+		var type = "private";
+		if(store.tiddlerExists(tiddler.title) || store.isShadowTiddler(tiddler.title)) {
+			var ns = config.extensions.tiddlyspace;
+			var space = ns.determineSpace(tiddler, true);
+			type = space && space.name == ns.currentSpace.name ? space.type : "external";
+		}
 
 		var tidEl = story.findContainingTiddler(place);
 		$(tidEl).removeClass("private public external").addClass(type);
