@@ -3,8 +3,9 @@ Routine related to web handling of space
 listing, creation, subscription, etc.
 """
 
-import simplejson
+import re
 import urllib
+import simplejson
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
@@ -15,6 +16,8 @@ from tiddlyweb.web.http import HTTP404, HTTP409
 
 from tiddlywebplugins.utils import require_any_user
 
+
+SPACE_NAME_PATTERN = re.compile(r"^[a-z][0-9a-z\-]*[0-9a-z]$")
 
 try:
     JSONDecodeError = simplejson.decoder.JSONDecodeError
@@ -398,11 +401,10 @@ def _validate_space_name(environ, name):
         name = str(name)
     except UnicodeEncodeError:
         raise HTTP409('Invalid space name, ascii required: %s' %
-                name.encode('UTF-8'))
-    if not name.islower(): # just a stub for now
-        raise HTTP409('Invalid space name, lowercase required: %s' % name)
-    if not name.isalnum():
-        raise HTTP409('Invalid space name, alphanumeric required: %s' % name)
+            name.encode('UTF-8'))
+    if not SPACE_NAME_PATTERN.match(name):
+        raise HTTP409('Invalid space name, must be valid host name (RFC 1035)' +
+            ': %s' % name)
     # This reserved list should/could be built up from multiple
     # sources.
     reserved_space_names = environ['tiddlyweb.config'].get(

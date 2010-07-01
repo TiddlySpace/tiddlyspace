@@ -100,7 +100,10 @@ var plugin = config.extensions.tiddlyspace = {
 	currentSpace: determineSpace(recipe),
 	coreBags: ["system", "tiddlyspace"],
 
-	determineSpace: determineSpace
+	determineSpace: determineSpace,
+	isValidSpaceName: function(name) {
+		return name.match(/^[a-z][0-9a-z\-]*[0-9a-z]$/) ? true : false;
+	}
 };
 
 ns = config.extensions.tiddlyweb;

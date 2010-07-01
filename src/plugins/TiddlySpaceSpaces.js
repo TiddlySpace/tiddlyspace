@@ -30,7 +30,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		addLabel: "Create space",
 		addSuccess: "created space %0",
 		conflictError: "space <em>%0</em> already exists",
-		charError: "error: invalid space name - must be alphanumeric (lowercase)",
+		charError: "error: invalid space name - must only contain lowercase " +
+			"letters, digits or hyphens",
 		noSpaces: "you have no spaces"
 	},
 
@@ -76,12 +77,12 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var space = form.find("[name=space]").val();
 		var subscribe = form.find("[name=subscribe]").attr("checked");
 		space = new tiddlyweb.Space(space, host);
-		var specialChars = space.name.match(/[^0-9a-z]/) ? true : false; // XXX: duplicated from TiddlySpaceRegister
 		var displayError = config.macros.TiddlySpaceLogin.displayError;
+		var ns = config.extensions.tiddlyspace;
 		var callback = function(resource, status, xhr) {
 			if(subscribe) {
 				config.macros.TiddlySpaceInclusion.include(
-					config.extensions.tiddlyspace.currentSpace.name, space.name);
+					ns.currentSpace.name, space.name);
 			}
 			macro.refresh(container);
 			displayMessage(macro.locale.addSuccess.format([space.name]));
@@ -94,7 +95,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			};
 			displayError(xhr, error, exc, ctx);
 		};
-		if(!specialChars) {
+		if(ns.isValidSpaceName(space.name)) {
 			space.create(callback, errback);
 		} else {
 			var xhr = { status: 409 }; // XXX: hacky

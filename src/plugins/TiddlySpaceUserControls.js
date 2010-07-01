@@ -152,7 +152,8 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		userError: "user <em>%0</em> already exists",
 		spaceSuccess: "created space %0",
 		spaceError: "space <em>%0</em> already exists",
-		charError: "error: invalid username - must be alphanumeric (lowercase)",
+		charError: "error: invalid username - must only contain lowercase " +
+			"letters, digits or hyphens",
 		passwordError: "error: passwords do not match"
 	},
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -170,16 +171,16 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		var username = form.find("[name=username]").val();
 		var password = form.find("[name=password]").val();
 		var passwordConfirm = form.find("[name=password_confirm]").val();
-		var specialChars = username.match(/[^0-9a-z]/) ? true : false;
-		if(!specialChars && password && password == passwordConfirm) { // TODO: check password length?
+		var validName = config.extensions.tiddlyspace.isValidSpaceName(username);
+		if(validName && password && password == passwordConfirm) { // TODO: check password length?
 			tsr.register(username, password, form);
 		} else {
 			var xhr = { status: 409 }; // XXX: hacky
-			var msg = specialChars ? "charError" : "passwordError";
+			var msg = validName ? "passwordError" : "charError";
 			var ctx = {
 				msg: { 409: tsr.locale[msg] },
 				form: form,
-				selector: specialChars ? "[name=username]" : "[type=password]"
+				selector: validName ? "[type=password]" : "[name=username]"
 			};
 			tsl.displayError(xhr, null, null, ctx);
 		}
