@@ -6,6 +6,7 @@
 
 var cmd = config.commands;
 var ns = config.extensions.tiddlyspace;
+var fieldStash = {}; // XXX: should not be private!?
 
 cmd.cloneTiddler = {
 	text: cmd.editTiddler.text,
@@ -25,6 +26,7 @@ cmd.cloneTiddler = {
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
+		fieldStash[title] = $.extend({}, tiddler.fields);
 		tiddler.fields["server.workspace"] = "bags/%0_private".
 			format([ns.currentSpace.name]);
 		$.each(["bag", "permissions", "page.revision"], function(i, item) {
@@ -37,6 +39,22 @@ cmd.cloneTiddler = {
 
 cmd.editTiddler.isEnabled = function(tiddler) {
 	return !cmd.cloneTiddler.isEnabled.apply(this, arguments);
+};
+
+// hijack cancelTiddler to restore original fields
+var _cancelHandler = cmd.cancelTiddler.handler;
+cmd.cancelTiddler.handler = function(ev, src, title) {
+	var tiddler = store.getTiddler(title);
+	tiddler.fields = fieldStash[title] || tiddler.fields;
+	delete fieldStash[title];
+	return _cancelHandler.apply(this, arguments);
+};
+
+// hijack saveTiddler to clear unused fields stash
+cmd.saveTiddler.handler =  function(ev, src, title) {
+	var tiddler = store.getTiddler(title);
+	delete fieldStash[title];
+	return _saveHandler.apply(this, arguments);
 };
 
 })(jQuery);
