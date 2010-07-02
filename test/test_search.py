@@ -40,7 +40,6 @@ def setup_module(module):
     import tiddlywebplugins.whoosher
     tiddlywebplugins.whoosher.init(config)
     handle(['', 'wreindex', ''])
-    #tiddlywebplugins.whoosher.wreindex([])
 
 def teardown_module(module):
     import os
@@ -55,7 +54,7 @@ def test_basic_search():
 
 def test_wildcard_search():
     response, content = http.request(
-            'http://0.0.0.0:8080/search.json?q=title:TiddlyWeb*')
+            'http://0.0.0.0:8080/search.json?q=ftitle:TiddlyWeb*')
     assert response['status'] == '200'
     info = simplejson.loads(content)
     assert info[0]['title'] == 'TiddlyWebAdaptor'
@@ -122,6 +121,4 @@ def test_cased_search():
     response, content = http.request(
             'http://0.0.0.0:8080/search.json?q=ftitle:%22one%20two%22%20fbag:fnd_public')
     info = simplejson.loads(content)
-    assert len(info) == 2, info
-    assert info[0]['bag'] == 'fnd_public', info
-
+    assert len(info) == 1, info # don't get the new tiddler because of case
