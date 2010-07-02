@@ -1,19 +1,5 @@
 /***
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
-!StyleSheet
-.public,
-.private,
-.external {
-	border-left: 5px solid #A2F7A2;
-}
-
-.public {
-	border-color: #C7EAFF;
-}
-
-.private {
-	border-color: #FFCAE9;
-}
 !Code
 ***/
 //{{{
@@ -45,10 +31,6 @@ config.macros.view.views.text = function(value, place, params, wikifier,
 	}
 	_view.apply(this, arguments);
 };
-
-var name = "StyleSheetTiddlySpace";
-config.shadowTiddlers[name] = store.getTiddlerText(tiddler.title + "##StyleSheet");
-store.addNotification(name, refreshStyles);
 
 })(jQuery);
 //}}}
