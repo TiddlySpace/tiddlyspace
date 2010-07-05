@@ -38,7 +38,7 @@ setup(
         'tiddlywebplugins.pathinfohack>=0.8',
         'tiddlywebplugins.form==dev',
         'tiddlywebplugins.reflector>=0.2',
-        'tiddlywebplugins.whoosher>=0.9.4',
+        'tiddlywebplugins.whoosher>=0.9.5',
     ],
     include_package_data = True,
     zip_safe = False
