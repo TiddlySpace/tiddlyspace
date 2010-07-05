@@ -27,8 +27,10 @@ if(!config.macros.image) {
 	throw "Missing dependency: ImageMacroPlugin";
 }
 
-var _handler = config.macros.toolbar.handler;
-config.macros.toolbar.handler = function(place, macroName, params, wikifier,
+var macro = config.macros.toolbar;
+
+var _handler = macro.handler;
+macro.handler = function(place, macroName, params, wikifier,
 		paramString, tiddler) {
 	var toolbar = $(place);
 	toolbar.attr({
@@ -42,17 +44,17 @@ config.macros.toolbar.handler = function(place, macroName, params, wikifier,
 		toolbar.removeClass("toolbarReadOnly");
 	}
 	if(config.macros.image.svgAvailable) {
-		augmentToolbar(place);
+		this.augmentCommandButtons(place);
 	}
 	return status;
 };
 
-config.macros.toolbar.refresh = function(place, params) {
+macro.refresh = function(place, params) {
 	var args = $(place).empty().data("args");
 	this.handler.apply(this, args);
 };
 
-var augmentToolbar = function(toolbar) { // XXX: should not be private!?
+macro.augmentCommandButtons = function(toolbar) {
 	$(toolbar).children(".button").each(function(i, el) {
 		var cmd = el.className.match(/\bcommand_([^ ]+?)\b/); // XXX: gratuitous RegEx?
 		cmd = cmd ? cmd[1] : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
@@ -65,7 +67,7 @@ var augmentToolbar = function(toolbar) { // XXX: should not be private!?
 };
 
 // override onClickMore to provide extra commands in a popup
-config.macros.toolbar.onClickMore = function(ev) {
+macro.onClickMore = function(ev) {
 	var sibling = this.nextSibling;
 	var commands = sibling.childNodes;
 	var popup = Popup.create(this);
