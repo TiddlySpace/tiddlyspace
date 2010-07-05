@@ -41,7 +41,7 @@ config.macros.view.views.text = function(value, place, params, wikifier,
 					spaceName = "%0_public".format([space.name]);
 				}
 				var imageSrc = "%0/bags/%1/tiddlers/SiteIcon".format([tsHost,spaceName]);
-				$("<img/>").attr("src",imageSrc).attr("alt",spaceName).
+				$("<img />").attr("src",imageSrc).attr("alt",spaceName).
 				prependTo(place);
 			});
 		}
