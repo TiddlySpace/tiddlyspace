@@ -103,20 +103,20 @@ body #backstageArea {
 	position:relative;
 }
 
-#backstageToolbar a[task=space] {
+#backstageToolbar .task_space {
 	margin-top:3px;
 	float:left;
 }
 
-#backstageToolbar a[task=user],
-#backstageToolbar a[task=login] {
+#backstageToolbar .task_user,
+#backstageToolbar .task_login {
 	margin-top:1px;
 	float:right;
 	right:30px;
 }
 
-#backstageToolbar a[task=space] svg, 
-#backstageToolbar a[task=space] img {
+#backstageToolbar .task_space svg, 
+#backstageToolbar .task_space img {
 	float:left;
 	z-index:2;
 }
