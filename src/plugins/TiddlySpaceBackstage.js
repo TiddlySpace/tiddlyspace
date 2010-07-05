@@ -99,16 +99,16 @@ backstage.init = function(){
 			server_host.port != '443'){
 			tsHost += ":" + server_host.port;
 		}
+
 		tiddlyweb.getUserInfo(function(user){
 			//show avatar in the users public bag
 			if(!user.anon){
-				$("[task=user]","#backstageArea").
-				append("<span><img src=\""
-					+ tsHost + "/recipes/"
-					+ user.name
-					+ "_public/tiddlers/SiteIcon\"/></span><br/>");
+				var imageSrc = "%0/recipes/%1_public/tiddlers/SiteIcon".format([tsHost,user.name]);
+				var image = $("<img/>").attr("src",imageSrc).appendTo("<span/>").
+				appendTo("[task=user]","#backstageArea");
 			}
 		});
+		
 		//show default avatar for the login button
 		$("[task=login]","#backstageArea").append('<span><img src="/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
 
