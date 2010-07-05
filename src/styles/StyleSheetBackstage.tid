@@ -101,6 +101,7 @@ body #backstageArea {
 
 #backstageToolbar a {
 	position:relative;
+	margin:3px auto;
 }
 
 #backstageToolbar .task_space {
@@ -110,19 +111,42 @@ body #backstageArea {
 
 #backstageToolbar .task_user,
 #backstageToolbar .task_login {
-	margin-top:1px;
 	float:right;
 	right:30px;
 }
 
+#backstageToolbar .task_user img,
+#backstageToolbar .task_login img {
+	float:right;
+	display:block;
+}
+
 #backstageToolbar .task_space svg, 
-#backstageToolbar .task_space img {
+#backstageToolbar .task_space span {
 	float:left;
 	z-index:2;
 }
 
+#backstageToolbar a span {
+	display:block;
+	height:25px;
+	float:right;
+	z-index:2;
+}
+
+a.backstageTask {
+	display:block;
+	height:25px;
+}
+
+#backstageToolbar a span.txtUserName,
+#backstageToolbar a .txtUserName span {
+	display:inline;
+	float:none;
+}
+
 #backstage {
-	top:-5px;
+	top:-8px;
 }
 
 .textRight {
@@ -145,7 +169,7 @@ body #backstageArea {
 }
 
 #backstageToolbar img {
-	height:18px;
+	height:25px;
 }
 
 .backstagePanelBody .tabContents .button {
