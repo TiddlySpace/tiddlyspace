@@ -52,30 +52,30 @@ backstage.init = function(){
 	var userButton = $(".backstageTask[task=user]").
 	html(config.tasks.user.text+ "<span class='txtUserName'></span>"+ glyph("downTriangle"));
 	config.macros.option.handler($(".txtUserName",userButton)[0],null,["txtUserName"]);
-	
+
 	//make the backstage become visible when you mouseover it
 	var _revealBackstageArea;
-	$("#backstageButton").mouseover(function(e){ //when mouseover the button set a timeout to show backstage
+	$("#backstageButton").mouseover(function(e) { //when mouseover the button set a timeout to show backstage
 		if(!backstage.isVisible()){
-			_revealBackstageArea = window.setTimeout(function(){
-				if(!backstage.isVisible()){
+			_revealBackstageArea = window.setTimeout(function() {
+				if(!backstage.isVisible()) {
 					backstage.show();
 				}
 			},"600");}
 		}
 	).
 	mouseout(function(e){ //on a mouseout we prevent showing of the backstage.
-		if(_revealBackstageArea){
+		if(_revealBackstageArea) {
 			window.clearTimeout(_revealBackstageArea);
 		}
 	});
-	
+
 	//override show button with an svg image
 	var showButton = $("#backstageShow")[0];
 	var altText = $(showButton).text();
 	$(showButton).empty();
 	invokeMacro(showButton, "image", "backstage.svg 60 60 alt:%0".format([altText]), null);
-	
+
 	//override hide button
 	var hideButton =$("#backstageHide")[0];
 	altText = $(hideButton).text();
@@ -87,33 +87,33 @@ backstage.init = function(){
 	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",$("#backstageLogo",backstageToolbar)[0]);
 	
 	var siteIcon =store.getTiddler("SiteIcon");
-	if(siteIcon){
+	if(siteIcon) {
 		wikify(siteIcon.text,$("[task=space]","#backstageArea")[0]);
 	}
 
 	var tiddlyweb = config.extensions.tiddlyweb;
-	tiddlyweb.getStatus(function(status){
+	tiddlyweb.getStatus(function(status) {
 		var server_host = status.server_host;
-		var tsHost = server_host.scheme +"://" + server_host.host;
-		if(server_host.port && server_host.port != '80' &&
-			server_host.port != '443'){
+		var tsHost = server_host.scheme + "://" + server_host.host;
+		if(server_host.port && server_host.port != "80" &&
+			server_host.port != "443") {
 			tsHost += ":" + server_host.port;
 		}
 
-		tiddlyweb.getUserInfo(function(user){
+		tiddlyweb.getUserInfo(function(user) {
 			//show avatar in the users public bag
-			if(!user.anon){
-				var imageSrc = "%0/recipes/%1_public/tiddlers/SiteIcon".format([tsHost,user.name]);
+			if(!user.anon) {
+				var imageSrc = "%0/recipes/%1_public/tiddlers/SiteIcon".format([tsHost, user.name]);
 				var image = $("<img/>").attr("src",imageSrc).appendTo("<span/>").
 				appendTo("[task=user]","#backstageArea");
 			}
 		});
-		
+
 		//show default avatar for the login button
 		$("[task=login]","#backstageArea").append('<span><img src="/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
 
 		var tasks = $(".backstageTask");
-		for(var i=0; i < tasks.length; i++) {
+		for(var i = 0; i < tasks.length; i++) {
 			var taskButton = $(tasks[i]);
 			var taskName = taskButton.attr("task");
 			taskButton.addClass("task_%0".format([taskName]));
