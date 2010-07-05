@@ -74,7 +74,7 @@ backstage.init = function(){
 	var showButton = $("#backstageShow")[0];
 	var altText = $(showButton).text();
 	$(showButton).empty();
-	wikify("<<image backstage.svg 60 60 alt:\""+altText+"\">>",showButton);
+	invokeMacro(showButton, "image", "backstage.svg 60 60 alt:%0".format([altText]), null);
 	
 	//override hide button
 	var hideButton =$("#backstageHide")[0];
