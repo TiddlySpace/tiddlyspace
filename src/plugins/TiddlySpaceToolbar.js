@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceToolbar|
 |''Description''|augments tiddler toolbar commands with SVG icons|
 |''Author''|Osmosoft|
-|''Version''|0.5.0|
+|''Version''|0.6.0|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceToolbar.js|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -28,6 +28,10 @@ if(!config.macros.image) {
 }
 
 var macro = config.macros.toolbar;
+
+macro.icons = {
+	cloneTiddler: "editTiddler"
+};
 
 var _handler = macro.handler;
 macro.handler = function(place, macroName, params, wikifier,
@@ -58,7 +62,8 @@ macro.augmentCommandButtons = function(toolbar) {
 	$(toolbar).children(".button").each(function(i, el) {
 		var cmd = el.className.match(/\bcommand_([^ ]+?)\b/); // XXX: gratuitous RegEx?
 		cmd = cmd ? cmd[1] : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
-		var title = "%0.svg".format([cmd]);
+		var icon = macro.icons[cmd] || cmd;
+		var title = "%0.svg".format([icon]);
 		if(store.tiddlerExists(title)) { // XXX: does not support shadow tiddler
 			$(el).empty();
 			wikify("<<image %0>>".format([title]), el); // XXX: use function call instead of wikification
