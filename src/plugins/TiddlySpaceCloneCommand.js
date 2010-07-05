@@ -51,6 +51,7 @@ cmd.cancelTiddler.handler = function(ev, src, title) {
 };
 
 // hijack saveTiddler to clear unused fields stash
+var _saveHandler = cmd.saveTiddler.handler;
 cmd.saveTiddler.handler =  function(ev, src, title) {
 	var tiddler = store.getTiddler(title);
 	delete fieldStash[title];
