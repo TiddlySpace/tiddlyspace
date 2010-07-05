@@ -80,15 +80,15 @@ backstage.init = function(){
 	var hideButton =$("#backstageHide")[0];
 	altText = $(hideButton).text();
 	$(hideButton).empty();
-	wikify("<<image close.svg 25 25 alt:\""+altText+"\">>",hideButton);
-	
+	invokeMacro(hideButton, "image", "close.svg 25 25 alt:%0".format([altText]), null);
+
 	var backstageToolbar = $("#backstageToolbar")[0];
 	$("<div id='backstageLogo'></div>").prependTo(backstageToolbar);
 	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",$("#backstageLogo",backstageToolbar)[0]);
-	
+
 	var siteIcon =store.getTiddler("SiteIcon");
 	if(siteIcon) {
-		wikify(siteIcon.text,$("[task=space]","#backstageArea")[0]);
+		wikify(siteIcon.text, $("[task=space]","#backstageArea")[0]);
 	}
 
 	var tiddlyweb = config.extensions.tiddlyweb;
@@ -103,20 +103,20 @@ backstage.init = function(){
 		tiddlyweb.getUserInfo(function(user) {
 			//show avatar in the users public bag
 			if(!user.anon) {
-				var imageSrc = "%0/recipes/%1_public/tiddlers/SiteIcon".format([tsHost, user.name]);
-				var image = $("<img/>").attr("src",imageSrc).appendTo("<span/>").
+				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".format([tsHost, user.name]);
+				$("<img />").attr("src", src).appendTo("<span />").
 				appendTo("[task=user]","#backstageArea");
 			}
 		});
 
 		//show default avatar for the login button
-		$("[task=login]","#backstageArea").append('<span><img src="/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
+		$("[task=login]", "#backstageArea").append("<span><img src='/bags/tiddlyspace/tiddlers/SiteIcon'/></span><br/>");
 
 		var tasks = $(".backstageTask");
 		for(var i = 0; i < tasks.length; i++) {
-			var taskButton = $(tasks[i]);
-			var taskName = taskButton.attr("task");
-			taskButton.addClass("task_%0".format([taskName]));
+			var btn = $(tasks[i]);
+			var taskName = btn.attr("task");
+			btn.addClass("task_%0".format([taskName]));
 		}
 	});
 };
