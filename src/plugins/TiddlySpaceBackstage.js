@@ -111,6 +111,13 @@ backstage.init = function(){
 		});
 		//show default avatar for the login button
 		$("[task=login]","#backstageArea").append('<span><img src="/bags/tiddlyspace/tiddlers/SiteIcon"/></span><br/>');
+
+		var tasks = $(".backstageTask");
+		for(var i=0; i < tasks.length; i++) {
+			var taskButton = $(tasks[i]);
+			var taskName = taskButton.attr("task");
+			taskButton.addClass("task_%0".format([taskName]));
+		}
 	});
 };
 
