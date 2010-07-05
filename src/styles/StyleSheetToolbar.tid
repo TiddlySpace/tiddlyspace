@@ -5,7 +5,13 @@ tags: excludeLists
 }
 
 .tiddler .title {
-	min-height:29pt;
+	margin-bottom:13px;
+}
+
+.tiddler .title img,
+.tiddler .title svg {
+	padding-right:5px;
+	height:25px;
 }
 
 .toolbar {
