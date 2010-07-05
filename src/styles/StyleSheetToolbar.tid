@@ -1,4 +1,4 @@
-type: None
+tags: excludeLists
 
 .tiddler {position:relative;}
 .tiddler .title {min-height:29pt;}

@@ -1,4 +1,5 @@
 modifier: Osmosoft
+tags: excludeLists
 
 {{public_bubble{
 	{{private_bubble{

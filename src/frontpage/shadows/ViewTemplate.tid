@@ -1,4 +1,5 @@
 modifier: Osmosoft
+tags: excludeLists
 
 <!--{{{-->
 <div class='toolbar' macro='toolbar [[ToolbarCommands::ViewToolbar]]'></div>
