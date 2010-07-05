@@ -1,6 +1,7 @@
 tags: excludeLists
 
-.publicLightText {
+/*{{{*/
+	.publicLightText {
 	color:#C0E5FC;
 }
 
@@ -150,3 +151,4 @@ body #backstageArea {
 .backstagePanelBody .tabContents .button {
 	display:block;
 }
+/*}}}*/
