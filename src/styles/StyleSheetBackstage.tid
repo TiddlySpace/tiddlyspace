@@ -1,31 +1,178 @@
 tags: excludeLists
 
-.publicLightText {color:#C0E5FC;}
-.privateLightText {color:#E2C1D6;}
-#backstageLogo {margin:0;auto;font-size:1.2em;padding:0;text-align:center;top:0;position:absolute;width:100%;}
-#backstageArea {background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, rgb(0,0,0)),color-stop(0.5, rgb(0,0,0)),color-stop(1, rgb(219,219,219)));background: -moz-linear-gradient(center bottom,rgb(0,0,0) 5%,rgb(0,0,0) 50%,rgb(219,219,219) 100%);}
-.backstageBackground {fill:black;}
-#backstageButton #backstageShow,#backstageButton #backstageHide {margin:0px;padding:0px;}
-#backstageButton #backstageShow:hover,#backstageButton #backstageHide:hover {background:none;}
-#backstageShow {margin-right:-3px;margin-top:-3px;}
-#backstageShow svg {left:4px;position:relative;top:-3px;}
-#messageArea {top:50px;}
-body #backstageArea {z-index:49;color:white;background-color:black;}
-#backstageToolbar {margin-right:10px;position:relative;margin-bottom:10px;margin-left:10px;}
-#backstageArea a {padding:0px;color:white;background:none;}
-#backstageArea a:hover {color:black;background-color:white;}
-#backstage .tabContents ol, #backstage .tabContents ul {padding:auto;}
-#backstageButton a {margin:0;}
-.backstagePanelBody,.backstagePanelBody .tabContents ul {padding:5px;margin:5px;}
-#backstage #backstagePanel {width:100%;margin-left:0;padding:0;}
-#backstageToolbar a {position:relative;}
-#backstageToolbar a[task=space] {margin-top:3px;float:left;}
-#backstageToolbar a[task=user],#backstageToolbar a[task=login] {margin-top:1px;float:right;right:30px;}
-#backstageToolbar a[task=space] svg, #backstageToolbar a[task=space] img {float:left;z-index:2;}
-#backstage {top:-5px;}
-.textRight {text-align:right;}
-#backstage .deleteButton {margin-left:0.3em;font-weight:bold;color:red;font-size:1.6em;}
-#backstage .deleteButton:hover {background:none;}
-#backstagePanel .TiddlySpaceLogin {display:inline;}
-#backstageToolbar img {height:18px;}
-.backstagePanelBody .tabContents .button {display:block;}
+/*{{{*/
+	.publicLightText {
+	color: #C0E5FC;
+}
+
+.privateLightText {
+	color: #E2C1D6;
+}
+
+#backstageLogo {
+	margin: auto;
+	font-size: 1.2em;
+	padding: 0;
+	text-align: center;
+	top: 0;
+	position: absolute;
+	width: 100%;
+}
+
+#backstageArea {
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, rgb(0,0,0)),color-stop(0.5, rgb(0,0,0)),color-stop(1, rgb(219,219,219)));
+	background: -moz-linear-gradient(center bottom,rgb(0,0,0) 5%,rgb(0,0,0) 50%,rgb(219,219,219) 100%);
+}
+
+.backstageBackground {
+	fill: black;
+}
+
+#backstageButton #backstageShow,
+#backstageButton #backstageHide {
+	margin: 0px;
+	padding: 0px;
+}
+
+#backstageButton #backstageShow: hover,
+#backstageButton #backstageHide: hover {
+	background: none;
+}
+
+#backstageShow {
+	margin-right: -3px;
+	margin-top: -3px;
+}
+
+#backstageShow svg {
+	left: 4px;
+	position: relative;
+	top: -3px;
+}
+
+#messageArea {
+	top: 50px;
+}
+
+body #backstageArea {
+	z-index: 49;
+	color: white;
+	background-color: black;
+}
+
+#backstageToolbar {
+	margin-right: 10px;
+	position: relative;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+
+#backstageArea a {
+	padding: 0px;
+	color: white;
+	background: none;
+}
+
+#backstageArea a: hover {
+	color: black;
+	background-color: white;
+}
+
+#backstage .tabContents ol, 
+#backstage .tabContents ul {
+	padding: auto;
+}
+
+#backstageButton a {
+	margin: 0;
+}
+
+.backstagePanelBody,
+.backstagePanelBody .tabContents ul {
+	padding: 5px;
+	margin: 5px;
+}
+
+#backstage #backstagePanel {
+	width: 100%;
+	margin-left: 0;
+	padding: 0;
+}
+
+#backstageToolbar a {
+	position: relative;
+	margin: 3px auto;
+}
+
+#backstageToolbar .task_space {
+	margin-top: 3px;
+	float: left;
+}
+
+#backstageToolbar .task_user,
+#backstageToolbar .task_login {
+	float: right;
+	right: 30px;
+}
+
+#backstageToolbar .task_user img,
+#backstageToolbar .task_login img {
+	float: right;
+	display: block;
+}
+
+#backstageToolbar .task_space svg, 
+#backstageToolbar .task_space span {
+	float: left;
+	z-index: 2;
+}
+
+#backstageToolbar a span {
+	display: block;
+	height: 25px;
+	float: right;
+	z-index: 2;
+}
+
+a.backstageTask {
+	display: block;
+	height: 25px;
+}
+
+#backstageToolbar a span.txtUserName,
+#backstageToolbar a .txtUserName span {
+	display: inline;
+	float: none;
+}
+
+#backstage {
+	top: -8px;
+}
+
+.textRight {
+	text-align: right;
+}
+
+#backstage .deleteButton {
+	margin-left: 0.3em;
+	font-weight: bold;
+	color: red;
+	font-size: 1.6em;
+}
+
+#backstage .deleteButton: hover {
+	background: none;
+}
+
+#backstagePanel .TiddlySpaceLogin {
+	display: inline;
+}
+
+#backstageToolbar img {
+	height: 25px;
+}
+
+.backstagePanelBody .tabContents .button {
+	display: block;
+}
+/*}}}*/
