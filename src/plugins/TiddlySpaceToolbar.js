@@ -64,7 +64,7 @@ macro.augmentCommandButtons = function(toolbar) {
 		cmd = cmd ? cmd[1] : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
 		var icon = macro.icons[cmd] || cmd;
 		var title = "%0.svg".format([icon]);
-		if(store.tiddlerExists(title)) { // XXX: does not support shadow tiddler
+		if(store.tiddlerExists(title)) { // XXX: does not support shadow tiddlers
 			$(el).empty();
 			wikify("<<image %0>>".format([title]), el); // XXX: use function call instead of wikification
 		}

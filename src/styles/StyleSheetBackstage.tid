@@ -78,7 +78,7 @@ body #backstageArea {
 	background-color: white;
 }
 
-#backstage .tabContents ol, 
+#backstage .tabContents ol,
 #backstage .tabContents ul {
 	padding: auto;
 }
@@ -121,7 +121,7 @@ body #backstageArea {
 	display: block;
 }
 
-#backstageToolbar .task_space svg, 
+#backstageToolbar .task_space svg,
 #backstageToolbar .task_space span {
 	float: left;
 	z-index: 2;

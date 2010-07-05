@@ -48,14 +48,14 @@ backstage.show = function() {
 var _init = backstage.init;
 backstage.init = function(){
 	_init.apply(this, arguments);
-	//update usernames
+	// update usernames
 	var userButton = $(".backstageTask[task=user]").
 	html(config.tasks.user.text+ "<span class='txtUserName'></span>"+ glyph("downTriangle"));
 	config.macros.option.handler($(".txtUserName",userButton)[0],null,["txtUserName"]);
 
-	//make the backstage become visible when you mouseover it
+	// make the backstage become visible when you mouseover it
 	var _revealBackstageArea;
-	$("#backstageButton").mouseover(function(e) { //when mouseover the button set a timeout to show backstage
+	$("#backstageButton").mouseover(function(ev) { // when mouseover the button set a timeout to show backstage
 		if(!backstage.isVisible()){
 			_revealBackstageArea = window.setTimeout(function() {
 				if(!backstage.isVisible()) {
@@ -64,19 +64,19 @@ backstage.init = function(){
 			},"600");}
 		}
 	).
-	mouseout(function(e){ //on a mouseout we prevent showing of the backstage.
+	mouseout(function(ev){ // on a mouseout we prevent showing of the backstage.
 		if(_revealBackstageArea) {
 			window.clearTimeout(_revealBackstageArea);
 		}
 	});
 
-	//override show button with an svg image
+	// override show button with an svg image
 	var showButton = $("#backstageShow")[0];
 	var altText = $(showButton).text();
 	$(showButton).empty();
 	invokeMacro(showButton, "image", "backstage.svg 60 60 alt:%0".format([altText]), null);
 
-	//override hide button
+	// override hide button
 	var hideButton =$("#backstageHide")[0];
 	altText = $(hideButton).text();
 	$(hideButton).empty();
@@ -84,7 +84,8 @@ backstage.init = function(){
 
 	var backstageToolbar = $("#backstageToolbar")[0];
 	$("<div id='backstageLogo'></div>").prependTo(backstageToolbar);
-	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",$("#backstageLogo",backstageToolbar)[0]);
+	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",
+		$("#backstageLogo", backstageToolbar)[0]);
 
 	var siteIcon =store.getTiddler("SiteIcon");
 	if(siteIcon) {
@@ -101,16 +102,18 @@ backstage.init = function(){
 		}
 
 		tiddlyweb.getUserInfo(function(user) {
-			//show avatar in the users public bag
+			// show avatar in the users public bag
 			if(!user.anon) {
-				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".format([tsHost, user.name]);
+				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
+					format([tsHost, user.name]);
 				$("<img />").attr("src", src).appendTo("<span />").
-				appendTo("[task=user]","#backstageArea");
+					appendTo("[task=user]","#backstageArea");
 			}
 		});
 
-		//show default avatar for the login button
-		$("[task=login]", "#backstageArea").append("<span><img src='/bags/tiddlyspace/tiddlers/SiteIcon'/></span><br/>");
+		// show default avatar for the login button
+		$("[task=login]", "#backstageArea").
+			append('<span><img src="/bags/tiddlyspace/tiddlers/SiteIcon" /></span><br/>');
 
 		var tasks = $(".backstageTask");
 		for(var i = 0; i < tasks.length; i++) {
