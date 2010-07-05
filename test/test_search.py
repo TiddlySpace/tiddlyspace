@@ -54,7 +54,7 @@ def test_basic_search():
 
 def test_wildcard_search():
     response, content = http.request(
-            'http://0.0.0.0:8080/search.json?q=ftitle:TiddlyWeb*')
+            'http://0.0.0.0:8080/search.json?q=ftitle:TiddlyWebA*')
     assert response['status'] == '200'
     info = simplejson.loads(content)
     assert info[0]['title'] == 'TiddlyWebAdaptor'
