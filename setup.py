@@ -39,6 +39,7 @@ setup(
         'tiddlywebplugins.form==dev',
         'tiddlywebplugins.reflector>=0.2',
         'tiddlywebplugins.whoosher>=0.9.5',
+        'tiddlywebplugins.atom>=1.2.0',
     ],
     include_package_data = True,
     zip_safe = False
