@@ -40,8 +40,7 @@ config.macros.view.views.text = function(value, place, params, wikifier,
 				}
 				var uri = "%0/%1s/%2/tiddlers/SiteIcon".format([host,
 					container.type, container.name]);
-				$("<img />").attr("src", uri).attr("alt", container.name).
-					prependTo(place);
+				$('<img alt="" />').attr("src", uri).prependTo(place);
 			});
 		}
 		$(place).attr("title", type);
