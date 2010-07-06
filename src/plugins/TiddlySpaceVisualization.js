@@ -28,23 +28,23 @@ config.macros.view.views.text = function(value, place, params, wikifier,
 			invokeMacro(place, "image", "%0Icon alt:%0".format([type]), null, tiddler); // XXX: should call macro's function directly
 		} else {
 			config.extensions.tiddlyweb.getStatus(function(status) {
-				var server_host = status.server_host;
-				var tsHost = server_host.scheme + "://" + server_host.host;
-				if(server_host.port && server_host.port != "80" &&
-					server_host.port != "443") {
-					tsHost += ":" + server_host.port;
+				var host = status.server_host;
+				var port = host.port;
+				host = "%0://%1".format([host.scheme, host.host]);
+				if(port && !["80", "443"].contains(port)) {
+					host += ":" + port;
 				}
-				var spaceName = "tiddlyspace";
-				if(space.name) {
-					spaceName = "%0_public".format([space.name]);
+				var container = {
+					type: space ? "recipe" : "bag",
+					name: space ? "%0_public".format([space.name]) : "tiddlyspace"
 				}
-				var src = "%0/bags/%1/tiddlers/SiteIcon".
-					format([tsHost, spaceName]);
-				$("<img />").attr("src", src).attr("alt", spaceName).
+				var uri = "%0/%1s/%2/tiddlers/SiteIcon".format([host,
+					container.type, container.name]);
+				$("<img />").attr("src", uri).attr("alt", container.name).
 					prependTo(place);
 			});
 		}
-		$(place).attr("title", "private");
+		$(place).attr("title", type);
 	}
 	_view.apply(this, arguments);
 };
