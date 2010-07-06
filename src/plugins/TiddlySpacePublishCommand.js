@@ -18,7 +18,7 @@ var cmd = config.commands.publishTiddlerRevision = {
 		var space = ns.determineSpace(tiddler, true);
 		return space && space.name == ns.currentSpace.name && space.type == "private";
 	},
-	handler: function(ev, src, title) {
+	publishTiddler: function(title,callback) {
 		var original = store.getTiddler(title);
 		var space = ns.determineSpace(original);
 		var tiddler = $.extend(new Tiddler(title), original);
@@ -27,13 +27,17 @@ var cmd = config.commands.publishTiddlerRevision = {
 			"server.page.revision": "false"
 		});
 		var adaptor = tiddler.getAdaptor();
-		adaptor.putTiddler(tiddler, null, null, function(context, userParams) {
+		adaptor.putTiddler(tiddler, null, null, callback);
+	},
+	handler: function(ev, src, title) {
+		var callback = function(context, userParams) {
 			if(context.status) {
 				ns.spawnPublicTiddler(context.tiddler, src);
 			} else {
 				displayMessage(cmd.errorMsg.format([title, context.statusText]));
 			}
-		});
+		};
+		cmd.publishTiddler(title,callback);
 	}
 };
 
