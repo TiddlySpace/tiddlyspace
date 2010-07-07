@@ -20,6 +20,7 @@ body {
 	border-color: #FFCAE9;
 }
 
+[[StyleSheetSideBar]]
 [[StyleSheetToolbar]]
 [[StyleSheetBackstage]]
 /*}}}*/
