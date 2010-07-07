@@ -169,4 +169,9 @@ eg. filter:[tag[systemConfig]]
 			});
 		}
 	};
+
+	var TabMore = config.shadowTiddlers.TabMore;
+	var unpublishedTabText = 'Unpublished "Manage unpublished tiddlers" TabUnpublished';
+	config.shadowTiddlers.TabMore = TabMore.replace("TabMoreShadowed", 
+		"TabMoreShadowed %0".format([unpublishedTabText]));
 })(jQuery);
