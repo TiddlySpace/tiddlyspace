@@ -34,7 +34,6 @@ eg. filter:[tag[systemConfig]]
 			columns: [
 				{ name: "Selected", field: "Selected", rowName: "title", type: "Selector" },
 				{ name: "Tiddler", field: "tiddler", title: "Tiddler", type: "Tiddler" },
-				{ name: "Text", field: "text", title: "Text", type: "String" },
 				{ name: "Status", field: "status", title: "Status", type: "WikiText" }
 			],
 			rowClasses:[
@@ -119,12 +118,8 @@ eg. filter:[tag[systemConfig]]
 					if(bag == privateBag) {
 						var candidate = {
 							title:tiddler.title,
-							tiddler:tiddler,
-							text: tiddler.text.substr(0,100)
+							tiddler:tiddler
 						};
-						if(tiddler.text.length > 100) {
-							candidate.text += "... ";
-						}
 						var publishedTiddler = publishedTiddlers[tiddler.title];
 						if(publishedTiddler) {
 							var publishedModified = publishedTiddler.modified;
