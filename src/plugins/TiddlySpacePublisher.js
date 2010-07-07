@@ -45,16 +45,21 @@ eg. filter:[tag[systemConfig]]
 
 		publishedTiddlers: {}, // maps tiddler titles to a currently public tiddler where public tiddlers exist
 		getPublicTiddlers: function(listWrapper, paramString, spaceName) { // fills in publishedTiddlers variable above
-			ajaxReq({
-				url: "/recipes/"+ spaceName + "_public/tiddlers.json",
-				success: function(tiddlers){
+			var adaptor = tiddler.getAdaptor();
+			var context = {
+				workspace: "recipes/%0_public".format([spaceName])
+			};
+			var callback = function(context, userParams){
+				if(context.status) {
+					var tiddlers = context.tiddlers
 					for(var i = 0; i < tiddlers.length; i++) {
 						var tid = tiddlers[i];
 						macro.publishedTiddlers[tid.title] = tid;
 					}
 					macro.refresh(listWrapper, paramString);
 				}
-			});
+			};
+			adaptor.getTiddlerList(context, null, callback)
 		},
 		makePublic: function(e, listWrapper, paramString){ // this is what is called when you click the publish button
 			var wizard = new Wizard(e.target);
