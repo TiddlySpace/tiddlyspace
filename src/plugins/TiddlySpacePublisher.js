@@ -157,6 +157,16 @@ eg. filter:[tag[systemConfig]]
 						{caption: locale.makePublicLabel, tooltip: locale.makePublicPrompt, onClick: btnHandler}
 					]);
 			}
+
+			var publicLinks = $(".viewPublicTiddler");
+			$.each(publicLinks, function(index,el){
+				var el = $(el);
+				var title = el.text();
+				var handler = function(ev) {
+					config.commands.pubRev.handler(ev, el, title);
+				};
+				el.html("<a>%0</a>".format([title])).click(handler);
+			});
 		}
 	};
 })(jQuery);
