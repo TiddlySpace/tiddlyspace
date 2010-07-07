@@ -3,9 +3,8 @@
 |''Description''|Adds a random color palette to TiddlyWiki|
 |''Requires''|TiddlySpacePublishCommand|
 |''Author''|Jon Robson|
-|''Version''|<0.1.1>|
-|''Status''|stable|
-|''Source''|http://svn.tiddlywiki.org/Trunk/contributors/JonRobson/plugins/RandomColorPalettePlugin/RandomColorPalettePlugin.js|
+|''Version''|0.1.1|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpacePublisher.js|
 |''License''|[[BSD|http://www.opensource.org/licenses/bsd-license.php]]|
 !Usage
 {{{
@@ -32,15 +31,15 @@ eg. filter:[tag[systemConfig]]
 		},
 
 		listViewTemplate: {
-			columns:[
-				{name: "Selected", field: "Selected", rowName: "title", type: "Selector"},
-				{name: "Tiddler", field: "tiddler", title: "Tiddler", type: "Tiddler"},
-				{name: "Text", field: "text", title: "Text", type: "String"},
-				{name: "Status", field: "status", title: "Status", type: "WikiText"}
+			columns: [
+				{ name: "Selected", field: "Selected", rowName: "title", type: "Selector" },
+				{ name: "Tiddler", field: "tiddler", title: "Tiddler", type: "Tiddler" },
+				{ name: "Text", field: "text", title: "Text", type: "String" },
+				{ name: "Status", field: "status", title: "Status", type: "WikiText" }
 			],
 			rowClasses:[
-				{className: "updated", field: "updated"},
-				{className: "notPublished", field: "notPublished"}
+				{ className: "updated", field: "updated" },
+				{ className: "notPublished", field: "notPublished" }
 			]
 		},
 
@@ -65,16 +64,16 @@ eg. filter:[tag[systemConfig]]
 					macro.refresh(listWrapper, paramString);
 				};
 				for(var i = 0; i < rowNames.length; i++) {
-					var tiddlerTitle = rowNames[i];
-					macro.publishedTiddlers[tiddlerTitle] = store.getTiddler(tiddlerTitle);
-					config.commands.publishTiddlerRevision.publishTiddler(tiddlerTitle, callback);
+					var title = rowNames[i];
+					macro.publishedTiddlers[title] = store.getTiddler(title);
+					config.commands.publishTiddlerRevision.publishTiddler(title, callback);
 				}
 		},
 		handler: function(place, macroName, params, wikifier, paramString) {
 			var wizard = new Wizard();
 			var locale = macro.locale;
 			wizard.createWizard(place,locale.title);
-			wizard.addStep(macro.locale.description, "<input type='hidden' name='markList'></input>");
+			wizard.addStep(macro.locale.description, '<input type="hidden" name="markList"></input>');
 			var markList = wizard.getElement("markList");
 			var listWrapper = document.createElement("div");
 			markList.parentNode.insertBefore(listWrapper, markList);
@@ -133,8 +132,7 @@ eg. filter:[tag[systemConfig]]
 								candidate.updated = true;
 								include = true;
 							}
-						}
-						else {
+						} else {
 							candidate.status = "unpublished";
 							include = true;
 							candidate.notPublished = true;
