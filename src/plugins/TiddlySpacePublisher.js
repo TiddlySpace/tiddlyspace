@@ -44,7 +44,7 @@ eg. filter:[tag[systemConfig]]
 
 		publishedTiddlers: {}, // maps tiddler titles to a currently public tiddler where public tiddlers exist
 		getPublicTiddlers: function(listWrapper, paramString, spaceName) { // fills in publishedTiddlers variable above
-			var adaptor = tiddler.getAdaptor();
+			var adaptor = new config.adaptors.tiddlyweb();
 			var context = {
 				workspace: "recipes/%0_public".format([spaceName])
 			};
