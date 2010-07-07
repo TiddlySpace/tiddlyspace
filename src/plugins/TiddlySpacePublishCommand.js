@@ -31,7 +31,7 @@ var cmd = config.commands.publishTiddlerRevision = {
 	publishTiddler: function(title, callback) {
 		var original = store.getTiddler(title);
 		var space = ns.determineSpace(original);
-		var adaptor = tiddler.getAdaptor();
+		var adaptor = original.getAdaptor();
 		var publish = function(original, callback) {
 			var tiddler = $.extend(new Tiddler(original.title), original);
 			tiddler.fields = $.extend({}, original.fields, {
