@@ -30,6 +30,10 @@ tags: excludeLists
 	fill: black;
 }
 
+#backstageButton {
+	overflow: hidden;
+}
+
 #backstageButton #backstageShow,
 #backstageButton #backstageHide {
 	margin: 0px;
@@ -48,7 +52,7 @@ tags: excludeLists
 }
 
 #backstageShow .svgIcon {
-	left: 4px;
+	left: 5px;
 	position: relative;
 	top: -3px;
 }
