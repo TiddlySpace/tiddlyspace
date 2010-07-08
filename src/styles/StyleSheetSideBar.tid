@@ -1,0 +1,7 @@
+tags: 
+
+/*{{{*/
+#sidebar .wizard table {
+	margin: 0px;
+}
+/*}}}*/

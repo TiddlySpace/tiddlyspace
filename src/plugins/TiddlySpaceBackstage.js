@@ -3,7 +3,11 @@
 ***/
 //{{{
 (function($) {
-config.options.chkBackstage = true;
+
+if(config.options.chkBackstage === undefined) {
+	config.options.chkBackstage = true;
+}
+
 config.backstageTasks = [];
 
 config.tasks.login = {
