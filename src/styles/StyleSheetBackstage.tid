@@ -36,9 +36,10 @@ tags: excludeLists
 	padding: 0px;
 }
 
-#backstageButton #backstageShow: hover,
-#backstageButton #backstageHide: hover {
+#backstageButton #backstageShow:hover,
+#backstageButton #backstageHide:hover {
 	background: none;
+	color: none;
 }
 
 #backstageShow {
@@ -76,7 +77,7 @@ body #backstageArea {
 	background: none;
 }
 
-#backstageArea a: hover {
+#backstageArea a:hover {
 	color: black;
 	background-color: white;
 }
@@ -161,7 +162,7 @@ a.backstageTask {
 	font-size: 1.6em;
 }
 
-#backstage .deleteButton: hover {
+#backstage .deleteButton:hover {
 	background: none;
 }
 
