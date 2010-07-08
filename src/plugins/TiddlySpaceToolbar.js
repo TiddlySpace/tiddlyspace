@@ -30,7 +30,8 @@ if(!config.macros.image) {
 var macro = config.macros.toolbar;
 
 macro.icons = {
-	cloneTiddler: "editTiddler"
+	cloneTiddler: "editTiddler",
+	savePublicTiddler: "saveTiddler"
 };
 
 var _handler = macro.handler;
