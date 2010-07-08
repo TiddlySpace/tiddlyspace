@@ -37,10 +37,6 @@ tags: excludeLists
 	stop-color:#00A;
 }
 
-.command_saveTiddler .saveCommandStopColor2 {
-	stop-color:#FFCAE9;
-}
-
 .command_savePublicTiddler .saveCommandStopColor2 {
 	stop-color:#C7EAFF;
 }
