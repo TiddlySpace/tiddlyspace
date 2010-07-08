@@ -45,15 +45,16 @@ cmd.editTiddler.isEnabled = function(tiddler) {
 var _cancelHandler = cmd.cancelTiddler.handler;
 cmd.cancelTiddler.handler = function(ev, src, title) {
 	var tiddler = store.getTiddler(title);
-	tiddler.fields = fieldStash[title] || tiddler.fields;
-	delete fieldStash[title];
+	if(tiddler) {
+		tiddler.fields = fieldStash[title] || tiddler.fields;
+		delete fieldStash[title];
+	}
 	return _cancelHandler.apply(this, arguments);
 };
 
 // hijack saveTiddler to clear unused fields stash
 var _saveHandler = cmd.saveTiddler.handler;
 cmd.saveTiddler.handler =  function(ev, src, title) {
-	var tiddler = store.getTiddler(title);
 	delete fieldStash[title];
 	return _saveHandler.apply(this, arguments);
 };
