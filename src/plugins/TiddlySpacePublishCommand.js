@@ -6,6 +6,22 @@
 
 var ns = config.extensions.tiddlyspace;
 
+config.commands.savePublicTiddler = {
+	text: "publish",
+	tooltip: "Save as public tiddler",
+
+	isEnabled: function(tiddler) {
+		return !readOnly && !store.tiddlerExists(tiddler.title);
+	},
+	handler: function(ev, src, title) {
+		var el = story.findContainingTiddler(src);
+		el = $(".customFields [edit=server.workspace]", el);
+		var workspace = el.val().replace(/_private$/, "_public");
+		el.val(workspace);
+		config.commands.saveTiddler.handler.apply(this, arguments);
+	}
+};
+
 var cmd = config.commands.publishTiddlerRevision = {
 	text: "publish",
 	tooltip: "Make this revision public",
