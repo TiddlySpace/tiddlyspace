@@ -18,7 +18,9 @@ eg. filter:[tag[systemConfig]]
 !Code
 ***/
 /*{{{*/
-(function($){
+(function($) {
+
+var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
 
 var macro = config.macros.TiddlySpacePublisher = {
 	locale: {
@@ -37,7 +39,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 			{ name: "Tiddler", field: "tiddler", title: "Tiddler", type: "Tiddler" },
 			{ name: "Status", field: "status", title: "Status", type: "WikiText" }
 		],
-		rowClasses:[
+		rowClasses: [
 			{ className: "updated", field: "updated" },
 			{ className: "notPublished", field: "notPublished" }
 		]
@@ -49,9 +51,9 @@ var macro = config.macros.TiddlySpacePublisher = {
 		var context = {
 			workspace: "recipes/%0_public".format([spaceName])
 		};
-		var callback = function(context, userParams){
+		var callback = function(context, userParams) {
 			if(context.status) {
-				var tiddlers = context.tiddlers
+				var tiddlers = context.tiddlers;
 				for(var i = 0; i < tiddlers.length; i++) {
 					var tid = tiddlers[i];
 					macro.publishedTiddlers[tid.title] = tid;
@@ -59,9 +61,9 @@ var macro = config.macros.TiddlySpacePublisher = {
 				macro.refresh(listWrapper, paramString);
 			}
 		};
-		adaptor.getTiddlerList(context, null, callback)
+		adaptor.getTiddlerList(context, null, callback);
 	},
-	makePublic: function(e, listWrapper, paramString){ // this is what is called when you click the publish button
+	makePublic: function(e, listWrapper, paramString) { // this is what is called when you click the publish button
 		var wizard = new Wizard(e.target);
 			var listView = wizard.getValue("listView");
 			var rowNames = ListView.getSelectedRows(listView);
@@ -78,7 +80,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 		var wizard = new Wizard();
 		var locale = macro.locale;
 		wizard.createWizard(place, locale.title);
-		wizard.addStep(macro.locale.description, '<input type="hidden" name="markList"></input>');
+		wizard.addStep(macro.locale.description, '<input type="hidden" name="markList" />');
 		var markList = wizard.getElement("markList");
 		var listWrapper = document.createElement("div");
 		markList.parentNode.insertBefore(listWrapper, markList);
@@ -87,9 +89,9 @@ var macro = config.macros.TiddlySpacePublisher = {
 		listWrapper.setAttribute("params", paramString);
 
 		$(listWrapper).text(macro.locale.pleaseWait);
-		this.getPublicTiddlers(listWrapper, paramString, config.extensions.tiddlyspace.currentSpace.name);
+		this.getPublicTiddlers(listWrapper, paramString, currentSpace);
 	},
-	refresh: function(listWrapper, paramString){
+	refresh: function(listWrapper, paramString) {
 		var wizard = new Wizard(listWrapper);
 		var locale = macro.locale;
 		var selectedRows = [];
@@ -109,8 +111,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 			unpublishedTiddlers = store.getTiddlers();
 		}
 		var publishedTiddlers = macro.publishedTiddlers;
-		var spaceName = config.extensions.tiddlyspace.currentSpace.name;
-		var privateBag = spaceName +"_private";
+		var privateBag = currentSpace + "_private";
 		for(var t = 0; t < unpublishedTiddlers.length; t++) {
 			var include = false;
 			var tiddler = unpublishedTiddlers[t];
@@ -118,8 +119,8 @@ var macro = config.macros.TiddlySpacePublisher = {
 			if(!tiddler.tags.contains("excludePublisher")) {
 				if(bag == privateBag) {
 					var candidate = {
-						title:tiddler.title,
-						tiddler:tiddler
+						title: tiddler.title,
+						tiddler: tiddler
 					};
 					var publishedTiddler = publishedTiddlers[tiddler.title];
 					if(publishedTiddler) {
@@ -155,13 +156,13 @@ var macro = config.macros.TiddlySpacePublisher = {
 				macro.makePublic(ev, listWrapper, paramString);
 			};
 			wizard.setButtons([
-					{ caption: locale.makePublicLabel, tooltip: locale.makePublicPrompt, onClick: btnHandler }
-				]);
+				{ caption: locale.makePublicLabel, tooltip: locale.makePublicPrompt, onClick: btnHandler }
+			]);
 		}
 
 		var publicLinks = $(".viewPublicTiddler");
-		$.each(publicLinks, function(index, el){
-			var el = $(el);
+		$.each(publicLinks, function(index, el) {
+			el = $(el);
 			var title = el.text();
 			var handler = function(ev) {
 				config.commands.pubRev.handler(ev, el, title);
