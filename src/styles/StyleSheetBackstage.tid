@@ -20,6 +20,10 @@ tags: excludeLists
 	margin-top: 1px;
 }
 
+#backstageLogo .svgIconText {
+	display: none;
+}
+
 #backstageArea {
 	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, rgb(0,0,0)),color-stop(0.5, rgb(0,0,0)),color-stop(1, rgb(219,219,219)));
 	background: -moz-linear-gradient(center bottom,rgb(0,0,0) 5%,rgb(0,0,0) 50%,rgb(219,219,219) 100%);
@@ -121,14 +125,12 @@ body #backstageArea {
 	right: 30px;
 }
 
-#backstageToolbar .task_user img,
 #backstageToolbar .task_login img {
 	float: right;
 	display: block;
 }
 
-#backstageToolbar .task_space .svgIcon,
-#backstageToolbar .task_space span {
+#backstageToolbar .task_space .svgIcon {
 	float: left;
 	z-index: 2;
 }
@@ -136,8 +138,12 @@ body #backstageArea {
 #backstageToolbar a span {
 	display: block;
 	height: 25px;
-	float: right;
+	float: left;
 	z-index: 2;
+}
+
+#backstageToolbar .spaceSiteIcon {
+	float: left;
 }
 
 a.backstageTask {
