@@ -29,8 +29,6 @@ def setup_module(module):
     module.store = Store(config['server_store'][0],
             config['server_store'][1], {'tiddlyweb.config': config})
     make_fake_space(module.store, 'cdent')
-    user = User('cdent')
-    user.set_password('cow')
 
 
 def teardown_module(module):
