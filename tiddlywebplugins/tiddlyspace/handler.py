@@ -190,7 +190,8 @@ def serve_space(environ, start_response, http_host):
     """
     space_name = _determine_space(environ, http_host)
     recipe_name = _determine_space_recipe(environ, space_name)
-    environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
+    environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
+            'UTF-8')
     _, mime_type = get_serialize_type(environ)
     if 'text/html' in mime_type:
         environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
