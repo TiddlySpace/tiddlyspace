@@ -19,8 +19,8 @@ eg. filter:[tag[systemConfig]]
 ***/
 /*{{{*/
 (function($){
-	
-	var macro = config.macros.TiddlySpacePublisher = {
+
+var macro = config.macros.TiddlySpacePublisher = {
 	locale: {
 		title: "Publisher",
 		updatedPrivateTiddler: "newer than published version {{viewPublicTiddler{%0}}}",
@@ -77,7 +77,7 @@ eg. filter:[tag[systemConfig]]
 	handler: function(place, macroName, params, wikifier, paramString) {
 		var wizard = new Wizard();
 		var locale = macro.locale;
-		wizard.createWizard(place,locale.title);
+		wizard.createWizard(place, locale.title);
 		wizard.addStep(macro.locale.description, '<input type="hidden" name="markList"></input>');
 		var markList = wizard.getElement("markList");
 		var listWrapper = document.createElement("div");
@@ -85,15 +85,15 @@ eg. filter:[tag[systemConfig]]
 		listWrapper.setAttribute("refresh", "macro");
 		listWrapper.setAttribute("macroName", "SpaceManager");
 		listWrapper.setAttribute("params", paramString);
-		
+
 		$(listWrapper).text(macro.locale.pleaseWait);
-		this.getPublicTiddlers(listWrapper,paramString, config.extensions.tiddlyspace.currentSpace.name);
+		this.getPublicTiddlers(listWrapper, paramString, config.extensions.tiddlyspace.currentSpace.name);
 	},
 	refresh: function(listWrapper, paramString){
 		var wizard = new Wizard(listWrapper);
 		var locale = macro.locale;
 		var selectedRows = [];
-		ListView.forEachSelector(listWrapper, function(e,rowName) {
+		ListView.forEachSelector(listWrapper, function(e, rowName) {
 			if(e.checked) {
 				selectedRows.push(e.getAttribute("rowName"));
 			}
@@ -150,17 +150,17 @@ eg. filter:[tag[systemConfig]]
 		} else {
 			var listView = ListView.create(listWrapper, publishCandidates, macro.listViewTemplate);
 			wizard.setValue("listView", listView);
-			
+
 			var btnHandler = function(ev) {
 				macro.makePublic(ev, listWrapper, paramString);
 			};
 			wizard.setButtons([
-					{caption: locale.makePublicLabel, tooltip: locale.makePublicPrompt, onClick: btnHandler}
+					{ caption: locale.makePublicLabel, tooltip: locale.makePublicPrompt, onClick: btnHandler }
 				]);
 		}
 
 		var publicLinks = $(".viewPublicTiddler");
-		$.each(publicLinks, function(index,el){
+		$.each(publicLinks, function(index, el){
 			var el = $(el);
 			var title = el.text();
 			var handler = function(ev) {
@@ -173,6 +173,7 @@ eg. filter:[tag[systemConfig]]
 
 var TabMore = config.shadowTiddlers.TabMore;
 var unpublishedTabText = 'Unpublished "Manage unpublished tiddlers" TabUnpublished';
-config.shadowTiddlers.TabMore = TabMore.replace("TabMoreShadowed", 
+config.shadowTiddlers.TabMore = TabMore.replace("TabMoreShadowed",
 	"TabMoreShadowed %0".format([unpublishedTabText]));
+
 })(jQuery);
