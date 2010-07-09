@@ -25,7 +25,7 @@ config.tasks.user = {
 config.backstageTasks.push("user");
 
 config.tasks.space = {
-	text: "space: "+config.extensions.tiddlyspace.currentSpace.name,
+	text: "space: " + config.extensions.tiddlyspace.currentSpace.name,
 	tooltip: "space control panel",
 	content: "<<tiddler BackstageSpace>>",
 	className: "right"
@@ -52,10 +52,14 @@ backstage.show = function() {
 var _init = backstage.init;
 backstage.init = function(){
 	_init.apply(this, arguments);
+
+	var backstageArea = $("#backstageArea");
+
 	// update usernames
-	var userButton = $(".backstageTask[task=user]").
-	html(config.tasks.user.text+ "<span class='txtUserName'></span>"+ glyph("downTriangle"));
-	config.macros.option.handler($(".txtUserName",userButton)[0],null,["txtUserName"]);
+	var userBtn = $(".backstageTask[task=user]").
+		html('%0<span class="txtUserName" />%1'.format([
+			config.tasks.user.text, glyph("downTriangle")]));
+	config.macros.option.handler($(".txtUserName", userBtn)[0], null, ["txtUserName"]);
 
 	// make the backstage become visible when you mouseover it
 	var _revealBackstageArea;
@@ -75,29 +79,35 @@ backstage.init = function(){
 	});
 
 	// override show button with an svg image
-	var showButton = $("#backstageShow")[0];
-	var altText = $(showButton).text();
-	$(showButton).empty();
-	invokeMacro(showButton, "image", "backstage.svg 60 60 alt:%0".format([altText]), null);
+	var showBtn = $("#backstageShow")[0];
+	var altText = $(showBtn).text();
+	$(showBtn).empty();
+	invokeMacro(showBtn, "image", "backstage.svg 60 60 alt:%0".format([altText]), null);
 
 	// override hide button
-	var hideButton =$("#backstageHide")[0];
-	altText = $(hideButton).text();
-	$(hideButton).empty();
-	invokeMacro(hideButton, "image", "close.svg 25 25 alt:%0".format([altText]), null);
+	var hideBtn = $("#backstageHide")[0];
+	altText = $(hideBtn).text();
+	$(hideBtn).empty();
+	invokeMacro(hideBtn, "image", "close.svg 25 25 alt:%0".format([altText]), null);
 
 	var backstageToolbar = $("#backstageToolbar")[0];
-	$("<div id='backstageLogo'></div>").prependTo(backstageToolbar);
+	$("<div id='backstageLogo' />").prependTo(backstageToolbar);
 	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",
-		$("#backstageLogo", backstageToolbar)[0]);
+		$("#backstageLogo", backstageToolbar)[0]); // XXX: macro invocation is evil
 
-	var siteIcon =store.getTiddler("SiteIcon");
+	var siteIcon = store.getTiddler("SiteIcon");
 	if(siteIcon) {
-		wikify(siteIcon.text, $("[task=space]","#backstageArea")[0]);
+		var btn = $("[task=space]", backstageArea);
+		var existing = btn.text();
+		btn.empty();
+		$('<img class="spaceSiteIcon" />').
+			attr("src", "SiteIcon").appendTo(btn);
+		$("<span />").text(existing).appendTo(btn);
+
 	}
 
 	var tiddlyweb = config.extensions.tiddlyweb;
-	tiddlyweb.getStatus(function(status) {
+	tiddlyweb.getStatus(function(status) { // XXX: partial duplication of TiddlySpaceVisualization:getAvatar
 		var server_host = status.server_host;
 		var tsHost = server_host.scheme + "://" + server_host.host;
 		if(server_host.port && server_host.port != "80" &&
@@ -111,13 +121,15 @@ backstage.init = function(){
 				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
 					format([tsHost, user.name]);
 				$("<img />").attr("src", src).appendTo("<span />").
-					appendTo("[task=user]","#backstageArea");
+					appendTo("[task=user]", backstageArea);
 			}
 		});
 
 		// show default avatar for the login button
-		$("[task=login]", "#backstageArea").
-			append('<span><img src="/bags/tiddlyspace/tiddlers/SiteIcon" /></span><br/>');
+		var loginBtn = $("[task=login]", backstageArea);
+		var existing = loginBtn.text();
+		loginBtn.html('<span>%0</span><span class="siteIcon"><img src="/bags/tiddlyspace/tiddlers/SiteIcon" /></span>'.
+			format([existing]));
 
 		var tasks = $(".backstageTask");
 		for(var i = 0; i < tasks.length; i++) {
