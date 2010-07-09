@@ -37,7 +37,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 			{ name: "Tiddler", field: "tiddler", title: "Tiddler", type: "Tiddler" },
 			{ name: "Status", field: "status", title: "Status", type: "WikiText" }
 		],
-		rowClasses:[
+		rowClasses: [
 			{ className: "updated", field: "updated" },
 			{ className: "notPublished", field: "notPublished" }
 		]
@@ -51,7 +51,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 		};
 		var callback = function(context, userParams){
 			if(context.status) {
-				var tiddlers = context.tiddlers
+				var tiddlers = context.tiddlers;
 				for(var i = 0; i < tiddlers.length; i++) {
 					var tid = tiddlers[i];
 					macro.publishedTiddlers[tid.title] = tid;
@@ -59,7 +59,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 				macro.refresh(listWrapper, paramString);
 			}
 		};
-		adaptor.getTiddlerList(context, null, callback)
+		adaptor.getTiddlerList(context, null, callback);
 	},
 	makePublic: function(e, listWrapper, paramString){ // this is what is called when you click the publish button
 		var wizard = new Wizard(e.target);
@@ -118,8 +118,8 @@ var macro = config.macros.TiddlySpacePublisher = {
 			if(!tiddler.tags.contains("excludePublisher")) {
 				if(bag == privateBag) {
 					var candidate = {
-						title:tiddler.title,
-						tiddler:tiddler
+						title: tiddler.title,
+						tiddler: tiddler
 					};
 					var publishedTiddler = publishedTiddlers[tiddler.title];
 					if(publishedTiddler) {
@@ -161,7 +161,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 
 		var publicLinks = $(".viewPublicTiddler");
 		$.each(publicLinks, function(index, el){
-			var el = $(el);
+			el = $(el);
 			var title = el.text();
 			var handler = function(ev) {
 				config.commands.pubRev.handler(ev, el, title);
