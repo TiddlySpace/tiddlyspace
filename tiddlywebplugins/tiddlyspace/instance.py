@@ -89,3 +89,16 @@ store_structure['bags']['MAPUSER'] = {
         'owner': 'administrator',
     },
 }
+
+store_structure['bags']['MAPSPACE'] = {
+    'desc': 'maps domain information to canonical space',
+    'policy': {
+        'read': ['NONE'],
+        'write': ['NONE'],
+        'create': ['ANY'],
+        'delete': ['NONE'],
+        'manage': ['NONE'],
+        'accept': ['NONE'],
+        'owner': 'administrator',
+    },
+}

@@ -243,6 +243,16 @@ def _determine_space(environ, http_host):
     server_host = environ['tiddlyweb.config']['server_host']['host']
     if '.%s' % server_host in http_host:
         return http_host.rsplit('.', server_host.count('.') + 1)[0]
+    else:
+        if ':' in http_host:
+            http_host = http_host.split(':', 1)[0]
+        store = environ['tiddlyweb.store']
+        tiddler = Tiddler(http_host, 'MAPSPACE')
+        try:
+            tiddler = store.get(tiddler)
+            return tiddler.fields['mapped_space']
+        except (KeyError, NoBagError, NoTiddlerError), exc:
+            pass
     return None
 
 
@@ -326,6 +336,7 @@ class ControlView(object):
             template = control.recipe_template(environ)
             bags = [bag for bag, _ in recipe.get_recipe(template)]
             bags.insert(0, "MAPUSER")
+            bags.insert(0, "MAPSPACE")
 
             filter_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:

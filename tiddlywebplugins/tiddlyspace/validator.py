@@ -9,6 +9,10 @@ import Cookie
 from tiddlyweb.util import sha
 from tiddlyweb.web.validator import TIDDLER_VALIDATORS, InvalidTiddlerError
 
+# XXX: importing private members, so they should probably not be private
+from tiddlywebplugins.tiddlyspace.handler import (_determine_host,
+        _determine_space, _determine_space_recipe)
+
 
 def validate_mapuser(tiddler, environ):
     """
@@ -47,4 +51,28 @@ def validate_mapuser(tiddler, environ):
     return tiddler
 
 
+def validate_mapspace(tiddler, environ):
+    """
+    If a tiddler is put to the MAPSPACE bag clear
+    out the tiddler and set fields['mapped_space']
+    to the current space.
+
+    Elsewhere in the space the mapped_space can map
+    a alien domain to space.
+    """
+    if tiddler.bag == 'MAPSPACE':
+        current_space = _determine_space(environ, _determine_host(environ)[0])
+        print 'current_space is ', current_space
+        recipe_name = _determine_space_recipe(environ, current_space)
+        if recipe_name != '%s_private' % current_space:
+            raise InvalidTiddlerError('non member may not map space')
+
+        tiddler.text = ''
+        tiddler.tags = []
+        tiddler.fields = {}
+        tiddler.fields['mapped_space'] = current_space
+    return tiddler
+
+
 TIDDLER_VALIDATORS.append(validate_mapuser)
+TIDDLER_VALIDATORS.append(validate_mapspace)
