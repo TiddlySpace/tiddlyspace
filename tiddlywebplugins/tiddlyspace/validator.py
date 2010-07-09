@@ -62,7 +62,6 @@ def validate_mapspace(tiddler, environ):
     """
     if tiddler.bag == 'MAPSPACE':
         current_space = _determine_space(environ, _determine_host(environ)[0])
-        print 'current_space is ', current_space
         recipe_name = _determine_space_recipe(environ, current_space)
         if recipe_name != '%s_private' % current_space:
             raise InvalidTiddlerError('non member may not map space')
