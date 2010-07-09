@@ -54,7 +54,8 @@ backstage.init = function(){
 	_init.apply(this, arguments);
 	// update usernames
 	var userButton = $(".backstageTask[task=user]").
-	html(config.tasks.user.text+ "<span class='txtUserName'></span>"+ glyph("downTriangle"));
+	html("<span />").html('%0<span class="txtUserName"></span>%1'.
+		format([config.tasks.user.text, glyph("downTriangle")]));
 	config.macros.option.handler($(".txtUserName",userButton)[0],null,["txtUserName"]);
 
 	// make the backstage become visible when you mouseover it
@@ -93,7 +94,13 @@ backstage.init = function(){
 
 	var siteIcon =store.getTiddler("SiteIcon");
 	if(siteIcon) {
-		wikify(siteIcon.text, $("[task=space]","#backstageArea")[0]);
+		var spaceButton = $("[task=space]","#backstageArea");
+		var existing = spaceButton.text();
+		spaceButton.empty();
+		$('<img class="spaceSiteIcon" />').
+			attr("src","SiteIcon").appendTo(spaceButton);
+		$("<span />").text(existing).appendTo(spaceButton);
+		
 	}
 
 	var tiddlyweb = config.extensions.tiddlyweb;
@@ -116,8 +123,10 @@ backstage.init = function(){
 		});
 
 		// show default avatar for the login button
-		$("[task=login]", "#backstageArea").
-			append('<span><img src="/bags/tiddlyspace/tiddlers/SiteIcon" /></span><br/>');
+		var loginButton = $("[task=login]", "#backstageArea");
+		var existing = loginButton.text();
+		loginButton.html('<span>%0</span><span class="siteIcon"><img src="/bags/tiddlyspace/tiddlers/SiteIcon" /></span>'
+			.format([existing]));
 
 		var tasks = $(".backstageTask");
 		for(var i = 0; i < tasks.length; i++) {
