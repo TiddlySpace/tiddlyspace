@@ -52,9 +52,12 @@ backstage.show = function() {
 var _init = backstage.init;
 backstage.init = function(){
 	_init.apply(this, arguments);
+
+	var backstageArea = $("#backstageArea");
+
 	// update usernames
 	var userBtn = $(".backstageTask[task=user]").
-		html("<span />").html('%0<span class="txtUserName" />%1'.format([
+		html('%0<span class="txtUserName" />%1'.format([
 			config.tasks.user.text, glyph("downTriangle")]));
 	config.macros.option.handler($(".txtUserName", userBtn)[0], null, ["txtUserName"]);
 
@@ -94,7 +97,7 @@ backstage.init = function(){
 
 	var siteIcon = store.getTiddler("SiteIcon");
 	if(siteIcon) {
-		var btn = $("[task=space]", "#backstageArea");
+		var btn = $("[task=space]", backstageArea);
 		var existing = btn.text();
 		btn.empty();
 		$('<img class="spaceSiteIcon" />').
@@ -118,12 +121,12 @@ backstage.init = function(){
 				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
 					format([tsHost, user.name]);
 				$("<img />").attr("src", src).appendTo("<span />").
-					appendTo("[task=user]", "#backstageArea");
+					appendTo("[task=user]", backstageArea);
 			}
 		});
 
 		// show default avatar for the login button
-		var loginBtn = $("[task=login]", "#backstageArea");
+		var loginBtn = $("[task=login]", backstageArea);
 		var existing = loginBtn.text();
 		loginBtn.html('<span>%0</span><span class="siteIcon"><img src="/bags/tiddlyspace/tiddlers/SiteIcon" /></span>'.
 			format([existing]));
