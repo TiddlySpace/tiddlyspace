@@ -57,7 +57,7 @@ backstage.init = function(){
 
 	// update usernames
 	var userBtn = $(".backstageTask[task=user]").
-		html('%0<span class="txtUserName" />%1'.format([
+		html('<span>%0<span class="txtUserName" />%1</span>'.format([
 			config.tasks.user.text, glyph("downTriangle")]));
 	config.macros.option.handler($(".txtUserName", userBtn)[0], null, ["txtUserName"]);
 
