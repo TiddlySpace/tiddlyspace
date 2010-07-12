@@ -164,7 +164,7 @@ def list_spaces(environ, start_response):
     start_response('200 OK', [
         ('Content-Type', 'application/json; charset=UTF-8')])
     return simplejson.dumps([{'name': space, 'uri': _space_uri(environ, space)}
-        for space in spaces])
+        for space in sorted(spaces)])
 
 
 def list_space_members(environ, start_response):
