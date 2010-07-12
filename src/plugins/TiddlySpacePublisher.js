@@ -46,8 +46,8 @@ var macro = config.macros.TiddlySpacePublisher = {
 	},
 
 	publishedTiddlers: {}, // maps tiddler titles to a currently public tiddler where public tiddlers exist
-	getPublicTiddlers: function(listWrapper, paramString, spaceName) { // fills in publishedTiddlers variable above
-		var adaptor = new config.adaptors.tiddlyweb();
+	getPublicTiddlers: function(listWrapper, paramString, spaceName, tiddler) { // fills in publishedTiddlers variable above
+		var adaptor = tiddler.getAdaptor();
 		var context = {
 			workspace: "recipes/%0_public".format([spaceName])
 		};
@@ -76,7 +76,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 				config.commands.publishTiddlerRevision.publishTiddler(title, callback);
 			}
 	},
-	handler: function(place, macroName, params, wikifier, paramString) {
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var wizard = new Wizard();
 		var locale = macro.locale;
 		wizard.createWizard(place, locale.title);
@@ -89,7 +89,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 		listWrapper.setAttribute("params", paramString);
 
 		$(listWrapper).text(macro.locale.pleaseWait);
-		this.getPublicTiddlers(listWrapper, paramString, currentSpace);
+		this.getPublicTiddlers(listWrapper, paramString, currentSpace, tiddler);
 	},
 	refresh: function(listWrapper, paramString) {
 		var wizard = new Wizard(listWrapper);
@@ -162,12 +162,11 @@ var macro = config.macros.TiddlySpacePublisher = {
 
 		var publicLinks = $(".viewPublicTiddler");
 		$.each(publicLinks, function(index, el) {
-			el = $(el);
-			var title = el.text();
+			var title = $(el).text();
 			var handler = function(ev) {
 				config.commands.pubRev.handler(ev, el, title);
 			};
-			el.html("<a>%0</a>".format([title])).click(handler);
+			$("<a />").text(title).click(handler).appendTo(el);
 		});
 	}
 };
