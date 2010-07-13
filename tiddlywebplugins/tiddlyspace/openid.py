@@ -36,8 +36,9 @@ class Challenger(OpenID):
             usersign = usersign.split('://', 1)[1]
         usersign = usersign.rstrip('/')
 
-        redirect = environ['tiddlyweb.query'].get('tiddlyweb_redirect', ['/'])
-        uri = urlparse.urljoin(server_host_url(environ), redirect[0])
+        redirect = environ['tiddlyweb.query'].get(
+            'tiddlyweb_redirect', ['/'])[0]
+        uri = urlparse.urljoin(server_host_url(environ), redirect)
 
         cookie_name = 'tiddlyweb_user'
         cookie_age = environ['tiddlyweb.config'].get('cookie_age', None)
@@ -47,8 +48,9 @@ class Challenger(OpenID):
             fragment = None
         if fragment:
             openid = fragment[len(FRAGMENT_PREFIX):]
-            environ['tiddlyweb.query']['tiddlyweb_redirect'] = redirect.replace(
-                    FRAGMENT_PREFIX + openid, FRAGMENT_PREFIX + usersign)
+            environ['tiddlyweb.query']['tiddlyweb_redirect'] = [
+                    redirect.replace(FRAGMENT_PREFIX + openid,
+                        FRAGMENT_PREFIX + usersign)]
             cookie_name = 'tiddlyweb_secondary_user'
             cookie_age = None
         secret = environ['tiddlyweb.config']['secret']
