@@ -62,11 +62,18 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	generateForm: function() {
 		var challenger = "tiddlywebplugins.tiddlyspace.openid";
 		var uri = "%0/challenge/%1".format([ns.host, challenger]);
-		var redirect = ns.serverPrefix + "#auth:OpenID";
-		return $(this.formTemplate).attr("action", uri).
+		var redirect = ns.serverPrefix + "#auth:OpenID:";
+		return $(this.formTemplate).attr("action", uri).submit(this.onSubmit).
 			find("legend").text(this.locale.addLabel).end().
 			find("[name=tiddlyweb_redirect]").val(redirect).end().
 			find("[type=submit]").val(this.locale.addLabel).end();
+	},
+	onSubmit: function(ev) {
+		var form = $(this)
+		var redirect = form.find("[name=tiddlyweb_redirect]");
+		var openid = form.find("[name=openid]").val();
+		redirect.val(redirect.val() + openid);
+		return true;
 	}
 };
 
@@ -77,10 +84,8 @@ config.paramifiers.auth = {
 	},
 
 	onstart: function(v) {
-		var identity = readCookie("tiddlyweb_secondary_user");
+		var identity = window.location.hash.split("auth:OpenID:")[1];
 		if(identity) {
-			// strip off the MAC from the cookie and unquote
-			identity = identity.replace(/:[^:]+$/, "").replace('"', "");
 			this.addIdentity(identity);
 		}
 	},
@@ -97,22 +102,6 @@ config.paramifiers.auth = {
 		};
 		tiddler.put(callback, errback);
 	}
-};
-
-// adapted from http://www.quirksmode.org/js/cookies.html
-var readCookie = function(name) {
-	var nameEQ = name + "=";
-	var ca = document.cookie.split(";");
-	for(var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while(c.charAt(0) == " ") {
-			c = c.substring(1, c.length);
-		}
-		if(c.indexOf(nameEQ) == 0) {
-			return c.substring(nameEQ.length, c.length);
-		}
-	}
-	return null;
 };
 
 })(jQuery);

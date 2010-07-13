@@ -11,7 +11,7 @@ from tiddlyweb.web.util import server_host_url, make_cookie
 from tiddlywebplugins.openid2 import Challenger as OpenID
 
 
-FRAGMENT_VALUE = 'auth:OpenID'
+FRAGMENT_VALUE = 'auth:OpenID:'
 
 
 class Challenger(OpenID):
@@ -42,9 +42,10 @@ class Challenger(OpenID):
         cookie_age = environ['tiddlyweb.config'].get('cookie_age', None)
         try:
             fragment = uri.rsplit('#', 1)[1]
+            openid = fragment[len(FRAGMENT_VALUE):]
         except (ValueError, IndexError):
             fragment = None
-        if fragment and fragment == FRAGMENT_VALUE:
+        if fragment and openid == usersign: # XXX: usersign check unnecessary!?
             cookie_name = 'tiddlyweb_secondary_user'
             cookie_age = None
         secret = environ['tiddlyweb.config']['secret']
