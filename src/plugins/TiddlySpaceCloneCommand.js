@@ -1,5 +1,11 @@
 /***
+|''Name''|TiddlySpaceCloneCommand|
+|''Version''||
+|''Description''|Provides a clone command for copying from an alien bag to a public bag in TiddlySpace|
+|''Status''|//unknown//|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''Requires''|TiddlySpaceConfig|
+!Code
 ***/
 //{{{
 (function($) {

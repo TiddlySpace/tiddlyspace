@@ -1,5 +1,6 @@
 /***
 |''Name''|TiddlySpacePublisher|
+|''Version''||
 |''Description''|Adds a random color palette to TiddlyWiki|
 |''Requires''|TiddlySpacePublishCommand|
 |''Author''|Jon Robson|

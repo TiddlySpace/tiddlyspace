@@ -1,5 +1,11 @@
 /***
+|''Name''|TiddlySpacePublishCommand|
+|''Version''||
+|''Description''|Provides publishing commands for publishing tiddlers in public to private bags|
+|''Status''|//unknown//|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''Requires''|TiddlySpaceConfig|
+!Code
 ***/
 //{{{
 (function($) {

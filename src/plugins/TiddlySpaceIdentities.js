@@ -1,5 +1,9 @@
-//{{{
 /***
+|''Name''|TiddlySpaceIdentities|
+|''Version''||
+|''Description''||
+|''Status''|//unknown//|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''Requires''|TiddlySpaceConfig chrjs|
 !HTMLForm
 <form method="POST" action="#">

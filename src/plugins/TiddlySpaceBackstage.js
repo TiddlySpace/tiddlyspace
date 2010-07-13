@@ -1,7 +1,13 @@
 /***
+|''Name''|TiddlySpaceBackstage|
+|''Version''||
+|''Description''|Provides a TiddlySpace version of the backstage|
+|''Status''|//unknown//|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''Requires''|TiddlySpaceConfig|
+!Code
 ***/
-//{{{
+/*{{{*/
 (function($) {
 
 if(config.options.chkBackstage === undefined) {
@@ -141,4 +147,4 @@ backstage.init = function(){
 };
 
 })(jQuery);
-//}}}
+/*}}}*/

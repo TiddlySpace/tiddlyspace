@@ -1,5 +1,9 @@
 /***
+|''Name''|TiddlySpaceVisualization|
+|''Version''||
+|''Description''||
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
+|''Source''||
 !Code
 ***/
 //{{{

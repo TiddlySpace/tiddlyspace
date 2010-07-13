@@ -1,5 +1,9 @@
 /***
+|''Name''|TiddlySpaceSpaces|
+|''Version''||
+|''Description''||
 |''Requires''|TiddlyWebConfig TiddlySpaceInclusion TiddlySpaceUserControls|
+|''Source''||
 !HTMLForm
 <form action="#">
 	<fieldset>

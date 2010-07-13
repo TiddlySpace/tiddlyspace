@@ -1,5 +1,10 @@
 /***
+|''Name''|TiddlySpacePubRevCommand|
+|''Version''||
+|''Description''||
 |''Requires''|TiddlySpaceConfig|
+|''Source''||
+!Code
 ***/
 //{{{
 (function($) {

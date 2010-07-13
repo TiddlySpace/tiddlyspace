@@ -1,4 +1,9 @@
 /***
+|''Name''|TiddlySpaceMembers|
+|''Version''||
+|''Description''|Provides interfaces for managing members of a given space in TiddlySpace|
+|''Status''|//unknown//|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''Requires''|TiddlySpaceConfig TiddlySpaceUserControls|
 !HTMLForm
 <form action="#">
