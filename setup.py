@@ -32,7 +32,7 @@ setup(
         'tiddlywebplugins.socialusers>=0.3',
         'tiddlywebplugins.magicuser>=0.3',
         'tiddlywebplugins.openid2>=0.5',
-        'tiddlywebplugins.cookiedomain>=0.3',
+        'tiddlywebplugins.cookiedomain>=0.6',
         'tiddlywebplugins.mselect',
         'tiddlywebplugins.prettyerror>=0.8',
         'tiddlywebplugins.pathinfohack>=0.8',
