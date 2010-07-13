@@ -48,9 +48,8 @@ class Challenger(OpenID):
             fragment = None
         if fragment:
             openid = fragment[len(FRAGMENT_PREFIX):]
-            environ['tiddlyweb.query']['tiddlyweb_redirect'] = [
-                    redirect.replace(FRAGMENT_PREFIX + openid,
-                        FRAGMENT_PREFIX + usersign)]
+            uri = uri.replace(FRAGMENT_PREFIX + openid,
+                    FRAGMENT_PREFIX + usersign)
             cookie_name = 'tiddlyweb_secondary_user'
             cookie_age = None
         secret = environ['tiddlyweb.config']['secret']
