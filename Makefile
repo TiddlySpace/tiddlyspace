@@ -15,7 +15,7 @@ remotes: jslib
 jslib: qunit
 	$(call wrap_jslib, src/lib/chrjs.js, \
 		http://github.com/tiddlyweb/chrjs/raw/master/main.js)
-	$(call wrap_jslib, src/lib/users.js, \
+	$(call wrap_jslib, src/lib/chrjs.users.js, \
 		http://github.com/tiddlyweb/chrjs/raw/master/users.js)
 
 qunit:
