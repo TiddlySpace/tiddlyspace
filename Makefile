@@ -1,5 +1,11 @@
 .PHONY: test remotes jslib qunit dist release deploy pypi dev clean purge
 
+wrap_jslib = curl -s $(2) | \
+	{ \
+		echo "/***"; echo $(2); echo "***/"; \
+		echo "//{{{"; cat -; echo "//}}}"; \
+	} > $(1)
+
 test:
 	py.test -x test
 
@@ -7,10 +13,10 @@ remotes: jslib
 	./cacher
 
 jslib: qunit
-	curl -o src/lib/chrjs.js \
-		http://github.com/tiddlyweb/chrjs/raw/master/main.js
-	curl -o src/lib/users.js \
-		http://github.com/tiddlyweb/chrjs/raw/master/users.js
+	$(call wrap_jslib, src/lib/chrjs.js, \
+		http://github.com/tiddlyweb/chrjs/raw/master/main.js)
+	$(call wrap_jslib, src/lib/users.js, \
+		http://github.com/tiddlyweb/chrjs/raw/master/users.js)
 
 qunit:
 	mkdir -p src/test/qunit

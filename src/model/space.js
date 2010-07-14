@@ -1,3 +1,7 @@
+/***
+TiddlySpace extensions for [[chrjs]]
+***/
+//{{{
 (function($) {
 
 tiddlyweb.routes.spaces = "{host}/spaces";
@@ -44,3 +48,4 @@ $.extend(MemberCollection.prototype, {
 });
 
 })(jQuery);
+//}}}
