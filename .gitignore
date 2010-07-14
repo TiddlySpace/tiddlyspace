@@ -1,7 +1,4 @@
 *.pyc
 src/lib/chrjs.js
 src/lib/chrjs.users.js
-src/lib/loadScript.js
-src/lib/jquery.min.js
-src/lib/jquery-json.min.js
 src/test/qunit

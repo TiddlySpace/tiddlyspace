@@ -27,7 +27,6 @@ instance_config['twanager_plugins'] = ['tiddlywebplugins.tiddlyspace']
 store_contents['common'] = ['src/common.recipe']
 store_contents['tiddlyspace'] = [
     'src/lib/index.recipe',
-    'src/model/index.recipe',
     'src/backstage/index.recipe',
     'src/shadows/index.recipe',
     'src/styles/index.recipe',
