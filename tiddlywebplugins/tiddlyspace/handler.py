@@ -26,7 +26,7 @@ from tiddlywebplugins.utils import require_any_user
 import tiddlywebplugins.status
 
 
-CORE_BAGS = ['system', 'tiddlyspace']
+CORE_BAGS = ['system', 'common', 'tiddlyspace']
 
 
 def home(environ, start_response):
@@ -336,6 +336,7 @@ class ControlView(object):
 
             template = control.recipe_template(environ)
             bags = [bag for bag, _ in recipe.get_recipe(template)]
+            bags.insert(0, "common")
             bags.insert(0, "MAPUSER")
             bags.insert(0, "MAPSPACE")
 
