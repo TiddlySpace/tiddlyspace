@@ -12,7 +12,7 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
 from tiddlyweb.model.policy import Policy
 from tiddlyweb.store import NoRecipeError, NoBagError, NoUserError
-from tiddlyweb.web.http import HTTP404, HTTP409
+from tiddlyweb.web.http import HTTP403, HTTP404, HTTP409
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -83,6 +83,9 @@ def change_space_member(store, space_name, add=None, remove=None,
 
     if current_user:
         private_bag.policy.allows(current_user, 'manage')
+
+    if remove and len(private_bag.policy.manage) == 1:
+        raise HTTP403('must not remove the last member from a space')
 
     if add:
         store.get(User(add))
