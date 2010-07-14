@@ -1,4 +1,9 @@
 /***
+|''Name''|TiddlySpaceInclusion|
+|''Version''||
+|''Description''|Provides user interfaces for managing inclusion within TiddlySpace|
+|''Status''|//unknown//|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''Requires''|TiddlySpaceConfig TiddlySpaceUserControls chrjs|
 !HTMLForm
 <form action="#">

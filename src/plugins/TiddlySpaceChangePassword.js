@@ -1,5 +1,6 @@
 /***
 |''Name''|TiddlySpaceChangePassword|
+|''Version''||
 |''Requires''|TiddlyWebConfig|
 !HTMLForm
 <form action="#">

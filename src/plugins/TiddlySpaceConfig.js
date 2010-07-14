@@ -1,6 +1,11 @@
 /***
 |''Name''|TiddlySpaceConfig|
+|''Version''||
+|''Description''|Configures Tiddly(Web)Wiki for use with TiddlySpace|
+|''Status''|//unknown//|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''Requires''|TiddlyWebConfig|
+!Code
 ***/
 //{{{
 (function($) {

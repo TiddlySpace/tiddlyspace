@@ -1,6 +1,11 @@
 /***
 |''Name''|TiddlySpaceInitialization|
+|''Version''||
+|''Description''|Initialises new TiddlySpaces the first time they are created|
+|''Status''|//unknown//|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''Requires''|TiddlySpaceConfig RandomColorPalettePlugin|
+!Code
 ***/
 //{{{
 (function($) {

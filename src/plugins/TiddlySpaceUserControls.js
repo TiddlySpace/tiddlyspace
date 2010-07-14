@@ -1,5 +1,8 @@
 /***
 |''Name''|TiddlySpaceUserControls|
+|''Version''||
+|''Description''||
+|''Source''||
 |''Requires''|TiddlySpaceConfig|
 !HTMLForm
 <form action="#">
