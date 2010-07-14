@@ -24,6 +24,7 @@ store_structure['recipes'].update(prettyerror_store_structure['recipes'])
 instance_config['system_plugins'] = ['tiddlywebplugins.tiddlyspace']
 instance_config['twanager_plugins'] = ['tiddlywebplugins.tiddlyspace']
 
+store_contents['common'] = ['src/common.recipe']
 store_contents['tiddlyspace'] = [
     'src/lib/index.recipe',
     'src/model/index.recipe',
