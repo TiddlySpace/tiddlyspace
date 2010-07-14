@@ -61,23 +61,6 @@ backstage.init = function(){
 			config.tasks.user.text, glyph("downTriangle")]));
 	config.macros.option.handler($(".txtUserName", userBtn)[0], null, ["txtUserName"]);
 
-	// make the backstage become visible when you mouseover it
-	var _revealBackstageArea;
-	$("#backstageButton").mouseover(function(ev) { // when mouseover the button set a timeout to show backstage
-		if(!backstage.isVisible()){
-			_revealBackstageArea = window.setTimeout(function() {
-				if(!backstage.isVisible()) {
-					backstage.show();
-				}
-			},"600");}
-		}
-	).
-	mouseout(function(ev){ // on a mouseout we prevent showing of the backstage.
-		if(_revealBackstageArea) {
-			window.clearTimeout(_revealBackstageArea);
-		}
-	});
-
 	// override show button with an svg image
 	var showBtn = $("#backstageShow")[0];
 	var altText = $(showBtn).text();
