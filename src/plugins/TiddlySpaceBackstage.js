@@ -7,7 +7,7 @@
 |''Requires''|TiddlySpaceConfig|
 !Code
 ***/
-/*{{{*/
+//{{{
 (function($) {
 
 if(config.options.chkBackstage === undefined) {
@@ -147,4 +147,4 @@ backstage.init = function(){
 };
 
 })(jQuery);
-/*}}}*/
+//}}}
