@@ -114,12 +114,6 @@ var plugin = config.extensions.tiddlyspace = {
 ns = config.extensions.tiddlyweb;
 ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
 
-config.shadowTiddlers.ToolbarCommands = config.shadowTiddlers.ToolbarCommands.
-	replace("editTiddler ", "editTiddler cloneTiddler ").
-	replace("closeOthers", "").replace("jump", "jump closeOthers").
-	replace("revisions ", "publishTiddlerRevision pubRev revisions ").
-	replace("saveTiddler ", "saveTiddler savePublicTiddler ");
-
 // set global read-only mode based on membership heuristics
 var indicator = store.getTiddler("SiteTitle") || tiddler;
 readOnly = !(recipe.split("_").pop() == "private" ||
