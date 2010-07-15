@@ -48,8 +48,15 @@ macro.handler = function(place, macroName, params, wikifier,
 	} else {
 		toolbar.removeClass("toolbarReadOnly");
 	}
-	if(config.macros.image.svgAvailable) {
+	var parsedParams = paramString.parseParams("name")[0];
+	if(config.macros.image.svgAvailable && parsedParams.icons &&
+			parsedParams.icons == "yes") {
 		this.augmentCommandButtons(place);
+	}
+	if(parsedParams.more && parsedParams.more == "popup") {
+		// note we must override the onclick event like in createTiddlyButton
+		// otherwise the click event is the popup AND the slider
+		$(".moreCommand", place)[0].onclick = macro.onClickMorePopUp;
 	}
 	return status;
 };
@@ -72,8 +79,8 @@ macro.augmentCommandButtons = function(toolbar) {
 	});
 };
 
-// override onClickMore to provide extra commands in a popup
-macro.onClickMore = function(ev) {
+// provide onClickMore to provide extra commands in a popup
+macro.onClickMorePopUp = function(ev) {
 	var sibling = this.nextSibling;
 	var commands = sibling.childNodes;
 	var popup = Popup.create(this);
@@ -90,7 +97,7 @@ macro.onClickMore = function(ev) {
 };
 
 var getIcon = function(cmd) {
-	return "%0.svg".format([cmd])
+	return "%0.svg".format([cmd]);
 };
 
 })(jQuery);
