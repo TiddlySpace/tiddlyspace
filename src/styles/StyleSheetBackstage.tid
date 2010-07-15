@@ -1,7 +1,7 @@
 tags: excludeLists
 
 /*{{{*/
-	.publicLightText {
+.publicLightText {
 	color: #C0E5FC;
 }
 

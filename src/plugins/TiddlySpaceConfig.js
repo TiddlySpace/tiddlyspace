@@ -133,8 +133,8 @@ config.macros.backstageInit = {
 	}
 };
 
-// register style sheet
-store.addNotification("StyleSheetTiddlySpace", refreshStyles);
+// register style sheet for backstage separately (important)
+store.addNotification("StyleSheetBackstage", refreshStyles);
 
 })(jQuery);
 //}}}
