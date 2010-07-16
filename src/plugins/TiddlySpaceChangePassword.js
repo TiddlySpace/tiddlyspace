@@ -1,7 +1,7 @@
 /***
 |''Name''|TiddlySpaceChangePassword|
 |''Version''||
-|''Requires''|TiddlyWebConfig|
+|''Requires''|TiddlyWebConfig TiddlySpaceUserControls|
 !HTMLForm
 <form action="#">
 	<fieldset>
@@ -28,12 +28,12 @@
 (function($) {
 
 var ns = config.extensions.tiddlyweb;
+var displayError = config.macros.TiddlySpaceLogin.displayError;
 
 var macro = config.macros.TiddlySpaceChangePassword = {
 	locale: {
 		label: "Change password",
 		cpwSuccess: "Password changed",
-		cpwError: "Error changing password: %0",
 		noPasswordError: "Please enter password",
 		passwordMatchError: "Error: passwords do not match",
 		passwordShortError: "Error: password must be at least %0 characters",
@@ -57,32 +57,29 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 		var npassword = form.find("[name=new_password]").val();
 		var npasswordConfirm = form.find("[name=new_password_confirm]").val();
 		if(npassword != npasswordConfirm) {
+			var xhr = { status: 409 }; // XXX: hacky
 			var ctx = {
+				msg: {
+					409: msg.passwordMatchError
+				},
 				form: form,
-				selector: "[name=new_password]"
+				selector: "[name=new_password], [name=new_password_confirm]"
 			};
-			config.macros.TiddlySpaceChangePassword.displayError(null, null, null, ctx, msg.passwordMatchError);
+			displayError(xhr, null, null, ctx);
 		} else if(npassword.length < msg.passwordMinLength) {
+			var xhr = { status: 409 }; // XXX: hacky
 			var ctx = {
+				msg: {
+					409: msg.passwordShortError.format([msg.passwordMinLength])
+				},
 				form: form,
 				selector: "[name=new_password]"
 			};
-			config.macros.TiddlySpaceChangePassword.displayError(null, null, null, ctx,
-				msg.passwordShortError.format([msg.passwordMinLength]));
+			displayError(xhr, null, null, ctx);
 		} else {
 			macro.changePassword(ns.username, password, npassword);
 		}
 		return false;
-	},
-
-	displayError: function(xhr, error, exc, ctx, errMsg) {
-		error = errMsg ||
-			"%0: %1".format([xhr.statusText, xhr.responseText]).htmlEncode();
-		var el = $(ctx.selector, ctx.form).addClass("error").focus(function(ev) {
-			el.removeClass("error").unbind(ev.originalEvent.type).
-				closest("form").find(".annotation").slideUp();
-		});
-		$(".annotation", ctx.form).html(error).slideDown();
 	},
 
 	changePassword: function(username, password, npassword, form) {
@@ -92,11 +89,11 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 		};
 		var pwErrback = function(xhr, error, exc) {
 			var ctx = {
+				msg: {},
 				form: form,
 				selector: "[name=new_password]"
 			};
-			errMsg = msg.cpwError.format([xhr.statusText]);
-			config.macros.TiddlySpaceChangePassword.displayError(xhr, null, null, ctx, errMsg);
+			displayError(xhr, null, null, ctx);
 		};
 		var user = new tiddlyweb.User(username, password, ns.host);
 		user.setPassword(npassword, pwCallback, pwErrback);

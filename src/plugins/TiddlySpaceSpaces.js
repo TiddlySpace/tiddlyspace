@@ -102,7 +102,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		if(ns.isValidSpaceName(space.name)) {
 			space.create(callback, errback);
 		} else {
-			var xhr = { status: 409 }; // XXX: hacky
+			xhr = { status: 409 }; // XXX: hacky
 			var ctx = {
 				msg: { 409: macro.locale.charError },
 				form: form,
