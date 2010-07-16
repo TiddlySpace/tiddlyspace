@@ -74,7 +74,7 @@ config.extensions.ServerSideSavingPlugin.sync = function(tiddlers) {
 	store.forEachTiddler(function(title, tiddler) {
 		var pubRev = config.extensions.tiddlyweb.endsWith(title,
 			ns.spawnPublicTiddler.pubSuffix);
-		if(tiddler.fields.doNotSave == "true" && pubRev) {
+		if(pubRev && tiddler.fields.doNotSave == "true") {
 			tid = $.extend(new Tiddler(title), tiddler);
 			tid.fields = $.extend({}, tiddler.fields);
 			tid.title = tid.fields["server.title"];
