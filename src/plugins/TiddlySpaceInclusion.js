@@ -121,16 +121,24 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		var space = form.find(selector).val();
 		var provider = mode == "passive" ? space : currentSpace;
 		var subscriber = mode == "passive" ? currentSpace : space;
+		var loc = macro.locale;
 		var callback = function(data, status, xhr) {
-			displayMessage(macro.locale.addSuccess.format([provider, subscriber]));
+			displayMessage(loc.addSuccess.format([provider, subscriber]));
 			// TODO: refresh list or reload page
 		};
 		var errback = function(xhr, error, exc) {
+			if(xhr.status == 409) {
+				var included = "already subscribed";
+				xhr = { // XXX: hacky
+					status: xhr.responseText.indexOf(included) != -1 ? "409a" : "409b"
+				};
+			}
 			var ctx = {
 				msg: {
-					403: macro.locale.forbiddenError.format([subscriber]),
-					404: macro.locale.noSpaceError.format([subscriber]), // XXX: only relevant for passive mode? -- XXX: could also be provider!?
-					409: macro.locale.conflictError.format([provider, subscriber]) // TODO: distinguish between cases non-existing and already subscribed
+					403: loc.forbiddenError.format([subscriber]),
+					404: loc.noSpaceError.format([subscriber]), // XXX: only relevant for passive mode
+					"409a": loc.conflictError.format([provider, subscriber]),
+					"409b": loc.noSpaceError.format([provider])
 				},
 				form: form,
 				selector: selector
