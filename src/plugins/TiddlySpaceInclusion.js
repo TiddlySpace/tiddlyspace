@@ -130,7 +130,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 				msg: {
 					403: macro.locale.forbiddenError.format([subscriber]),
 					404: macro.locale.noSpaceError.format([subscriber]), // XXX: only relevant for passive mode? -- XXX: could also be provider!?
-					409: macro.locale.conflictError.format([subscriber, provider]) // TODO: distinguish between cases non-existing and already subscribed
+					409: macro.locale.conflictError.format([provider, subscriber]) // TODO: distinguish between cases non-existing and already subscribed
 				},
 				form: form,
 				selector: selector
