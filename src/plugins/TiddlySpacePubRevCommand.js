@@ -72,8 +72,9 @@ var _sync = config.extensions.ServerSideSavingPlugin.sync;
 config.extensions.ServerSideSavingPlugin.sync = function(tiddlers) {
 	_sync.apply(this, arguments);
 	store.forEachTiddler(function(title, tiddler) {
-		if(tiddler.fields.doNotSave == "true" &&
-				endsWith(title, ns.spawnPublicTiddler.pubSuffix)) {
+		var pubRev = config.extensions.tiddlyweb.endsWith(title,
+			ns.spawnPublicTiddler.pubSuffix);
+		if(tiddler.fields.doNotSave == "true" && pubRev) {
 			tid = $.extend(new Tiddler(title), tiddler);
 			tid.fields = $.extend({}, tiddler.fields);
 			tid.title = tid.fields["server.title"];
@@ -82,11 +83,6 @@ config.extensions.ServerSideSavingPlugin.sync = function(tiddlers) {
 			config.extensions.ServerSideSavingPlugin.saveTiddler(tid);
 		}
 	});
-};
-
-var endsWith = function(str, suffix) {
-	return str.length >= suffix.length &&
-		str.substr(str.length - suffix.length) == suffix;
 };
 
 })(jQuery);
