@@ -24,14 +24,14 @@ config.tasks.login = {
 config.backstageTasks.push("login");
 
 config.tasks.user = {
-	text: "user: ",
+	text: "user:&nbsp;",
 	tooltip: "user control panel",
 	content: "<<tiddler BackstageUser>>"
 };
 config.backstageTasks.push("user");
 
 config.tasks.space = {
-	text: "space: " + config.extensions.tiddlyspace.currentSpace.name,
+	text: "space:&nbsp;",
 	tooltip: "space control panel",
 	content: "<<tiddler BackstageSpace>>",
 	className: "right"
@@ -91,7 +91,9 @@ backstage.init = function(){
 		btn.empty();
 		$('<img class="spaceSiteIcon" />').
 			attr("src", "SiteIcon").appendTo(btn);
-		$("<span />").text(config.tasks.space.text).appendTo(btn);
+		$("<span />").html(config.tasks.space.text).appendTo(btn);
+		$('<span class="spaceName" />').text(config.extensions.tiddlyspace.currentSpace.name).
+			appendTo(btn);
 
 	}
 

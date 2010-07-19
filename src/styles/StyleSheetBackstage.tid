@@ -86,7 +86,6 @@ body #backstageArea {
 }
 
 #backstageArea a:hover {
-	color: black;
 	background-color: white;
 }
 
@@ -115,8 +114,22 @@ body #backstageArea {
 	position: relative;
 }
 
+#backstageArea a.backstageSelTab,
 #backstageToolbar .backstageTask {
 	line-height: 1.6em;
+	color: #767676;
+}
+
+.backstageTask .txtUserName,
+.backstageTask .spaceName {
+	color: #fff;
+}
+
+.backstageSelTab .txtUserName,
+.backstageSelTab .spaceName,
+a:hover .txtUserName,
+a:hover .spaceName {
+	color: #000;
 }
 
 .spaceSiteIcon {
