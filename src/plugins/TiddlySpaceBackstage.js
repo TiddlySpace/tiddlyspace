@@ -61,10 +61,10 @@ backstage.init = function(){
 
 	var backstageArea = $("#backstageArea");
 
-	// update usernames
+	// override user button (logged in) to show username
 	var userBtn = $(".backstageTask[task=user]").
-		html('<span>%0<span class="txtUserName" />%1</span>'.format([
-			config.tasks.user.text, glyph("downTriangle")]));
+		html('<span>%0<span class="txtUserName" /></span>'.format([
+			config.tasks.user.text]));
 	config.macros.option.handler($(".txtUserName", userBtn)[0], null, ["txtUserName"]);
 
 	// override show button with an svg image
@@ -84,14 +84,14 @@ backstage.init = function(){
 	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",
 		$("#backstageLogo", backstageToolbar)[0]); // XXX: macro invocation is evil
 
+	// override space button to show SiteIcon
 	var siteIcon = store.getTiddler("SiteIcon");
 	if(siteIcon) {
 		var btn = $("[task=space]", backstageArea);
-		var existing = btn.text();
 		btn.empty();
 		$('<img class="spaceSiteIcon" />').
 			attr("src", "SiteIcon").appendTo(btn);
-		$("<span />").text(existing).appendTo(btn);
+		$("<span />").text(config.tasks.space.text).appendTo(btn);
 
 	}
 
@@ -109,16 +109,15 @@ backstage.init = function(){
 			if(!user.anon) {
 				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
 					format([tsHost, user.name]);
-				$("<img />").attr("src", src).appendTo("<span />").
+				$('<img class="userSiteIcon" />').attr("src", src).appendTo("<span />").
 					appendTo("[task=user]", backstageArea);
 			}
 		});
 
-		// show default avatar for the login button
+		// override login button to show default avatar
 		var loginBtn = $("[task=login]", backstageArea);
-		var existing = loginBtn.text();
-		loginBtn.html('<span>%0</span><span class="siteIcon"><img src="/bags/tiddlyspace/tiddlers/SiteIcon" /></span>'.
-			format([existing]));
+		loginBtn.html('<span>%0</span><img class="userSiteIcon" src="/bags/tiddlyspace/tiddlers/SiteIcon" />'.
+			format([config.tasks.login.text]));
 
 		var tasks = $(".backstageTask");
 		for(var i = 0; i < tasks.length; i++) {

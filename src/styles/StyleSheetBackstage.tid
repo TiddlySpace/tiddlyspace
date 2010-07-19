@@ -115,6 +115,18 @@ body #backstageArea {
 	position: relative;
 }
 
+#backstageToolbar .backstageTask {
+	line-height: 1.6em;
+}
+
+.spaceSiteIcon {
+	margin-right: 10px;
+}
+
+.userSiteIcon {
+	margin-left: 10px;
+}
+
 #backstageToolbar .task_space {
 	float: left;
 }
