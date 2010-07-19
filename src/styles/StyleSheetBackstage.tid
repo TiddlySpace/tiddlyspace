@@ -27,7 +27,7 @@ tags: excludeLists
 #backstageArea {
 	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, rgb(0,0,0)),color-stop(0.5, rgb(0,0,0)),color-stop(1, rgb(219,219,219)));
 	background: -moz-linear-gradient(center bottom,rgb(0,0,0) 5%,rgb(0,0,0) 50%,rgb(219,219,219) 100%);
-	height: 26px;
+	height: 25px;
 }
 
 .backstageBackground {
@@ -106,9 +106,9 @@ body #backstageArea {
 }
 
 #backstage #backstagePanel {
-	width: 100%;
-	margin-left: 0;
-	padding: 0;
+	width: 90%;
+	margin-left: 3em;
+	padding: 1em;
 }
 
 #backstageToolbar a {
@@ -155,10 +155,6 @@ a.backstageTask {
 #backstageToolbar a .txtUserName span {
 	display: inline;
 	float: none;
-}
-
-#backstage {
-	top: -1px;
 }
 
 .textRight {
