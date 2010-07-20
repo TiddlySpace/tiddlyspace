@@ -29,7 +29,7 @@ setup(
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout>=0.6',
         'tiddlywebplugins.virtualhosting',
-        'tiddlywebplugins.socialusers>=0.3',
+        'tiddlywebplugins.socialusers>=0.4',
         'tiddlywebplugins.magicuser>=0.3',
         'tiddlywebplugins.openid2>=0.5',
         'tiddlywebplugins.cookiedomain>=0.6',
