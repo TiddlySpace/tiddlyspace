@@ -47,7 +47,8 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		forbiddenError: "unauthorized to modify space <em>%0</em>",
 		noSpaceError: "space <em>%0</em> does not exist",
 		conflictError: "space <em>%0</em> is already included in <em>%1</em>",
-		noInclusions: "no spaces are included"
+		noInclusions: "no spaces are included",
+		reloadPrompt: "The page must be reloaded for inclusion to take effect. Reload now?"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -124,7 +125,9 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		var loc = macro.locale;
 		var callback = function(data, status, xhr) {
 			displayMessage(loc.addSuccess.format([provider, subscriber]));
-			// TODO: refresh list or reload page
+			if(confirm(loc.reloadPrompt)) {
+				window.location.reload();
+			}
 		};
 		var errback = function(xhr, error, exc) {
 			if(xhr.status == 409) {
