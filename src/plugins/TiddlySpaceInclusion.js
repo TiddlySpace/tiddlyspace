@@ -148,7 +148,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			};
 			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
 		};
-		this.include(provider, subscriber, callback, errback);
+		this.inclusion(provider, subscriber, callback, errback, false);
 		return false;
 	},
 	onDelClick: function(ev) {
@@ -162,12 +162,12 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			displayMessage(macro.locale.delError.format([username, error]));
 		};
 		if(confirm(msg)) {
-			macro.include(provider, currentSpace, callback, errback, true);
+			macro.inclusion(provider, currentSpace, callback, errback, true);
 		}
 	},
-	include: function(provider, subscriber, callback, errback, unsubscribe) {
+	inclusion: function(provider, subscriber, callback, errback, remove) {
 		var data = {};
-		var key = unsubscribe ? "unsubscriptions" : "subscriptions";
+		var key = remove ? "unsubscriptions" : "subscriptions";
 		data[key] = [provider];
 		$.ajax({ // TODO: add to model/space.js?
 			url: host + "/spaces/" + subscriber,
