@@ -8,6 +8,7 @@ import simplejson
 
 from tiddlyweb.store import Store
 from tiddlyweb.model.tiddler import Tiddler
+from tiddlyweb.model.recipe import Recipe
 
 
 def setup_module(module):
@@ -23,6 +24,7 @@ def setup_module(module):
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('thing.0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('other.0.0.0.0', 8080, app_fn)
+    wsgi_intercept.add_wsgi_intercept('foo.0.0.0.0', 8080, app_fn)
 
     module.store = Store(config['server_store'][0],
             config['server_store'][1], {'tiddlyweb.config': config})
@@ -140,3 +142,33 @@ def test_space_has_limited_view():
 
     info = simplejson.loads(content)
     assert len(info) == 2
+
+
+def test_space_exposes_subscription_recipes():
+    make_fake_space(store, 'foo')
+    make_fake_space(store, 'bar')
+    make_fake_space(store, 'baz')
+
+    # add subscription (manual because it's not currently properly encapsulated)
+    public_recipe = store.get(Recipe('foo_public'))
+    private_recipe = store.get(Recipe('foo_private'))
+    public_recipe_list = public_recipe.get_recipe()
+    private_recipe_list = private_recipe.get_recipe()
+    public_recipe_list.insert(-1, ('bar_public', ''))
+    private_recipe_list.insert(-2, ('bar_public', ''))
+    public_recipe.set_recipe(public_recipe_list)
+    private_recipe.set_recipe(private_recipe_list)
+    store.put(public_recipe)
+    store.put(private_recipe)
+
+    http = httplib2.Http()
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+            method='GET')
+
+    assert response['status'] == '200'
+    assert 'foo_public' in content, content
+    assert 'foo_private' not in content, content # not auth'd
+    assert 'bar_public' in content, content
+    assert 'bar_private' not in content, content
+    assert 'baz_' not in content, content

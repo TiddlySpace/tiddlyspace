@@ -262,7 +262,7 @@ def _send_safe_mode(environ, start_response):
     Send a form that initiates safe_mode by asking
     the user to confirm that they want it and then
     POSTing back to the same URI.
-    
+
     XXX: This should maybe be replaced with a tiddler.
     However, then that tiddler will be visible in spaces
     and we don't want that.
@@ -335,7 +335,13 @@ class ControlView(object):
                 raise HTTP404('No recipe for space: %s', exc)
 
             template = control.recipe_template(environ)
-            bags = [bag for bag, _ in recipe.get_recipe(template)]
+            bags = []
+            subscriptions = []
+            for bag, _ in recipe.get_recipe(template):
+                bags.append(bag)
+                if (bag.endswith('_public') and
+                        not bag.startswith('%s_p' % space_name)):
+                    subscriptions.append(bag[:-7])
             bags.insert(0, 'common')
             bags.insert(0, 'MAPUSER')
             bags.insert(0, 'MAPSPACE')
@@ -348,6 +354,8 @@ class ControlView(object):
                             'name:%s_public' % space_name]
                 else:
                     filter_parts = ['name:%s_public' % space_name]
+                for subscription in subscriptions:
+                    filter_parts.append('name:%s_public' % subscription)
                 filter_string += ','.join(filter_parts)
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
                 filter_string = 'mselect='
