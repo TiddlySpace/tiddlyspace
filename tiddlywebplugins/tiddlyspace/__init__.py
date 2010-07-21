@@ -34,7 +34,7 @@ def init(config):
     import tiddlywebplugins.mselect
     import tiddlywebplugins.cookiedomain
     import tiddlywebplugins.tiddlyspace.validator
-    import tiddlywebplugins.prettyerror
+    #import tiddlywebplugins.prettyerror
     import tiddlywebplugins.pathinfohack
     import tiddlywebplugins.form
     import tiddlywebplugins.reflector
@@ -64,7 +64,7 @@ def init(config):
     tiddlywebplugins.socialusers.init(config)
     tiddlywebplugins.mselect.init(config)
     tiddlywebplugins.cookiedomain.init(config)
-    tiddlywebplugins.prettyerror.init(config)
+    #tiddlywebplugins.prettyerror.init(config)
     tiddlywebplugins.pathinfohack.init(config)
     tiddlywebplugins.form.init(config)
     tiddlywebplugins.reflector.init(config)
