@@ -91,7 +91,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 				var btn = $('<a class="deleteButton" href="javascript:;" />').
 					text("x"). // TODO: i18n (use icon!?)
 					attr("title", macro.locale.delTooltip).
-					data("space", item).click(macro.onClick);
+					data("space", item).click(macro.onDelClick);
 				return $("<li />").append(link).append(btn)[0];
 			});
 			if(items.length) {
@@ -151,7 +151,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		this.include(provider, subscriber, callback, errback);
 		return false;
 	},
-	onClick: function(ev) { // XXX: ambiguous; rename
+	onDelClick: function(ev) {
 		var btn = $(this);
 		var provider = btn.data("space");
 		var msg = macro.locale.delPrompt.format([provider]);
