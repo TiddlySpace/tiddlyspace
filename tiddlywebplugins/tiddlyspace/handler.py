@@ -342,12 +342,13 @@ class ControlView(object):
 
             filter_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
+                filter_string = 'mselect='
                 if recipe_name.endswith('_private'):
-                    filter_string = (
-                            'mselect=name:%s_private,name:%s_public' % (
-                            space_name, space_name))
+                    filter_parts = ['name:%s_private' % space_name,
+                            'name:%s_public' % space_name]
                 else:
-                    filter_string = 'select=name:%s_public' % space_name
+                    filter_parts = ['name:%s_public' % space_name]
+                filter_string += ','.join(filter_parts)
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
                 filter_string = 'mselect='
                 filter_parts = []
