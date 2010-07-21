@@ -71,7 +71,7 @@
   url: /users/cdent
 
 # Put a user's new password
-- name: Put a user password
+- name: Put a user password fail no old_password
   desc: Set a user password
   url: /users/cdent
   request_headers:
@@ -79,6 +79,28 @@
     content-type: application/json
   method: PUT
   data: '{"password": "newpass"}'
+  status: 400
+
+# Put a user's new password
+- name: Put a user password fail bad old_password
+  desc: Set a user password
+  url: /users/cdent
+  request_headers:
+    authorization: Basic Y2RlbnQ6Y293cGln
+    content-type: application/json
+  method: PUT
+  data: '{"password": "newpass", "old_password": "zang"}'
+  status: 400
+
+# Put a user's new password
+- name: Put a user password
+  desc: Set a user password
+  url: /users/cdent
+  request_headers:
+    authorization: Basic Y2RlbnQ6Y293cGln
+    content-type: application/json
+  method: PUT
+  data: '{"password": "newpass", "old_password": "cowpig"}'
   status: 204
 
 # Put a user's new password
@@ -89,7 +111,7 @@
     authorization: Basic Y2RlbnQ6bmV3cGFzcw==
     content-type: application/json
   method: PUT
-  data: '{"password": "貳肆柒阡"}'
+  data: '{"old_password": "newpass", "password": "貳肆柒阡"}'
   status: 204
 
 # Fail setting password
