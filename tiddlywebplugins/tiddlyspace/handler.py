@@ -223,7 +223,7 @@ def _determine_space_recipe(environ, space_name):
     """
     store = environ['tiddlyweb.store']
     user = environ['tiddlyweb.usersign']['name']
-    bag = Bag("%s_private" % space_name)
+    bag = Bag('%s_private' % space_name)
     try:
         bag = store.get(bag)
     except NoBagError, exc:
@@ -336,9 +336,9 @@ class ControlView(object):
 
             template = control.recipe_template(environ)
             bags = [bag for bag, _ in recipe.get_recipe(template)]
-            bags.insert(0, "common")
-            bags.insert(0, "MAPUSER")
-            bags.insert(0, "MAPSPACE")
+            bags.insert(0, 'common')
+            bags.insert(0, 'MAPUSER')
+            bags.insert(0, 'MAPSPACE')
 
             filter_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
