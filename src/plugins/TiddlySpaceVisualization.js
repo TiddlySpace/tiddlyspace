@@ -31,8 +31,9 @@ config.macros.view.views.text = function(value, place, params, wikifier,
 		if(type != "external") {
 			invokeMacro(place, "image", "%0Icon alt:%0".format([type]), null, tiddler); // XXX: should call macro's function directly
 		} else {
-			config.extensions.tiddlyweb.getStatus(function(status) {
-				var uri = getAvatar(status.server_host, space);
+			var ns = config.extensions.tiddlyweb;
+			ns.getStatus(function(status) {
+				var uri = getAvatar(ns.status.server_host.url, space);
 				$('<img alt="" />').attr("src", uri).prependTo(place);
 			});
 		}
@@ -42,11 +43,6 @@ config.macros.view.views.text = function(value, place, params, wikifier,
 };
 
 var getAvatar = function(host, space) {
-	var port = host.port;
-	host = "%0://%1".format([host.scheme, host.host]);
-	if(port && !["80", "443"].contains(port)) {
-		host += ":" + port;
-	}
 	var container = {
 		type: space ? "recipe" : "bag",
 		name: space ? "%0_public".format([space.name]) : "tiddlyspace"

@@ -98,19 +98,12 @@ backstage.init = function(){
 	}
 
 	var tiddlyweb = config.extensions.tiddlyweb;
-	tiddlyweb.getStatus(function(status) { // XXX: partial duplication of TiddlySpaceVisualization:getAvatar
-		var server_host = status.server_host;
-		var tsHost = server_host.scheme + "://" + server_host.host;
-		if(server_host.port && server_host.port != "80" &&
-			server_host.port != "443") {
-			tsHost += ":" + server_host.port;
-		}
-
+	tiddlyweb.getStatus(function(status) { // XXX: redundant due to getUserInfo!?
 		tiddlyweb.getUserInfo(function(user) {
-			// show avatar in the users public bag
-			if(!user.anon) {
+			// show avatar in the user's public bag
+			if(!user.anon) { // XXX: duplication of TiddlySpaceVisualization:getAvatar!?
 				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
-					format([tsHost, user.name]);
+					format([ns.status.server_host.url, user.name]);
 				$('<img class="userSiteIcon" />').attr("src", src).appendTo("<span />").
 					appendTo("[task=user]", backstageArea);
 			}
