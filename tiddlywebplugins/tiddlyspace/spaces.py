@@ -233,17 +233,11 @@ def subscribe_space(environ, start_response):
     for space in unsubscriptions:
         if space == space_name:
             raise HTTP409('Attempt to unsubscribe self')
+        bag = '%s_public' % space
         try:
-            subscribed_recipe = store.get(Recipe('%s_public' % space))
-            for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
-                if bag == '%s_public' % space_name:
-                    continue
-                try:
-                    public_recipe_list.remove([bag, filter_string])
-                    private_recipe_list.remove([bag, filter_string])
-                except ValueError:
-                    pass
-        except NoRecipeError, exc:
+            public_recipe_list.remove([bag, ""])
+            private_recipe_list.remove([bag, ""])
+        except ValueError, exc:
             raise HTTP409('Invalid content for unsubscription: %s' % exc)
 
     public_recipe.set_recipe(public_recipe_list)

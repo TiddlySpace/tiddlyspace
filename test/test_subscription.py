@@ -114,7 +114,7 @@ def test_mutual_subscription():
     """
     response, content = add_subscription('fnd', 'cdent', cookie=get_auth('cdent', 'bar'))
     assert response['status'] == '204'
-    
+
     recipe = store.get(Recipe('cdent_public'))
     bags = [bag for bag, filter in recipe.get_recipe()]
     unique_bags = list(set(bags))
@@ -132,20 +132,6 @@ def test_unsubscribe():
     to another space that then goes away? (A non-existent bag in a recipe will
     cause an error)
     """
-    response, content = remove_subscription('psd', 'fnd')
-    assert response['status'] == '204'
-
-    recipe = Recipe('fnd_public')
-    recipe = store.get(recipe)
-    recipe = recipe.get_recipe()
-    assert len(recipe) == 4
-
-    recipe = Recipe('fnd_private')
-    recipe = store.get(recipe)
-    recipe = recipe.get_recipe()
-    assert len(recipe) == 5
-
-    # do it again, should be idempotent
     response, content = remove_subscription('psd', 'fnd')
     assert response['status'] == '204'
 
@@ -190,7 +176,7 @@ def test_unsubscribe():
     assert len(recipe) == 5
 
     # unsubscribe mutuality
-    # We don't want a subscribed-to space which has subscribed to the 
+    # We don't want a subscribed-to space which has subscribed to the
     # subscribing space to cause removal of one's own bags
     # In this test cdent is subscribed to fnd and fnd is subscribed
     # to cdent. We only want to remove the cdent bags.
