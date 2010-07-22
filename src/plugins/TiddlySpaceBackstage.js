@@ -103,7 +103,7 @@ backstage.init = function(){
 			// show avatar in the user's public bag
 			if(!user.anon) { // XXX: duplication of TiddlySpaceVisualization:getAvatar!?
 				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
-					format([ns.status.server_host.url, user.name]);
+					format([tiddlyweb.status.server_host.url, user.name]);
 				$('<img class="userSiteIcon" />').attr("src", src).appendTo("<span />").
 					appendTo("[task=user]", backstageArea);
 			}
