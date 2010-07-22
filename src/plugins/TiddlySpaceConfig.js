@@ -113,6 +113,15 @@ var plugin = config.extensions.tiddlyspace = {
 
 ns = config.extensions.tiddlyweb;
 ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
+ns.getStatus(function(status) {
+	var host = status.server_host;
+	var port = host.port;
+	var url = "%0://%1".format([host.scheme, host.host]);
+	if(port && !["80", "443"].contains(port)) {
+		url += ":" + port;
+	}
+	ns.status.server_host.url = url;
+});
 
 // set global read-only mode based on membership heuristics
 var indicator = store.getTiddler("SiteTitle") || tiddler;
