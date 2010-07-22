@@ -350,8 +350,8 @@ class ControlView(object):
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
                 filter_string = 'mselect='
                 if recipe_name.endswith('_private'):
-                    filter_parts = ['name:%s_private' % space_name,
-                            'name:%s_public' % space_name]
+                    filter_parts = ['name:%s_%s' % (space_name, status)
+                            for status in ('private', 'public')]
                 else:
                     filter_parts = ['name:%s_public' % space_name]
                 for subscription in subscriptions:
@@ -373,7 +373,9 @@ class ControlView(object):
                 entity_name = req_uri.split('/')[2]
                 if '/recipes/' in req_uri:
                     valid_recipes = ['%s_%s' % (space_name, status)
-                            for status in ['private', 'public']]
+                            for status in ('private', 'public')]
+                    valid_recipes += ['%s_public' % _space_name
+                            for _space_name in subscriptions]
                     if entity_name not in valid_recipes:
                         raise HTTP404('recipe %s not found' % entity_name)
                 else:

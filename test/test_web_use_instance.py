@@ -149,7 +149,7 @@ def test_space_exposes_subscription_recipes():
     make_fake_space(store, 'bar')
     make_fake_space(store, 'baz')
 
-    # add subscription (manual because it's not currently properly encapsulated)
+    # add subscription (manual as this is currently insufficiently encapsulated)
     public_recipe = store.get(Recipe('foo_public'))
     private_recipe = store.get(Recipe('foo_private'))
     public_recipe_list = public_recipe.get_recipe()
@@ -172,3 +172,27 @@ def test_space_exposes_subscription_recipes():
     assert 'bar_public' in content, content
     assert 'bar_private' not in content, content
     assert 'baz_' not in content, content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes/foo_public',
+            method='GET')
+    assert response['status'] == '200'
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes/foo_private',
+            method='GET')
+    assert response['status'] == '200'
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes/bar_public',
+            method='GET')
+    assert response['status'] == '200'
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes/bar_private',
+            method='GET')
+    assert response['status'] == '404'
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes/baz_public',
+            method='GET')
+    assert response['status'] == '404'
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes/baz_private',
+            method='GET')
+    assert response['status'] == '404'
