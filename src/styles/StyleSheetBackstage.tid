@@ -10,14 +10,14 @@ tags: excludeLists
 }
 
 #backstageLogo {
-	margin: auto;
+	margin: 1px auto auto -50%;
+	width: 100%;
 	font-size: 1.2em;
 	padding: 0;
 	text-align: center;
 	top: 0;
 	position: absolute;
 	left: 50%;
-	margin-top: 1px;
 }
 
 #backstageLogo .svgIconText {
