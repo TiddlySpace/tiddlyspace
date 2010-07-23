@@ -16,7 +16,7 @@ tags: excludeLists
 	text-align: center;
 	top: 0;
 	position: absolute;
-	width: 100%;
+	left: 50%;
 	margin-top: 1px;
 }
 
@@ -27,6 +27,10 @@ tags: excludeLists
 #backstageArea {
 	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, rgb(0,0,0)),color-stop(0.5, rgb(0,0,0)),color-stop(1, rgb(219,219,219)));
 	background: -moz-linear-gradient(center bottom,rgb(0,0,0) 5%,rgb(0,0,0) 50%,rgb(219,219,219) 100%);
+	/* For Internet Explorer 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff444444, endColorstr=#ff000000);
+	/* For Internet Explorer 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ff000000)";
 	height: 25px;
 }
 
@@ -73,10 +77,6 @@ body #backstageArea {
 
 #backstageToolbar {
 	position: relative;
-}
-
-#backstageArea {
-	padding: 0px;
 }
 
 #backstageArea a {
