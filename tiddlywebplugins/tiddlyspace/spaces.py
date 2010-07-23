@@ -38,8 +38,6 @@ def add_spaces_routes(selector):
             )
     selector.add('/spaces/{space_name:segment}/members', # list space members
             GET=list_space_members)
-    selector.add('/spaces/{space_name:segment}/members', # list space members
-            GET=list_space_members)
     selector.add('/spaces/{space_name:segment}/members/{user_name:segment}',
             PUT=add_space_member, # add member to space
             DELETE=delete_space_member) # delete from from space

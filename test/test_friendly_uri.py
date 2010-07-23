@@ -16,19 +16,13 @@ from tiddlyweb.model.tiddler import Tiddler
 
 
 def setup_module(module):
-    make_test_env()
-    from tiddlyweb.config import config
-    from tiddlyweb.web import serve
+    make_test_env(module)
     # we have to have a function that returns the callable,
     # Selector just _is_ the callable
-    def app_fn():
-        return serve.load_app()
+    make_fake_space(module.store, 'cdent')
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('cdent.0.0.0.0', 8080, app_fn)
-    module.store = Store(config['server_store'][0],
-            config['server_store'][1], {'tiddlyweb.config': config})
-    make_fake_space(module.store, 'cdent')
 
 
 def teardown_module(module):
@@ -42,15 +36,15 @@ def test_friendly():
             'http://cdent.0.0.0.0:8080/recipes/cdent_public/tiddlers/TiddlyWebConfig',
             method='GET')
         
-    assert response['status'] == '200'
+    assert response['status'] == '200', content_core
 
     response, content_friendly = http.request(
             'http://cdent.0.0.0.0:8080/TiddlyWebConfig',
             method='GET')
-    assert response['status'] == '200'
+    assert response['status'] == '200', content_friendly
     assert content_core == content_friendly
 
     response, content_friendly = http.request(
             'http://0.0.0.0:8080/TiddlyWebConfig',
             method='GET')
-    assert response['status'] == '404'
+    assert response['status'] == '404', content_friendly

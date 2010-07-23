@@ -21,4 +21,7 @@ config = {
     'socialusers.reserved_names': ['www', 'about', 'help', 'announcements',
         'info', 'api', 'status', 'login'],
     'cookie_age': '2592000', # 1 month
+    'server_store': ['tiddlywebplugins.mysql', {
+        'db_config': 'mysql:///tiddlyweb?charset=utf8&use_unicode=0'}],
+    'indexer': 'tiddlywebplugins.mysql',
 }
