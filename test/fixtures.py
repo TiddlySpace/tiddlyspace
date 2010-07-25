@@ -45,7 +45,7 @@ def make_test_env(module):
     except:
         pass
         
-    os.system('mysqladmin -f drop tiddlywebtest create tiddlywebtest')
+    os.system('mysqladmin -f drop tiddlyspacetest create tiddlyspacetest')
     if SESSION_COUNT > 1:
         del sys.modules['tiddlywebplugins.mysql']
         del sys.modules['tiddlywebplugins.sqlalchemy']
@@ -53,7 +53,7 @@ def make_test_env(module):
         import tiddlywebplugins.sqlalchemy
     SESSION_COUNT += 1
     db_config = init_config['server_store'][1]['db_config']
-    db_config = db_config.replace('///tiddlyweb?','///tiddlywebtest?')
+    db_config = db_config.replace('///tiddlyspace?','///tiddlyspacetest?')
     init_config['server_store'][1]['db_config'] = db_config
 
     if sys.path[0] != os.getcwd():
