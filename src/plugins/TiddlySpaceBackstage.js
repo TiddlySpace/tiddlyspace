@@ -81,7 +81,14 @@ backstage.init = function(){
 
 	var backstageToolbar = $("#backstageToolbar")[0];
 	$("<div id='backstageLogo' />").prependTo(backstageToolbar);
-	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",
+	var iconName; 
+	if(!readOnly) { // work out which icon to show (member or non member) based on readOnly setting
+		iconName = "privateAndPublicIcon"
+	} else {
+		iconName = "publicIcon";
+	}
+	wikify("<<image %0 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''".
+		format([iconName]),
 		$("#backstageLogo", backstageToolbar)[0]); // XXX: macro invocation is evil
 
 	// override space button to show SiteIcon
