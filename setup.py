@@ -40,7 +40,7 @@ setup(
         'tiddlywebplugins.reflector>=0.2',
         #'tiddlywebplugins.whoosher>=0.9.11',
         'tiddlywebplugins.atom>=1.2.0',
-        'tiddlywebplugins.mysql',
+        'tiddlywebplugins.mysql>=0.4',
     ],
     include_package_data = True,
     zip_safe = False
