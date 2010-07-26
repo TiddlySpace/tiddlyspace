@@ -19,6 +19,6 @@ config = {
     'recipe_create_policy': 'ANY',
     'css_uri': '/bags/common/tiddlers/tiddlyweb.css',
     'socialusers.reserved_names': ['www', 'about', 'help', 'announcements',
-        'info', 'api', 'status', 'login'],
+        'dev', 'info', 'api', 'status', 'login'],
     'cookie_age': '2592000', # 1 month
 }
