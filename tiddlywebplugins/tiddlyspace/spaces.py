@@ -90,6 +90,7 @@ def change_space_member(store, space_name, add=None, remove=None,
 
     for entity in [public_bag, private_bag, public_recipe, private_recipe]:
         new_policy = _update_policy(entity.policy, add=add, subtract=remove)
+        print 'np', new_policy.manage
         entity.policy = new_policy
         store.put(entity)
 
