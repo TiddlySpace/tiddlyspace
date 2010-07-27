@@ -40,6 +40,7 @@ setup(
         'tiddlywebplugins.reflector>=0.2',
         'tiddlywebplugins.atom>=1.2.0',
         'tiddlywebplugins.mysql>=0.8',
+        'tiddlywebplugins.sqlalchemy>=0.9.4',
     ],
     include_package_data = True,
     zip_safe = False
