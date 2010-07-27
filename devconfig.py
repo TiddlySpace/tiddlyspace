@@ -1,4 +1,10 @@
+"""
+develpment instance configuration
+"""
+
 import mangler
+
+
 def update_config(config, set_host=True):
     config['log_level'] = 'DEBUG'
     if set_host:

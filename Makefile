@@ -45,14 +45,14 @@ dev: remotes dev_local
 dev_local:
 	@mysqladmin -f drop tiddlyspace create tiddlyspace
 	@PYTHONPATH="." ./tiddlyspace dev_instance
-	( cd dev_instance  && \
-		ln -s ../devtiddlers.py && \
+	( cd dev_instance && \
+		ln -s ../devconfig.py && \
 		ln -s ../mangler.py && \
 		ln -s ../tiddlywebplugins && \
-		ln -s ../tiddlyweb  )
-	@echo "from devtiddlers import update_config; update_config(config)" \
+		ln -s ../tiddlyweb )
+	@echo "from devconfig import update_config; update_config(config)" \
 		>> dev_instance/tiddlywebconfig.py
-	@echo "INFO development instance created in dev_instance" \
+	@echo "INFO development instance created in dev_instance"
 
 clean:
 	find . -name "*.pyc" | xargs rm || true
