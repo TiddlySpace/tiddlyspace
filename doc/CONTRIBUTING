@@ -17,18 +17,21 @@ Development Instance
 
 * install dependencies
 ** components listed in setup.py's install_requires
-** tiddlyspace has a dependency on tiddlyweb 1.1, which has not yet been released.
-   The easiest way to handle this is to create symlinks to a tiddlyweb repository. Note
-   that two symlinks are required, one in the tiddlyspace directory and one in the
-   dev_instance directory (see below). From the tiddlyspace directory clone the tiddlyweb
-   repository and create a symlink to it:
+** tiddlyspace has a dependency on tiddlyweb 1.1, which has not yet been
+   released. The easiest way to handle this is to create symlinks to a
+   tiddlyweb repository. Note that two symlinks are required, one in the
+   tiddlyspace directory and one in the dev_instance directory (see below).
+   From the tiddlyspace directory clone the tiddlyweb repository and create
+   a symlink to it:
      $ git clone git://github.com/tiddlyweb/tiddlyweb.git tiddlyweb-core
      $ ln -s tiddlyweb-core/tiddlyweb
-** tiddlywebplugins.devstore
-     $ sudo pip install -U --no-deps tiddlywebplugins.devstore
 ** httplib2 (this is required for testing)
+
+* Set up mysql on your machine. See MYSQL.
+
 * extend hosts file (e.g. /etc/hosts) to include one or more subdomains, e.g.:
      127.0.1.1 tiddlyspace.org foo.tiddlyspace.org bar.tiddlyspace.org
+
 * create development instance:
      $ make dev
      $ cd dev_instance
@@ -37,6 +40,5 @@ Development Instance
   fire up the server
      $ twanager server 0.0.0.0 8080
   open http://tiddlyspace.org:8080 in web browser
-* changes to *.js within the repository files are reflected directly in the
-  browser (after a page reload)
+
 * deploy: $ make deploy

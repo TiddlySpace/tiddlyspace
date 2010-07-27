@@ -1,0 +1,59 @@
+
+TiddlySpace uses MySQL as its storage. Therefore it requires:
+
+* tiddlywebplugins.mysql
+* tiddlywebplugins.sqlalchemy
+* pyparsing
+* sqlalchemy
+* MySQL-Python
+
+All of which are available from PyPI.
+
+Also required, of course, is MySQL itself. If your operating system
+includes its own packaging of mysql, then use that. Otherwise see
+http://www.mysql.com/downloads/
+
+Update the global my.cnf to add to the [mysqld] section:
+
+   ft_min_word_len = 3
+   ft_stopword_file = ''
+
+This is required for the fulltext index to work correctly.
+
+my.cnf is often in /etc/mysql/my.cnf or /etc/my.cnf
+
+You will need to create two databases:
+
+* 'tiddlyspace' for the dev instance
+* 'tiddlyspacetest' for testing
+
+You will need to grant a user access. Learning how to use msyql is
+out of scope for this document. See http://www.mysql.com/ for
+documentation, tutorials, etc.
+
+TiddlySpace has a default store configuration of:
+
+    'server_store': ['tiddlywebplugins.mysql', {
+        'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
+    'indexer': 'tiddlywebplugins.mysql',
+
+which defaults to using whoever the current user is.
+
+On the deployed server this is changed to:
+
+    'server_store': ['tiddlywebplugins.caching', {}],
+    'cached_store': ['tiddlywebplugins.mysql', {
+        'db_config': 'mysql://tiddlyweb@localhost/tiddlyspace?charset=utf8&use_unicode=0'}],
+    'indexer': 'tiddlywebplugins.mysql',
+
+which uses 'tiddlyweb' as the user.
+
+To enable fulltext indexing for searches without fields (compare:
+
+* /search?q=GettingStarted        <= no field
+* /search?q=ftitle:GettingStarted <= field
+
+) once the database is up and running do:
+
+echo "create fulltext index full on revision(tiddler_title, text, tags);" | \
+    mysql tiddlyspace
