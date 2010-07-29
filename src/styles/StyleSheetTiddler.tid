@@ -8,6 +8,7 @@ tags: excludeLists
 	padding: 0.7em;
 	background-color: white;
 }
+
 .concertinaOn .concertina {
 	display: auto;
 	padding: 10px;
@@ -51,7 +52,7 @@ tags: excludeLists
 	position: relative;
 	width: 46px;
 	float: left;
-margin-top: 2em;
+	margin-top: 2em;
 }
 
 .selected .tagging,
@@ -122,14 +123,15 @@ margin-top: 2em;
 	position: relative;
 	float: left;
 }
+
 .heading {
 	left: 0;
 	margin-bottom: 3em;
 	position: relative;
 	top: 3em;
 	position: relative;
-
 }
+
 .followButton a:hover {
 	background: none;
 	color: black;
@@ -177,14 +179,20 @@ margin-top: 2em;
 }
 
 .toolbar svg {
-  height: 20px;
-  width: 20px;
+	height: 20px;
+	width: 20px;
 }
+
 .toolbar svg .glyph{
 	fill: #ccc;
 }
+
 .toolbar a:hover .glyph{
 	fill: #111;
+}
+
+.toolbar .command_savePublicTiddler .glyph {
+	fill: #C0E5FC;
 }
 
 .calendar .date {
@@ -239,7 +247,7 @@ margin-top: 2em;
 }
 
 .spaceIcon img {
-  height: 40px;
+	height: 40px;
 }
 
 .siteIcon .label {
@@ -249,7 +257,6 @@ margin-top: 2em;
 .siteIcon {
 	text-align: center;
 }
-
 
 .tiddler .spaceSiteIcon {
 	width: 7em;
@@ -301,7 +308,7 @@ margin-top: 2em;
 
 .tiddler .privacyRoundel {
 	float: left;
- 	padding-left: 10px;
+	padding-left: 10px;
 }
 
 .tiddler .privacyRoundel img,
