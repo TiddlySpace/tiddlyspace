@@ -94,10 +94,11 @@ TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 		modified, tags, fields, clearChangeCount, created, creator) {
 	if(title instanceof Tiddler) { // overloading first argument
 		var t = $.extend(new Tiddler(title.title), title);
-		_saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
+		t = _saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
 			t.modified, t.tags, t.fields, false, t.created, t.creator]);
+		return t;
 	} else {
-		_saveTiddler.apply(this, arguments);
+		return _saveTiddler.apply(this, arguments);
 	}
 };
 
