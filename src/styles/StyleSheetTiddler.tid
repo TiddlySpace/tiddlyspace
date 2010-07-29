@@ -1,0 +1,342 @@
+tags: excludeLists
+
+/*{{{*/
+.concertina {
+	overflow: hidden;
+	display: none;
+	height: 0;
+	padding: 0.7em;
+	background-color: white;
+}
+.concertinaOn .concertina {
+	display: auto;
+	padding: 10px;
+	height: auto;
+	border-bottom: 1px solid [[ColorPalette: :PrimaryDark]];
+	overflow: auto;
+}
+
+.privateNotPublic .concertina,
+.private .concertina {
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05,#DE85B3),color-stop(0.5,#eee),color-stop(1, #fff));
+	background: -moz-linear-gradient(top center , #fff 5%, #eee 20%, #DE85B3 100%);
+	/* For Internet Explorer 5.5 - 7 */
+	filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffDE85B3)";
+	/* For Internet Explorer 8 */
+	-ms-filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffDE85B3)";
+}
+
+.public .concertina, 
+.privateAndPublic .concertina {
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, #BBE7FD),color-stop(0.5,#eee),color-stop(1, #fff));
+	background: -moz-linear-gradient(top center , #fff 5%, #eee 20%, #BBE7FD 100%);
+	/* For Internet Explorer 5.5 - 7 */
+	filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffBBE7FD)";
+	/* For Internet Explorer 8 */
+	-ms-filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffBBE7FD)";
+}
+
+.external .concertina {
+	background-color: white;
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, #8BD69E),color-stop(0.5,#eee),color-stop(1, #fff));
+	background: -moz-linear-gradient(top center , #fff 5%, #eee 20%, #8BD69E 100%);
+	/* For Internet Explorer 5.5 - 7 */
+	filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ff8BD69E)";
+	/* For Internet Explorer 8 */
+	-ms-filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ff8BD69E)";
+}
+
+.content .calendar {
+	margin-left: 2em;
+	position: relative;
+	width: 46px;
+	float: left;
+margin-top: 2em;
+}
+
+.selected .tagging, 
+.selected .tagged,
+.selected .tagging:hover, 
+.selected .tagged:hover {
+	background: none;
+	border: none;
+}
+
+.tagged {
+	float: left;
+}
+
+.tagging, .tagged {
+	background: none;
+	border: none;
+}
+
+.tagging {
+	float: none;
+}
+
+.tagging li {
+display: inline;
+	float: left;
+}
+
+.tagging .tiddlyLink {
+-webkit-border-radius: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	background-color: white;
+	margin: 0 0.2em 0.2em;
+	display: block;
+	padding: 0.8em;
+}
+
+.tagged .button {
+	-webkit-border-radius: 0px 15px 15px 0px;
+	-moz-border-radius: 0px 15px 15px 0px;
+	background-color: white;
+	border-bottom: 2px solid #ccc;
+	border-right: 2px solid #ccc;
+	border-top: 2px solid #ccc;
+	display: block;
+	margin: 0 0.2em 0.2em -1.1em;
+	padding: 0.4em;
+	font-size: 0.9em;
+	width: 8em;
+	word-wrap: break-word;
+	color: [[ColorPalette: :Background]];
+	background: [[ColorPalette: :TertiaryMid]];
+}
+
+/* for following */
+#popup .siteIcon {
+	float: left;
+	height: 25px;
+}
+
+.content {
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
+.content .left {
+	position: relative;
+	float: left;
+}
+.heading {
+	left: 0;
+	margin-bottom: 3em;
+	position: relative;
+	top: 3em;
+	position: relative;
+
+}
+.followButton a:hover {
+	background: none;
+	color: black;
+}
+
+.followPlaceHolder {
+	position: absolute;
+	left: 5.8em;
+	top: 0.5em;
+}
+
+.followButton {
+	cursor: pointer;
+	-webkit-border-radius: 0.3em;
+	-moz-border-radius: 0.3em;
+	background: none repeat scroll 0 0 #CCCCCC;
+	color: red;
+	min-width: 2em;
+	height: 1em;
+	padding: 0.4em;
+	text-align: center;
+}
+
+.followButton:before {
+	content: "\00a0";
+	display: block; /* reduce the damage in FF3.0 */
+	position: absolute;
+	bottom: -0.2em;
+	left: 0.1em;
+	width: 0;
+	height: 0;
+	border-width: 0.5em 0.2em 0 0.6em;
+	border-style: solid;
+	border-color: #ccc transparent;
+	
+}
+
+.calendar .month {
+	padding: 2px;
+	color: white;
+	text-align: center;
+	border-left: solid 1px black;
+	border-right: solid 1px black;
+	border-top: solid 1px black;
+	background-color: #F09CA7;
+}
+
+.toolbar svg {
+  height: 20px;
+  width: 20px;
+}
+.toolbar svg .glyph{
+	fill: #ccc;
+}
+.toolbar a:hover .glyph{
+	fill: #111;
+}
+
+.calendar .date {
+	background-color: white;
+	color: #515151;
+	font-weight: bold;
+	text-align: center;
+	font-size: 1.8em;
+	border: solid 1px black;
+}
+
+.calendar .time {
+	font-size: 0.7em;
+	background-color: white;
+	border-left: solid 1px black;
+	border-right: solid 1px black;
+	border-bottom: solid 1px black;
+	text-align: center;
+}
+
+.originButton, 
+.modifierIcon .label {
+	color: [[ColorPalette: :TertiaryDark]];
+	font-size: 0.8em;
+	text-align: center;
+	display: block;
+}
+
+.spaceSiteIcon a:hover {
+	background: none;
+}
+
+.modifierIcon {
+	margin-right: 2em;
+	position: relative;
+	float: right;
+}
+
+.tiddler .viewer {
+	margin: 1em 4.5em 0 7em;
+	padding-bottom: 4em;
+	line-height: normal;
+}
+
+.tiddler .title {
+	font-size: 1.7em;
+	display: block;
+	padding-bottom: 0.5em;
+	margin-bottom: 0.4em;
+	border-bottom: 0.05em solid [[ColorPalette: :PrimaryDark]];
+	word-wrap: break-word;
+}
+
+.spaceIcon img {
+  height: 40px;
+}
+
+.siteIcon .label {
+	color: [[ColorPalette: :TertiaryDark]];
+}
+
+.siteIcon {
+	text-align: center;
+}
+
+
+.tiddler .spaceSiteIcon {
+	width: 7em;
+	margin-bottom: -15px;
+	position: relative;
+	float: left;
+	margin-top: 0em;
+}
+
+.followButton a {
+	color: red;
+}
+
+.tiddler {
+	position: relative;
+	-moz-box-shadow: 2px 2px 8px black;
+	-webkit-box-shadow: 2px 2px 8px black;
+	filter: progid: DXImageTransform.Microsoft.Shadow(color='#000000', Direction=135, Strength=3);
+	box-shadow: 2px 2px 8px black;
+	background-color: white;
+	margin-bottom: 2em;
+	padding: 0;
+}
+
+.tiddler .editor {
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.tiddler .leftHeading {
+	float: left;
+	padding-left: 1em;
+}
+
+.tiddler .heading .title {
+	margin-left: 5em;
+	margin-right: 7em;
+	position: relative;
+}
+
+.tiddler .headingClear {
+	clear: both;
+}
+
+.tiddler .subtitle {
+	font-size: 0.8em;
+	margin-top: 0.2em;
+}
+
+.tiddler .privacyRoundel {
+	float: left;
+ 	padding-left: 10px;
+}
+
+.tiddler .privacyRoundel img,
+.tiddler .privacyRoundel .svgIcon {
+	height: 1.6em;
+}
+
+.tiddler .privacyRoundel a:hover {
+	background-color: transparent;
+}
+
+.toolbar {
+	position: absolute;
+	padding: 1em 1em 0 0;
+	top: 0px;
+	right: 0px;
+}
+
+.tiddler .toolbar .button {
+	float: left;
+	border: none;
+	display: block;
+}
+
+.tiddler .toolbar a:hover {
+	background-color: #ccc;
+	border: solid 1px #000;
+}
+
+.tiddler .button.command_closeTiddler {
+	float: right;
+}
+
+.tiddler .tagged .listTitle {
+	display: none;
+}
+/*}}}*/

@@ -1,5 +1,8 @@
 tiddler: StyleSheet.tid
 tiddler: StyleSheetTiddlySpace.tid
-tiddler: StyleSheetToolbar.tid
+tiddler: StyleSheetTiddler.tid
 tiddler: StyleSheetBackstage.tid
+tiddler: StyleSheetBackstagePanels.tid
+tiddler: StyleSheetMenuBar.tid
+tiddler: StyleSheetHeader.tid
 tiddler: StyleSheetSideBar.tid
