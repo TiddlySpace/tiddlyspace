@@ -72,30 +72,36 @@ backstage.init = function(){
 	var showBtn = $("#backstageShow")[0];
 	var altText = $(showBtn).text();
 	$(showBtn).empty();
-	imageMacro.renderImage(showBtn, "backstage.svg", { alt: altText, width: 100, height: 100 });
+	imageMacro.renderImage(showBtn, "backstage.svg",
+		{ alt: altText, width: 100, height: 100 });
 
 	// override hide button
 	var hideBtn = $("#backstageHide")[0];
 	altText = $(hideBtn).text();
 	$(hideBtn).empty();
-	imageMacro.renderImage(hideBtn, "close.svg", { alt: altText, width: 48, height: 48 });
+	imageMacro.renderImage(hideBtn, "close.svg",
+		{ alt: altText, width: 48, height: 48 });
 
 	var backstageToolbar = $("#backstageToolbar")[0];
-	var backstageLogo = $("<div id='backstageLogo' />").prependTo(backstageToolbar)[0];
+	var backstageLogo = $('<div id="backstageLogo" />').
+		prependTo(backstageToolbar)[0];
 	var iconName = readOnly ? "publicIcon" : "privateAndPublicIcon";
-	imageMacro.renderImage(backstageLogo, iconName, {width: 48, height: 48})
+	imageMacro.renderImage(backstageLogo, iconName, { width: 48, height: 48 })
 	// construct the tiddlyspace logo
-	$('<span class="logoText"><span class="privateLightText">tiddly</span><span class="publicLightText">space</span></span>').
-	appendTo(backstageLogo);
+	$('<span class="logoText"><span class="privateLightText">tiddly</span>' +
+			'<span class="publicLightText">space</span></span>').
+		appendTo(backstageLogo);
 
 	// override space button to show SiteIcon
 	var siteIcon = store.getTiddler("SiteIcon");
 	if(siteIcon) {
 		var btn = $("[task=space]", backstageArea);
 		btn.empty();
-		imageMacro.renderImage(btn[0], "SiteIcon", {imageClass:"spaceSiteIcon", height: 48, width: 48});
+		imageMacro.renderImage(btn[0], "SiteIcon",
+			{ imageClass:"spaceSiteIcon", height: 48, width: 48 });
 		$("<span />").html(config.tasks.space.text).appendTo(btn);
-		$('<span class="spaceName" />').text(config.extensions.tiddlyspace.currentSpace.name).
+		$('<span class="spaceName" />').
+			text(config.extensions.tiddlyspace.currentSpace.name).
 			appendTo(btn);
 
 	}
@@ -108,7 +114,8 @@ backstage.init = function(){
 				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
 					format([tiddlyweb.status.server_host.url, user.name]);
 				var container = $("<span />").appendTo("[task=user]", backstageArea)[0];
-				imageMacro.renderImage(container, src, { imageClass:"userSiteIcon", height: 48, width: 48 });
+				imageMacro.renderImage(container, src,
+					{ imageClass:"userSiteIcon", height: 48, width: 48 });
 			}
 		});
 
