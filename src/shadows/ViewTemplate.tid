@@ -5,7 +5,7 @@ tags: excludeLists
 <div class="followPlaceHolder" macro="followTiddlers"></div>
 <div class='heading'>
 	<div class='spaceSiteIcon' macro='tiddlerOrigin label:yes height:48 width:48'></div>
-	<div class='modifierIcon' 
+	<div class='modifierIcon'
 		macro="view modifier SiteIcon label:yes height:48 width:48 labelPrefix:'modified by '">
 	</div>
 	<div class='title' macro='view title'></div>

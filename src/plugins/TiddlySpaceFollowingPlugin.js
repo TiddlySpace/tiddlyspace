@@ -8,7 +8,7 @@
 
 config.macros.followTiddlers = {
 	handler: function() {
-		
+
 	}
 };
 

@@ -60,7 +60,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		var imageOptions = imageMacro.getArguments(extraArgs, []);
 		imageMacro.renderImage(container, uri, imageOptions);
 		if(!value) {
-			value = "tiddlyspace"; 
+			value = "tiddlyspace";
 		}
 		$('<div class="label" />').
 			text("%0%1%2".format([labelPrefix, value, labelSuffix])).
@@ -84,7 +84,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"privateNotPublic_info": "This tiddler is currently public, with a later private revision.\nIt is visible to all at:\n%2\nbut the content will differ depending on permissions.",
 		"unknownUser": "an unknown user"
 	},
-	
+
 	handler: function(place, macroName, params,wikifier, paramString, tiddler){
 		var adaptor = tiddler.getAdaptor();
 		var imageOptions = imageMacro.getArguments(paramString, []);
@@ -100,7 +100,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			var tidEl = story.findContainingTiddler(place);
 			var concertina = $(".concertina", tidEl)[0];
 			var concertinaButton = $('<a class="originButton" href="javascript:;" />').
-				click(function() {                     
+				click(function() {
 					if($(tidEl).hasClass("concertinaOn")) {
 						$(tidEl).removeClass("concertinaOn");
 						$(concertina).hide(500);
@@ -126,7 +126,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			if(type != "external") {
 				var showPrivacyRoundel = function(context) {
 					if(context && context.status) { // there is a public tiddler as well as the current tiddler!
-						// to do: not this is not enough.. we also need to check if the public tiddler is the same as.. 
+						// to do: not this is not enough.. we also need to check if the public tiddler is the same as..
 						// .. the private tiddler to determine whether this is a draft
 						// use of hashes would be useful here.
 						if(context.tiddler.modified < tiddler.modified) { // public is older so therefore this is a draft
@@ -162,7 +162,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 					originMacro.fillConcertina(concertina, type, tiddler);
 				});
 			}
-			
+
 		}
 	},
 	fillConcertina: function(place, privacyType, tiddler) {
@@ -187,7 +187,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 					space = "[[%0|%1]]".format([space, spaceLink]);
 					link = "[[%0/%1]]".format([spaceLink, tiddler.title]);
 				}
-				
+
 				var localeString = locale["%0_info".format([privacyType])];
 				if(localeString){
 					wikify(localeString.format([modifier, space, link]), place);

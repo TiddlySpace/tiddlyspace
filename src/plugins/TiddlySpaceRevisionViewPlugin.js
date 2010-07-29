@@ -8,7 +8,7 @@
 
 config.macros.viewRevisions = {
 	handler: function() {
-		
+
 	}
 };
 
