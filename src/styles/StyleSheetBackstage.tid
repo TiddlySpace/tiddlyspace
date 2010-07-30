@@ -10,24 +10,35 @@ tags: excludeLists
 }
 
 #backstageLogo {
-	margin: auto;
-	font-size: 1.2em;
+	margin: 1px auto auto -50%;
+	font-weight: bold;
+	width: 100%;
+	font-size: 1.8em;
 	padding: 0;
 	text-align: center;
 	top: 0;
 	position: absolute;
-	width: 100%;
-	margin-top: 1px;
+	left: 50%;
 }
 
 #backstageLogo .svgIconText {
 	display: none;
 }
 
+#backstageLogo .logoText {
+	position:absolute;
+	top:12px;
+}
+
 #backstageArea {
-	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, rgb(0,0,0)),color-stop(0.5, rgb(0,0,0)),color-stop(1, rgb(219,219,219)));
-	background: -moz-linear-gradient(center bottom,rgb(0,0,0) 5%,rgb(0,0,0) 50%,rgb(219,219,219) 100%);
-	height: 26px;
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #222),color-stop(0.5, #333),color-stop(1, #555));
+	background: -moz-linear-gradient(center bottom,#222 0%, #333 50%, #555 100%);
+	/* For Internet Explorer 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222);
+	/* For Internet Explorer 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222)";
+	height: 48px;
+	border-bottom: solid 1px black;
 }
 
 .backstageBackground {
@@ -56,9 +67,9 @@ tags: excludeLists
 }
 
 #backstageShow .svgIcon {
-	left: 5px;
+	left: 8px;
 	position: relative;
-	top: -3px;
+	top: -5px;
 }
 
 #messageArea {
@@ -75,10 +86,6 @@ body #backstageArea {
 	position: relative;
 }
 
-#backstageArea {
-	padding: 0px;
-}
-
 #backstageArea a {
 	padding: 0px;
 	color: white;
@@ -86,7 +93,6 @@ body #backstageArea {
 }
 
 #backstageArea a:hover {
-	color: black;
 	background-color: white;
 }
 
@@ -106,39 +112,78 @@ body #backstageArea {
 }
 
 #backstage #backstagePanel {
-	width: 100%;
-	margin-left: 0;
-	padding: 0;
+	width: 90%;
+	margin-left: 3em;
+	padding: 1em;
 }
 
 #backstageToolbar a {
 	position: relative;
 }
 
+#backstageArea a.backstageSelTab,
+#backstageToolbar .backstageTask {
+	line-height: 46px;
+	color: #767676;
+}
+
+.backstageTask .externalImage,
+.backstageTask .image {
+	display: inline;
+}
+
+.backstageTask .txtUserName,
+.backstageTask .spaceName {
+	color: #fff;
+}
+
+.backstageSelTab .txtUserName,
+.backstageSelTab .spaceName,
+a:hover .txtUserName,
+a:hover .spaceName {
+	color: #000;
+}
+
+.spaceSiteIcon {
+	margin-right: 10px;
+}
+
+.userSiteIcon {
+	margin-left: 10px;
+}
+
 #backstageToolbar .task_space {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+#backstageToolbar .task_user span,
+#backstageToolbar .task_login span {
+	display: block;
 	float: left;
 }
 
 #backstageToolbar .task_user,
 #backstageToolbar .task_login {
-	float: right;
-	right: 30px;
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: 50px;
 }
 
 #backstageToolbar .task_login img {
-	float: right;
-	display: block;
+	position: relative;
+	display: inline;
 }
 
 #backstageToolbar .task_space .svgIcon {
 	float: left;
+	position: relative;
 	z-index: 2;
 }
 
 #backstageToolbar a span {
-	display: block;
-	height: 25px;
-	float: left;
 	z-index: 2;
 }
 
@@ -148,17 +193,13 @@ body #backstageArea {
 
 a.backstageTask {
 	display: block;
-	height: 25px;
+	height: 53px;
 }
 
 #backstageToolbar a span.txtUserName,
 #backstageToolbar a .txtUserName span {
 	display: inline;
 	float: none;
-}
-
-#backstage {
-	top: -1px;
 }
 
 .textRight {
@@ -178,10 +219,6 @@ a.backstageTask {
 
 #backstagePanel .TiddlySpaceLogin {
 	display: inline;
-}
-
-#backstageToolbar img {
-	height: 25px;
 }
 
 .backstagePanelBody .tabContents .button {

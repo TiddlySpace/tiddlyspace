@@ -25,6 +25,13 @@ tags: excludeLists
 	display:block;
 }
 
+.tiddler .toolbar .button:hover {
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border-color: black;
+}
+
 .tiddler .button.command_closeTiddler {
 	float:right;
 }
@@ -33,10 +40,27 @@ tags: excludeLists
 	stop-color:#666;
 }
 
-.command_cloneTiddler .editCommandStopColor2 {
-	stop-color:#00A;
-}
-
 .command_savePublicTiddler .saveCommandStopColor2 {
 	stop-color:#C7EAFF;
 }
+
+.toolbar svg .glyph{
+	fill: #ccc;
+}
+
+.toolbar .command_cancelTiddler:hover,
+.toolbar .moreCommand:hover{
+	background-color: #ccc;
+	border-color: #fff;
+}
+
+.toolbar .command_cloneTiddler:hover,
+.toolbar .command_saveTiddler:hover,
+.toolbar .command_editTiddler:hover{
+	background-color: #8FD284;
+}
+
+.toolbar a:hover .glyph{
+	fill: #111;
+}
+

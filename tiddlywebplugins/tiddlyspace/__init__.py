@@ -34,11 +34,10 @@ def init(config):
     import tiddlywebplugins.mselect
     import tiddlywebplugins.cookiedomain
     import tiddlywebplugins.tiddlyspace.validator
-    import tiddlywebplugins.prettyerror
+    #import tiddlywebplugins.prettyerror
     import tiddlywebplugins.pathinfohack
     import tiddlywebplugins.form
     import tiddlywebplugins.reflector
-    import tiddlywebplugins.whoosher
 
     @make_command()
     def addmember(args):
@@ -64,17 +63,16 @@ def init(config):
     tiddlywebplugins.socialusers.init(config)
     tiddlywebplugins.mselect.init(config)
     tiddlywebplugins.cookiedomain.init(config)
-    tiddlywebplugins.prettyerror.init(config)
+    #tiddlywebplugins.prettyerror.init(config)
     tiddlywebplugins.pathinfohack.init(config)
     tiddlywebplugins.form.init(config)
     tiddlywebplugins.reflector.init(config)
-    tiddlywebplugins.whoosher.init(config)
 
     if 'selector' in config: # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
         config['selector'].add('/_safe', GET=safe_mode, POST=safe_mode)
         add_spaces_routes(config['selector'])
-        config['selector'].add('/{tiddler_name:segment', GET=friendly_uri)
+        config['selector'].add('/{tiddler_name:segment}', GET=friendly_uri)
         config['selector'].add('/users/{username}/identities',
                 GET=get_identities)
         if ControlView not in config['server_request_filters']:

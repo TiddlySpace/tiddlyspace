@@ -47,12 +47,15 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		forbiddenError: "unauthorized to modify space <em>%0</em>",
 		noSpaceError: "space <em>%0</em> does not exist",
 		conflictError: "space <em>%0</em> is already included in <em>%1</em>",
-		noInclusions: "no spaces are included"
+		noInclusions: "no spaces are included",
+		recursiveInclusions: "Spaces included by the removed space are highlighted and should be removed manually.",
+		reloadPrompt: "The page must be reloaded for inclusion to take effect. Reload now?"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		// passive mode means subscribing given space to current space
 		// active mode means subscribing current space to given space
+		this.name = macroName;
 		var mode = params[0] || "list";
 		var form = $(this.formTemplate).
 			find(".annotation").hide().end();
@@ -74,7 +77,8 @@ var macro = config.macros.TiddlySpaceInclusion = {
 				appendTo(place);
 			this.populateSpaces(form);
 		} else {
-			var container = $("<div />").appendTo(place);
+			var container = $("<div />").addClass(this.name).appendTo(place);
+			$('<p class="annotation" />').hide().appendTo(container);
 			this.listInclusions(container);
 		}
 	},
@@ -90,7 +94,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 				var btn = $('<a class="deleteButton" href="javascript:;" />').
 					text("x"). // TODO: i18n (use icon!?)
 					attr("title", macro.locale.delTooltip).
-					data("space", item).click(macro.onClick);
+					data("space", item).click(macro.onDelClick);
 				return $("<li />").append(link).append(btn)[0];
 			});
 			if(items.length) {
@@ -124,7 +128,9 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		var loc = macro.locale;
 		var callback = function(data, status, xhr) {
 			displayMessage(loc.addSuccess.format([provider, subscriber]));
-			// TODO: refresh list or reload page
+			if(confirm(loc.reloadPrompt)) {
+				window.location.reload();
+			}
 		};
 		var errback = function(xhr, error, exc) {
 			if(xhr.status == 409) {
@@ -145,12 +151,13 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			};
 			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
 		};
-		this.include(provider, subscriber, callback, errback);
+		this.inclusion(provider, subscriber, callback, errback, false);
 		return false;
 	},
-	onClick: function(ev) { // XXX: ambiguous; rename
+	onDelClick: function(ev) { // XXX: too long, needs refactoring
 		var btn = $(this);
 		var provider = btn.data("space");
+
 		var msg = macro.locale.delPrompt.format([provider]);
 		var callback = function(data, status, xhr) {
 			btn.closest("li").slideUp(function(ev) { $(this).remove(); });
@@ -159,12 +166,34 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			displayMessage(macro.locale.delError.format([username, error]));
 		};
 		if(confirm(msg)) {
-			macro.include(provider, currentSpace, callback, errback, true);
+
+			var recipe = new tiddlyweb.Recipe(provider + "_public", host);
+			recipe.get(function(recipe, status, xhr) {
+				var inclusions = $.map(recipe.recipe, function(item, i) { // XXX: duplicated from above
+					var arr = item[0].split("_public");
+					return (arr[0] != provider && arr[1] === "") ? arr[0] : null;
+				});
+				var recursiveMatch = false;
+				btn.closest("ul").find("li").each(function(i, node) {
+					var space = $(".deleteButton", node).data("space"); // XXX: relying on button is hacky
+					if($.inArray(space, inclusions) != -1) {
+						recursiveMatch = true;
+						$(node).addClass("annotation"); // TODO: proper highlighting
+					}
+				});
+				if(recursiveMatch) {
+					btn.closest("." + macro.name).find("> .annotation").
+						text(macro.locale.recursiveInclusions).slideDown();
+				}
+			});
+
+			macro.inclusion(provider, currentSpace, callback, errback, true);
 		}
+		return false;
 	},
-	include: function(provider, subscriber, callback, errback, unsubscribe) {
+	inclusion: function(provider, subscriber, callback, errback, remove) {
 		var data = {};
-		var key = unsubscribe ? "unsubscriptions" : "subscriptions";
+		var key = remove ? "unsubscriptions" : "subscriptions";
 		data[key] = [provider];
 		$.ajax({ // TODO: add to model/space.js?
 			url: host + "/spaces/" + subscriber,

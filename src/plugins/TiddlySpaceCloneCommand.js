@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceCloneCommand|
 |''Version''||
 |''Description''|Provides a clone command for copying from an alien bag to a public bag in TiddlySpace|
-|''Status''|//unknown//|
+|''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''Requires''|TiddlySpaceConfig|
 !Code
@@ -20,6 +20,9 @@ cmd.cloneTiddler = {
 	errorMsg: "Error publishing %0: %1",
 
 	isEnabled: function(tiddler) {
+		if(!store.tiddlerExists(tiddler.title)) {
+			return true;
+		}
 		var bag = tiddler.fields["server.bag"];
 		if(readOnly) {
 			return false;
@@ -32,12 +35,27 @@ cmd.cloneTiddler = {
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
-		fieldStash[title] = $.extend({}, tiddler.fields);
-		tiddler.fields["server.workspace"] = "bags/%0_private".
-			format([ns.currentSpace.name]);
-		$.each(["bag", "permissions", "page.revision"], function(i, item) {
-			delete tiddler.fields["server." + item];
-		});
+		if(tiddler) {
+			fieldStash[title] = $.extend({}, tiddler.fields);
+			tiddler.fields["server.workspace"] = "bags/%0_private".
+				format([ns.currentSpace.name]);
+			$.each(["bag", "permissions", "page.revision"], function(i, item) {
+				delete tiddler.fields["server." + item];
+			});
+		} else { // ensure workspace is the current space
+			var el = story.findContainingTiddler(src);
+			el = $(el);
+			var fields = el.attr("tiddlyfields")
+			if(fields) { // inherited via TiddlyLink
+				fields = fields.decodeHashMap();
+				fields["server.workspace"] = config.
+					defaultCustomFields["server.workspace"];
+			} else {
+				fields = config.defaultCustomFields;
+			}
+			fields = String.encodeHashMap(fields);
+			el.attr("tiddlyfields", fields);
+		}
 		cmd.editTiddler.handler.apply(this, arguments);
 		return false;
 	}

@@ -37,6 +37,7 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 		noPasswordError: "Please enter password",
 		passwordMatchError: "Error: passwords do not match",
 		passwordShortError: "Error: password must be at least %0 characters",
+		passwordAuthError: "Error: old password is incorrect",
 		passwordMinLength: 6
 	},
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -56,9 +57,10 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 		var password = form.find("[name=password]").val();
 		var npassword = form.find("[name=new_password]").val();
 		var npasswordConfirm = form.find("[name=new_password_confirm]").val();
+		var xhr, ctx;
 		if(npassword != npasswordConfirm) {
-			var xhr = { status: 409 }; // XXX: hacky
-			var ctx = {
+			xhr = { status: 409 }; // XXX: hacky
+			ctx = {
 				msg: {
 					409: msg.passwordMatchError
 				},
@@ -67,8 +69,8 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 			};
 			displayError(xhr, null, null, ctx);
 		} else if(npassword.length < msg.passwordMinLength) {
-			var xhr = { status: 409 }; // XXX: hacky
-			var ctx = {
+			xhr = { status: 409 }; // XXX: hacky
+			ctx = {
 				msg: {
 					409: msg.passwordShortError.format([msg.passwordMinLength])
 				},
@@ -83,15 +85,16 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 	},
 
 	changePassword: function(username, password, npassword, form) {
-		var msg = macro.locale;
 		var pwCallback = function(resource, status, xhr) {
 			displayMessage(msg.cpwSuccess);
 		};
 		var pwErrback = function(xhr, error, exc) {
 			var ctx = {
-				msg: {},
+				msg: {
+					400: macro.locale.passwordAuthError
+				},
 				form: form,
-				selector: "[name=new_password]"
+				selector: "[name=password]"
 			};
 			displayError(xhr, null, null, ctx);
 		};

@@ -62,19 +62,7 @@ var cmd = config.commands.publishTiddlerRevision = {
 			});
 			adaptor.putTiddler(tiddler, null, null, callback);
 		};
-		// ensure binary tiddlers contain authentic body
-		if(!original.fields["server.content-type"]) {
-			publish(original, callback);
-		} else {
-			var _callback = function(context, userParams) {
-				publish(context.tiddler, callback);
-			};
-			var context = {
-				host: original.fields["server.host"],
-				workspace: original.fields["server.workspace"]
-			};
-			adaptor.getTiddler(original.title, context, null, _callback);
-		}
+		publish(original, callback);
 	}
 };
 

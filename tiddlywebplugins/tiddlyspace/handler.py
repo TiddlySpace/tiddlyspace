@@ -223,7 +223,7 @@ def _determine_space_recipe(environ, space_name):
     """
     store = environ['tiddlyweb.store']
     user = environ['tiddlyweb.usersign']['name']
-    bag = Bag("%s_private" % space_name)
+    bag = Bag('%s_private' % space_name)
     try:
         bag = store.get(bag)
     except NoBagError, exc:
@@ -262,7 +262,7 @@ def _send_safe_mode(environ, start_response):
     Send a form that initiates safe_mode by asking
     the user to confirm that they want it and then
     POSTing back to the same URI.
-    
+
     XXX: This should maybe be replaced with a tiddler.
     However, then that tiddler will be visible in spaces
     and we don't want that.
@@ -335,19 +335,28 @@ class ControlView(object):
                 raise HTTP404('No recipe for space: %s', exc)
 
             template = control.recipe_template(environ)
-            bags = [bag for bag, _ in recipe.get_recipe(template)]
-            bags.insert(0, "common")
-            bags.insert(0, "MAPUSER")
-            bags.insert(0, "MAPSPACE")
+            bags = []
+            subscriptions = []
+            for bag, _ in recipe.get_recipe(template):
+                bags.append(bag)
+                if (bag.endswith('_public') and
+                        not bag.startswith('%s_p' % space_name)):
+                    subscriptions.append(bag[:-7])
+            bags.insert(0, 'common')
+            bags.insert(0, 'MAPUSER')
+            bags.insert(0, 'MAPSPACE')
 
             filter_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
+                filter_string = 'mselect='
                 if recipe_name.endswith('_private'):
-                    filter_string = (
-                            'mselect=name:%s_private,name:%s_public' % (
-                            space_name, space_name))
+                    filter_parts = ['name:%s_%s' % (space_name, status)
+                            for status in ('private', 'public')]
                 else:
-                    filter_string = 'select=name:%s_public' % space_name
+                    filter_parts = ['name:%s_public' % space_name]
+                for subscription in subscriptions:
+                    filter_parts.append('name:%s_public' % subscription)
+                filter_string += ','.join(filter_parts)
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
                 filter_string = 'mselect='
                 filter_parts = []
@@ -364,7 +373,9 @@ class ControlView(object):
                 entity_name = req_uri.split('/')[2]
                 if '/recipes/' in req_uri:
                     valid_recipes = ['%s_%s' % (space_name, status)
-                            for status in ['private', 'public']]
+                            for status in ('private', 'public')]
+                    valid_recipes += ['%s_public' % _space_name
+                            for _space_name in subscriptions]
                     if entity_name not in valid_recipes:
                         raise HTTP404('recipe %s not found' % entity_name)
                 else:

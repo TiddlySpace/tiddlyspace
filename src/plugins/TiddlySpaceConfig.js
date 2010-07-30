@@ -94,10 +94,11 @@ TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 		modified, tags, fields, clearChangeCount, created, creator) {
 	if(title instanceof Tiddler) { // overloading first argument
 		var t = $.extend(new Tiddler(title.title), title);
-		_saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
+		t = _saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
 			t.modified, t.tags, t.fields, false, t.created, t.creator]);
+		return t;
 	} else {
-		_saveTiddler.apply(this, arguments);
+		return _saveTiddler.apply(this, arguments);
 	}
 };
 
@@ -113,6 +114,15 @@ var plugin = config.extensions.tiddlyspace = {
 
 ns = config.extensions.tiddlyweb;
 ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
+ns.getStatus(function(status) {
+	var host = status.server_host;
+	var port = host.port;
+	var url = "%0://%1".format([host.scheme, host.host]);
+	if(port && !["80", "443"].contains(port)) {
+		url += ":" + port;
+	}
+	ns.status.server_host.url = url;
+});
 
 // set global read-only mode based on membership heuristics
 var indicator = store.getTiddler("SiteTitle") || tiddler;

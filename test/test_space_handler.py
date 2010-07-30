@@ -26,19 +26,12 @@ from test.fixtures import make_test_env, make_fake_space, get_auth
 
 
 def setup_module(module):
-    make_test_env()
-    from tiddlyweb.config import config
-    from tiddlyweb.web import serve
-    # we have to have a function that returns the callable,
-    # Selector just _is_ the callable
-    def app_fn():
-        return serve.load_app()
+    make_test_env(module)
     httplib2_intercept.install()
+    from tiddlyweb.config import config
     config['blacklisted_spaces'] = ['scrappy']
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('cdent.0.0.0.0', 8080, app_fn)
-    module.store = Store(config['server_store'][0],
-            config['server_store'][1], {'tiddlyweb.config': config})
     make_fake_space(module.store, 'cdent')
     user = User('cdent')
     user.set_password('cow')
@@ -141,7 +134,7 @@ def test_create_space():
             method='GET')
     response['status'] == '200'
     info = simplejson.loads(content)
-    assert info == ['cdent']
+    assert info == ['cdent'], content
 
     bag = store.get(Bag('extra_public'))
     assert bag.policy.owner == 'cdent'
@@ -253,7 +246,7 @@ def test_add_a_member():
     response, content = http.request('http://0.0.0.0:8080/spaces/extra/members',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='GET')
-    assert response['status'] == '200'
+    assert response['status'] == '200', content
     info = simplejson.loads(content)
     assert info == ['cdent', 'fnd']
 

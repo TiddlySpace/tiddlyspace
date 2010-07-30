@@ -89,7 +89,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 					ns.currentSpace.name, space.name);
 			}
 			var link = $('<a href="javascript:;" />').text(space.name); // TODO: calculate URL
-			var el = $("ul", container)
+			var el = $("ul", container);
 			$("<li />").append(link).hide().appendTo(el).
 				slideDown(function() {
 					$(this).css("display", ""); // required to neutralize animation remnants

@@ -81,6 +81,7 @@ macro.augmentCommandButtons = function(toolbar) {
 
 // provide onClickMore to provide extra commands in a popup
 macro.onClickMorePopUp = function(ev) {
+	ev = ev || window.event;
 	var sibling = this.nextSibling;
 	var commands = sibling.childNodes;
 	var popup = Popup.create(this);
@@ -93,7 +94,11 @@ macro.onClickMorePopUp = function(ev) {
 		li.appendChild(command);
 	}
 	Popup.show();
-	ev.stopPropagation();
+	ev.cancelBubble = true;
+	if(ev.stopPropagation) {
+		ev.stopPropagation();
+	}
+	return false;
 };
 
 var getIcon = function(cmd) {
