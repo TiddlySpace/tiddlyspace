@@ -2,3 +2,4 @@ tags: excludeLists
 
 |~ViewToolbar|closeTiddler  +editTiddler cloneTiddler > fields publishTiddlerRevision pubRev revisions syncing permalink references jump closeOthers|
 |~EditToolbar|+saveTiddler savePublicTiddler -cancelTiddler deleteTiddler|
+|~RevisionToolbar|> fields revert|
