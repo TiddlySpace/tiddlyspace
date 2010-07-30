@@ -36,7 +36,7 @@
 //{{{
 (function($) {
 
-var ns = config.extensions.tiddlyweb;
+var tweb = config.extensions.tiddlyweb;
 
 var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -63,7 +63,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			return tsl[type + "Login"](form);
 		};
 		container.empty();
-		ns.getUserInfo(function(user) {
+		tweb.getUserInfo(function(user) {
 			if(user.anon) {
 				$(tsl.formTemplate).submit(handler).
 					find("legend").text(msg.label).end().
@@ -76,7 +76,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 					appendTo(container);
 			} else {
 				$("<a />", {
-					href: ns.host + "/logout",
+					href: tweb.host + "/logout",
 					text: msg.logoutLabel
 				}).appendTo(container);
 			}
@@ -114,14 +114,14 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	},
 	login: function(username, password, callback, errback) {
 		var challenger = "cookie_form";
-		var uri = "%0/challenge/%1".format([ns.host, challenger]);
+		var uri = "%0/challenge/%1".format([tweb.host, challenger]);
 		$.ajax({
 			url: uri,
 			type: "POST",
 			data: {
 				user: username,
 				password: password,
-				tiddlyweb_redirect: ns.serverPrefix + "/status" // workaround to marginalize automatic subsequent GET
+				tiddlyweb_redirect: tweb.serverPrefix + "/status" // workaround to marginalize automatic subsequent GET
 			},
 			success: callback,
 			error: function(xhr, error, exc) {
@@ -135,16 +135,15 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	},
 	openidLogin: function(form) {
 		var openid = form.find("[name=openid]").val();
-		var host = config.extensions.tiddlyweb.host;
 		var challenger = "tiddlywebplugins.tiddlyspace.openid";
-		var uri = "%0/challenge/%1".format([ns.host, challenger]);
-		var redirect = ns.serverPrefix || "/"; // must not be empty string
+		var uri = "%0/challenge/%1".format([tweb.host, challenger]);
+		var redirect = tweb.serverPrefix || "/"; // must not be empty string
 		form.attr("action", uri).attr("method", "POST").
 			find("[name=tiddlyweb_redirect]").val(redirect);
 		return true;
 	},
 	redirect: function() {
-		window.location = ns.host;
+		window.location = tweb.host;
 	}
 };
 
@@ -198,7 +197,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		var userCallback = function(resource, status, xhr) {
 			displayMessage(msg.userSuccess.format([username])); // XXX: redundant?
 			tsl.login(username, password, function(data, status, xhr) {
-				var space = new tiddlyweb.Space(username, ns.host);
+				var space = new tiddlyweb.Space(username, tweb.host);
 				space.create(spaceCallback, spaceErrback);
 			});
 		};
@@ -214,7 +213,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 			ctx.msg = { 409: msg.spaceError.format([username]) }; // XXX: 409 unlikely to occur at this point
 			tsl.displayError(xhr, error, exc, ctx);
 		};
-		var user = new tiddlyweb.User(username, password, ns.host);
+		var user = new tiddlyweb.User(username, password, tweb.host);
 		user.create(userCallback, userErrback);
 	}
 };

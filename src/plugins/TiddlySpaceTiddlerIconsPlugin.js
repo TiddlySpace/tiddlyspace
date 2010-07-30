@@ -35,15 +35,16 @@ if(!config.macros.image) {
 }
 
 var imageMacro = config.macros.image;
+var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
+
 config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		paramString, tiddler) {
 	var publicSuffix = value.indexOf("_public");
 	var privateSuffix = value.indexOf("_private");
 	if(publicSuffix == value.length - 7) {
 		value = value.substr(0, publicSuffix);
-	}
-	else if(privateSuffix == value.length - 8) {
+	} else if(privateSuffix == value.length - 8) {
 		value = value.substr(0, privateSuffix);
 	}
 	if(value == "None") { // the default modifier might be None meaning no-one.
@@ -53,7 +54,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 	var labelPrefix = args.labelPrefix ? args.labelPrefix[0] : "";
 	var labelSuffix = args.labelSuffix ? args.labelSuffix[0] : "";
 	var imageOptions = imageMacro.getArguments(paramString, []);
-	config.extensions.tiddlyweb.getStatus(function(status) {
+	tweb.getStatus(function(status) {
 		var container = $('<div class="siteIcon" />');
 		var uri = tiddlyspace.getAvatar(status.server_host, {name: value});
 		var extraArgs = params.splice(2, params.length - 2).join(" ");
@@ -93,9 +94,8 @@ var originMacro = config.macros.tiddlerOrigin = {
 		var parsedParams = paramString.parseParams("name")[0];
 		var includeLabel = parsedParams.label && parsedParams.label[0] == "yes";
 		if(store.tiddlerExists(tiddler.title) || store.isShadowTiddler(tiddler.title)) {
-			var ns = config.extensions.tiddlyspace;
-			var space = ns.determineSpace(tiddler, true);
-			type = space && space.name == ns.currentSpace.name ? space.type : "external";
+			var space = tiddlyspace.determineSpace(tiddler, true);
+			type = space && space.name == tiddlyspace.currentSpace.name ? space.type : "external";
 
 			var tidEl = story.findContainingTiddler(place);
 			var concertina = $(".concertina", tidEl)[0];
@@ -107,7 +107,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 					} else {
 						$(tidEl).addClass("concertinaOn");
 						$(concertina).show(500, function() {
-							$(concertina).attr('style', 'display:block;'); // jQuery uses the filter for opacity
+							$(concertina).attr("style", "display:block;"); // jQuery uses the filter for opacity
 						});
 					}
 				}).appendTo(place)[0];
@@ -147,22 +147,19 @@ var originMacro = config.macros.tiddlerOrigin = {
 					};
 					label = locale["private"];
 					adaptor.getTiddler(tiddler.title, context, null, showPrivacyRoundel);
-				}
-				else {
+				} else {
 					label = locale["public"];
 					showPrivacyRoundel();
 				}
-			}
-			else {
+			} else {
 				label = locale.external.format([space.name || "tiddlyspace"]);
-				config.extensions.tiddlyweb.getStatus(function(status) {
+				tweb.getStatus(function(status) {
 					var uri = tiddlyspace.getAvatar(status.server_host, space);
 					imageMacro.renderImage(concertinaButton, uri, imageOptions);
 					showLabel(type);
 					originMacro.fillConcertina(concertina, type, tiddler);
 				});
 			}
-
 		}
 	},
 	fillConcertina: function(place, privacyType, tiddler) {
@@ -170,10 +167,9 @@ var originMacro = config.macros.tiddlerOrigin = {
 			return;
 		} else {
 			var locale = originMacro.locale;
-			var tiddlyspace = config.extensions.tiddlyspace;
 			var space = tiddlyspace.determineSpace(tiddler);
 			space = space.name ? space.name : false;
-			config.extensions.tiddlyweb.getStatus(function(status) {
+			tweb.getStatus(function(status) {
 				var modifier = tiddler.modifier;
 				if(modifier == "None") {
 					modifier = locale.unknownUser;
