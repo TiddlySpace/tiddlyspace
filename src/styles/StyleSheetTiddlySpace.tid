@@ -4,12 +4,16 @@ tags: excludeLists
 body {
 	font-size: 1.0em;
 	font-family: helvetica, arial, sans-serif;
+	background-color: [[ColorPalette::PrimaryLight]];
 }
 
-.public,
-.private,
-.external {
-	border-left: 5px solid #A2F7A2;
+#displayArea {
+	margin: 0;
+	position: relative;
+}
+
+#tiddlerDisplay {
+	margin: 2em 19em 0 2em;
 }
 
 .public {
@@ -20,6 +24,9 @@ body {
 	border-color: #FFCAE9;
 }
 
+[[StyleSheetHeader]]
+[[StyleSheetMenuBar]]
 [[StyleSheetSideBar]]
-[[StyleSheetToolbar]]
+[[StyleSheetTiddler]]
+[[StyleSheetBackstagePanels]]
 /*}}}*/

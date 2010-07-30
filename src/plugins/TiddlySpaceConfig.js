@@ -10,7 +10,6 @@
 //{{{
 (function($) {
 
-var ns;
 var recipe = config.defaultCustomFields["server.workspace"].split("recipes/")[1];
 
 // hijack search macro to add custom attributes for mobile devices
@@ -59,9 +58,9 @@ var determineContainer = function(tiddler, fuzzy) { // TODO: expose?
 };
 
 // hijack removeTiddlerCallback to restore tiddler from recipe cascade
-ns = config.extensions.ServerSideSavingPlugin;
-var _removeTiddlerCallback = ns.removeTiddlerCallback;
-ns.removeTiddlerCallback = function(context, userParams) {
+var sssp = config.extensions.ServerSideSavingPlugin;
+var _removeTiddlerCallback = sssp.removeTiddlerCallback;
+sssp.removeTiddlerCallback = function(context, userParams) {
 	var title = context.tiddler.title;
 	var recipe = context.tiddler.fields["server.recipe"];
 	_removeTiddlerCallback.apply(this, arguments);
@@ -109,25 +108,38 @@ var plugin = config.extensions.tiddlyspace = {
 	determineSpace: determineSpace,
 	isValidSpaceName: function(name) {
 		return name.match(/^[a-z][0-9a-z\-]*[0-9a-z]$/) ? true : false;
+	},
+	getAvatar: function(host, space) {
+		host = host ? this.getHost(host) : "";
+		var container = {
+			type: space.name ? "recipe" : "bag",
+			name: space.name ? "%0_public".format([space.name]) : "tiddlyspace"
+		};
+		return "%0/%1s/%2/tiddlers/SiteIcon".format([host, container.type,
+			container.name]);
+	},
+	getHost: function(host, subdomain) {
+		sudomain = subdomain ? subdomain + "." : "";
+		var url = "%0://%1%2".format([host.scheme, subdomain, host.host]);
+		var port = host.port;
+		if(port && !["80", "443"].contains(port)) {
+			url += ":" + port;
+		}
+		return url;
 	}
 };
 
-ns = config.extensions.tiddlyweb;
-ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
-ns.getStatus(function(status) {
-	var host = status.server_host;
-	var port = host.port;
-	var url = "%0://%1".format([host.scheme, host.host]);
-	if(port && !["80", "443"].contains(port)) {
-		url += ":" + port;
-	}
-	ns.status.server_host.url = url;
+var tweb = config.extensions.tiddlyweb;
+tweb.serverPrefix = tweb.host.split("/")[3] || ""; // XXX: assumes root handler
+tweb.getStatus(function(status) {
+	var url = plugin.getHost(status.server_host);
+	tweb.status.server_host.url = url;
 });
 
 // set global read-only mode based on membership heuristics
 var indicator = store.getTiddler("SiteTitle") || tiddler;
 readOnly = !(recipe.split("_").pop() == "private" ||
-	ns.hasPermission("write", indicator));
+	tweb.hasPermission("write", indicator));
 
 // ensure backstage is always initialized
 // required to circumvent TiddlyWiki's read-only based handling

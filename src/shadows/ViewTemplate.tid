@@ -2,10 +2,30 @@ tags: excludeLists
 
 <!--{{{-->
 <div class='toolbar' macro='toolbar [[ToolbarCommands::ViewToolbar]] icons:yes more:popup'></div>
-<div class='title' macro='view title'></div>
-<div class='subtitle'><span macro='view modifier link'></span>, <span macro='view modified date'></span> (<span macro='message views.wikified.createdPrompt'></span> <span macro='view created date'></span>)</div>
+<div class='followPlaceHolder' macro='followTiddlers'></div>
+<div class='heading'>
+	<div class='spaceSiteIcon' macro='tiddlerOrigin label:yes height:48 width:48'></div>
+	<div class='modifierIcon'
+		macro='view modifier SiteIcon label:yes height:48 width:48 labelPrefix:"modified by "'>
+	</div>
+	<div class='title' macro='view title'></div>
+	<div class='tagClear'></div>
+</div>
+<div class='tagClear'></div>
+<div class='concertina' ></div>
+<div class='content'>
+	<div class='left'>
+		<div class='calendar' macro='viewRevisions page:5'>
+			<div class='month' macro='view modified date mmm'></div>
+			<div class='date' macro='view modified date 0DD'></div>
+			<div class='time' macro='view modified date 0hh:0mm'></div>
+		</div>
+		<div class='tagClear'></div>
+		<div class='tagged' macro='tags'></div>
+	</div>
+	<div class='viewer' macro='view text wikified'></div>
+</div>
+<div class='tagClear'></div>
 <div class='tagging' macro='tagging'></div>
-<div class='tagged' macro='tags'></div>
-<div class='viewer' macro='view text wikified'></div>
 <div class='tagClear'></div>
 <!--}}}-->

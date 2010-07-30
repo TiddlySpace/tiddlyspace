@@ -56,6 +56,7 @@ backstage.show = function() {
 };
 
 var _init = backstage.init;
+var tiddlyspace = config.extensions.tiddlyspace;
 var imageMacro = config.macros.image;
 backstage.init = function(){
 	_init.apply(this, arguments);
@@ -86,7 +87,7 @@ backstage.init = function(){
 	var backstageLogo = $('<div id="backstageLogo" />').
 		prependTo(backstageToolbar)[0];
 	var iconName = readOnly ? "publicIcon" : "privateAndPublicIcon";
-	imageMacro.renderImage(backstageLogo, iconName, { width: 48, height: 48 })
+	imageMacro.renderImage(backstageLogo, iconName, { width: 48, height: 48 });
 	// construct the tiddlyspace logo
 	$('<span class="logoText"><span class="privateLightText">tiddly</span>' +
 			'<span class="publicLightText">space</span></span>').
@@ -103,21 +104,16 @@ backstage.init = function(){
 		$('<span class="spaceName" />').
 			text(config.extensions.tiddlyspace.currentSpace.name).
 			appendTo(btn);
-
 	}
 
-	var tiddlyweb = config.extensions.tiddlyweb;
-	tiddlyweb.getStatus(function(status) { // XXX: redundant due to getUserInfo!?
-		tiddlyweb.getUserInfo(function(user) {
-			// show avatar in the user's public bag
-			if(!user.anon) { // XXX: duplication of TiddlySpaceVisualization:getAvatar!?
-				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
-					format([tiddlyweb.status.server_host.url, user.name]);
-				var container = $("<span />").appendTo("[task=user]", backstageArea)[0];
-				imageMacro.renderImage(container, src,
-					{ imageClass:"userSiteIcon", height: 48, width: 48 });
-			}
-		});
+	var tweb = config.extensions.tiddlyweb;
+	tweb.getUserInfo(function(user) {
+		if(!user.anon) {
+			var src = tiddlyspace.getAvatar(tweb.status.server_host, user.name);
+			var container = $("<span />").appendTo("[task=user]", backstageArea)[0];
+			imageMacro.renderImage(container, src,
+				{ imageClass:"userSiteIcon", height: 48, width: 48 });
+		}
 
 		// override login button to show default avatar
 		var loginBtn = $("[task=login]", backstageArea);
