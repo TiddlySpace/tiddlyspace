@@ -26,8 +26,8 @@ tags: excludeLists
 }
 
 #backstageLogo .logoText {
-	position:absolute;
-	top:12px;
+	position: absolute;
+	top: 12px;
 }
 
 #backstageArea {

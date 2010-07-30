@@ -6,7 +6,7 @@ width="30" height="30">
 <g stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
 	<g>
 		<path d="M 2.25 756 L 11.25 747 L 24.75 760.4994 L 60.750004 724.4994 L 69.75 733.49902 
-		L 24.749977 778.49976 Z" fill="#020202"/>
+		L 24.749977 778.49976 Z" fill="#101010" class="glyph"/>
 	</g>
 </g>
 </svg>

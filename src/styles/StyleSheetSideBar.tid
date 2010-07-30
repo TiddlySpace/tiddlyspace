@@ -4,4 +4,15 @@ tags: excludeLists
 #sidebar .wizard table {
 	margin: 0px;
 }
+
+#sidebarTabs {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 17em;
+}
+
+#menuBar #sidebarOptions {
+	margin-right: 0.6em;
+}
 /*}}}*/

@@ -1,0 +1,24 @@
+tags: excludeLists
+
+<!--{{{-->
+<div class='header'>
+	<div id='sidebarSearch'>
+		<span macro='search'></span>
+	</div>
+	<div class='headerForeground'>
+		<span class='siteTitle' refresh='content' tiddler='SiteTitle'></span>
+		<span class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'></span>
+	</div>
+	<div class='clearFloat'></div>
+</div>
+
+<div id='menuBar'>
+	<div id='mainMenu' refresh='content' tiddler='MainMenu'></div>
+	<div id='sidebarOptions' refresh='content' tiddler='SideBarOptions'></div>
+</div>
+<div id='displayArea'>
+	<div id='messageArea'></div>
+	<div id='tiddlerDisplay'></div>
+	<div id='sidebarTabs' refresh='content' force='true' tiddler='SideBarTabs'></div>
+</div>
+<!--}}}-->

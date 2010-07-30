@@ -56,6 +56,7 @@ backstage.show = function() {
 };
 
 var _init = backstage.init;
+var tiddlyspace = config.extensions.tiddlyspace;
 var imageMacro = config.macros.image;
 backstage.init = function(){
 	_init.apply(this, arguments);
@@ -107,12 +108,10 @@ backstage.init = function(){
 	}
 
 	var tiddlyweb = config.extensions.tiddlyweb;
-	tiddlyweb.getStatus(function(status) { // XXX: redundant due to getUserInfo!?
+	tiddlyweb.getStatus(function(status) { // need to access root uri as user site icon may not be available
 		tiddlyweb.getUserInfo(function(user) {
-			// show avatar in the user's public bag
-			if(!user.anon) { // XXX: duplication of TiddlySpaceVisualization:getAvatar!?
-				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
-					format([tiddlyweb.status.server_host.url, user.name]);
+			if(!user.anon) {
+				var src = tiddlyspace.getAvatar(status.server_host, user.name);
 				var container = $("<span />").appendTo("[task=user]", backstageArea)[0];
 				imageMacro.renderImage(container, src,
 					{ imageClass:"userSiteIcon", height: 48, width: 48 });

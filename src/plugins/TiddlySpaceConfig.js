@@ -137,6 +137,29 @@ config.macros.backstageInit = {
 	}
 };
 
+plugin.getHost = function(host, subdomain) {
+	var port = host.port;
+	if(!subdomain) {
+		subdomain = "";
+	} else {
+		subdomain = "%0.".format([subdomain]);
+	}
+	host = "%0://%1%2".format([host.scheme, subdomain, host.host]);
+	if(port && !["80", "443"].contains(port)) {
+		host += ":" + port;
+	}
+	return host;
+};
+
+plugin.getAvatar = function(host, space) {
+	host = host ? plugin.getHost(host) : "";
+	var container = {
+		type: space.name ? "recipe" : "bag",
+		name: space.name ? "%0_public".format([space.name]) : "tiddlyspace"
+	};
+	return "%0/%1s/%2/tiddlers/SiteIcon".format([host, container.type,
+		container.name]);
+};
 // register style sheet for backstage separately (important)
 store.addNotification("StyleSheetBackstage", refreshStyles);
 
