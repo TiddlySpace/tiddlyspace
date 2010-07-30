@@ -345,4 +345,8 @@ tags: excludeLists
 .tiddler .tagged .listTitle {
 	display: none;
 }
+
+.revButton {
+	float: right;
+}
 /*}}}*/
