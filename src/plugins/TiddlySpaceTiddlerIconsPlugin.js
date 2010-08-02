@@ -47,7 +47,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 	} else if(privateSuffix == value.length - 8) {
 		value = value.substr(0, privateSuffix);
 	}
-	if(value == "None") { // the default modifier might be None meaning no-one.
+	if(!store.tiddlerExists(tiddler.title) || value == "None") { // some core tiddlers lack modifier
 		value = false;
 	}
 	var args = paramString.parseParams("name", null, true, false, true)[0];
