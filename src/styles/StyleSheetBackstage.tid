@@ -10,9 +10,9 @@ tags: excludeLists
 }
 
 #backstageLogo {
-	margin: 1px auto auto -50%;
+	margin: 1px auto auto -200px;
 	font-weight: bold;
-	width: 100%;
+	width: 200px;
 	font-size: 1.8em;
 	padding: 0;
 	text-align: center;
