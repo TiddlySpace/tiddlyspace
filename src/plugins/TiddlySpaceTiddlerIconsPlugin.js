@@ -40,12 +40,13 @@ var tiddlyspace = config.extensions.tiddlyspace;
 
 config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		paramString, tiddler) {
-	var publicSuffix = value.indexOf("_public");
-	var privateSuffix = value.indexOf("_private");
-	if(publicSuffix == value.length - 7) {
-		value = value.substr(0, publicSuffix);
-	} else if(privateSuffix == value.length - 8) {
-		value = value.substr(0, privateSuffix);
+	var pos;
+	if(tweb.endsWith(value, "_public")) {
+		pos = value.indexOf("_public");
+		value = value.substr(0, pos);
+	} else if(tweb.endsWith(value, "_private")) {
+		pos = value.indexOf("_private");
+		value = value.substr(0, pos);
 	}
 	if(!store.tiddlerExists(tiddler.title) || value == "None") { // some core tiddlers lack modifier
 		value = false;
@@ -56,7 +57,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 	var imageOptions = imageMacro.getArguments(paramString, []);
 	tweb.getStatus(function(status) {
 		var container = $('<div class="siteIcon" />');
-		var uri = tiddlyspace.getAvatar(status.server_host, {name: value});
+		var uri = tiddlyspace.getAvatar(status.server_host, { name: value });
 		var extraArgs = params.splice(2, params.length - 2).join(" ");
 		var imageOptions = imageMacro.getArguments(extraArgs, []);
 		imageMacro.renderImage(container, uri, imageOptions);
@@ -66,8 +67,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		$('<div class="label" />').
 			text("%0%1%2".format([labelPrefix, value, labelSuffix])).
 			appendTo(container);
-		$(container).prependTo(place);
-		$(container).attr("title", value).attr("alt", value);
+		container.attr("title", value).attr("alt", value).prependTo(place);
 	});
 };
 
@@ -98,29 +98,30 @@ var originMacro = config.macros.tiddlerOrigin = {
 			type = space && space.name == tiddlyspace.currentSpace.name ? space.type : "external";
 
 			var tidEl = story.findContainingTiddler(place);
+			tidEl = $(tidEl);
 			var concertina = $(".concertina", tidEl)[0];
 			var concertinaButton = $('<a class="originButton" href="javascript:;" />').
 				click(function() {
-					if($(tidEl).hasClass("concertinaOn")) {
-						$(tidEl).removeClass("concertinaOn");
-						$(concertina).hide(500);
+					if(tidEl.hasClass("concertinaOn")) {
+						tidEl.removeClass("concertinaOn");
+						concertina.hide(500);
 					} else {
-						$(tidEl).addClass("concertinaOn");
-						$(concertina).show(500, function() {
-							$(concertina).attr("style", "display:block;"); // jQuery uses the filter for opacity
+						tidEl.addClass("concertinaOn");
+						concertina.show(500, function() {
+							concertina.attr("style", "display: block;"); // jQuery uses the filter for opacity
 						});
 					}
-				}).appendTo(place)[0];
+				}).appendTo(place);
 
 			var label;
 			var showLabel = function(type) {
-				$(tidEl).
+				tidEl.
 					removeClass("private public external privateAndPublic privateNotPublic").
 					addClass(type);
 				if(includeLabel) {
 					$('<div class="roundelLabel" />').text(label).appendTo(concertinaButton);
 				}
-				$(concertinaButton).prependTo(place).attr("title", label);
+				concertinaButton.prependTo(place).attr("title", label);
 			};
 
 			if(type != "external") {
@@ -137,7 +138,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 							type = "privateAndPublic";
 						}
 					}
-					imageMacro.renderImage(concertinaButton, "%0Icon".format([type]), imageOptions);
+					imageMacro.renderImage(concertinaButton[0], "%0Icon".format([type]), imageOptions);
 					showLabel(type);
 					originMacro.fillConcertina(concertina, type, tiddler);
 				};
@@ -155,7 +156,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				label = locale.external.format([space.name || "tiddlyspace"]);
 				tweb.getStatus(function(status) {
 					var uri = tiddlyspace.getAvatar(status.server_host, space);
-					imageMacro.renderImage(concertinaButton, uri, imageOptions);
+					imageMacro.renderImage(concertinaButton[0], uri, imageOptions);
 					showLabel(type);
 					originMacro.fillConcertina(concertina, type, tiddler);
 				});
