@@ -1,8 +1,8 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.5|
-|''Description''|Initialises new TiddlySpaces the first time they are created|
-|''Status''|dev|
+|''Version''|0.5.0|
+|''Description''|Initializes new TiddlySpaces the first time they are created|
+|''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
 |''Requires''|TiddlySpaceConfig RandomColorPalettePlugin|
 !Code
@@ -10,7 +10,6 @@
 //{{{
 (function($) {
 
-var colorPaletteMacro = config.macros.RandomColorPalette;
 var macro = config.macros.TiddlySpaceInit = {
 	version: "0.1",
 	SiteTitle: "%0",
@@ -55,7 +54,7 @@ var macro = config.macros.TiddlySpaceInit = {
 		var wfield = "server.workspace";
 		var workspace = config.defaultCustomFields[wfield];
 		config.defaultCustomFields[wfield] = pubWorkspace;
-		colorPaletteMacro.generatePalette({}, true);
+		config.macros.RandomColorPalette.generatePalette({}, true);
 		config.defaultCustomFields[wfield] = workspace;
 	}
 };
