@@ -126,7 +126,6 @@ config.macros.viewRevisions = me = {
 		$(promoteElem).attr("left", $(promoteElem).css("left"));
 
 		$('<div class="revisionCloak" />').css({
-			position: "absolute",
 			position: "fixed !important",
 			height: "100%",
 			width: "100%",
@@ -264,7 +263,7 @@ config.macros.viewRevisions = me = {
 	onClickRevision: function(revElem, revision, callback) {
 		// don't do anything if we are still loading
 		if ($(".revisions").hasClass("loading")) {
-			return
+			return null;
 		}
 
 		var origTitle = me.stripRevFromTitle(revision.title);
@@ -285,7 +284,7 @@ config.macros.viewRevisions = me = {
 			});
 			$(revElem).removeAttr("prevPos").removeClass("viewRevision");
 		} else {
-			function viewRevision() {
+			var viewRevision = function() {
 				var prevPos = $(revElem).offset().left;
 				$(revElem).addClass("viewRevision").attr("prevPos", prevPos);
 				$(".revisions").addClass("loading");
@@ -293,7 +292,7 @@ config.macros.viewRevisions = me = {
 					me.slideOut(revElem, rev, origTitle, function() {
 						$(".revisions").removeClass("loading");
 					});
-				})
+				});
 			};
 			//make sure another revision isn't already out
 			if ($(".viewRevision").length) {

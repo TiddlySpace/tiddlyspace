@@ -29,7 +29,7 @@ config.commands.revert = {
 		if ((revision) && (tidToRevert)) {
 			tidToRevert.text = revision.text;
 			var newFields = merge({}, revision.fields);
-			for (fieldName in newFields) {
+			for (var fieldName in newFields) {
 				if (fieldName.substr(0, 7) === "server.") {
 					delete newFields[fieldName];
 				}

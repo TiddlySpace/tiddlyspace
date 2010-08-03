@@ -45,7 +45,7 @@ cmd.cloneTiddler = {
 		} else { // ensure workspace is the current space
 			var el = story.findContainingTiddler(src);
 			el = $(el);
-			var fields = el.attr("tiddlyfields")
+			var fields = el.attr("tiddlyfields");
 			if(fields) { // inherited via TiddlyLink
 				fields = fields.decodeHashMap();
 				fields["server.workspace"] = config.
