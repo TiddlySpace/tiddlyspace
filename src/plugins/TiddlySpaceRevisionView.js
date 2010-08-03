@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceRevisionView|
 |''Description''|Show tiddler revisions in a stack of cards view|
 |''Author''|BenGillies|
-|''Version''|0.1|
+|''Version''|0.1.1|
 |''Status''|beta|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -125,23 +125,11 @@ config.macros.viewRevisions = me = {
 		$(promoteElem).attr("top", $(promoteElem).css("top"));
 		$(promoteElem).attr("left", $(promoteElem).css("left"));
 
-		$('<div class="revisionCloak" />').css({
-			position: "fixed !important",
-			height: "100%",
-			width: "100%",
-			top: 0,
-			left: 0,
-			border: 0,
-			margin: 0,
-			padding: 0,
-			opacity: 0.5,
-			filter: "alpha(opacity=50)",
-			"z-index": me.zIndex,
-			"background-color": "black"
-		}).click(function() {
-			me.closeRevisions(promoteElem);
-		})
-		.appendTo(document.body);
+		$('<div class="revisionCloak" />').css("z-index", me.zIndex)
+			.click(function() {
+				me.closeRevisions(promoteElem);
+			})
+			.appendTo(document.body);
 
 		$(promoteElem).css("z-index", me.zIndex + 1);
 	},
