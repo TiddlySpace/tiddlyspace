@@ -53,6 +53,11 @@ tags: excludeLists
 	width: 46px;
 	float: left;
 	margin-top: 2em;
+	cursor: pointer;
+}
+
+.content .calendar:hover {
+	opacity: 0.2;
 }
 
 .selected .tagging,
@@ -221,10 +226,6 @@ tags: excludeLists
 	display: block;
 }
 
-.spaceSiteIcon a:hover {
-	background: none;
-}
-
 .modifierIcon {
 	margin-right: 2em;
 	position: relative;
@@ -260,7 +261,7 @@ tags: excludeLists
 
 .tiddler .spaceSiteIcon {
 	width: 7em;
-	margin-bottom: -15px;
+	margin-top: -15px;
 	position: relative;
 	float: left;
 	margin-top: 0em;
@@ -306,18 +307,18 @@ tags: excludeLists
 	margin-top: 0.2em;
 }
 
-.tiddler .privacyRoundel {
-	float: left;
-	padding-left: 10px;
+.external .spaceSiteIcon a:hover {
+	background-color: #8BD69E;
 }
 
-.tiddler .privacyRoundel img,
-.tiddler .privacyRoundel .svgIcon {
-	height: 1.6em;
+.privateNotPublic .spaceSiteIcon a:hover,
+.private .spaceSiteIcon a:hover {
+	background-color: #DE85B3;
 }
 
-.tiddler .privacyRoundel a:hover {
-	background-color: transparent;
+.privateAndPublic .spaceSiteIcon a:hover,
+.public .spaceSiteIcon a:hover {
+	background-color: #BBE7FD;
 }
 
 .toolbar {
