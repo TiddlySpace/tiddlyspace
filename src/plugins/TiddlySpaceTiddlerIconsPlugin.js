@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.21|
+|''Version''|0.22|
 |''Status''|beta|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -40,6 +40,10 @@ var tiddlyspace = config.extensions.tiddlyspace;
 
 config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		paramString, tiddler) {
+	var container = $('<div class="siteIcon" />').prependTo(place);
+	var extraArgs = params.splice(2, params.length - 2).join(" ");
+	var imageOptions = imageMacro.getArguments(extraArgs, []);
+	var imagePlace = $("<div />").appendTo(container);
 	var pos;
 	if(tweb.endsWith(value, "_public")) {
 		pos = value.indexOf("_public");
@@ -48,27 +52,28 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		pos = value.indexOf("_private");
 		value = value.substr(0, pos);
 	}
-	if(!store.tiddlerExists(tiddler.title) || value == "None") { // some core tiddlers lack modifier
-		value = false;
-	}
+
 	var args = paramString.parseParams("name", null, true, false, true)[0];
 	var labelPrefix = args.labelPrefix ? args.labelPrefix[0] : "";
 	var labelSuffix = args.labelSuffix ? args.labelSuffix[0] : "";
-	var imageOptions = imageMacro.getArguments(paramString, []);
-	tweb.getStatus(function(status) {
-		var container = $('<div class="siteIcon" />');
-		var uri = tiddlyspace.getAvatar(status.server_host, { name: value });
-		var extraArgs = params.splice(2, params.length - 2).join(" ");
-		var imageOptions = imageMacro.getArguments(extraArgs, []);
-		imageMacro.renderImage(container, uri, imageOptions);
-		if(!value) {
-			value = "tiddlyspace";
+	if(!store.tiddlerExists(tiddler.title) || value == "None") { // some core tiddlers lack modifier
+		value = "unknown";
+		if(store.tiddlerExists("UnknownModifierIcon")) {
+			imageMacro.renderImage(imagePlace, "UnknownModifierIcon", imageOptions);
 		}
-		$('<div class="label" />').
-			text("%0%1%2".format([labelPrefix, value, labelSuffix])).
-			appendTo(container);
-		container.attr("title", value).attr("alt", value).prependTo(place);
-	});
+	} else {
+		tweb.getStatus(function(status) {
+			var uri = tiddlyspace.getAvatar(status.server_host, {name: value});
+			imageMacro.renderImage(imagePlace, uri, imageOptions);
+			if(!value) {
+				value = "tiddlyspace";
+			}
+		});
+	}
+	$('<div class="label" />').
+		text("%0%1%2".format([labelPrefix, value, labelSuffix])).
+		appendTo(container);
+	$(container).attr("title", value).attr("alt", value);
 };
 
 var originMacro = config.macros.tiddlerOrigin = {
@@ -97,20 +102,15 @@ var originMacro = config.macros.tiddlerOrigin = {
 			var space = tiddlyspace.determineSpace(tiddler, true);
 			type = space && space.name == tiddlyspace.currentSpace.name ? space.type : "external";
 
-			var tidEl = story.findContainingTiddler(place);
-			tidEl = $(tidEl);
+			var tidEl = $(story.findContainingTiddler(place));
+			var concertinaContentEl = $("<div />")[0];
 			var concertina = $(".concertina", tidEl)[0];
 			var concertinaButton = $('<a class="originButton" href="javascript:;" />').
 				click(function() {
-					if(tidEl.hasClass("concertinaOn")) {
-						tidEl.removeClass("concertinaOn");
-						concertina.hide(500);
-					} else {
-						tidEl.addClass("concertinaOn");
-						concertina.show(500, function() {
-							concertina.attr("style", "display: block;"); // jQuery uses the filter for opacity
-						});
-					}
+					tidEl.addClass("concertinaOn");
+					$(concertina).empty();
+					$(concertina).append(concertinaContentEl);
+					$(concertina).toggle(500);
 				}).appendTo(place);
 
 			var label;
@@ -140,7 +140,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 					}
 					imageMacro.renderImage(concertinaButton[0], "%0Icon".format([type]), imageOptions);
 					showLabel(type);
-					originMacro.fillConcertina(concertina, type, tiddler);
+					originMacro.fillConcertina(concertinaContentEl, type, tiddler);
 				};
 				if(type == "private") { //check for a public version
 					var context = {
@@ -158,7 +158,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 					var uri = tiddlyspace.getAvatar(status.server_host, space);
 					imageMacro.renderImage(concertinaButton[0], uri, imageOptions);
 					showLabel(type);
-					originMacro.fillConcertina(concertina, type, tiddler);
+					originMacro.fillConcertina(concertinaContentEl, type, tiddler);
 				});
 			}
 		}
