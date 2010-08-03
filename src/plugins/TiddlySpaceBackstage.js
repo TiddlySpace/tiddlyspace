@@ -109,7 +109,7 @@ backstage.init = function(){
 	var tweb = config.extensions.tiddlyweb;
 	tweb.getUserInfo(function(user) {
 		if(!user.anon) {
-			var src = tiddlyspace.getAvatar(tweb.status.server_host, user.name);
+			var src = tiddlyspace.getAvatar(tweb.status.server_host, { name: user.name });
 			var container = $("<span />").appendTo("[task=user]", backstageArea)[0];
 			imageMacro.renderImage(container, src,
 				{ imageClass:"userSiteIcon", height: 48, width: 48 });
