@@ -13,5 +13,6 @@ tiddler: TiddlySpaceCloneCommand.js
 tiddler: TiddlySpaceChangePassword.js
 tiddler: TiddlySpaceToolbar.js
 tiddler: TiddlySpaceTiddlerIconsPlugin.js
-tiddler: TiddlySpaceRevisionViewPlugin.js
+tiddler: TiddlySpaceRevisionView.js
+tiddler: TiddlySpaceRevertRevision.js
 tiddler: TiddlySpaceFollowingPlugin.js
