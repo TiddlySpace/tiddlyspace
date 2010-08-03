@@ -1,8 +1,0 @@
-modifier: Osmosoft
-tags: excludeLists
-
-{{annotation{
-You are logged in as <<message options.txtUserName>>.
-This identity is currently not associated with any registered TiddlySpace user.
-Feel free to <<TiddlySpaceLoginLoader Authorization "Sign Up">> now.
-}}}

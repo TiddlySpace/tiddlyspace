@@ -19,7 +19,7 @@ config = {
     'recipe_create_policy': 'ANY',
     'css_uri': '/bags/common/tiddlers/tiddlyweb.css',
     'socialusers.reserved_names': ['www', 'about', 'help', 'announcements',
-        'dev', 'info', 'api', 'status', 'login'],
+        'dev', 'info', 'api', 'status', 'login', 'frontpage'],
     'cookie_age': '2592000', # 1 month
     'server_store': ['tiddlywebplugins.mysql', {
         'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],

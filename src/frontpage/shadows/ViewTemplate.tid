@@ -1,8 +1,0 @@
-modifier: Osmosoft
-tags: excludeLists
-
-<!--{{{-->
-<div class='toolbar' macro='toolbar [[ToolbarCommands::ViewToolbar]]'></div>
-<div class='title' macro='view title'></div>
-<div class='viewer' macro='view text wikified'></div>
-<!--}}}-->
