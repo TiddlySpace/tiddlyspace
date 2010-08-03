@@ -2,7 +2,7 @@
 |''Name''|TiddlySpacePubRevCommand|
 |''Version''||
 |''Description''||
-|''Requires''|TiddlySpaceConfig|
+|''Requires''|TiddlySpaceConfig BinaryTiddlersPlugin|
 |''Source''||
 !Code
 ***/
@@ -72,7 +72,7 @@ var _sync = config.extensions.ServerSideSavingPlugin.sync;
 config.extensions.ServerSideSavingPlugin.sync = function(tiddlers) {
 	_sync.apply(this, arguments);
 	store.forEachTiddler(function(title, tiddler) {
-		var pubRev = config.extensions.tiddlyweb.endsWith(title,
+		var pubRev = config.extensions.BinaryTiddlersPlugin.endsWith(title,
 			ns.spawnPublicTiddler.pubSuffix);
 		if(pubRev && tiddler.fields.doNotSave == "true") {
 			var tid = $.extend(new Tiddler(title), tiddler);

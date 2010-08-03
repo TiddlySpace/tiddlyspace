@@ -3,7 +3,7 @@
 |''Version''|0.22|
 |''Status''|beta|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
-|''Requires''|TiddlySpaceConfig ImageMacroPlugin|
+|''Requires''|TiddlySpaceConfig BinaryTiddlersPlugin ImageMacroPlugin|
 |''Source''||
 !Notes
 Provides an additional SiteIcon view for use with view macro
@@ -35,8 +35,9 @@ if(!config.macros.image) {
 }
 
 var imageMacro = config.macros.image;
-var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
+var getStatus = config.extensions.tiddlyweb.getStatus;
+var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
 
 config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		paramString, tiddler) {
@@ -45,10 +46,10 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 	var imageOptions = imageMacro.getArguments(extraArgs, []);
 	var imagePlace = $("<div />").appendTo(container);
 	var pos;
-	if(tweb.endsWith(value, "_public")) {
+	if(endsWith(value, "_public")) {
 		pos = value.indexOf("_public");
 		value = value.substr(0, pos);
-	} else if(tweb.endsWith(value, "_private")) {
+	} else if(endsWith(value, "_private")) {
 		pos = value.indexOf("_private");
 		value = value.substr(0, pos);
 	}
@@ -62,7 +63,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 			imageMacro.renderImage(imagePlace, "UnknownModifierIcon", imageOptions);
 		}
 	} else {
-		tweb.getStatus(function(status) {
+		getStatus(function(status) {
 			var uri = tiddlyspace.getAvatar(status.server_host, {name: value});
 			imageMacro.renderImage(imagePlace, uri, imageOptions);
 			if(!value) {
@@ -154,7 +155,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				}
 			} else {
 				label = locale.external.format([space.name || "tiddlyspace"]);
-				tweb.getStatus(function(status) {
+				getStatus(function(status) {
 					var uri = tiddlyspace.getAvatar(status.server_host, space);
 					imageMacro.renderImage(concertinaButton[0], uri, imageOptions);
 					showLabel(type);
@@ -170,7 +171,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			var locale = originMacro.locale;
 			var space = tiddlyspace.determineSpace(tiddler);
 			space = space.name ? space.name : false;
-			tweb.getStatus(function(status) {
+			getStatus(function(status) {
 				var modifier = tiddler.modifier;
 				if(modifier == "None") {
 					modifier = locale.unknownUser;
