@@ -119,7 +119,7 @@ var plugin = config.extensions.tiddlyspace = {
 			container.name]);
 	},
 	getHost: function(host, subdomain) {
-		sudomain = subdomain ? subdomain + "." : "";
+		subdomain = subdomain ? subdomain + "." : "";
 		var url = "%0://%1%2".format([host.scheme, subdomain, host.host]);
 		var port = host.port;
 		if(port && !["80", "443"].contains(port)) {
