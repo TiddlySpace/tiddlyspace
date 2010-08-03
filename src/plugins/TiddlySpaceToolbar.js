@@ -49,8 +49,7 @@ macro.handler = function(place, macroName, params, wikifier,
 		toolbar.removeClass("toolbarReadOnly");
 	}
 	var parsedParams = paramString.parseParams("name")[0];
-	if(config.macros.image.svgAvailable && parsedParams.icons &&
-			parsedParams.icons == "yes") {
+	if(parsedParams.icons && parsedParams.icons == "yes") {
 		this.augmentCommandButtons(place);
 	}
 	if(parsedParams.more && parsedParams.more == "popup") {
@@ -66,6 +65,7 @@ macro.refresh = function(place, params) {
 	this.handler.apply(this, args);
 };
 
+var imageMacro = config.macros.image;
 macro.augmentCommandButtons = function(toolbar) {
 	$(toolbar).children(".button").each(function(i, el) {
 		var cmd = el.className.match(/\bcommand_([^ ]+?)\b/); // XXX: gratuitous RegEx?
@@ -74,7 +74,7 @@ macro.augmentCommandButtons = function(toolbar) {
 		var title = getIcon(icon);
 		if(store.tiddlerExists(title)) { // XXX: does not support shadow tiddlers
 			$(el).empty();
-			wikify("<<image %0>>".format([title]), el); // XXX: use function call instead of wikification
+			imageMacro.renderImage(el, title);
 		}
 	});
 };
