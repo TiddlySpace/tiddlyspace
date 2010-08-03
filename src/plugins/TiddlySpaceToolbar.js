@@ -72,10 +72,8 @@ macro.augmentCommandButtons = function(toolbar) {
 		cmd = cmd ? cmd[1] : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
 		var icon = store.tiddlerExists(getIcon(cmd)) ? cmd : macro.icons[cmd];
 		var title = getIcon(icon);
-		if(store.tiddlerExists(title)) { // XXX: does not support shadow tiddlers
-			$(el).empty();
-			imageMacro.renderImage(el, title);
-		}
+		$(el).empty();
+		imageMacro.renderImage(el, title);
 	});
 };
 
@@ -101,8 +99,12 @@ macro.onClickMorePopUp = function(ev) {
 	return false;
 };
 
-var getIcon = function(cmd) {
-	return "%0.svg".format([cmd]);
+var getIcon = function(cmd) { // XXX: does not support shadow tiddlers
+	if(store.tiddlerExists(cmd)) {
+		return cmd;
+	} else { // for backwards compatibility purposes
+		return "%0.svg".format([cmd]);
+	}
 };
 
 })(jQuery);
