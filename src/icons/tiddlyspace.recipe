@@ -4,7 +4,7 @@ tiddler: cancelTiddler.tid
 tiddler: closeTiddler.tid
 tiddler: editTiddler.tid
 tiddler: deleteTiddler.tid
-tiddler: moreCommand.svg.tid
+tiddler: moreCommand.tid
 tiddler: publicIcon.tid
 tiddler: privateIcon.tid
 tiddler: privateAndPublicIcon.tid
