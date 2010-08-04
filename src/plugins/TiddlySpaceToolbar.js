@@ -70,10 +70,12 @@ macro.augmentCommandButtons = function(toolbar) {
 	$(toolbar).children(".button").each(function(i, el) {
 		var cmd = el.className.match(/\bcommand_([^ ]+?)\b/); // XXX: gratuitous RegEx?
 		cmd = cmd ? cmd[1] : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
-		var icon = store.tiddlerExists(getIcon(cmd)) ? cmd : macro.icons[cmd];
-		var title = getIcon(icon);
-		$(el).empty();
-		imageMacro.renderImage(el, title);
+		var icon = store.tiddlerExists(cmd) ? cmd : macro.icons[cmd];
+		var text = $(el).text();
+		if(store.tiddlerExists(cmd)) {
+			$(el).empty();
+			imageMacro.renderImage(el, icon, {alt: text});
+		}
 	});
 };
 
@@ -97,14 +99,6 @@ macro.onClickMorePopUp = function(ev) {
 		ev.stopPropagation();
 	}
 	return false;
-};
-
-var getIcon = function(cmd) { // XXX: does not support shadow tiddlers
-	if(store.tiddlerExists(cmd)) {
-		return cmd;
-	} else { // for backwards compatibility purposes
-		return "%0.svg".format([cmd]);
-	}
 };
 
 })(jQuery);
