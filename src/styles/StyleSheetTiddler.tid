@@ -19,8 +19,8 @@ tags: excludeLists
 
 .privateNotPublic .concertina,
 .private .concertina {
-	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05,#DE85B3),color-stop(0.5,#eee),color-stop(1, #fff));
-	background: -moz-linear-gradient(top center , #fff 5%, #eee 20%, #DE85B3 100%);
+	background: -webkit-gradient(linear, left bottom, left top, color-stop(0.29, rgb(222,133,179)), color-stop(1, rgb(245,208,229)), color-stop(0.71, rgb(255,224,241)));
+		background: -moz-linear-gradient(center bottom, rgb(222,133,179) 29%, rgb(245,208,229) 100%, rgb(255,224,241) 71%);
 	/* For Internet Explorer 5.5 - 7 */
 	filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffDE85B3)";
 	/* For Internet Explorer 8 */
@@ -29,8 +29,8 @@ tags: excludeLists
 
 .public .concertina,
 .privateAndPublic .concertina {
-	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, #BBE7FD),color-stop(0.5,#eee),color-stop(1, #fff));
-	background: -moz-linear-gradient(top center , #fff 5%, #eee 20%, #BBE7FD 100%);
+	background: -webkit-gradient(linear, left bottom, left top, color-stop(0.55, rgb(187,231,253)), color-stop(1, rgb(197,233,252)), color-stop(0.74, rgb(220,238,250)));
+	background: -moz-linear-gradient(center bottom, rgb(187,231,253) 55%, rgb(197,233,252) 100%, rgb(220,238,250) 74%);
 	/* For Internet Explorer 5.5 - 7 */
 	filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffBBE7FD)";
 	/* For Internet Explorer 8 */
@@ -39,8 +39,8 @@ tags: excludeLists
 
 .external .concertina {
 	background-color: white;
-	background: -webkit-gradient(linear,left bottom,left top,color-stop(0.05, #8BD69E),color-stop(0.5,#eee),color-stop(1, #fff));
-	background: -moz-linear-gradient(top center , #fff 5%, #eee 20%, #8BD69E 100%);
+	background: -webkit-gradient(linear, left bottom, left top, color-stop(0.25, rgb(139,214,158)), color-stop(1, rgb(175,230,187)), color-stop(0.74, rgb(204,240,213)));
+	background: -moz-linear-gradient(center bottom, rgb(139,214,158) 25%, rgb(175,230,187) 100%, rgb(204,240,213) 74%);
 	/* For Internet Explorer 5.5 - 7 */
 	filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ff8BD69E)";
 	/* For Internet Explorer 8 */

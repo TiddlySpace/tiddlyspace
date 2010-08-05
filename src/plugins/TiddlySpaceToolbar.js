@@ -74,7 +74,7 @@ macro.augmentCommandButtons = function(toolbar) {
 		var text = $(el).text();
 		if(store.tiddlerExists(cmd)) {
 			$(el).empty();
-			imageMacro.renderImage(el, icon, {alt: text});
+			imageMacro.renderImage(el, icon, { alt: text });
 		}
 	});
 };
