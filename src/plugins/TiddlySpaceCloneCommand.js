@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceCloneCommand|
-|''Version''||
-|''Description''|Provides a clone command for copying from an alien bag to a public bag in TiddlySpace|
+|''Version''|0.5.1|
+|''Description''|provides a toolbar command for cloning external tiddlers|
 |''Status''|stable|
-|''Source''|http://github.com/TiddlySpace/tiddlyspace|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceCloneCommand.js|
 |''Requires''|TiddlySpaceConfig|
 !Code
 ***/
@@ -39,7 +39,7 @@ cmd.cloneTiddler = {
 			fieldStash[title] = $.extend({}, tiddler.fields);
 			tiddler.fields["server.workspace"] = "bags/%0_private".
 				format([ns.currentSpace.name]);
-			$.each(["bag", "permissions", "page.revision"], function(i, item) {
+			$.each(["permissions", "page.revision"], function(i, item) {
 				delete tiddler.fields["server." + item];
 			});
 		} else { // ensure workspace is the current space
