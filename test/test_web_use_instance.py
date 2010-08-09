@@ -30,7 +30,7 @@ def test_home_page_exist():
     response, content = http.request('http://0.0.0.0:8080/', method='GET')
 
     assert response['status'] == '200'
-    assert 'discoursive' in content
+    assert 'Welcome to TiddlySpace' in content
 
 
 def test_space_not_exist():

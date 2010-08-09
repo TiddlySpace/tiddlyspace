@@ -25,7 +25,7 @@ Development Instance
    a symlink to it:
      $ git clone git://github.com/tiddlyweb/tiddlyweb.git tiddlyweb-core
      $ ln -s tiddlyweb-core/tiddlyweb
-** httplib2 (this is required for testing)
+** httplib2, yaml (required for testing)
 
 * Set up mysql on your machine. See MYSQL.
 
