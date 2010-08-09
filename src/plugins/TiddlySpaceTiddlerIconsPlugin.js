@@ -64,7 +64,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		}
 	} else {
 		getStatus(function(status) {
-			var uri = tiddlyspace.getAvatar(status.server_host, {name: value});
+			var uri = tiddlyspace.getAvatar(status.server_host, { name: value });
 			imageMacro.renderImage(imagePlace, uri, imageOptions);
 			if(!value) {
 				value = "tiddlyspace";
@@ -183,11 +183,11 @@ var originMacro = config.macros.tiddlerOrigin = {
 				} else {
 					spaceLink = tiddlyspace.getHost(status.server_host, space);
 					space = "[[%0|%1]]".format([space, spaceLink]);
-					link = "[[%0/%1]]".format([spaceLink, tiddler.title]);
+					link = "%0/%1".format([spaceLink, tiddler.title]);
 				}
 
 				var localeString = locale["%0_info".format([privacyType])];
-				if(localeString){
+				if(localeString) {
 					wikify(localeString.format([modifier, space, link]), place);
 				}
 			});
