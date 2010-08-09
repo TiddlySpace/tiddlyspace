@@ -72,7 +72,7 @@ macro.augmentCommandButtons = function(toolbar) {
 		cmd = cmd ? cmd[1] : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
 		var icon = store.tiddlerExists(cmd) ? cmd : macro.icons[cmd];
 		var text = $(el).text();
-		if(store.tiddlerExists(cmd)) {
+		if(store.tiddlerExists(icon)) {
 			$(el).empty();
 			imageMacro.renderImage(el, icon, { alt: text });
 		}
