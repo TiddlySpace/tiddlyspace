@@ -323,9 +323,13 @@ class ControlView(object):
         """
         Override a core request, adding filters or sending 404s where
         necessary to limit the view of entities.
+
+        filtering can be disabled with a custom HTTP header X-ControlView set
+        to false
         """
         http_host, host_url = _determine_host(environ)
-        if http_host != host_url:
+        disable_ControlView = environ.get('HTTP_X_CONTROLVIEW') == 'false'
+        if http_host != host_url and not disable_ControlView:
             space_name = _determine_space(environ, http_host)
             recipe_name = _determine_space_recipe(environ, space_name)
             store = environ['tiddlyweb.store']

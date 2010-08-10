@@ -187,3 +187,29 @@ def test_space_exposes_subscription_recipes():
     response, content = http.request('http://foo.0.0.0.0:8080/recipes/baz_private',
             method='GET')
     assert response['status'] == '404'
+
+
+def test_disable_ControlView():
+    make_fake_space(store, 'foo')
+    make_fake_space(store, 'bar')
+    http = httplib2.Http()
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+            method='GET')
+
+    assert 'foo_public' in content, content
+    assert 'bar_public' not in content, content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+            headers={'X-ControlView': 'false'},
+            method='GET')
+
+    assert 'foo_public' in content, content
+    assert 'bar_public' in content, content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+            headers={'X-ControlView': 'true'},
+            method='GET')
+
+    assert 'foo_public' in content, content
+    assert 'bar_public' not in content, content
