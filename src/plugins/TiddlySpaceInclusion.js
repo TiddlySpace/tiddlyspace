@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceInclusion|
-|''Version''||
-|''Description''|Provides user interfaces for managing inclusion within TiddlySpace|
-|''Status''|//unknown//|
-|''Source''|http://github.com/TiddlySpace/tiddlyspace|
+|''Version''|0.5.0|
+|''Description''|provides user interfaces for managing TiddlySpace inclusions|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceInclusion.js|
 |''Requires''|TiddlySpaceConfig TiddlySpaceUserControls chrjs|
 !HTMLForm
 <form action="#">
@@ -95,6 +95,9 @@ var macro = config.macros.TiddlySpaceInclusion = {
 					text("x"). // TODO: i18n (use icon!?)
 					attr("title", macro.locale.delTooltip).
 					data("space", item).click(macro.onDelClick);
+				if(readOnly) {
+					btn.hide();
+				}
 				return $("<li />").append(link).append(btn)[0];
 			});
 			if(items.length) {
@@ -166,7 +169,6 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			displayMessage(macro.locale.delError.format([username, error]));
 		};
 		if(confirm(msg)) {
-
 			var recipe = new tiddlyweb.Recipe(provider + "_public", host);
 			recipe.get(function(recipe, status, xhr) {
 				var inclusions = $.map(recipe.recipe, function(item, i) { // XXX: duplicated from above
@@ -186,7 +188,6 @@ var macro = config.macros.TiddlySpaceInclusion = {
 						text(macro.locale.recursiveInclusions).slideDown();
 				}
 			});
-
 			macro.inclusion(provider, currentSpace, callback, errback, true);
 		}
 		return false;
