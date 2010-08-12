@@ -196,10 +196,6 @@ tags: excludeLists
 	fill: #111;
 }
 
-.toolbar .command_savePublicTiddler .glyph {
-	fill: #C0E5FC;
-}
-
 .calendar .date {
 	background-color: white;
 	color: #515151;
