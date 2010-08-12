@@ -16,3 +16,4 @@ tiddler: TiddlySpaceTiddlerIconsPlugin.js
 tiddler: TiddlySpaceRevisionView.js
 tiddler: TiddlySpaceRevertRevision.js
 tiddler: TiddlySpaceFollowingPlugin.js
+tiddler: ToggleTiddlerPrivacyPlugin.js
