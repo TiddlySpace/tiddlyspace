@@ -1,8 +1,7 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.5.0|
+|''Version''|0.5.1|
 |''Status''|beta|
-|''Author''|Jon Robson|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
 |''Source''||
@@ -20,7 +19,7 @@ var privacyMacro = config.macros.setPrivacy = {
 		var currentSpace = ns.currentSpace.name;
 		var currentWorkspace = tiddler ? tiddler.fields['server.workspace'] : false;
 		var currentBag = tiddler.fields['server.bag'] || "";
-		var isNewTiddler = $(el).hasClass("missing"); // is this reliable?
+		var isNewTiddler = $(el).hasClass("missing") || !currentWorkspace; // is this reliable?
 		var privateWorkspace = "bags/%0_private".format([currentSpace]);
 		var publicWorkspace = "bags/%0_public".format([currentSpace]);
 		var isExternal = currentBag.indexOf("/%0_".format([currentSpace])) >  -1 || currentBag == "tiddlyspace";
