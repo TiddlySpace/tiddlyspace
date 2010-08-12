@@ -6,7 +6,7 @@ tiddler: TiddlySpaceIdentities.js
 tiddler: TiddlySpaceMembers.js
 tiddler: TiddlySpaceSpaces.js
 tiddler: TiddlySpaceInclusion.js
-tiddler: TiddlySpacePublishCommand.js
+tiddler: TiddlySpacePublishingCommands.js
 tiddler: TiddlySpacePublisher.js
 tiddler: TiddlySpacePubRevCommand.js
 tiddler: TiddlySpaceCloneCommand.js
