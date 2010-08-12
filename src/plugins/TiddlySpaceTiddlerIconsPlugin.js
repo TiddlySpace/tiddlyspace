@@ -325,7 +325,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				var answer = confirm(msg);
 				if(answer) {
 					var privateWorkspace = cmd.getPrivateWorkspace(tiddler.fields['server.workspace']);
-					config.commands.publishTiddlerRevision.moveTiddler(tiddler, {title: tiddler.title, fields: {"server.workspace": privateWorkspace}}, chk.attr("checked"));
+					cmd.moveTiddler(tiddler, {title: tiddler.title, fields: {"server.workspace": privateWorkspace}}, chk.attr("checked"));
 				}
 			};
 			var toggleCheckbox = function(ev) {
@@ -364,7 +364,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				store.addTiddler(tiddler);
 				var answer = confirm(msg);
 				if(answer) {
-					config.commands.publishTiddlerRevision.moveTiddler(tiddler, {title: newTitle, fields: {"server.workspace": publicWorkspace}}, checked);
+					cmd.moveTiddler(tiddler, {title: newTitle, fields: {"server.workspace": publicWorkspace}}, checked);
 				}
 			};
 			var link = $('<a class="publishButton" />').text(locale.makePublic).
