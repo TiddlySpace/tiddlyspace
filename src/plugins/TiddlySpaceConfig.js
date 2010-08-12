@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''||
-|''Description''|Configures Tiddly(Web)Wiki for use with TiddlySpace|
-|''Status''|//unknown//|
-|''Source''|http://github.com/TiddlySpace/tiddlyspace|
+|''Version''|0.5.0|
+|''Description''|TiddlySpace configuration|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
 |''Requires''|TiddlyWebConfig|
 !Code
 ***/
@@ -111,12 +111,8 @@ var plugin = config.extensions.tiddlyspace = {
 	},
 	getAvatar: function(host, space) {
 		host = host ? this.getHost(host) : "";
-		var container = {
-			type: space.name ? "recipe" : "bag",
-			name: space.name ? "%0_public".format([space.name]) : "tiddlyspace"
-		};
-		return "%0/%1s/%2/tiddlers/SiteIcon".format([host, container.type,
-			container.name]);
+		var bag = space.name ? "%0_public".format([space.name]) : "tiddlyspace";
+		return "%0/bags/%1/tiddlers/SiteIcon".format([host, bag]);
 	},
 	getHost: function(host, subdomain) {
 		subdomain = subdomain ? subdomain + "." : "";
