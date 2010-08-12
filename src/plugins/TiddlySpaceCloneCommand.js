@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceCloneCommand|
-|''Version''|0.5.1|
+|''Version''|0.5.2|
 |''Description''|provides a toolbar command for cloning external tiddlers|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceCloneCommand.js|
@@ -42,6 +42,10 @@ cmd.cloneTiddler = {
 			$.each(["permissions", "page.revision"], function(i, item) {
 				delete tiddler.fields["server." + item];
 			});
+			// special handling for pseudo-shadow tiddlers
+			if(tiddler.fields["server.bag"] == "tiddlyspace") {
+				tiddler.tags.remove("excludeLists");
+			}
 		} else { // ensure workspace is the current space
 			var el = story.findContainingTiddler(src);
 			el = $(el);
