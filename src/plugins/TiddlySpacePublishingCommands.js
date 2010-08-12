@@ -1,18 +1,18 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
 |''Version''|0.4.0|
-|''Status''|beta|
-|''Description''|New commands for use with TiddlySpace|
-|''Requires''|TiddlySpaceConfig ServerSideSavingPlugin|
+|''Status''|@@beta@@|
+|''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
-|''Source''||
-!Notes
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpacePublishingCommands.js|
+|''Requires''|TiddlySpaceConfig ServerSideSavingPlugin|
 !Code
 ***/
 //{{{
 (function($) {
-var sssPlugin = config.extensions.ServerSideSavingPlugin;
-var ns = config.extensions.tiddlyspace;
+
+var tiddlyspace = config.extensions.tiddlyspace;
+
 var cmd = config.commands.publishTiddler = {
 	text: "publish",
 	tooltip: "Change the public/private state of this tiddler",
@@ -22,22 +22,23 @@ var cmd = config.commands.publishTiddler = {
 		if(readOnly || !store.tiddlerExists(tiddler.title)) {
 			return false;
 		}
-		var space = ns.determineSpace(tiddler, true);
-		return space && space.name == ns.currentSpace.name && space.type == "private";
+		var space = tiddlyspace.determineSpace(tiddler, true);
+		return space && space.name == tiddlyspace.currentSpace.name &&
+			space.type == "private";
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.toggleWorkspace(tiddler.fields['server.workspace']);
+		var newWorkspace = cmd.toggleWorkspace(tiddler.fields["server.workspace"]);
 		this.copyTiddler(title, newWorkspace, callback); // copy by default
 	},
 	toggleWorkspace: function(workspace, to) {
 		var newWorkspace;
 		if(workspace.indexOf("_private") > -1) { // should make use of endsWith
 			to = to ? to : "public";
-			newWorkspace = workspace.replace("_private", "_%0".format([to]));
+			newWorkspace = workspace.replace("_private", "_" + to);
 		} else {
 			to = to ? to : "private";
-			newWorkspace = workspace.replace("_public", "_%0".format([to]));
+			newWorkspace = workspace.replace("_public", "_" + to);
 		}
 		return newWorkspace;
 	},
@@ -49,7 +50,7 @@ var cmd = config.commands.publishTiddler = {
 	},
 	copyTiddler: function(title, newWorkspace, callback) {
 		var original = store.getTiddler(title);
-		var space = ns.determineSpace(original);
+		var space = tiddlyspace.determineSpace(original);
 		var adaptor = original.getAdaptor();
 		var publish = function(original, callback) {
 			var tiddler = $.extend(new Tiddler(original.title), original);
@@ -68,7 +69,7 @@ var cmd = config.commands.publishTiddler = {
 			var adaptor = tiddler.getAdaptor();
 			var newTitle = newTiddler.title;
 			var oldTitle = tiddler.title;
-			var newWorkspace = newTiddler.fields['server.workspace'];
+			var newWorkspace = newTiddler.fields["server.workspace"];
 
 			cmd.copyTiddler(oldTitle, newWorkspace, function(ctx) {
 					var context = {
@@ -91,19 +92,19 @@ var cmd = config.commands.publishTiddler = {
 		var oldWorkspace = tiddler.fields["server.workspace"];
 		var oldTitle = tiddler.title;
 		var newTitle = newTiddler.title;
-		var newWorkspace = newTiddler.fields['server.workspace'];
+		var newWorkspace = newTiddler.fields["server.workspace"];
 
 		// we first must delete any existing public revisions
 		tiddler.title = newTitle;
-		tiddler.fields['server.workspace'] = newWorkspace;
-		tiddler.fields['server.page.revision'] = "false"; // force this action
+		tiddler.fields["server.workspace"] = newWorkspace;
+		tiddler.fields["server.page.revision"] = "false"; // force this action
 
-		adaptor.deleteTiddler(tiddler, {workspace: newWorkspace}, {},
+		adaptor.deleteTiddler(tiddler, { workspace: newWorkspace }, {},
 			function(ctx) {
-				tiddler.fields['server.workspace'] = oldWorkspace; // rectify above change to workspace
+				tiddler.fields["server.workspace"] = oldWorkspace; // rectify above change to workspace
 				adaptor.moveTiddler(
-					{title: oldTitle, workspace: oldWorkspace},
-					{title: newTitle, workspace: newWorkspace},
+					{ title: oldTitle, workspace: oldWorkspace },
+					{ title: newTitle, workspace: newWorkspace },
 					{}, {},
 					function(context) {
 						var newTiddler = context.tiddler;
@@ -125,20 +126,20 @@ var cmd = config.commands.publishTiddler = {
 config.commands.changeToPrivate = {
 	text: "make private",
 	tooltip: "turn this public tiddler into a private tiddler",
-	handler: function(event,src,title) {
+	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.getPrivateWorkspace(tiddler.fields['server.workspace']);
-		var newTiddler = {title: title, fields: {"server.workspace": newWorkspace}};
+		var newWorkspace = cmd.getPrivateWorkspace(tiddler.fields["server.workspace"]);
+		var newTiddler = { title: title, fields: { "server.workspace": newWorkspace }};
 		cmd.moveTiddler(tiddler, newTiddler, true);
 	}
 };
 config.commands.changeToPublic = {
 	text: "make public",
 	tooltip: "turn this private tiddler into a public tiddler",
-	handler: function(event,src,title) {
+	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.getPublicWorkspace(tiddler.fields['server.workspace']);
-		var newTiddler = {title: title, fields: {"server.workspace": newWorkspace}};
+		var newWorkspace = cmd.getPublicWorkspace(tiddler.fields["server.workspace"]);
+		var newTiddler = { title: title, fields: { "server.workspace": newWorkspace }};
 		cmd.moveTiddler(tiddler, newTiddler, true);
 	}
 };
@@ -150,13 +151,13 @@ config.commands.deleteTiddler.deleteResource = function(tiddler, workspace) {
 		workspace: workspace
 	};
 	tiddler.fields["server.workspace"] = context.workspace;
-	tiddler.fields['server.page.revision'] = 'false';
+	tiddler.fields["server.page.revision"] = "false";
 	var callback;
 	if(workspace == originalWorkspace) {
-		callback = sssPlugin.removeTiddlerCallback;
+		callback = config.extensions.ServerSideSavingPlugin.removeTiddlerCallback;
 	} else {
 		callback = function(context, userParams) {
-			tiddler.fields['server.workspace'] = originalWorkspace;
+			tiddler.fields["server.workspace"] = originalWorkspace;
 			story.refreshTiddler(tiddler.title, true);
 			story.displayTiddler(place, tiddler.title);
 		};
@@ -168,11 +169,11 @@ config.commands.deletePublicTiddler = {
 	text: "delete public",
 	tooltip: "Delete any public versions of this tiddler",
 	isEnabled: function(tiddler) {
-		return tiddler.fields['server.workspace'];
+		return tiddler.fields["server.workspace"];
 	},
-	handler: function(event,src,title) {
+	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var workspace = tiddler.fields['server.workspace'];
+		var workspace = tiddler.fields["server.workspace"];
 		workspace = cmd.getPublicWorkspace(workspace);
 		config.commands.deleteTiddler.deleteResource(tiddler, workspace);
 	}
@@ -181,9 +182,9 @@ config.commands.deletePublicTiddler = {
 config.commands.deletePrivateTiddler = {
 	text: "delete private",
 	tooltip: "delete any private versions of this tiddler",
-	handler: function(event,src,title) {
+	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var workspace = tiddler.fields['server.workspace'];
+		var workspace = tiddler.fields["server.workspace"];
 		workspace = cmd.getPrivateWorkspace(workspace);
 		config.commands.deleteTiddler.deleteResource(tiddler, workspace);
 	}
@@ -204,14 +205,14 @@ config.commands.saveDraft = {
 			return false;
 		}
 	},
-	handler: function(ev, src, title) { 
-		// XX: todo - when creating a draft also copy over revisions from the public version.
+	handler: function(ev, src, title) {
+		// TODO: when creating a draft also copy over revisions from the public version
 		var tiddler = store.getTiddler(title); // original tiddler
 		var tidEl = story.getTiddler(title);
 		var fields = {};
 		story.gatherSaveFields(tidEl, fields);
-		var extendedFields = merge({},config.defaultCustomFields);
-		var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
+		var extendedFields = merge({}, config.defaultCustomFields);
+		var currentSpace = tiddlyspace.currentSpace.name;
 		var privateWorkspace = "recipes/%0_private".format([currentSpace]);
 		var draftTitle;
 		var draftNum = "";
@@ -224,17 +225,17 @@ config.commands.saveDraft = {
 			}
 		}
 
-		extendedFields['server.publish.name'] = title;
-		extendedFields['server.workspace'] = privateWorkspace;
+		extendedFields["server.publish.name"] = title;
+		extendedFields["server.workspace"] = privateWorkspace;
 		var newDate = new Date();
 		for(var n in fields) {
 			if(!TiddlyWiki.isStandardField(n)) {
 				extendedFields[n] = fields[n];
 			}
 		}
-		tiddler = store.saveTiddler(draftTitle, draftTitle,fields.text,config.options.txtUserName,
-			newDate,fields.tags,extendedFields);
-		autoSaveChanges(null,[tiddler]);
+		tiddler = store.saveTiddler(draftTitle, draftTitle, fields.text, config.options.txtUserName,
+			newDate, fields.tags, extendedFields);
+		autoSaveChanges(null, [tiddler]);
 		story.closeTiddler(title);
 		story.displayTiddler(src, draftTitle);
 		return draftTitle;
