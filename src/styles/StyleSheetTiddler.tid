@@ -358,4 +358,21 @@ tags: excludeLists
 .revButton {
 	float: right;
 }
+
+/*! EditTemplate specific*/
+.tiddler .privacySettings {
+	text-align: center;
+}
+
+.tiddler .privacySettings .originButton{
+	display: inline;
+}
+
+.annotationsBox {
+	margin-top: 4em;
+}
+
+.editorFooter {
+	padding: 0.3em 1em 0.3em 1em;
+}
 /*}}}*/
