@@ -160,12 +160,13 @@ var originMacro = config.macros.tiddlerOrigin = {
 				return "privateNotPublic";
 			}
 		};
+		var context;
 		if(type == "private") { //check for a public version
 			// is there a public version in store?
 			var title = tiddler.title;
 			var publicVersion = store.getTiddler("%0 [public]".format([title]));
 			if(!publicVersion) {
-				var context = {
+				context = {
 					workspace: "bags/%0_public".format([space.name])
 				};
 				adaptor.getTiddler(tiddler.title, context, null, function(context) {
@@ -182,7 +183,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			if(serverTitle != tiddler.title) { // viewing a spawned public tiddler
 				callback(determineType(store.getTiddler(serverTitle), tiddler));
 			} else {
-				var context = {
+				context = {
 					workspace: "bags/%0_private".format([space.name])
 				};
 				adaptor.getTiddler(tiddler.title, context, null, function(context) {
@@ -204,11 +205,11 @@ var originMacro = config.macros.tiddlerOrigin = {
 			labelOptions: { includeLabel: includeLabel },
 			imageOptions: imageMacro.getArguments(paramString, [])
 		};
-		options.space = tiddlyspace.determineSpace(tiddler, true)
+		options.space = tiddlyspace.determineSpace(tiddler, true);
 		var concertinaContentEl = $("<div />")[0];
 
 		var concertinaButton = originMacro.createConcertinaButton(place, concertinaContentEl);
-		var type = originMacro.determineTiddlerType(tiddler, options, function(type) {
+		type = originMacro.determineTiddlerType(tiddler, options, function(type) {
 			originMacro.renderIcon(tiddler, type, concertinaButton,
 				concertinaContentEl, options);
 		});
@@ -318,7 +319,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		}
 	},
 	concertinaCommands: {
-		public: function(place, tiddler) {
+		"public": function(place, tiddler) {
 			var locale = originMacro.locale;
 			var chk = $('<input type="checkbox" checked="true" name="retainPublicRevisions" />');
 			var doPublish = function(ev) {
@@ -346,7 +347,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			$("<span />").click(toggleCheckbox).
 				text(locale.retainPublicRevisions).appendTo(place);
 		},
-		private: function(place, tiddler) {
+		"private": function(place, tiddler) {
 			var locale = originMacro.locale;
 			var adaptor = tiddler.getAdaptor();
 			var chk = $('<input type="checkbox" checked="true" name="retainRevisions" />');
@@ -383,7 +384,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				text(locale.retainPrivateRevisions).appendTo(place);
 		},
 		privateNotPublic: function(place, tiddler) {
-			originMacro.concertinaCommands.private(place, tiddler);
+			originMacro.concertinaCommands["private"](place, tiddler);
 			originMacro.concertinaCommands.privateAndPublic(place, tiddler);
 		},
 		privateAndPublic: function(place, tiddler) {
