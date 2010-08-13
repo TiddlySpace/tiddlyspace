@@ -27,17 +27,12 @@ config.macros.setPrivacy = {
 		var originButton = $(".originButton", el)[0];
 		var iconOptions = { labelOptions: { includeLabel: "true" } };
 		if(isNewTiddler || isExternal) {
-			var rbtn = $('<input type="radio" />').attr("name", tiddler.title).
-				append("<label />");
-			var radios = [
-				rbtn.clone().attr("checked", "true").val("private").
-					addClass("isPrivate").
-					find("label").text("private").end(). // TODO: i18n
-					appendTo(container),
-				rbtn.clone().val("public").addClass("isPublic").
-					find("label").text("public").end(). // TODO: i18n
-					appendTo(container)
-			];
+			var rbtn = $('<input type="radio" />').attr("name", tiddler.title);
+			rbtn.clone().val("private").addClass("isPrivate").
+				attr("checked", "true").appendTo(container);
+			$("<label />").text("private").appendTo(container); // TODO: i18n
+			rbtn.clone().val("public").addClass("isPublic").appendTo(container);
+			$("<label />").text("public").appendTo(container); // TODO: i18n
 			var refreshIcon = function(type) {
 				var originMacro = config.macros.originMacro;
 				if(originButton && originMacro) {
@@ -45,7 +40,7 @@ config.macros.setPrivacy = {
 					originMacro.showPrivacyRoundel(tiddler, type, originButton, null, iconOptions);
 				}
 			};
-			radios.click(function() {
+			$("[type=radio]", container).click(function() {
 				var btn = $(this);
 				var saveField = $("[edit=server.workspace]", el);
 				var name = el.attr("name");
