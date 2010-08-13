@@ -1,11 +1,11 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
 |''Version''|0.5.0|
-|''Status''|beta|
+|''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceTiddlerIconsPlugin.js|
 |''Requires''|TiddlySpaceConfig BinaryTiddlersPlugin ImageMacroPlugin TiddlySpacePublishingCommands|
-|''Source''||
 !Notes
 Provides an additional SiteIcon view for use with view macro
 {{{<<view modifier SiteIcon>>}}}
@@ -19,7 +19,6 @@ If a tiddler is external, the SiteIcon of that external space will be shown
 
 When a ViewTemplate contains an element with class concertina, clicking on the icon outputted by the tiddlerOrigin macro
 will reveal more detailed information on what the icon means.
-
 !Parameters
 both take the same parameters
 width / height : define a width or height of the outputted icon
@@ -39,8 +38,6 @@ if(!config.macros.image) {
 var imageMacro = config.macros.image;
 var tiddlyspace = config.extensions.tiddlyspace;
 var getStatus = config.extensions.tiddlyweb.getStatus;
-var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
-var sssPlugin = config.extensions.ServerSideSavingPlugin;
 var cmd = config.commands.publishTiddler;
 
 config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
@@ -50,6 +47,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 	var imageOptions = imageMacro.getArguments(extraArgs, []);
 	var imagePlace = $("<div />").appendTo(container)[0];
 	var pos;
+	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
 	if(endsWith(value, "_public")) {
 		pos = value.indexOf("_public");
 		value = value.substr(0, pos);
@@ -68,15 +66,14 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		}
 	} else {
 		getStatus(function(status) {
-			var uri = tiddlyspace.getAvatar(status.server_host, {name: value});
+			var uri = tiddlyspace.getAvatar(status.server_host, { name: value });
 			imageMacro.renderImage(imagePlace, uri, imageOptions);
 			if(!value) {
 				value = "tiddlyspace";
 			}
 		});
 	}
-	$('<div class="label" />').
-		text("%0%1%2".format([labelPrefix, value, labelSuffix])).
+	$('<div class="label" />').text(labelPrefix + value + labelSuffix).
 		appendTo(container);
 	$(container).attr("title", value).attr("alt", value);
 };
@@ -140,7 +137,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		} else {
 			var space = options.space;
 			if(space && space.name == tiddlyspace.currentSpace.name) {
-				var parts = tiddler.fields['server.workspace'].split("_"); // todo: use the split function in TiddlySpaceConfig
+				var parts = tiddler.fields["server.workspace"].split("_"); // TODO: use the split function in TiddlySpaceConfig
 				var spaceType = parts[parts.length - 1];
 				var type = ["public", "private"].contains(spaceType) ? spaceType : false;
 				originMacro.distinguishPublicPrivateType(tiddler, options, type, callback);
@@ -181,7 +178,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				callback(determineType(tiddler, publicVersion));
 			}
 		} else {
-			var serverTitle = tiddler.fields['server.title'];
+			var serverTitle = tiddler.fields["server.title"];
 			if(serverTitle != tiddler.title) { // viewing a spawned public tiddler
 				callback(determineType(store.getTiddler(serverTitle), tiddler));
 			} else {
@@ -203,19 +200,24 @@ var originMacro = config.macros.tiddlerOrigin = {
 		var type = "private";
 		var parsedParams = paramString.parseParams("name")[0];
 		var includeLabel = parsedParams.label && parsedParams.label[0] == "yes";
-		var options = {labelOptions: {includeLabel: includeLabel}, imageOptions: imageMacro.getArguments(paramString, [])};
+		var options = {
+			labelOptions: { includeLabel: includeLabel },
+			imageOptions: imageMacro.getArguments(paramString, [])
+		};
 		options.space = tiddlyspace.determineSpace(tiddler, true)
 		var concertinaContentEl = $("<div />")[0];
 
 		var concertinaButton = originMacro.createConcertinaButton(place, concertinaContentEl);
 		var type = originMacro.determineTiddlerType(tiddler, options, function(type) {
-			originMacro.renderIcon(tiddler, type, concertinaButton, concertinaContentEl, options);
+			originMacro.renderIcon(tiddler, type, concertinaButton,
+				concertinaContentEl, options);
 		});
 	},
 	renderIcon: function(tiddler, type, concertinaButton, concertinaContentEl, options) {
 		var locale = originMacro.locale;
 		if(type != "external") {
-			originMacro.showPrivacyRoundel(tiddler, type, concertinaButton, concertinaContentEl, options);
+			originMacro.showPrivacyRoundel(tiddler, type, concertinaButton,
+				concertinaContentEl, options);
 		} else {
 			var label = locale.external.format([options.space.name || "tiddlyspace"]);
 			getStatus(function(status) {
@@ -245,7 +247,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		var fields1 = tiddler1.fields;
 		var fields2 = tiddler2.fields;
 		var sameFields = true;
-		var ignoreList = ['changecount', 'doNotSave'];
+		var ignoreList = ["changecount", "doNotSave"];
 		for(var field in fields1) {
 			if(field.indexOf("server.") !== 0 && !ignoreList.contains(field)) { // ignore server fields
 				if(!fields2[field]) {
@@ -294,7 +296,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 					modifier = locale.unknownUser;
 				}
 				var spaceLink, link;
-				var title = tiddler.fields['server.title'] || tiddler.title;
+				var title = tiddler.fields["server.title"] || tiddler.title;
 				if(!space) {
 					space = "core";
 					link = "[[/%0|/%0]]".format([title]);
@@ -318,14 +320,17 @@ var originMacro = config.macros.tiddlerOrigin = {
 	concertinaCommands: {
 		public: function(place, tiddler) {
 			var locale = originMacro.locale;
-			var chk = $('<input type="checkbox" checked="true" name="retainPublicRevisions"/>');
+			var chk = $('<input type="checkbox" checked="true" name="retainPublicRevisions" />');
 			var doPublish = function(ev) {
 				var checked = chk.attr("checked");
 				var msg = checked ? locale.moveToPrivateKeep : locale.moveToPrivate;
 				var answer = confirm(msg);
 				if(answer) {
-					var privateWorkspace = cmd.getPrivateWorkspace(tiddler.fields['server.workspace']);
-					cmd.moveTiddler(tiddler, {title: tiddler.title, fields: {"server.workspace": privateWorkspace}}, chk.attr("checked"));
+					var privateWorkspace = cmd.getPrivateWorkspace(tiddler.fields["server.workspace"]);
+					cmd.moveTiddler(tiddler, {
+						title: tiddler.title,
+						fields: { "server.workspace": privateWorkspace }
+					}, chk.attr("checked"));
 				}
 			};
 			var toggleCheckbox = function(ev) {
@@ -338,12 +343,13 @@ var originMacro = config.macros.tiddlerOrigin = {
 			var link = $('<a class="publishButton" />').text(locale.makePrivate).
 			click(doPublish).appendTo(place);
 			chk.appendTo(place);
-			$("<span />").click(toggleCheckbox).text(locale.retainPublicRevisions).appendTo(place);
+			$("<span />").click(toggleCheckbox).
+				text(locale.retainPublicRevisions).appendTo(place);
 		},
 		private: function(place, tiddler) {
 			var locale = originMacro.locale;
 			var adaptor = tiddler.getAdaptor();
-			var chk = $('<input type="checkbox" checked="true" name="retainRevisions"/>');
+			var chk = $('<input type="checkbox" checked="true" name="retainRevisions" />');
 			var toggleCheckbox = function(ev) {
 				if (chk.attr("checked")) {
 					chk.attr("checked", true);
@@ -360,17 +366,21 @@ var originMacro = config.macros.tiddlerOrigin = {
 				msg = checked ? locale.publishPrivateKeepPrivate : locale.publishPrivateDeletePrivate;
 				var title = tiddler.title;
 				var newTitle = publishTo || tiddler.title;
-				tiddler.fields['server.page.revision'] = "false";
+				tiddler.fields["server.page.revision"] = "false";
 				store.addTiddler(tiddler);
 				var answer = confirm(msg);
 				if(answer) {
-					cmd.moveTiddler(tiddler, {title: newTitle, fields: {"server.workspace": publicWorkspace}}, checked);
+					cmd.moveTiddler(tiddler, {
+						title: newTitle,
+						fields: { "server.workspace": publicWorkspace }
+					}, checked);
 				}
 			};
 			var link = $('<a class="publishButton" />').text(locale.makePublic).
 			click(doPublish).appendTo(place);
 			chk.appendTo(place);
-			$("<span />").click(toggleCheckbox).text(locale.retainPrivateRevisions).appendTo(place);
+			$("<span />").click(toggleCheckbox).
+				text(locale.retainPrivateRevisions).appendTo(place);
 		},
 		privateNotPublic: function(place, tiddler) {
 			originMacro.concertinaCommands.private(place, tiddler);
@@ -380,7 +390,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			var locale = originMacro.locale;
 			var deleteTiddler = function(type) {
 				type = type ? type.toLowerCase() : "public";
-				var workspace = cmd.toggleWorkspace(tiddler.fields['server.workspace'], type);
+				var workspace = cmd.toggleWorkspace(tiddler.fields["server.workspace"], type);
 				if(confirm(locale["%0ConfirmDelete".format([type])])) {
 					config.commands.deleteTiddler.deleteResource(tiddler, workspace);
 				}
@@ -391,8 +401,10 @@ var originMacro = config.macros.tiddlerOrigin = {
 			var deletePrivate = function(ev) {
 				deleteTiddler("private");
 			};
-			$('<a class="publishButton" />').text(locale.deletePublic).click(deletePublic).appendTo(place);
-			$('<a class="publishButton" />').text(locale.deletePrivate).click(deletePrivate).appendTo(place);
+			$('<a class="publishButton" />').text(locale.deletePublic).
+				click(deletePublic).appendTo(place);
+			$('<a class="publishButton" />').text(locale.deletePrivate).
+				click(deletePrivate).appendTo(place);
 		}
 	}
 };

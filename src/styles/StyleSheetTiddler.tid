@@ -48,8 +48,9 @@ tags: excludeLists
 }
 
 .concertina .publishButton {
-	-webkit-border-radius: 1em 1em 1em 1em;
-	-moz-border-radius: 1em 1em 1em 1em;
+	border-radius: 1em;
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
 	background-color: white;
 	border: 1px solid black;
 	display: block;
