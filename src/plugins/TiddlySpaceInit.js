@@ -30,11 +30,8 @@ var macro = config.macros.TiddlySpaceInit = {
 			tid.fields[versionField] = this.version;
 			tid.text = "@@%0@@".format([this.flagWarning]);
 			store.saveTiddler(tid);
-			var autoSave = config.options.chkAutoSave;
-			config.options.chkAutoSave = false;
+			autoSaveChanges(null, [tid]);
 			this.dispatch();
-			config.options.chkAutoSave = autoSave;
-			autoSaveChanges();
 		}
 	},
 	dispatch: function() {
@@ -49,6 +46,7 @@ var macro = config.macros.TiddlySpaceInit = {
 			});
 			tid.text = macro[item].format([space.name]);
 			store.saveTiddler(tid);
+			autoSaveChanges(null, [tid]);
 		});
 		// generate ColorPalette (ensuring it's public)
 		var wfield = "server.workspace";
