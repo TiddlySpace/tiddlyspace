@@ -47,6 +47,17 @@ tags: excludeLists
 	-ms-filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ff8BD69E)";
 }
 
+.concertina .publishButton {
+	-webkit-border-radius: 1em 1em 1em 1em;
+	-moz-border-radius: 1em 1em 1em 1em;
+	background-color: white;
+	border: 1px solid black;
+	display: block;
+	padding: 0.7em;
+	text-align: center;
+	width: 12em;
+}
+
 .content .calendar {
 	margin-left: 2em;
 	position: relative;
