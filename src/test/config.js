@@ -6,12 +6,8 @@ module("config");
 
 test("settings", function() {
 	// XXX: relies on fixtures/tiddlyweb.js due to evaluation timing
-	var toolbarCommands = config.shadowTiddlers.ToolbarCommands;
-
-	strictEqual(toolbarCommands.length, 185);
-	strictEqual(toolbarCommands.indexOf(" publishTiddlerRevision "), 60);
-
-	strictEqual(ns.currentSpace, "foo");
+	strictEqual(ns.currentSpace.type, "private");
+	strictEqual(ns.currentSpace.name, "foo");
 });
 
 test("determineSpace from container name", function() {
