@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.5.0|
+|''Version''|0.5.1|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -45,7 +45,7 @@ var macro = config.macros.TiddlySpaceInit = {
 				"server.workspace": pubWorkspace
 			});
 			tid.text = macro[item].format([space.name]);
-			store.saveTiddler(tid);
+			tid = store.saveTiddler(tid);
 			autoSaveChanges(null, [tid]);
 		});
 		// generate ColorPalette (ensuring it's public)
