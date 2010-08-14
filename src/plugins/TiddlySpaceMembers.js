@@ -52,7 +52,12 @@ var macro = config.macros.TiddlySpaceMembers = {
 			macro.displayMembers(data, container);
 		};
 		var errback = function(xhr, error, exc) {
-			var msg = macro.locale.listError.format([macro.space.name, error]);
+			var msg;
+			if(xhr.status == 403) {
+				msg = macro.locale.authError.format([macro.space.name]);
+			} else {
+				msg = macro.locale.listError.format([macro.space.name, error]);
+			}
 			macro.notify(msg, container);
 		};
 		this.space.members().get(callback, errback);
@@ -99,6 +104,10 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var username = btn.data("username");
 		var msg = macro.locale.delPrompt.format([username]);
 		var callback = function(data, status, xhr) {
+			if(username == config.options.txtUserName) {
+				readOnly = true;
+				refreshDisplay();
+			}
 			var container = btn.closest("div");
 			macro.refresh(container);
 		};
