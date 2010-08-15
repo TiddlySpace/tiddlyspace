@@ -29,7 +29,7 @@ var macro = config.macros.TiddlySpaceInit = {
 			var versionField = "%0_version".format([macroName]);
 			tid.fields[versionField] = this.version;
 			tid.text = "@@%0@@".format([this.flagWarning]);
-			store.saveTiddler(tid);
+			tid = store.saveTiddler(tid);
 			autoSaveChanges(null, [tid]);
 			this.dispatch();
 		}
