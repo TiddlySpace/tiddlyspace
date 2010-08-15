@@ -1,9 +1,10 @@
 /***
 |''Name''|TiddlySpaceSpaces|
-|''Version''||
-|''Description''||
+|''Version''|0.5.0|
+|''Description''|TiddlySpace spaces management|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
 |''Requires''|TiddlyWebConfig TiddlySpaceInclusion TiddlySpaceUserControls|
-|''Source''||
 !HTMLForm
 <form action="#">
 	<fieldset>
@@ -85,7 +86,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var ns = config.extensions.tiddlyspace;
 		var callback = function(resource, status, xhr) {
 			if(subscribe) {
-				config.macros.TiddlySpaceInclusion.include(
+				config.macros.TiddlySpaceInclusion.inclusion(
 					ns.currentSpace.name, space.name);
 			}
 			var link = $('<a href="javascript:;" />').text(space.name); // TODO: calculate URL
