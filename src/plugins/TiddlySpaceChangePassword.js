@@ -86,7 +86,7 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 
 	changePassword: function(username, password, npassword, form) {
 		var pwCallback = function(resource, status, xhr) {
-			displayMessage(msg.cpwSuccess);
+			displayMessage(macro.locale.cpwSuccess);
 		};
 		var pwErrback = function(xhr, error, exc) {
 			var ctx = {
