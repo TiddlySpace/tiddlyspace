@@ -299,7 +299,6 @@ class AllowOrigin(object):
     def __call__(self, environ, start_response):
         def replacement_start_response(status, headers, exc_info=None):
             if environ['REQUEST_METHOD'] == 'GET':
-                print 'adding acao'
                 headers.append(('Access-Control-Allow-Origin', '*'))
             return start_response(status, headers, exc_info)
         return self.application(environ, replacement_start_response)
