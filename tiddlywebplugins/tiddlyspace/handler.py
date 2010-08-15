@@ -291,6 +291,19 @@ def _status_gather_data(environ):
 
 tiddlywebplugins.status._gather_data = _status_gather_data
 
+class AllowOrigin(object):
+
+    def __init__(self, application):
+        self.application = application
+
+    def __call__(self, environ, start_response):
+        def replacement_start_response(status, headers, exc_info=None):
+            if environ['REQUEST_METHOD'] == 'GET':
+                print 'adding acao'
+                headers.append(('Access-Control-Allow-Origin', '*'))
+            return start_response(status, headers, exc_info)
+        return self.application(environ, replacement_start_response)
+
 
 class ControlView(object):
     """
@@ -311,12 +324,7 @@ class ControlView(object):
                 req_uri.startswith('/search')):
             self._handle_core_request(environ, start_response, req_uri)
 
-        def replacement_start_response(status, headers, exc_info=None):
-            if environ['REQUEST_METHOD'] == 'GET':
-                headers.append(('Access-Control-Allow-Origin', '*'))
-            return start_response(status, headers, exc_info)
-
-        return self.application(environ, replacement_start_response)
+        return self.application(environ, start_response)
 
     # XXX too long!
     def _handle_core_request(self, environ, start_response, req_uri):

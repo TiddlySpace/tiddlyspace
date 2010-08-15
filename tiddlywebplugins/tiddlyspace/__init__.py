@@ -7,6 +7,7 @@ repository: http://github.com/TiddlySpace/tiddlyspace
 """
 
 from tiddlyweb.web.extractor import UserExtract
+from tiddlyweb.web.http import HTTPExceptor
 from tiddlyweb.manage import make_command
 from tiddlyweb.util import merge_config
 
@@ -14,7 +15,7 @@ from tiddlywebplugins.utils import replace_handler, get_store
 
 from tiddlywebplugins.tiddlyspace.config import config as space_config
 from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
-        friendly_uri, get_identities, ControlView)
+        friendly_uri, get_identities, ControlView, AllowOrigin)
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 
@@ -102,3 +103,7 @@ def init(config):
             config['server_request_filters'].insert(
                     config['server_request_filters'].
                     index(UserExtract) + 1, ControlView)
+        if AllowOrigin not in config['server_response_filters']:
+            config['server_response_filters'].insert(
+                    config['server_response_filters'].
+                    index(HTTPExceptor) + 1, AllowOrigin)
