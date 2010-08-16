@@ -1,0 +1,13 @@
+type: image/svg+xml
+tags: excludeLists
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="78 222 60 60" 
+width="30" height="30">
+<g stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+	<g>
+		<path d="M 107.92718 244.14815 L 86.651474 222.89253 L 78.85206 230.69925 L 100.120415 251.9476 L 78.774 273.27396 
+		L 86.57342 281.08075 L 107.927216 259.74707 L 129.39981 281.19946 L 137.19922 273.39267 L 115.73397 251.94763 
+		L 137.121155 230.58054 L 129.32175 222.77374 Z" fill="black" class="glyph"/>
+	</g>
+</g>
+</svg>

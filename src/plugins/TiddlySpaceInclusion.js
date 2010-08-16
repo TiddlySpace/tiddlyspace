@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceInclusion|
-|''Version''||
-|''Description''|Provides user interfaces for managing inclusion within TiddlySpace|
-|''Status''|//unknown//|
-|''Source''|http://github.com/TiddlySpace/tiddlyspace|
+|''Version''|0.5.1|
+|''Description''|provides user interfaces for managing TiddlySpace inclusions|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceInclusion.js|
 |''Requires''|TiddlySpaceConfig TiddlySpaceUserControls chrjs|
 !HTMLForm
 <form action="#">
@@ -29,7 +29,7 @@
 //{{{
 (function($) {
 
-var host = config.extensions.tiddlyweb.host;
+var tweb = config.extensions.tiddlyweb;
 var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
 
 var macro = config.macros.TiddlySpaceInclusion = {
@@ -83,18 +83,26 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		}
 	},
 	listInclusions: function(container) {
-		var recipe = new tiddlyweb.Recipe(currentSpace + "_public", host);
+		var recipe = new tiddlyweb.Recipe(currentSpace + "_public", tweb.host);
 		recipe.get(function(recipe, status, xhr) {
 			var inclusions = $.map(recipe.recipe, function(item, i) { // TODO: refactor to canonicalize; move to TiddlySpaceConfig!?
 				var arr = item[0].split("_public");
 				return (arr[0] != currentSpace && arr[1] === "") ? arr[0] : null;
 			});
 			var items = $.map(inclusions, function(item, i) { // TODO: DRY (cf. displayMembers)
-				var link = $('<a href="javascript:;" />').text(item); // TODO: link to space
+				var link = $("<a />").text(item);
+				tweb.getStatus(function(status) {
+					var uri = config.extensions.tiddlyspace.getHost(
+						status.server_host, item);
+					link.attr("href", uri);
+				});
 				var btn = $('<a class="deleteButton" href="javascript:;" />').
 					text("x"). // TODO: i18n (use icon!?)
 					attr("title", macro.locale.delTooltip).
 					data("space", item).click(macro.onDelClick);
+				if(readOnly) {
+					btn.hide();
+				}
 				return $("<li />").append(link).append(btn)[0];
 			});
 			if(items.length) {
@@ -109,7 +117,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 	},
 	populateSpaces: function(form) { // TODO: rename?
 		$.ajax({ // TODO: add to model/space.js?
-			url: host + "/spaces?mine=1",
+			url: tweb.host + "/spaces?mine=1",
 			type: "GET",
 			success: function(data, status, xhr) {
 				var spaces = $.map(data, function(item, i) {
@@ -166,8 +174,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			displayMessage(macro.locale.delError.format([username, error]));
 		};
 		if(confirm(msg)) {
-
-			var recipe = new tiddlyweb.Recipe(provider + "_public", host);
+			var recipe = new tiddlyweb.Recipe(provider + "_public", tweb.host);
 			recipe.get(function(recipe, status, xhr) {
 				var inclusions = $.map(recipe.recipe, function(item, i) { // XXX: duplicated from above
 					var arr = item[0].split("_public");
@@ -186,7 +193,6 @@ var macro = config.macros.TiddlySpaceInclusion = {
 						text(macro.locale.recursiveInclusions).slideDown();
 				}
 			});
-
 			macro.inclusion(provider, currentSpace, callback, errback, true);
 		}
 		return false;
@@ -196,7 +202,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		var key = remove ? "unsubscriptions" : "subscriptions";
 		data[key] = [provider];
 		$.ajax({ // TODO: add to model/space.js?
-			url: host + "/spaces/" + subscriber,
+			url: tweb.host + "/spaces/" + subscriber,
 			type: "POST",
 			contentType: "application/json",
 			data: $.toJSON(data),

@@ -73,7 +73,7 @@ var macro = config.macros.TiddlySpaceIdentities = {
 			find("[type=submit]").val(this.locale.addLabel).end();
 	},
 	onSubmit: function(ev) {
-		var form = $(this)
+		var form = $(this);
 		var redirect = form.find("[name=tiddlyweb_redirect]");
 		var openid = form.find("[name=openid]").val();
 		redirect.val(redirect.val() + openid);

@@ -43,11 +43,16 @@ pypi: test
 dev: remotes dev_local
 
 dev_local:
-	@PYTHONPATH="." twinstance_dev tiddlywebplugins.tiddlyspace dev_instance
-	@echo "from devtiddlers import update_config; update_config(config)" \
+	@mysqladmin -f drop tiddlyspace create tiddlyspace
+	@PYTHONPATH="." ./tiddlyspace dev_instance
+	( cd dev_instance && \
+		ln -s ../devconfig.py && \
+		ln -s ../mangler.py && \
+		ln -s ../tiddlywebplugins && \
+		ln -s ../tiddlyweb )
+	@echo "from devconfig import update_config; update_config(config)" \
 		>> dev_instance/tiddlywebconfig.py
-	@echo "INFO development instance created in dev_instance," \
-		"using tiddler locations defined in devtiddlers.py"
+	@echo "INFO development instance created in dev_instance"
 
 clean:
 	find . -name "*.pyc" | xargs rm || true

@@ -29,19 +29,11 @@ AUTH_COOKIE = None
 
 
 def setup_module(module):
-    make_test_env()
+    make_test_env(module)
     from tiddlyweb.config import config
-    from tiddlyweb.web import serve
     module.secret = config['secret']
-    # we have to have a function that returns the callable,
-    # Selector just _is_ the callable
-    def app_fn():
-        return serve.load_app()
-    #wsgi_intercept.debuglevel = 1
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
-    module.store = Store(config['server_store'][0],
-            config['server_store'][1], {'tiddlyweb.config': config})
     user = User('cdent')
     user.set_password('cow')
     module.store.put(user)

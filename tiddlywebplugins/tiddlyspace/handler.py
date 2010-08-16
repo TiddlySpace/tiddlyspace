@@ -295,6 +295,18 @@ def _status_gather_data(environ):
 
 tiddlywebplugins.status._gather_data = _status_gather_data
 
+class AllowOrigin(object):
+
+    def __init__(self, application):
+        self.application = application
+
+    def __call__(self, environ, start_response):
+        def replacement_start_response(status, headers, exc_info=None):
+            if environ['REQUEST_METHOD'] == 'GET':
+                headers.append(('Access-Control-Allow-Origin', '*'))
+            return start_response(status, headers, exc_info)
+        return self.application(environ, replacement_start_response)
+
 
 class ControlView(object):
     """
@@ -315,21 +327,20 @@ class ControlView(object):
                 req_uri.startswith('/search')):
             self._handle_core_request(environ, start_response, req_uri)
 
-        def replacement_start_response(status, headers, exc_info=None):
-            if environ['REQUEST_METHOD'] == 'GET':
-                headers.append(('Access-Control-Allow-Origin', '*'))
-            return start_response(status, headers, exc_info)
-
-        return self.application(environ, replacement_start_response)
+        return self.application(environ, start_response)
 
     # XXX too long!
     def _handle_core_request(self, environ, start_response, req_uri):
         """
         Override a core request, adding filters or sending 404s where
         necessary to limit the view of entities.
+
+        filtering can be disabled with a custom HTTP header X-ControlView set
+        to false
         """
         http_host, host_url = _determine_host(environ)
-        if http_host != host_url:
+        disable_ControlView = environ.get('HTTP_X_CONTROLVIEW') == 'false'
+        if http_host != host_url and not disable_ControlView:
             space_name = _determine_space(environ, http_host)
             recipe_name = _determine_space_recipe(environ, space_name)
             store = environ['tiddlyweb.store']

@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''||
-|''Description''|Initialises new TiddlySpaces the first time they are created|
-|''Status''|//unknown//|
-|''Source''|http://github.com/TiddlySpace/tiddlyspace|
+|''Version''|0.5.1|
+|''Description''|Initializes new TiddlySpaces the first time they are created|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
 |''Requires''|TiddlySpaceConfig RandomColorPalettePlugin|
 !Code
 ***/
@@ -29,12 +29,9 @@ var macro = config.macros.TiddlySpaceInit = {
 			var versionField = "%0_version".format([macroName]);
 			tid.fields[versionField] = this.version;
 			tid.text = "@@%0@@".format([this.flagWarning]);
-			store.saveTiddler(tid);
-			var autoSave = config.options.chkAutoSave;
-			config.options.chkAutoSave = false;
+			tid = store.saveTiddler(tid);
+			autoSaveChanges(null, [tid]);
 			this.dispatch();
-			config.options.chkAutoSave = autoSave;
-			autoSaveChanges();
 		}
 	},
 	dispatch: function() {
@@ -48,13 +45,14 @@ var macro = config.macros.TiddlySpaceInit = {
 				"server.workspace": pubWorkspace
 			});
 			tid.text = macro[item].format([space.name]);
-			store.saveTiddler(tid);
+			tid = store.saveTiddler(tid);
+			autoSaveChanges(null, [tid]);
 		});
 		// generate ColorPalette (ensuring it's public)
 		var wfield = "server.workspace";
 		var workspace = config.defaultCustomFields[wfield];
 		config.defaultCustomFields[wfield] = pubWorkspace;
-		invokeMacro(null, "RandomColorPalette", "", null, null);
+		config.macros.RandomColorPalette.generatePalette({}, true);
 		config.defaultCustomFields[wfield] = workspace;
 	}
 };

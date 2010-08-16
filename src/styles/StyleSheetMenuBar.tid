@@ -1,0 +1,51 @@
+tags: excludeLists
+
+/*{{{*/
+#menuBar {
+	left: 0;
+	right: 0;
+	position: relative;
+	background-color: [[ColorPalette::Background]];
+	margin: 0;
+	padding: 0.5em 0 0.5em 0;
+	min-height: 1em;
+	overflow: hidden;
+	border-top: 1px solid [[ColorPalette::PrimaryDark]];
+	border-bottom: 1px solid [[ColorPalette::PrimaryDark]];
+	width: 100%; /* for ie 6 */
+}
+
+#mainMenu {
+	position: static;
+	text-align: left;
+	min-height: 1em;
+	margin-left: 1em;
+	float: left;
+	width: auto;
+	padding: 0;
+}
+
+#sidebarOptions {
+	float: right;
+	font-size: 1.1em;
+	line-height: 1.6em;
+	min-height: 1em;
+	padding-top: 0;
+}
+
+#mainMenu a {
+	padding: 0.6em 0.25em;
+}
+
+#mainMenu a:hover {
+	background-color: [[ColorPalette::PrimaryMid]];
+	color: [[ColorPalette::Background]]
+}
+
+#sidebarOptions a {
+	border: 0 none;
+	margin: 0 0.2em;
+	padding: 0.6em 0.25em;
+	display: inline;
+}
+/*}}}*/

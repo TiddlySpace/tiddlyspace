@@ -1,9 +1,0 @@
-tags: styles excludeLists excludeSearch
-
-#tiddlerAuthorization .title { /* hack to hide redundant title */
-	display: none;
-}
-
-[[BubblesCss]]
-[[StyleSheetToolbar]]
-[[HeaderCss]]

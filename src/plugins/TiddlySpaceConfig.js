@@ -1,16 +1,15 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''||
-|''Description''|Configures Tiddly(Web)Wiki for use with TiddlySpace|
-|''Status''|//unknown//|
-|''Source''|http://github.com/TiddlySpace/tiddlyspace|
+|''Version''|0.5.0|
+|''Description''|TiddlySpace configuration|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
 |''Requires''|TiddlyWebConfig|
 !Code
 ***/
 //{{{
 (function($) {
 
-var ns;
 var recipe = config.defaultCustomFields["server.workspace"].split("recipes/")[1];
 
 // hijack search macro to add custom attributes for mobile devices
@@ -59,9 +58,9 @@ var determineContainer = function(tiddler, fuzzy) { // TODO: expose?
 };
 
 // hijack removeTiddlerCallback to restore tiddler from recipe cascade
-ns = config.extensions.ServerSideSavingPlugin;
-var _removeTiddlerCallback = ns.removeTiddlerCallback;
-ns.removeTiddlerCallback = function(context, userParams) {
+var sssp = config.extensions.ServerSideSavingPlugin;
+var _removeTiddlerCallback = sssp.removeTiddlerCallback;
+sssp.removeTiddlerCallback = function(context, userParams) {
 	var title = context.tiddler.title;
 	var recipe = context.tiddler.fields["server.recipe"];
 	_removeTiddlerCallback.apply(this, arguments);
@@ -94,10 +93,11 @@ TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 		modified, tags, fields, clearChangeCount, created, creator) {
 	if(title instanceof Tiddler) { // overloading first argument
 		var t = $.extend(new Tiddler(title.title), title);
-		_saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
+		t = _saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
 			t.modified, t.tags, t.fields, false, t.created, t.creator]);
+		return t;
 	} else {
-		_saveTiddler.apply(this, arguments);
+		return _saveTiddler.apply(this, arguments);
 	}
 };
 
@@ -108,25 +108,34 @@ var plugin = config.extensions.tiddlyspace = {
 	determineSpace: determineSpace,
 	isValidSpaceName: function(name) {
 		return name.match(/^[a-z][0-9a-z\-]*[0-9a-z]$/) ? true : false;
+	},
+	getAvatar: function(host, space) {
+		host = host ? this.getHost(host) : "";
+		var bag = space.name ? "%0_public".format([space.name]) : "tiddlyspace";
+		return "%0/bags/%1/tiddlers/SiteIcon".format([host, bag]);
+	},
+	getHost: function(host, subdomain) {
+		subdomain = subdomain ? subdomain + "." : "";
+		var url = "%0://%1%2".format([host.scheme, subdomain, host.host]);
+		var port = host.port;
+		if(port && !["80", "443"].contains(port)) {
+			url += ":" + port;
+		}
+		return url;
 	}
 };
 
-ns = config.extensions.tiddlyweb;
-ns.serverPrefix = ns.host.split("/")[3] || ""; // XXX: assumes root handler
-ns.getStatus(function(status) {
-	var host = status.server_host;
-	var port = host.port;
-	var url = "%0://%1".format([host.scheme, host.host]);
-	if(port && !["80", "443"].contains(port)) {
-		url += ":" + port;
-	}
-	ns.status.server_host.url = url;
+var tweb = config.extensions.tiddlyweb;
+tweb.serverPrefix = tweb.host.split("/")[3] || ""; // XXX: assumes root handler
+tweb.getStatus(function(status) {
+	var url = plugin.getHost(status.server_host);
+	tweb.status.server_host.url = url;
 });
 
 // set global read-only mode based on membership heuristics
 var indicator = store.getTiddler("SiteTitle") || tiddler;
 readOnly = !(recipe.split("_").pop() == "private" ||
-	ns.hasPermission("write", indicator));
+	tweb.hasPermission("write", indicator));
 
 // ensure backstage is always initialized
 // required to circumvent TiddlyWiki's read-only based handling

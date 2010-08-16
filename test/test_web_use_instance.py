@@ -12,22 +12,13 @@ from tiddlyweb.model.recipe import Recipe
 
 
 def setup_module(module):
-    make_test_env()
-    from tiddlyweb.config import config
-    from tiddlyweb.web import serve
-    # we have to have a function that returns the callable,
-    # Selector just _is_ the callable
-    def app_fn():
-        return serve.load_app()
-    #wsgi_intercept.debuglevel = 1
+    make_test_env(module)
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('thing.0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('other.0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('foo.0.0.0.0', 8080, app_fn)
 
-    module.store = Store(config['server_store'][0],
-            config['server_store'][1], {'tiddlyweb.config': config})
 
 def teardown_module(module):
     import os
@@ -39,7 +30,7 @@ def test_home_page_exist():
     response, content = http.request('http://0.0.0.0:8080/', method='GET')
 
     assert response['status'] == '200'
-    assert 'discoursive' in content
+    assert 'Welcome to TiddlySpace' in content
 
 
 def test_space_not_exist():
@@ -196,3 +187,29 @@ def test_space_exposes_subscription_recipes():
     response, content = http.request('http://foo.0.0.0.0:8080/recipes/baz_private',
             method='GET')
     assert response['status'] == '404'
+
+
+def test_disable_ControlView():
+    make_fake_space(store, 'foo')
+    make_fake_space(store, 'bar')
+    http = httplib2.Http()
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+            method='GET')
+
+    assert 'foo_public' in content, content
+    assert 'bar_public' not in content, content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+            headers={'X-ControlView': 'false'},
+            method='GET')
+
+    assert 'foo_public' in content, content
+    assert 'bar_public' in content, content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+            headers={'X-ControlView': 'true'},
+            method='GET')
+
+    assert 'foo_public' in content, content
+    assert 'bar_public' not in content, content

@@ -38,8 +38,6 @@ def add_spaces_routes(selector):
             )
     selector.add('/spaces/{space_name:segment}/members', # list space members
             GET=list_space_members)
-    selector.add('/spaces/{space_name:segment}/members', # list space members
-            GET=list_space_members)
     selector.add('/spaces/{space_name:segment}/members/{user_name:segment}',
             PUT=add_space_member, # add member to space
             DELETE=delete_space_member) # delete from from space
@@ -165,6 +163,7 @@ def list_spaces(environ, start_response):
                 recipe in store.list_recipes() if
                 recipe.name.endswith('_public')]
     start_response('200 OK', [
+        ('Cache-Control', 'no-cache'),
         ('Content-Type', 'application/json; charset=UTF-8')])
     return simplejson.dumps([{'name': space, 'uri': _space_uri(environ, space)}
         for space in sorted(spaces)])
@@ -186,6 +185,7 @@ def list_space_members(environ, start_response):
     except NoBagError:
         raise HTTP404('No space for %s' % space_name)
     start_response('200 OK', [
+        ('Cache-Control', 'no-cache'),
         ('Content-Type', 'application/json; charset=UTF-8')])
     return simplejson.dumps(members)
 

@@ -1,0 +1,71 @@
+tags: excludeLists
+
+/*{{{*/
+.backstagePanelBody {
+	padding:1em;
+}
+
+.backstagePanelBody .tab {
+	-moz-border-radius-topleft: 0.4em;
+	-webkit-border-top-left-radius: 0.4em;
+	-moz-border-radius-topright: 0.4em;
+	-webkit-border-top-right-radius: 0.4em;
+	margin: 0 0 0 0.6em;
+	padding: 0.4em 0.5em 1px 0.5em;
+}
+
+#backstage .tabContents{
+	padding: 1.5em;
+}
+
+#backstage .wizard {
+	border: 0px;
+}
+
+#backstage div.txtSpaceTab li {
+	border: 1px solid #ddd;
+	background: #eee;
+	list-style: none;
+	margin: 0.5em;
+	padding: 0.5em;
+	width: 80%;
+}
+
+#backstage div  li.listLink {
+	border: 0px;
+	width: 78%;
+	font-size: 0.7em;
+}
+
+#backstage div li.listTitle {
+	font-weight: bold;
+	text-decoration: underline;
+	font-size: 1em;
+	background: #ccc;
+	width: 100%;
+}
+
+#backstage div.txtSpaceTab li .deleteButton {
+	float:right;
+}
+
+#backstage .viewer table,#backstage table.twtable {
+	border: 0px;
+}
+
+
+#backstageToolbar a.task_space,  #backstageToolbar a.task_user {
+	-moz-border-radius-topleft: 0.4em;
+	-webkit-border-top-left-radius: 0.4em;
+	-moz-border-radius-topright: 0.4em;
+	-webkit-border-top-right-radius: 0.4em;
+}
+
+#backstageToolbar img {
+	padding: 0.1em 0.3em 0;
+}
+
+.viewer td, .viewer tr, .twtable td, .twtable tr {
+	border: 1px solid #eee;
+}
+/*}}}*/

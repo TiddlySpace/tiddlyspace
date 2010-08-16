@@ -7,6 +7,7 @@ repository: http://github.com/TiddlySpace/tiddlyspace
 """
 
 from tiddlyweb.web.extractor import UserExtract
+from tiddlyweb.web.http import HTTPExceptor
 from tiddlyweb.manage import make_command
 from tiddlyweb.util import merge_config
 
@@ -14,12 +15,12 @@ from tiddlywebplugins.utils import replace_handler, get_store
 
 from tiddlywebplugins.tiddlyspace.config import config as space_config
 from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
-        friendly_uri, get_identities, ControlView)
+        friendly_uri, get_identities, ControlView, AllowOrigin)
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 
 
-__version__ = '0.2.2'
+__version__ = '0.5.2'
 
 
 def init(config):
@@ -38,11 +39,10 @@ def init(config):
     import tiddlywebplugins.pathinfohack
     import tiddlywebplugins.form
     import tiddlywebplugins.reflector
-    #import tiddlywebplugins.whoosher
 
     @make_command()
     def addmember(args):
-        """Add a member to a space. <space name> <user name>"""
+        """Add a member to a space: <space name> <user name>"""
         store = get_store(config)
         space_name, username = args
         change_space_member(store, space_name, add=username)
@@ -50,11 +50,34 @@ def init(config):
 
     @make_command()
     def delmember(args):
-        """Delete a member from a space. <space name> <user name>"""
+        """Delete a member from a space: <space name> <user name>"""
         store = get_store(config)
         space_name, username = args
         change_space_member(store, space_name, remove=username)
         return True
+
+    @make_command()
+    def deltiddler(args):
+        """Delete a tiddler from a bag: <bag> <title>"""
+        from tiddlyweb.model.tiddler import Tiddler
+        from tiddlyweb.store import NoTiddlerError
+        from tiddlyweb.util import std_error_message
+        bag, title = args
+        prompt = 'deleting tiddler %s from bag %s - enter "yes" to confirm' % (
+                title, bag)
+        if raw_input('%s\n' % prompt) == 'yes':
+            store = get_store(config)
+            tiddler = Tiddler(title, bag)
+            try:
+                store.delete(tiddler)
+            except NoTiddlerError:
+                std_error_message(
+                        'error deleting deleting tiddler %s from bag %s: %s' % (
+                            title, bag, 'no such tiddler'))
+            return True
+        else:
+            std_error_message('aborted')
+            return False
 
     merge_config(config, space_config)
 
@@ -68,7 +91,6 @@ def init(config):
     tiddlywebplugins.pathinfohack.init(config)
     tiddlywebplugins.form.init(config)
     tiddlywebplugins.reflector.init(config)
-    #tiddlywebplugins.whoosher.init(config)
 
     if 'selector' in config: # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
@@ -81,3 +103,7 @@ def init(config):
             config['server_request_filters'].insert(
                     config['server_request_filters'].
                     index(UserExtract) + 1, ControlView)
+        if AllowOrigin not in config['server_response_filters']:
+            config['server_response_filters'].insert(
+                    config['server_response_filters'].
+                    index(HTTPExceptor) + 1, AllowOrigin)

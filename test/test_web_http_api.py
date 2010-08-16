@@ -32,10 +32,7 @@ TESTS = {}
 
 def setup_module(module):
     global TESTS
-    make_test_env()
-    from tiddlyweb.web import serve
-    def app_fn():
-        return serve.load_app()
+    make_test_env(module)
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
 

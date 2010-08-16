@@ -4,7 +4,7 @@
 |''Description''|Provides a TiddlySpace version of the backstage|
 |''Status''|//unknown//|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace|
-|''Requires''|TiddlySpaceConfig|
+|''Requires''|TiddlySpaceConfig ImageMacroPlugin|
 !Code
 ***/
 //{{{
@@ -56,6 +56,8 @@ backstage.show = function() {
 };
 
 var _init = backstage.init;
+var tiddlyspace = config.extensions.tiddlyspace;
+var imageMacro = config.macros.image;
 backstage.init = function(){
 	_init.apply(this, arguments);
 
@@ -71,48 +73,53 @@ backstage.init = function(){
 	var showBtn = $("#backstageShow")[0];
 	var altText = $(showBtn).text();
 	$(showBtn).empty();
-	invokeMacro(showBtn, "image", "backstage.svg 60 60 alt:%0".format([altText]), null);
+	imageMacro.renderImage(showBtn, "backstage.svg",
+		{ alt: altText, width: 100, height: 100 });
 
 	// override hide button
 	var hideBtn = $("#backstageHide")[0];
 	altText = $(hideBtn).text();
 	$(hideBtn).empty();
-	invokeMacro(hideBtn, "image", "close.svg 25 25 alt:%0".format([altText]), null);
+	imageMacro.renderImage(hideBtn, "close.svg",
+		{ alt: altText, width: 48, height: 48 });
 
 	var backstageToolbar = $("#backstageToolbar")[0];
-	$("<div id='backstageLogo' />").prependTo(backstageToolbar);
-	wikify("<<image tiddlyspace.svg 16 16>> ''{{privateLightText{tiddly}}}{{publicLightText{space}}}''",
-		$("#backstageLogo", backstageToolbar)[0]); // XXX: macro invocation is evil
+	var backstageLogo = $('<div id="backstageLogo" />').
+		prependTo(backstageToolbar)[0];
+	var iconName = readOnly ? "publicIcon" : "privateAndPublicIcon";
+	imageMacro.renderImage(backstageLogo, iconName, { width: 48, height: 48 });
+	// construct the tiddlyspace logo
+	$('<span class="logoText"><span class="privateLightText">tiddly</span>' +
+			'<span class="publicLightText">space</span></span>').
+		appendTo(backstageLogo);
 
 	// override space button to show SiteIcon
 	var siteIcon = store.getTiddler("SiteIcon");
 	if(siteIcon) {
 		var btn = $("[task=space]", backstageArea);
 		btn.empty();
-		$('<img class="spaceSiteIcon" />').
-			attr("src", "SiteIcon").appendTo(btn);
+		imageMacro.renderImage(btn[0], "SiteIcon",
+			{ imageClass:"spaceSiteIcon", height: 48, width: 48 });
 		$("<span />").html(config.tasks.space.text).appendTo(btn);
-		$('<span class="spaceName" />').text(config.extensions.tiddlyspace.currentSpace.name).
+		$('<span class="spaceName" />').
+			text(config.extensions.tiddlyspace.currentSpace.name).
 			appendTo(btn);
-
 	}
 
-	var tiddlyweb = config.extensions.tiddlyweb;
-	tiddlyweb.getStatus(function(status) { // XXX: redundant due to getUserInfo!?
-		tiddlyweb.getUserInfo(function(user) {
-			// show avatar in the user's public bag
-			if(!user.anon) { // XXX: duplication of TiddlySpaceVisualization:getAvatar!?
-				var src = "%0/recipes/%1_public/tiddlers/SiteIcon".
-					format([tiddlyweb.status.server_host.url, user.name]);
-				$('<img class="userSiteIcon" />').attr("src", src).appendTo("<span />").
-					appendTo("[task=user]", backstageArea);
-			}
-		});
+	var tweb = config.extensions.tiddlyweb;
+	tweb.getUserInfo(function(user) {
+		if(!user.anon) {
+			var src = tiddlyspace.getAvatar(tweb.status.server_host, { name: user.name });
+			var container = $("<span />").appendTo("[task=user]", backstageArea)[0];
+			imageMacro.renderImage(container, src,
+				{ imageClass:"userSiteIcon", height: 48, width: 48 });
+		}
 
 		// override login button to show default avatar
 		var loginBtn = $("[task=login]", backstageArea);
-		loginBtn.html('<span>%0</span><img class="userSiteIcon" src="/bags/tiddlyspace/tiddlers/SiteIcon" />'.
-			format([config.tasks.login.text]));
+		loginBtn.html("<span>%0</span>".format([config.tasks.login.text]));
+		imageMacro.renderImage(loginBtn[0], "/bags/tiddlyspace/tiddlers/SiteIcon",
+			{ imageClass:"userSiteIcon", height: 48, width: 48 });
 
 		var tasks = $(".backstageTask");
 		for(var i = 0; i < tasks.length; i++) {

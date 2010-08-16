@@ -6,7 +6,21 @@ import Cookie
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
+from tiddlywebplugins.utils import get_store
 
+import tiddlywebplugins.tiddlyspace
+
+from tiddlywebplugins.sqlalchemy import (sField, sRevision,
+        sBag, sRecipe, sUser, sPolicy, sRole)
+import tiddlywebplugins.mysql
+
+from tiddlyweb.config import config
+from tiddlywebplugins.instancer.util import spawn
+
+from tiddlywebplugins.tiddlyspace import instance as instance_module
+from tiddlywebplugins.tiddlyspace.config import config as init_config
+
+SESSION_COUNT = 1
 
 
 def get_auth(username, password):
@@ -24,17 +38,34 @@ def get_auth(username, password):
     return cookie['tiddlyweb_user'].value
 
 
-def make_test_env():
+def make_test_env(module):
+    global SESSION_COUNT
     try:
         shutil.rmtree('test_instance')
-    except OSError:
+    except:
         pass
-    exit = os.system('PYTHONPATH="." ./tiddlyspace test_instance')
-    if exit == 0:
-        os.chdir('test_instance')
+        
+    os.system('mysqladmin -f drop tiddlyspacetest create tiddlyspacetest')
+    if SESSION_COUNT > 1:
+        del sys.modules['tiddlywebplugins.mysql']
+        del sys.modules['tiddlywebplugins.sqlalchemy']
+        import tiddlywebplugins.mysql
+        import tiddlywebplugins.sqlalchemy
+    SESSION_COUNT += 1
+    db_config = init_config['server_store'][1]['db_config']
+    db_config = db_config.replace('///tiddlyspace?','///tiddlyspacetest?')
+    init_config['server_store'][1]['db_config'] = db_config
+
+    if sys.path[0] != os.getcwd():
         sys.path.insert(0, os.getcwd())
-    else:
-        assert False is True, 'unable to create test env'
+    spawn('test_instance', init_config, instance_module)
+
+    from tiddlyweb.web import serve
+    module.store = get_store(config)
+    session = module.store.storage.session
+    def app_fn():
+        return serve.load_app()
+    module.app_fn = app_fn
 
 
 def make_fake_space(store, name):

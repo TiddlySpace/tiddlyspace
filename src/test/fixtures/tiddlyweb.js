@@ -2,5 +2,13 @@ config.defaultCustomFields = {
 	"server.workspace": "recipes/foo_private"
 };
 
-config.shadowTiddlers.ToolbarCommands = config.shadowTiddlers.ToolbarCommands.
-	replace("syncing ", "revisions syncing ");
+config.extensions.ServerSideSavingPlugin = {};
+
+config.extensions.tiddlyweb = {
+	host: "",
+	status: {},
+
+	getStatus: function() {
+		return this.status;
+	}
+};
