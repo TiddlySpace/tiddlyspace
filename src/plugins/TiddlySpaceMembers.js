@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceMembers|
-|''Version''||
-|''Description''|Provides interfaces for managing members of a given space in TiddlySpace|
-|''Status''|//unknown//|
-|''Source''|http://github.com/TiddlySpace/tiddlyspace|
+|''Version''|0.5.0|
+|''Description''|provides a UI for managing space members|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceMembers.js|
 |''Requires''|TiddlySpaceConfig TiddlySpaceUserControls|
 !HTMLForm
 <form action="#">
@@ -52,7 +52,8 @@ var macro = config.macros.TiddlySpaceMembers = {
 			macro.displayMembers(data, container);
 		};
 		var errback = function(xhr, error, exc) {
-			var msg = macro.locale.listError.format([macro.space.name, error]);
+			var msg = xhr.status == 403 ? "authError" : "listError";
+			msg = macro.locale[msg].format([macro.space.name, error]);
 			macro.notify(msg, container);
 		};
 		this.space.members().get(callback, errback);
@@ -99,6 +100,10 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var username = btn.data("username");
 		var msg = macro.locale.delPrompt.format([username]);
 		var callback = function(data, status, xhr) {
+			if(username == config.extensions.tiddlyweb.username) { // assumes getStatus has completed
+				readOnly = true;
+				refreshDisplay();
+			}
 			var container = btn.closest("div");
 			macro.refresh(container);
 		};
