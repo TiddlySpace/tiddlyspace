@@ -20,7 +20,7 @@ from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 
 
-__version__ = '0.5.2'
+__version__ = '0.6.0'
 
 
 def init(config):
