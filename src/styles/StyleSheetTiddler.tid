@@ -375,4 +375,9 @@ tags: excludeLists
 .editorFooter {
 	padding: 0.3em 1em;
 }
+
+.heading .editor input {
+	width: 90%;
+	font-size: 1.5em;
+}
 /*}}}*/
