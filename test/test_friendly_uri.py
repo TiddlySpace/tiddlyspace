@@ -31,20 +31,37 @@ def teardown_module(module):
 
 
 def test_friendly():
+    tiddler = Tiddler('HouseHold', 'cdent_public')
+    store.put(tiddler)
     http = httplib2.Http()
     response, content_core = http.request(
-            'http://cdent.0.0.0.0:8080/recipes/cdent_public/tiddlers/TiddlyWebConfig',
+            'http://cdent.0.0.0.0:8080/recipes/cdent_public/tiddlers/HouseHold',
             method='GET')
         
     assert response['status'] == '200', content_core
 
     response, content_friendly = http.request(
-            'http://cdent.0.0.0.0:8080/TiddlyWebConfig',
+            'http://cdent.0.0.0.0:8080/HouseHold',
             method='GET')
     assert response['status'] == '200', content_friendly
+    assert 'text/html' in response['content-type']
     assert content_core == content_friendly
+    assert 'href="/#%5B%5BHouseHold%5D%5D"' in content_friendly
+    assert 'HouseHold in space</a>' in content_friendly
 
     response, content_friendly = http.request(
-            'http://0.0.0.0:8080/TiddlyWebConfig',
+            'http://0.0.0.0:8080/HouseHold',
             method='GET')
     assert response['status'] == '404', content_friendly
+
+def test_friendly_encoded():
+    tiddler = Tiddler('House Hold', 'cdent_public')
+    store.put(tiddler)
+    http = httplib2.Http()
+    response, content_friendly = http.request(
+            'http://cdent.0.0.0.0:8080/House%20Hold',
+            method='GET')
+    assert response['status'] == '200', content_friendly
+    assert 'text/html' in response['content-type']
+    assert 'href="/#%5B%5BHouse%20Hold%5D%5D"' in content_friendly
+    assert 'House Hold in space</a>' in content_friendly
