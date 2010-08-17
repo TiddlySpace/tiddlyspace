@@ -4,7 +4,6 @@ tags: excludeLists
 .concertina {
 	overflow: hidden;
 	display: none;
-	height: 0;
 	padding: 0.7em;
 	background-color: white;
 }
