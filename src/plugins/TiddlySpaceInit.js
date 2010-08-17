@@ -1,9 +1,10 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.5.1|
+|''Version''|0.5.2|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
+|''CoreVersion''|2.6.1|
 |''Requires''|TiddlySpaceConfig RandomColorPalettePlugin|
 !Code
 ***/
@@ -11,30 +12,49 @@
 (function($) {
 
 var macro = config.macros.TiddlySpaceInit = {
-	version: "0.1",
+	version: "0.2",
 	SiteTitle: "%0",
 	SiteSubtitle: "a TiddlySpace",
 	flagTitle: "%0SetupFlag",
 	flagWarning: "Please do not modify this tiddler; it was created " +
 		"automatically upon space creation.",
 
-	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) { // XXX: must not be a macro
 		var space = config.extensions.tiddlyspace.currentSpace;
 		var title = this.flagTitle.format([space.name]);
 		config.annotations[title] = this.flagWarning;
-		if(!store.tiddlerExists(title) && space.type == "private") {
-			var tid = new Tiddler(title);
+		if(space.type != "private") {
+			return;
+		}
+		var tid = store.getTiddler(title);
+		var versionField = "%0_version".format([macroName]).toLowerCase();
+		if(tid) {
+			curVersion = parseFloat(tid.fields[versionField]);
+			reqVersion = parseFloat(this.version);
+			if(curVersion < reqVersion) {
+				this.update(curVersion);
+				tid.fields[versionField] = this.version;
+				tid.incChangeCount();
+				tid = store.saveTiddler(tid);
+				autoSaveChanges(null, [tid]);
+			}
+		} else { // first run
+			tid = new Tiddler(title);
 			tid.tags = ["excludeLists", "excludeSearch"];
 			tid.fields = $.extend({}, config.defaultCustomFields);
-			var versionField = "%0_version".format([macroName]);
 			tid.fields[versionField] = this.version;
 			tid.text = "@@%0@@".format([this.flagWarning]);
 			tid = store.saveTiddler(tid);
 			autoSaveChanges(null, [tid]);
-			this.dispatch();
+			this.firstRun();
 		}
 	},
-	dispatch: function() {
+	update: function(curVersion) {
+		if(curVersion < 0.2) {
+			this.createAvatar();
+		}
+	},
+	firstRun: function() {
 		var space = config.extensions.tiddlyspace.currentSpace;
 		var pubWorkspace = "bags/%0_public".format([space.name]);
 		// generate Site*itle
@@ -54,8 +74,13 @@ var macro = config.macros.TiddlySpaceInit = {
 		config.defaultCustomFields[wfield] = pubWorkspace;
 		config.macros.RandomColorPalette.generatePalette({}, true);
 		config.defaultCustomFields[wfield] = workspace;
+	},
+	createAvatar: function() {
+
 	}
 };
+
+//$(document).bind("startup", plugin.init); // XXX: requires TW 2.6.1
 
 })(jQuery);
 //}}}
