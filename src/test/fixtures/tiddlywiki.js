@@ -15,8 +15,14 @@ config = {
 };
 
 TiddlyWiki = NOP;
-store = NOP;
-store.getTiddler = function() { return {}; };
+store = function() {};
+store._tiddlers = {
+	"SiteTitle": {}
+};
+store.getTiddler = function(title) {
+	console.log("gT", title, this._tiddlers[title], store._tiddlers[title]);
+	return this._tiddlers[title];
+};
 store.addNotification = NOP;
 
 refreshStyles = NOP;
