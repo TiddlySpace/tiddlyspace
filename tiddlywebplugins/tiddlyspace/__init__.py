@@ -20,7 +20,7 @@ from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 
 
-__version__ = '0.5.2'
+__version__ = '0.6.0'
 
 
 def init(config):
@@ -99,11 +99,18 @@ def init(config):
         config['selector'].add('/{tiddler_name:segment}', GET=friendly_uri)
         config['selector'].add('/users/{username}/identities',
                 GET=get_identities)
+
         if ControlView not in config['server_request_filters']:
             config['server_request_filters'].insert(
                     config['server_request_filters'].
                     index(UserExtract) + 1, ControlView)
+
         if AllowOrigin not in config['server_response_filters']:
             config['server_response_filters'].insert(
                     config['server_response_filters'].
                     index(HTTPExceptor) + 1, AllowOrigin)
+
+        new_serializer = ['tiddlywebplugins.tiddlyspace.htmlserialization',
+                'text/html; charset=UTF-8']
+        config['serializers']['text/html'] = new_serializer
+        config['serializers']['default'] = new_serializer

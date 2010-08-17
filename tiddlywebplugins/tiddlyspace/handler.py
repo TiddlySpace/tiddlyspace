@@ -125,10 +125,11 @@ def safe_mode(environ, start_response):
         core_plugin_tiddler_titles = []
         for bag in CORE_BAGS:
             bag = store.get(Bag(bag))
-            tiddlers = store.list_bag_tiddlers(bag)
-            tiddlers = [tiddler.title for tiddler in tiddlers
-                    if 'systemConfig' in tiddler.tags]
-            core_plugin_tiddler_titles.extend(tiddlers)
+            for tiddler in store.list_bag_tiddlers(bag):
+                if not tiddler.store:
+                    tiddler = store.get(tiddler)
+                if 'systemConfig' in tiddler.tags:
+                    core_plugin_tiddler_titles.append(tiddler.title)
         core_plugin_tiddler_titles = set(core_plugin_tiddler_titles)
     except NoBagError, exc:
         raise HTTP404('core bag not found while trying safe mode: %s' % exc)
@@ -163,6 +164,8 @@ def safe_mode(environ, start_response):
     tiddlers_to_send = Tiddlers()
     for tiddler in candidate_tiddlers:
         if tiddler.bag not in CORE_BAGS:
+            if not tiddler.store:
+                tiddler = store.get(tiddler)
             if 'systemConfig' in tiddler.tags:
                 tiddler.tags.append('systemConfigDisable')
         tiddler.recipe = recipe.name
