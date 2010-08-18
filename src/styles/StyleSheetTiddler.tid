@@ -306,11 +306,6 @@ tags: excludeLists
 	padding-right: 1em;
 }
 
-.tiddler .leftHeading {
-	float: left;
-	padding-left: 1em;
-}
-
 .tiddler .heading .title {
 	margin-left: 5em;
 	margin-right: 7em;
