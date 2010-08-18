@@ -297,7 +297,7 @@ tags: excludeLists
 	box-shadow: 2px 2px 8px black;
 	background-color: white;
 	margin-bottom: 2em;
-	padding: 0 0 0;
+	padding: 0;
 }
 
 .tiddler .editor {
