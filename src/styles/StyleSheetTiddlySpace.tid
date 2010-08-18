@@ -13,7 +13,7 @@ body {
 }
 
 #tiddlerDisplay {
-	margin: 2em 19em 0 2em;
+	margin: 2em 23em 0 2em;
 }
 
 .public {

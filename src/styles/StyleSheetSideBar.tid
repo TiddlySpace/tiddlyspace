@@ -5,14 +5,119 @@ tags: excludeLists
 	margin: 0px;
 }
 
+#menuBar #sidebarOptions {
+	margin-right: 0.6em;
+}
+
 #sidebarTabs {
 	position: absolute;
 	right: 0;
 	top: 0;
-	width: 17em;
+	width: 22.2em;
 }
 
-#menuBar #sidebarOptions {
-	margin-right: 0.6em;
+.tabset {
+	padding: 1em 6px 1px 0;
+	position: relative;
+	top: 2px;
 }
+
+#sidebarTabs .tabsetWrapper .tabset {
+	float: left;
+	height: auto;
+	display: inline;
+	width: 5.5em;
+	word-wrap: break-word;
+	top: 0;
+	padding: 0 0 1px;
+}
+
+#sidebarTabs .tabsetWrapper .tabsetWrapper .tabset {
+	float: none;
+	height: auto;
+	top: 1px;
+	padding: 0 0 1px;
+}
+
+.tab {
+	margin: 0.1em 0.25em 0 0;
+	padding: 6px 6px 0;
+	display: inline-block;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+	-moz-border-radius-topleft: 6px;
+	-moz-border-radius-topright: 6px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+#sidebarTabs .tabsetWrapper .tabset .tab {
+	display: block;
+	margin: 0 0 1px 0.25em;
+	padding: 1em 6px 0.5em;
+	position: relative;
+	left: 3px;
+	border-right: 0;
+	border-bottom: 1px solid [[ColorPalette::TertiaryMid]];
+	border-color: [[ColorPalette::TertiaryMid]];
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+#sidebarTabs .tabsetWrapper .tabsetWrapper .tabset .tab {
+	margin: 0.1em 0.25em 0 0;
+	padding: 6px 6px 0;
+	display: inline-block;
+	border-right: 1px solid [[ColorPalette::TertiaryMid]];
+	border-bottom: 0;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+	-moz-border-radius-topleft: 6px;
+	-moz-border-radius-topright: 6px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+.tabContents {
+	-webkit-border-top-right-radius: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-webkit-border-bottom-right-radius: 6px;
+	-moz-border-radius-topright: 6px;
+	-moz-border-radius-bottomright: 6px;
+	-moz-border-radius-bottomleft: 6px;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+#sidebarTabs .tabsetWrapper .tabContents {
+	display: inline;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	border-width: 1px 1px 1px 3px;
+	float: left;
+	border-color: [[ColorPalette::TertiaryMid]];
+	*height: expression(this.scrollHeight < 301? "300px" : "auto");
+	min-height: 25em;
+	background-color: [[ColorPalette::TertiaryPale]];
+}
+
+#sidebarTabs .tabsetWrapper .tabsetWrapper .tabContents {
+	border-width: 1px;
+	display: block;
+	float: none;
+	min-height: 0;
+	-webkit-border-top-right-radius: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-webkit-border-bottom-right-radius: 6px;
+	-moz-border-radius-topright: 6px;
+	-moz-border-radius-bottomright: 6px;
+	-moz-border-radius-bottomleft: 6px;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
 /*}}}*/
