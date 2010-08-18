@@ -179,7 +179,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 				var tiddler = store.getTiddler(title);
 				config.extensions.tiddlyspace.spawnPublicTiddler(tiddler, el);
 			};
-			$('<a href="#" />').text(title).click(handler).appendTo(el);
+			$('<a href="javascript:;" />').text(title).click(handler).appendTo(el);
 		});
 	}
 };
