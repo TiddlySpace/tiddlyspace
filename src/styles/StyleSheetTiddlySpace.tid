@@ -4,7 +4,7 @@ tags: excludeLists
 body {
 	font-size: 1.0em;
 	font-family: helvetica, arial, sans-serif;
-	background-color: [[ColorPalette::PrimaryLight]];
+	background-color: [[ColorPalette::Background]];
 }
 
 #displayArea {
