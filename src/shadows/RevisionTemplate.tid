@@ -15,7 +15,7 @@ tags: excludeLists excludeMissing
 <div class='tagClear'></div>
 <div class='concertina' ></div>
 <div class='content'>
-	<div class='left'>
+	<div class='info'>
 		<div class='calendar'>
 			<div class='month' macro='view modified date mmm'></div>
 			<div class='date' macro='view modified date 0DD'></div>
