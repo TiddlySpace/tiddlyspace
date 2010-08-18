@@ -30,8 +30,11 @@ var cmd = config.commands.publishTiddler = {
 		var tiddler = store.getTiddler(title);
 		if(tiddler) {
 			var newWorkspace = tiddler.fields["server.workspace"];
-			var newWorkspace = cmd.toggleWorkspace(newWorkspace);
-			this.moveTiddler(tiddler, {title: tiddler.title, fields:{"server.workspace":newWorkspace}}, true, callback);
+			newWorkspace = cmd.toggleWorkspace(newWorkspace);
+			this.moveTiddler(tiddler, {
+				title: tiddler.title,
+				fields: { "server.workspace": newWorkspace }
+			}, true, callback);
 		}
 	},
 	toggleWorkspace: function(workspace, to) {
@@ -170,7 +173,7 @@ config.commands.deleteTiddler.deleteResource = function(tiddler, workspace) {
 	} else {
 		var oldDirty = store.isDirty();
 		callback = function(context, userParams) {
-			store.setDirty(oldDirty); // will fail to delete locally and throw an error..
+			store.setDirty(oldDirty); // will fail to delete locally and throw an error
 			tiddler.fields["server.workspace"] = originalWorkspace;
 			story.refreshTiddler(tiddler.title, true);
 			story.displayTiddler(place, tiddler.title);

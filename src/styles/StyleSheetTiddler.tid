@@ -136,7 +136,7 @@ tags: excludeLists
 	position: relative;
 	top: 0;
 	left: 0;
-	width: 100%; //ie
+	width: 100%; /* IE */
 }
 
 .content .info {

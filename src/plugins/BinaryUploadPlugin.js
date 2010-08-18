@@ -125,7 +125,7 @@ var macro = config.macros.binaryUpload ={
 				titleInput.val(fileName);
 			}
 			titleInput.removeClass("notEdited"); // allow editing on this element.
-		});		
+		});
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		params = paramString.parseParams(null, null, true);

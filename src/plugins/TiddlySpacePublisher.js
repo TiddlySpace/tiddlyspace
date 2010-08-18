@@ -12,11 +12,11 @@
 <<TiddlySpacePublisher>>
 creates an interface with which you can manage unpublished versions of tiddlers.
 }}}
-!Params
+!Parameters
 filter: allows you to run the publisher on a filtered set of tiddlers.
 eg. filter:[tag[systemConfig]]
 
-!To do
+!TODO
 batch publishing for the other way round (public to private)
 
 !Code
@@ -24,9 +24,9 @@ batch publishing for the other way round (public to private)
 //{{{
 (function($) {
 
-var ns = config.extensions.tiddlyspace;
-var currentSpace = ns.currentSpace.name;
+var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
 var originMacro = config.macros.tiddlerOrigin;
+
 var macro = config.macros.TiddlySpacePublisher = {
 	locale: {
 		title: "Publisher",
@@ -84,7 +84,10 @@ var macro = config.macros.TiddlySpacePublisher = {
 					publicWorkspace = cmd.getPublicWorkspace(tiddler);
 				}
 				macro.publishedTiddlers[title] = tiddler;
-				var newTiddler = {title: tiddler.title, fields: {"server.workspace": publicWorkspace}};
+				var newTiddler = {
+					title: tiddler.title,
+					fields: { "server.workspace": publicWorkspace }
+				};
 				config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, true, callback);
 			}
 	},
@@ -173,9 +176,10 @@ var macro = config.macros.TiddlySpacePublisher = {
 			el.empty();
 			var handler = function(ev) {
 				ev.preventDefault();
-				ns.spawnPublicTiddler(store.getTiddler(title), el);
+				var tiddler = store.getTiddler(title);
+				config.extensions.tiddlyspace.spawnPublicTiddler(tiddler, el);
 			};
-			$("<a href='#' />").text(title).click(handler).appendTo(el);
+			$('<a href="#" />').text(title).click(handler).appendTo(el);
 		});
 	}
 };
