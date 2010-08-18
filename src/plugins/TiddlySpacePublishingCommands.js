@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.4.0|
+|''Version''|0.5.0|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -28,8 +28,11 @@ var cmd = config.commands.publishTiddler = {
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.toggleWorkspace(tiddler.fields["server.workspace"]);
-		this.copyTiddler(title, newWorkspace, callback); // copy by default
+		if(tiddler) {
+			var newWorkspace = tiddler.fields["server.workspace"];
+			var newWorkspace = cmd.toggleWorkspace(newWorkspace);
+			this.moveTiddler(tiddler, {title: tiddler.title, fields:{"server.workspace":newWorkspace}}, true, callback);
+		}
 	},
 	toggleWorkspace: function(workspace, to) {
 		var newWorkspace;
@@ -42,10 +45,12 @@ var cmd = config.commands.publishTiddler = {
 		}
 		return newWorkspace;
 	},
-	getPrivateWorkspace: function(workspace) {
+	getPrivateWorkspace: function(tiddler) {
+		var workspace = tiddler.fields["server.workspace"];
 		return workspace.replace("_public", "_private");
 	},
-	getPublicWorkspace: function(workspace) {
+	getPublicWorkspace: function(tiddler) {
+		var workspace = tiddler.fields["server.workspace"];
 		return workspace.replace("_private", "_public");
 	},
 	copyTiddler: function(title, newWorkspace, callback) {
@@ -62,9 +67,9 @@ var cmd = config.commands.publishTiddler = {
 		};
 		publish(original, callback);
 	},
-	moveTiddler: function(tiddler, newTiddler, withRevisions) {
+	moveTiddler: function(tiddler, newTiddler, withRevisions, callback) {
 		if(withRevisions) {
-			this.moveTiddlerWithRevisions(tiddler, newTiddler);
+			this.moveTiddlerWithRevisions(tiddler, newTiddler, callback);
 		} else {
 			var adaptor = tiddler.getAdaptor();
 			var newTitle = newTiddler.title;
@@ -78,16 +83,20 @@ var cmd = config.commands.publishTiddler = {
 					};
 					tiddler.title = oldTitle; // for cases where a rename occurs
 					adaptor.deleteTiddler(tiddler, context, {}, function() {
-						store.removeTiddler(oldTitle);
-						story.closeTiddler(oldTitle);
-						store.addTiddler(ctx.tiddler);
-						story.refreshTiddler(newTitle, true);
-						story.displayTiddler(place, newTitle);
+						if(callback) {
+							callback();
+						} else {
+							store.removeTiddler(oldTitle);
+							story.closeTiddler(oldTitle);
+							store.addTiddler(ctx.tiddler);
+							story.refreshTiddler(newTitle, true);
+							story.displayTiddler(place, newTitle);
+						}
 					});
 			});
 		}
 	},
-	moveTiddlerWithRevisions: function(tiddler, newTiddler) {
+	moveTiddlerWithRevisions: function(tiddler, newTiddler, callback) {
 		var adaptor = tiddler.getAdaptor();
 		var oldWorkspace = tiddler.fields["server.workspace"];
 		var oldTitle = tiddler.title;
@@ -112,11 +121,14 @@ var cmd = config.commands.publishTiddler = {
 						var oldDirty = store.isDirty();
 						store.removeTiddler(oldTitle);
 						store.setDirty(oldDirty);
-
 						store.addTiddler(newTiddler); // note the tiddler may have changed name
-						story.closeTiddler(oldTitle);
-						story.refreshTiddler(newTitle, true);
-						story.displayTiddler(place, newTitle);
+						if(callback) {
+							callback();
+						}
+						var old = story.refreshTiddler(oldTitle, true);
+						if(old) {
+							story.displayTiddler(old, newTitle);
+						}
 					}
 				);
 		});
@@ -128,7 +140,7 @@ config.commands.changeToPrivate = {
 	tooltip: "turn this public tiddler into a private tiddler",
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.getPrivateWorkspace(tiddler.fields["server.workspace"]);
+		var newWorkspace = cmd.getPrivateWorkspace(tiddler);
 		var newTiddler = { title: title, fields: { "server.workspace": newWorkspace }};
 		cmd.moveTiddler(tiddler, newTiddler, true);
 	}
@@ -138,7 +150,7 @@ config.commands.changeToPublic = {
 	tooltip: "turn this private tiddler into a public tiddler",
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.getPublicWorkspace(tiddler.fields["server.workspace"]);
+		var newWorkspace = cmd.getPublicWorkspace(tiddler);
 		var newTiddler = { title: title, fields: { "server.workspace": newWorkspace }};
 		cmd.moveTiddler(tiddler, newTiddler, true);
 	}
@@ -156,7 +168,9 @@ config.commands.deleteTiddler.deleteResource = function(tiddler, workspace) {
 	if(workspace == originalWorkspace) {
 		callback = config.extensions.ServerSideSavingPlugin.removeTiddlerCallback;
 	} else {
+		var oldDirty = store.isDirty();
 		callback = function(context, userParams) {
+			store.setDirty(oldDirty); // will fail to delete locally and throw an error..
 			tiddler.fields["server.workspace"] = originalWorkspace;
 			story.refreshTiddler(tiddler.title, true);
 			story.displayTiddler(place, tiddler.title);
@@ -173,8 +187,7 @@ config.commands.deletePublicTiddler = {
 	},
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var workspace = tiddler.fields["server.workspace"];
-		workspace = cmd.getPublicWorkspace(workspace);
+		var workspace = cmd.getPublicWorkspace(tiddler);
 		config.commands.deleteTiddler.deleteResource(tiddler, workspace);
 	}
 };
@@ -184,8 +197,7 @@ config.commands.deletePrivateTiddler = {
 	tooltip: "delete any private versions of this tiddler",
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var workspace = tiddler.fields["server.workspace"];
-		workspace = cmd.getPrivateWorkspace(workspace);
+		var workspace = cmd.getPrivateWorkspace(tiddler);
 		config.commands.deleteTiddler.deleteResource(tiddler, workspace);
 	}
 };

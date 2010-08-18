@@ -1,10 +1,10 @@
 /***
 |''Name''|TiddlySpacePublisher|
 |''Version''||
-|''Description''|Adds a random color palette to TiddlyWiki|
-|''Requires''|TiddlySpacePublishCommand|
+|''Description''|Provides a batch publishing tool for managing lots of tiddlers in TiddlySpace|
+|''Requires''|TiddlySpacePublishCommand TiddlySpaceTiddlerIconsPlugin|
 |''Author''|Jon Robson|
-|''Version''|0.1.1|
+|''Version''|0.2.0|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpacePublisher.js|
 |''License''|[[BSD|http://www.opensource.org/licenses/bsd-license.php]]|
 !Usage
@@ -16,17 +16,21 @@ creates an interface with which you can manage unpublished versions of tiddlers.
 filter: allows you to run the publisher on a filtered set of tiddlers.
 eg. filter:[tag[systemConfig]]
 
+!To do
+batch publishing for the other way round (public to private)
+
 !Code
 ***/
-/*{{{*/
+//{{{
 (function($) {
 
-var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
-
+var ns = config.extensions.tiddlyspace;
+var currentSpace = ns.currentSpace.name;
+var originMacro = config.macros.tiddlerOrigin;
 var macro = config.macros.TiddlySpacePublisher = {
 	locale: {
 		title: "Publisher",
-		updatedPrivateTiddler: "newer than published version {{viewPublicTiddler{%0}}}",
+		updatedPrivateTiddler: "newer than published version (click {{viewPublicTiddler{%0}}} to view)",
 		makePublicLabel: "Make public",
 		noTiddlersText: "No tiddlers to publish",
 		makePublicPrompt: "Make all the selected tiddlers public.",
@@ -71,10 +75,17 @@ var macro = config.macros.TiddlySpacePublisher = {
 			var callback = function(status) {
 				macro.refresh(listWrapper, paramString);
 			};
+			var cmd = config.commands.publishTiddler;
+			var publicWorkspace;
 			for(var i = 0; i < rowNames.length; i++) {
 				var title = rowNames[i];
-				macro.publishedTiddlers[title] = store.getTiddler(title);
-				config.commands.publishTiddlerRevision.publishTiddler(title, callback);
+				var tiddler = store.getTiddler(title);
+				if(!publicWorkspace) {
+					publicWorkspace = cmd.getPublicWorkspace(tiddler);
+				}
+				macro.publishedTiddlers[title] = tiddler;
+				var newTiddler = {title: tiddler.title, fields: {"server.workspace": publicWorkspace}};
+				config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, true, callback);
 			}
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -124,21 +135,15 @@ var macro = config.macros.TiddlySpacePublisher = {
 						tiddler: tiddler
 					};
 					var publishedTiddler = publishedTiddlers[tiddler.title];
-					if(publishedTiddler) {
-						var publishedModified = publishedTiddler.modified;
-						if(typeof(publishedModified) == typeof("")) {
-							publishedModified = Date.convertFromYYYYMMDDHHMM(publishedModified);
-						}
-						if(publishedModified < tiddler.modified) {
-							candidate.status = "%0".format([locale.updatedPrivateTiddler.format([tiddler.title])]);
-							candidate.publicTiddler = publishedTiddler;
-							candidate.updated = true;
-							include = true;
-						}
-					} else {
+					if(!publishedTiddler) {
 						candidate.status = "unpublished";
 						include = true;
 						candidate.notPublished = true;
+					} else if(!originMacro.areIdentical(tiddler, publishedTiddler)) {
+						candidate.status = locale.updatedPrivateTiddler.format([tiddler.title]);
+						candidate.publicTiddler = publishedTiddler;
+						candidate.updated = true;
+						include = true;
 					}
 					if(include) {
 						publishCandidates.push(candidate);
@@ -163,11 +168,14 @@ var macro = config.macros.TiddlySpacePublisher = {
 
 		var publicLinks = $(".viewPublicTiddler");
 		$.each(publicLinks, function(index, el) {
-			var title = $(el).text();
+			el = $(el);
+			var title = el.text();
+			el.empty();
 			var handler = function(ev) {
-				config.commands.pubRev.handler(ev, el, title);
+				ev.preventDefault();
+				ns.spawnPublicTiddler(store.getTiddler(title), el);
 			};
-			$("<a />").text(title).click(handler).appendTo(el);
+			$("<a href='#' />").text(title).click(handler).appendTo(el);
 		});
 	}
 };
@@ -177,3 +185,4 @@ config.shadowTiddlers.TabMore = config.shadowTiddlers.TabMore.replace(
 	"TabMoreShadowed", "TabMoreShadowed %0".format([unpublishedTabText]));
 
 })(jQuery);
+//}}}
