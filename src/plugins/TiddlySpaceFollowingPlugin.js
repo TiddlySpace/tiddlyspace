@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.4.8|
+|''Version''|0.4.9|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -92,7 +92,7 @@ var followMacro = config.macros.followTiddlers = {
 	follower_names_cache: {},
 	getHosts: function(callback) {
 		tweb.getStatus(function(status) {
-			callback(status.host, tiddlyspace.getHost(status.server_host, "%0"));
+			callback("", tiddlyspace.getHost(status.server_host, "%0"));
 		});
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -102,11 +102,12 @@ var followMacro = config.macros.followTiddlers = {
 			var bagQuery = followMacro._constructBagQuery(followers);
 			followMacro.getHosts(function(host, tsHost) {
 				if(followers.length > 0) { // only run the search if we have a list of followers
+					var url = '%0/search.json?q=title:"%1" %2'.
+						format([host, encodeURI(title), bagQuery]);
 					ajaxReq({
 						dataType: "json",
 						beforeSend: followMacro.beforeSend,
-						url: '%0/search.json?q=ftitle:"%1" %2'.
-							format([host, encodeURI(title), bagQuery]),
+						url: url,
 						success: function(tiddlers) {
 							followMacro.constructInterface(place, tiddlers, { host: tsHost });
 						}
@@ -119,7 +120,7 @@ var followMacro = config.macros.followTiddlers = {
 	},
 	constructInterface: function(place, tiddlers, options) {
 		var ul = $('<ul class="followTiddlersList" />');
-		var host = options.host;
+		var host = options.host || "";
 		var handler = function(ev) {
 			var link = $(ev.target);
 			var spaceName = link.attr("space");
@@ -136,7 +137,7 @@ var followMacro = config.macros.followTiddlers = {
 				attr("space", spaceName).click(handler);
 			var li = $("<li />");
 			imageMacro.renderImage(li[0],
-				"%0/recipes/%1_public/tiddlers/SiteIcon".format([tsHost, spaceName]),
+				"%0/bags/%1_public/tiddlers/SiteIcon".format([tsHost, spaceName]),
 				{ imageClass: "siteIcon" });
 			li.append(link);
 			var modifierLink = host.format([modifier]);
@@ -195,7 +196,7 @@ var followMacro = config.macros.followTiddlers = {
 		for(var i = 0; i < followers.length; i++) {
 			var follower = followers[i];
 			if(follower != currentSpaceName) {
-				querySegments.push("fbag:%0_public".format([encodeURI(follower)]));
+				querySegments.push("bag:%0_public".format([encodeURI(follower)]));
 			}
 		}
 		return "(%0)".format([querySegments.join("%20OR%20")]);
