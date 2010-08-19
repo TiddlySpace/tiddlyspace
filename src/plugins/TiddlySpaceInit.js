@@ -5,7 +5,7 @@
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
 |''CoreVersion''|2.6.1|
-|''Requires''|TiddlySpaceConfig RandomColorPalettePlugin|
+|''Requires''|TiddlySpaceConfig RandomColorPalettePlugin chrjs|
 !Code
 ***/
 //{{{
@@ -78,7 +78,35 @@ var macro = config.macros.TiddlySpaceInit = {
 		macro.createAvatar();
 	},
 	createAvatar: function() {
+		var avatar = "SiteIcon";
+		var host = config.extensions.tiddlyweb.host;
 
+		var notify = function(xhr, error, exc) {
+			displayMessage("ERROR: could not create avatar - " + // TODO: i18n
+				"%0: %1".format([xhr.statusText, xhr.responseText]));
+			// TODO: resolve!?
+		};
+
+		var pubBag = currentSpace.name + "_public";
+		var tid = new tiddlyweb.Tiddler(avatar);
+		tid.bag = new tiddlyweb.Bag(pubBag, host);
+
+		var callback = function(data, status, xhr) {}; // avatar already exists; do nothing
+		var errback = function(xhr, error, exc) {
+			// copy default avatar -- XXX: assumes error cause was 404
+			var tid = new tiddlyweb.Tiddler("defaultSiteIcon");
+			tid.bag = new tiddlyweb.Bag("common", host);
+			var _notify = function(tid, status, xhr) {
+				displayMessage("created avatar"); // TODO: i18n
+			};
+			var _callback = function(tid, status, xhr) {
+				tid.title = avatar;
+				tid.bag.name = pubBag;
+				tid.put(_notify, notify); // TODO: add to current session document (via adaptor?)
+			};
+			tid.get(_callback, notify);
+		};
+		tid.get(callback, errback);
 	}
 };
 
