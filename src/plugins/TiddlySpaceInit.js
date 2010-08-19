@@ -74,6 +74,8 @@ var macro = config.macros.TiddlySpaceInit = {
 		config.defaultCustomFields[wfield] = pubWorkspace;
 		config.macros.RandomColorPalette.generatePalette({}, true);
 		config.defaultCustomFields[wfield] = workspace;
+		// generate avatar
+		macro.createAvatar();
 	},
 	createAvatar: function() {
 

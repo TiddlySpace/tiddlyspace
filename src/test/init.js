@@ -11,6 +11,7 @@ module("init", {
 		stash.firstRun = macro.firstRun;
 		macro.firstRun = function() {
 			data.firstRun = true;
+			stash.firstRun.apply(this, arguments);
 		};
 
 		stash.update = macro.update;
@@ -23,11 +24,17 @@ module("init", {
 		macro.createAvatar = function() {
 			data.createAvatar = true;
 		};
+
+		stash.RandomColorPalette = config.macros.RandomColorPalette;
+		config.macros.RandomColorPalette = {
+			generatePalette: function() {}
+		}
 	},
 	teardown: function() {
 		macro.firstRun = stash.firstRun;
 		macro.update = stash.update;
 		macro.createAvatar = stash.createAvatar;
+		config.macros.RandomColorPalette = stash.RandomColorPalette;
 
 		$.each(data, function(key, value) {
 			delete data[key];
@@ -41,11 +48,13 @@ module("init", {
 test("firstRun", function() {
 	strictEqual(data.firstRun, undefined);
 	strictEqual(data.update, undefined);
+	strictEqual(data.createAvatar, undefined);
 
 	macro.handler(null, "TiddlySpaceInit", null, null, null, null);
 
 	strictEqual(data.firstRun, true);
 	strictEqual(data.update, undefined);
+	strictEqual(data.createAvatar, true);
 	var flagTiddler = store.getTiddler("fooSetupFlag");
 	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.2");
 });
