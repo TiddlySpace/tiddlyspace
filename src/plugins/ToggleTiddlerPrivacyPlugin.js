@@ -1,20 +1,26 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.5.2|
+|''Version''|0.5.3|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/ToggleTiddlerPrivacyPlugin.js|
 !Notes
 When used in conjunction with TiddlySpaceTiddlerIconsPlugin changing the privacy setting will also interact with any privacy icons.
+
+!Params
+defaultValue:[private|public]
+Allows you to set the default privacy value (Default is private)
+
 !Code
 ***/
 //{{{
 (function($) {
 
-config.macros.setPrivacy = {
+var macro = config.macros.setPrivacy = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var el = $(story.findContainingTiddler(place));
+		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var container = $("<div />").addClass("privacySettings").appendTo(place);
 		var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
 		var currentWorkspace = tiddler ? tiddler.fields["server.workspace"] : false;
@@ -27,12 +33,22 @@ config.macros.setPrivacy = {
 		var originButton = $(".originButton", el)[0];
 		var iconOptions = { labelOptions: { includeLabel: "true" } };
 		if(isNewTiddler || isExternal) {
-			var rbtn = $('<input type="radio" />').attr("name", tiddler.title);
-			rbtn.clone().val("private").addClass("isPrivate").
-				attr("checked", "true").appendTo(container);
+			var rbtn = $("<input />").attr("type", "radio").attr("name", tiddler.title);
+			var rPrivate = rbtn.clone().val("private").addClass("isPrivate").appendTo(container);
 			$("<label />").text("private").appendTo(container); // TODO: i18n
-			rbtn.clone().val("public").addClass("isPublic").appendTo(container);
+			var rPublic = rbtn.clone().val("public").addClass("isPublic").appendTo(container);
 			$("<label />").text("public").appendTo(container); // TODO: i18n
+			var userDefault = args.defaultValue;
+			var defaultVal = userDefault ? "bags/%0_%1".format([currentSpace, userDefault[0]]) : currentWorkspace;
+			defaultVal = defaultVal ? defaultVal : privateWorkspace;
+			var initialStatus = "private";
+			if(publicWorkspace == defaultVal) {
+				rPublic.attr("checked", true);
+				initialStatus = "public";
+			} else {
+				rPrivate.attr("checked", true);
+			}
+
 			var refreshIcon = function(type) {
 				var originMacro = config.macros.originMacro;
 				if(originButton && originMacro) {
@@ -40,24 +56,31 @@ config.macros.setPrivacy = {
 					originMacro.showPrivacyRoundel(tiddler, type, originButton, null, iconOptions);
 				}
 			};
+			var setWorkspace = function(workspace) {
+				var saveField = $("[edit=server.workspace]", el);
+				saveField.val(workspace);
+				tiddler.fields["server.workspace"] = workspace; // for external tiddlers
+			};
+			
 			$("[type=radio]", container).click(function() {
 				var btn = $(this);
-				var saveField = $("[edit=server.workspace]", el);
 				var name = el.attr("name");
 				tiddler.fields["server.page.revision"] = "false";
 				if(btn.hasClass("isPrivate")) { // private button clicked.
 					el.addClass("isPrivate").removeClass("isPublic");
-					saveField.val(privateWorkspace);
-					tiddler.fields["server.workspace"] = privateWorkspace; // for external tiddlers
+					setWorkspace(privateWorkspace);
 					refreshIcon("private");
 				} else {
 					el.addClass("isPublic").removeClass("isPrivate");
-					saveField.val(publicWorkspace);
-					tiddler.fields["server.workspace"] = publicWorkspace;
+					setWorkspace(publicWorkspace);
 					refreshIcon("public");
 				}
 			});
-			refreshIcon("private");
+			// TODO: replace with a hijack of displayTiddler?
+			window.setTimeout(function() {
+				setWorkspace(defaultVal);
+				refreshIcon(initialStatus);
+			}, 200); // not ideal - but need to wait till finished displayTiddler for brand new tiddlers
 		}
 	}
 };
