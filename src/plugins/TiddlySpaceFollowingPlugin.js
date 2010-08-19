@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.4.7|
+|''Version''|0.4.8|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -12,14 +12,39 @@ will reveal the number of tiddlers with name X in the set of spaces the *current
 {{{<<following jon>>}}} will list all the users following Jon.
 {{{<<followers jon>>}}} will list all the followers of jon.
 If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default the current user.
+!StyleSheet
+.followTiddlersList li {
+	list-style:none;
+}
+
+.followButton {
+	width: 2em;
+}
+
+.followTiddlersList li .siteIcon {
+	height:48px;
+	width: 48px;
+}
+
+.followTiddlersList li .externalImage, .followTiddlersList li .image {
+	display: inline;
+}
 !Code
 ***/
 //{{{
 (function($) {
 
+config.annotations.FollowersTemplate = "This tiddler is used in the display of tiddlers from spaces you are following. Use the wildcard $1 for the space name, $2 for the space uri and $3 for the tiddler text.";
+config.shadowTiddlers.FollowersTemplate = "[[$1|$2]]";
+
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
 var imageMacro = config.macros.image;
+
+var name = "StyleSheetFollowing";
+config.shadowTiddlers[name] = store.getTiddlerText(tiddler.title +
+     "##StyleSheet");
+store.addNotification(name, refreshStyles);
 
 // provide support for sucking in tiddlers from the server
 tiddlyspace.displayServerTiddler = function(src, title, workspace) {
@@ -314,12 +339,12 @@ var followingMacro = config.macros.following = {
 			if(user.anon) {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
-					followMacro.getHosts(function(host) {
-						var url =  '%0/search.json?q=(bag:"%1_public" AND tag:%2)%3'.
-							format([host, user.name,followMacro.followTag, fat]);
-						followersMacro.listUsers(container, url, locale,
-							{ field: "title", link: true });
-					});
+				followMacro.getHosts(function(host) {
+					var url =  '%0/search.json?q=(bag:"%1_public" AND tag:%2)%3'.
+						format([host, user.name,followMacro.followTag, fat]);
+					followersMacro.listUsers(container, url, locale,
+						{ field: "title", link: true });
+				});
 			}
 		};
 		if(!username) {
@@ -330,12 +355,5 @@ var followingMacro = config.macros.following = {
 	}
 };
 
-config.annotations.FollowersTemplate = "This tiddler is used in the display of tiddlers from spaces you are following. Use the wildcard $1 for the space name, $2 for the space uri and $3 for the tiddler text.";
-config.shadowTiddlers.FollowersTemplate = "[[$1|$2]]";
-config.shadowTiddlers.StyleSheetFollowing = [".followTiddlersList li { list-style:none; }",
-	".followButton { width: 2em; }",
-	".followTiddlersList li .siteIcon { height:48px; width: 48px; }",
-	".followTiddlersList li .externalImage, .followTiddlersList li .image { display: inline; }"].join("\n");
-store.addNotification("StyleSheetFollowing", refreshStyles);
 })(jQuery);
 //}}}
