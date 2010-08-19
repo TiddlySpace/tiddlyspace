@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.4.9|
+|''Version''|0.4.10|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -92,7 +92,7 @@ var followMacro = config.macros.followTiddlers = {
 	follower_names_cache: {},
 	getHosts: function(callback) {
 		tweb.getStatus(function(status) {
-			callback("", tiddlyspace.getHost(status.server_host, "%0"));
+			callback(tweb.host, tiddlyspace.getHost(status.server_host, "%0"));
 		});
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -102,7 +102,7 @@ var followMacro = config.macros.followTiddlers = {
 			var bagQuery = followMacro._constructBagQuery(followers);
 			followMacro.getHosts(function(host, tsHost) {
 				if(followers.length > 0) { // only run the search if we have a list of followers
-					var url = '%0/search.json?q=title:"%1" %2'.
+					var url = '%0/search?q=title:"%1" %2'.
 						format([host, encodeURI(title), bagQuery]);
 					ajaxReq({
 						dataType: "json",
@@ -268,7 +268,7 @@ var followersMacro = config.macros.followers = {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
 				followMacro.getHosts(function(host, tsHost) {
-					var url = '%0/search.json?q=(title:"%1" AND tag:%2)%3'.
+					var url = '%0/search?q=(title:"%1" AND tag:%2)%3'.
 						format([host, user.name,followMacro.followTag, fat]);
 					followersMacro.listUsers(container, url, locale,
 						{ field: "bag", link: true, host: tsHost });
@@ -341,7 +341,7 @@ var followingMacro = config.macros.following = {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
 				followMacro.getHosts(function(host) {
-					var url =  '%0/search.json?q=(bag:"%1_public" AND tag:%2)%3'.
+					var url =  '%0/search?q=(bag:"%1_public" AND tag:%2)%3'.
 						format([host, user.name,followMacro.followTag, fat]);
 					followersMacro.listUsers(container, url, locale,
 						{ field: "title", link: true });
