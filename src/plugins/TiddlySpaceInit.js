@@ -11,6 +11,8 @@
 //{{{
 (function($) {
 
+var currentSpace = config.extensions.tiddlyspace.currentSpace;
+
 var macro = config.macros.TiddlySpaceInit = {
 	version: "0.2",
 	SiteTitle: "%0",
@@ -20,10 +22,9 @@ var macro = config.macros.TiddlySpaceInit = {
 		"automatically upon space creation.",
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) { // XXX: must not be a macro
-		var space = config.extensions.tiddlyspace.currentSpace;
-		var title = this.flagTitle.format([space.name]);
+		var title = this.flagTitle.format([currentSpace.name]);
 		config.annotations[title] = this.flagWarning;
-		if(space.type != "private") {
+		if(currentSpace.type != "private") {
 			return;
 		}
 		var tid = store.getTiddler(title);
@@ -55,8 +56,7 @@ var macro = config.macros.TiddlySpaceInit = {
 		}
 	},
 	firstRun: function() {
-		var space = config.extensions.tiddlyspace.currentSpace;
-		var pubWorkspace = "bags/%0_public".format([space.name]);
+		var pubWorkspace = "bags/%0_public".format([currentSpace.name]);
 		// generate Site*itle
 		$.each(["SiteTitle", "SiteSubtitle"], function(i, item) {
 			var tid = new Tiddler(item);
@@ -64,7 +64,7 @@ var macro = config.macros.TiddlySpaceInit = {
 			tid.fields = $.extend({}, config.defaultCustomFields, {
 				"server.workspace": pubWorkspace
 			});
-			tid.text = macro[item].format([space.name]);
+			tid.text = macro[item].format([currentSpace.name]);
 			tid = store.saveTiddler(tid);
 			autoSaveChanges(null, [tid]);
 		});
