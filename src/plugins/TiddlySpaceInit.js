@@ -1,11 +1,13 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.5.2|
+|''Version''|0.6.0|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
 |''CoreVersion''|2.6.1|
 |''Requires''|TiddlySpaceConfig RandomColorPalettePlugin chrjs|
+!TODO
+* robust error notification and recovery
 !Code
 ***/
 //{{{
@@ -74,7 +76,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		// generate ColorPalette (ensuring it's public)
 		var wfield = "server.workspace";
 		var workspace = config.defaultCustomFields[wfield];
-		config.defaultCustomFields[wfield] = pubWorkspace;
+		config.defaultCustomFields[wfield] = pubWorkspace; // XXX: hacky
 		config.macros.RandomColorPalette.generatePalette({}, true);
 		config.defaultCustomFields[wfield] = workspace;
 		// generate avatar
