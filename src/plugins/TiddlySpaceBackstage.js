@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''||
+|''Version''|0.5.0|
 |''Description''|Provides a TiddlySpace version of the backstage|
-|''Status''|//unknown//|
-|''Source''|http://github.com/TiddlySpace/tiddlyspace|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
 !Code
 ***/
@@ -96,14 +96,14 @@ backstage.init = function(){
 	// override space button to show SiteIcon
 	var siteIcon = store.getTiddler("SiteIcon");
 	if(siteIcon) {
+		var spaceName = tiddlyspace.currentSpace.name;
 		var btn = $("[task=space]", backstageArea);
 		btn.empty();
-		imageMacro.renderImage(btn[0], "SiteIcon",
+		var uri = "/bags/%0_public/tiddlers/SiteIcon".format([spaceName]);
+		imageMacro.renderImage(btn[0], uri,
 			{ imageClass:"spaceSiteIcon", height: 48, width: 48 });
 		$("<span />").html(config.tasks.space.text).appendTo(btn);
-		$('<span class="spaceName" />').
-			text(config.extensions.tiddlyspace.currentSpace.name).
-			appendTo(btn);
+		$('<span class="spaceName" />').text(spaceName).appendTo(btn);
 	}
 
 	var tweb = config.extensions.tiddlyweb;
