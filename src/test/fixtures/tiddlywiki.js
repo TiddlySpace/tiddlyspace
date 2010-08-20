@@ -20,22 +20,32 @@ Tiddler = function(title) {
 };
 Tiddler.prototype.incChangeCount = NOP;
 
-TiddlyWiki = NOP;
-store = function() {};
-store._tiddlers = {
-	"SiteTitle": {}
+TiddlyWiki = function() {
+	this._tiddlers = {};
 };
-store.getTiddler = function(title) {
+TiddlyWiki.prototype.getTiddler = function(title) {
 	return this._tiddlers[title];
 };
-store.saveTiddler = function(tiddler) {
-	store._tiddlers[tiddler.title] = tiddler;
+TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
+		modified, tags, fields, clearChangeCount, created, creator) {
+	var tiddler = new Tiddler(newTitle);
+	tiddler.creator = creator;
+	tiddler.created = created;
+	tiddler.modifier = modifier;
+	tiddler.modified = modifier;
+	tiddler.tags = tags;
+	tiddler.text = newBody;
+	tiddler.fields = fields;
+	this._tiddlers[tiddler.title] = tiddler;
 	return tiddler;
 }
-store.removeTiddler = function(title) {
-	delete store._tiddlers[title];
+TiddlyWiki.prototype.removeTiddler = function(title) {
+	delete this._tiddlers[title];
 };
-store.addNotification = NOP;
+TiddlyWiki.prototype.addNotification = NOP;
+
+store = new TiddlyWiki();
+store._tiddlers.SiteTitle = new Tiddler("SiteTitle"); // XXX: this should not be in fixtures
 
 refreshStyles = NOP;
 
