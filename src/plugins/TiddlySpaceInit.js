@@ -27,6 +27,7 @@ var macro = config.macros.TiddlySpaceInit = {
 		if(currentSpace.type != "private") {
 			return;
 		}
+		var tiddlers = [];
 		var tid = store.getTiddler(title);
 		var versionField = "%0_version".format([macroName]).toLowerCase();
 		if(tid) {
@@ -37,7 +38,7 @@ var macro = config.macros.TiddlySpaceInit = {
 				tid.fields[versionField] = this.version;
 				tid.incChangeCount();
 				tid = store.saveTiddler(tid);
-				autoSaveChanges(null, [tid]);
+				tiddlers.push(tid);
 			}
 		} else { // first run
 			tid = new Tiddler(title);
@@ -46,9 +47,9 @@ var macro = config.macros.TiddlySpaceInit = {
 			tid.fields[versionField] = this.version;
 			tid.text = "@@%0@@".format([this.flagWarning]);
 			tid = store.saveTiddler(tid);
-			autoSaveChanges(null, [tid]);
-			this.firstRun();
+			tiddlers = tiddlers.concat(this.firstRun(), tid);
 		}
+		autoSaveChanges(null, tiddlers);
 	},
 	update: function(curVersion) {
 		if(curVersion < 0.2) {
@@ -56,6 +57,7 @@ var macro = config.macros.TiddlySpaceInit = {
 		}
 	},
 	firstRun: function() {
+		var tiddlers = [];
 		var pubWorkspace = "bags/%0_public".format([currentSpace.name]);
 		// generate Site*itle
 		$.each(["SiteTitle", "SiteSubtitle"], function(i, item) {
@@ -66,7 +68,7 @@ var macro = config.macros.TiddlySpaceInit = {
 			});
 			tid.text = macro[item].format([currentSpace.name]);
 			tid = store.saveTiddler(tid);
-			autoSaveChanges(null, [tid]);
+			tiddlers.push(tid);
 		});
 		// generate ColorPalette (ensuring it's public)
 		var wfield = "server.workspace";
@@ -76,6 +78,7 @@ var macro = config.macros.TiddlySpaceInit = {
 		config.defaultCustomFields[wfield] = workspace;
 		// generate avatar
 		macro.createAvatar();
+		return tiddlers;
 	},
 	createAvatar: function() {
 		var avatar = "SiteIcon";

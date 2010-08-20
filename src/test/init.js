@@ -41,12 +41,18 @@ module("init", {
 				log.palette = true;
 			}
 		};
+
+		stash.autoSaveChanges = window.autoSaveChanges;
+		window.autoSaveChanges = function(onlyIfDirty, tiddlers) {
+			log.autoSave = tiddlers;
+		};
 	},
 	teardown: function() {
 		macro.firstRun = stash.firstRun;
 		macro.update = stash.update;
 		macro.createAvatar = stash.createAvatar;
 		config.macros.RandomColorPalette = stash.RandomColorPalette;
+		window.autoSaveChanges = stash.autoSaveChanges;
 
 		_reset(stash);
 		_reset(log);
@@ -65,6 +71,7 @@ test("firstRun", function() {
 	strictEqual(log.update, undefined);
 	strictEqual(log.palette, true);
 	strictEqual(log.avatar, true);
+	strictEqual(log.autoSave.length, 2); // ColorPalette and SiteIcon handled separately
 	var flagTiddler = store.getTiddler("fooSetupFlag");
 	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.2");
 });

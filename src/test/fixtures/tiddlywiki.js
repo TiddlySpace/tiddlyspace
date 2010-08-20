@@ -34,7 +34,6 @@ store.saveTiddler = function(tiddler) {
 }
 store.addNotification = NOP;
 
-autoSaveChanges = NOP;
 refreshStyles = NOP;
 
 Array.prototype.contains = function(item)
