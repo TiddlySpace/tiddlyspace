@@ -6,6 +6,16 @@ var macro = config.macros.TiddlySpaceInit;
 var log = {};
 var stash = {};
 
+var _reset = function(obj) {
+	var keys = [];
+	$.each(log, function(key, value) {
+		keys.push(key);
+	});
+	$.each(keys, function(i, key) {
+		delete log[key];
+	});
+};
+
 module("init", {
 	setup: function() {
 		stash.firstRun = macro.firstRun;
@@ -30,7 +40,7 @@ module("init", {
 			generatePalette: function() {
 				log.palette = true;
 			}
-		}
+		};
 	},
 	teardown: function() {
 		macro.firstRun = stash.firstRun;
@@ -38,12 +48,8 @@ module("init", {
 		macro.createAvatar = stash.createAvatar;
 		config.macros.RandomColorPalette = stash.RandomColorPalette;
 
-		$.each(log, function(key, value) {
-			delete log[key];
-		});
-		$.each(stash, function(key, value) {
-			delete stash[key];
-		});
+		_reset(stash);
+		_reset(log);
 	}
 });
 
