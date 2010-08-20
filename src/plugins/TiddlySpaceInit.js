@@ -11,9 +11,11 @@
 //{{{
 (function($) {
 
+var versionField = "tiddlyspaceinit_version";
+
 var currentSpace = config.extensions.tiddlyspace.currentSpace;
 
-var macro = config.macros.TiddlySpaceInit = {
+var plugin = config.extensions.TiddlySpaceInit = {
 	version: "0.2",
 	SiteTitle: "%0",
 	SiteSubtitle: "a TiddlySpace",
@@ -21,21 +23,20 @@ var macro = config.macros.TiddlySpaceInit = {
 	flagWarning: "Please do not modify this tiddler; it was created " +
 		"automatically upon space creation.",
 
-	handler: function(place, macroName, params, wikifier, paramString, tiddler) { // XXX: must not be a macro
-		var title = this.flagTitle.format([currentSpace.name]);
+	dispatch: function() {
+		var title = plugin.flagTitle.format([currentSpace.name]);
 		config.annotations[title] = this.flagWarning;
 		if(currentSpace.type != "private") {
 			return;
 		}
 		var tiddlers = [];
 		var tid = store.getTiddler(title);
-		var versionField = "%0_version".format([macroName]).toLowerCase();
 		if(tid) {
 			curVersion = parseFloat(tid.fields[versionField]);
-			reqVersion = parseFloat(this.version);
+			reqVersion = parseFloat(plugin.version);
 			if(curVersion < reqVersion) {
-				this.update(curVersion);
-				tid.fields[versionField] = this.version;
+				plugin.update(curVersion);
+				tid.fields[versionField] = plugin.version;
 				tid.incChangeCount();
 				tid = store.saveTiddler(tid);
 				tiddlers.push(tid);
@@ -44,10 +45,10 @@ var macro = config.macros.TiddlySpaceInit = {
 			tid = new Tiddler(title);
 			tid.tags = ["excludeLists", "excludeSearch"];
 			tid.fields = $.extend({}, config.defaultCustomFields);
-			tid.fields[versionField] = this.version;
-			tid.text = "@@%0@@".format([this.flagWarning]);
+			tid.fields[versionField] = plugin.version;
+			tid.text = "@@%0@@".format([plugin.flagWarning]);
 			tid = store.saveTiddler(tid);
-			tiddlers = tiddlers.concat(this.firstRun(), tid);
+			tiddlers = tiddlers.concat(plugin.firstRun(), tid);
 		}
 		autoSaveChanges(null, tiddlers);
 	},
@@ -66,7 +67,7 @@ var macro = config.macros.TiddlySpaceInit = {
 			tid.fields = $.extend({}, config.defaultCustomFields, {
 				"server.workspace": pubWorkspace
 			});
-			tid.text = macro[item].format([currentSpace.name]);
+			tid.text = plugin[item].format([currentSpace.name]);
 			tid = store.saveTiddler(tid);
 			tiddlers.push(tid);
 		});
@@ -77,7 +78,7 @@ var macro = config.macros.TiddlySpaceInit = {
 		config.macros.RandomColorPalette.generatePalette({}, true);
 		config.defaultCustomFields[wfield] = workspace;
 		// generate avatar
-		macro.createAvatar();
+		this.createAvatar();
 		return tiddlers;
 	},
 	createAvatar: function() {
@@ -113,7 +114,7 @@ var macro = config.macros.TiddlySpaceInit = {
 	}
 };
 
-//$(document).bind("startup", plugin.init); // XXX: requires TW 2.6.1
+$(document).bind("startup", plugin.dispatch);
 
 })(jQuery);
 //}}}

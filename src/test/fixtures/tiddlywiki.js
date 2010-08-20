@@ -32,6 +32,9 @@ store.saveTiddler = function(tiddler) {
 	store._tiddlers[tiddler.title] = tiddler;
 	return tiddler;
 }
+store.removeTiddler = function(title) {
+	delete store._tiddlers[title];
+};
 store.addNotification = NOP;
 
 refreshStyles = NOP;
