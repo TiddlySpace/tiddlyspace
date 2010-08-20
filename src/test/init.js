@@ -22,12 +22,14 @@ module("init", {
 
 		stash.createAvatar = macro.createAvatar;
 		macro.createAvatar = function() {
-			data.createAvatar = true;
+			data.avatar = true;
 		};
 
 		stash.RandomColorPalette = config.macros.RandomColorPalette;
 		config.macros.RandomColorPalette = {
-			generatePalette: function() {}
+			generatePalette: function() {
+				data.palette = true;
+			}
 		}
 	},
 	teardown: function() {
@@ -48,13 +50,15 @@ module("init", {
 test("firstRun", function() {
 	strictEqual(data.firstRun, undefined);
 	strictEqual(data.update, undefined);
-	strictEqual(data.createAvatar, undefined);
+	strictEqual(data.palette, undefined);
+	strictEqual(data.avatar, undefined);
 
 	macro.handler(null, "TiddlySpaceInit", null, null, null, null);
 
 	strictEqual(data.firstRun, true);
 	strictEqual(data.update, undefined);
-	strictEqual(data.createAvatar, true);
+	strictEqual(data.palette, true);
+	strictEqual(data.avatar, true);
 	var flagTiddler = store.getTiddler("fooSetupFlag");
 	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.2");
 });
@@ -68,13 +72,15 @@ test("update from v0.1", function() {
 
 	strictEqual(data.firstRun, undefined);
 	strictEqual(data.update, undefined);
-	strictEqual(data.createAvatar, undefined);
+	strictEqual(data.palette, undefined);
+	strictEqual(data.avatar, undefined);
 
 	macro.handler(null, "TiddlySpaceInit", null, null, null, null);
 
 	strictEqual(data.firstRun, undefined);
 	strictEqual(data.update, true);
-	strictEqual(data.createAvatar, true);
+	strictEqual(data.palette, undefined);
+	strictEqual(data.avatar, true);
 	var flagTiddler = store.getTiddler("fooSetupFlag");
 	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.2");
 });
@@ -88,13 +94,15 @@ test("update from v0.2", function() {
 
 	strictEqual(data.firstRun, undefined);
 	strictEqual(data.update, undefined);
-	strictEqual(data.createAvatar, undefined);
+	strictEqual(data.palette, undefined);
+	strictEqual(data.avatar, undefined);
 
 	macro.handler(null, "TiddlySpaceInit", null, null, null, null);
 
 	strictEqual(data.firstRun, undefined);
 	strictEqual(data.update, undefined);
-	strictEqual(data.createAvatar, undefined);
+	strictEqual(data.palette, undefined);
+	strictEqual(data.avatar, undefined);
 });
 
 })();
