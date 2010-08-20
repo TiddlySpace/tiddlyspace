@@ -1,6 +1,8 @@
 /***
 |''Name''|TiddlySpaceChangePassword|
-|''Version''||
+|''Version''|0.2.0|
+|''Author''|Osmosoft|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceChangePassword.js|
 |''Requires''|TiddlyWebConfig TiddlySpaceUserControls|
 !HTMLForm
 <form action="#">
@@ -27,7 +29,7 @@
 //{{{
 (function($) {
 
-var ns = config.extensions.tiddlyweb;
+var tweb = config.extensions.tiddlyweb;
 var displayError = config.macros.TiddlySpaceLogin.displayError;
 
 var macro = config.macros.TiddlySpaceChangePassword = {
@@ -79,7 +81,7 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 			};
 			displayError(xhr, null, null, ctx);
 		} else {
-			macro.changePassword(ns.username, password, npassword);
+			macro.changePassword(tweb.username, password, npassword);
 		}
 		return false;
 	},
@@ -98,7 +100,7 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 			};
 			displayError(xhr, null, null, ctx);
 		};
-		var user = new tiddlyweb.User(username, password, ns.host);
+		var user = new tiddlyweb.User(username, password, tweb.host);
 		user.setPassword(npassword, pwCallback, pwErrback);
 	}
 };
