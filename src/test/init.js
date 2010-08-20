@@ -1,4 +1,4 @@
-(function() {
+(function($) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
 var plugin = config.extensions.TiddlySpaceInit;
@@ -42,8 +42,8 @@ module("init", {
 			}
 		};
 
-		stash.autoSaveChanges = window.autoSaveChanges;
-		window.autoSaveChanges = function(onlyIfDirty, tiddlers) {
+		stash.autoSaveChanges = autoSaveChanges;
+		autoSaveChanges = function(onlyIfDirty, tiddlers) {
 			log.autoSave = tiddlers;
 		};
 	},
@@ -140,4 +140,4 @@ test("update from v0.2", function() {
 	strictEqual(log.avatar, undefined);
 });
 
-})();
+})(jQuery);
