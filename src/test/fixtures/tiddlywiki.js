@@ -47,6 +47,7 @@ TiddlyWiki.prototype.addNotification = NOP;
 store = new TiddlyWiki();
 
 refreshStyles = NOP;
+autoSaveChanges = NOP;
 
 Array.prototype.contains = function(item)
 {
