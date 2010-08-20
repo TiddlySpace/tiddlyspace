@@ -45,7 +45,6 @@ TiddlyWiki.prototype.removeTiddler = function(title) {
 TiddlyWiki.prototype.addNotification = NOP;
 
 store = new TiddlyWiki();
-store._tiddlers.SiteTitle = new Tiddler("SiteTitle"); // XXX: this should not be in fixtures
 
 refreshStyles = NOP;
 
