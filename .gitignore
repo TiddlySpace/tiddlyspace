@@ -2,3 +2,4 @@
 src/lib/chrjs.js
 src/lib/chrjs.users.js
 src/test/qunit
+src/test/lib
