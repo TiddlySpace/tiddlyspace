@@ -12,7 +12,7 @@ from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.model.collections import Tiddlers
 from tiddlyweb.store import (NoBagError, NoRecipeError, NoUserError,
-        NoTiddlerError)
+        NoTiddlerError, HOOKS)
 from tiddlyweb.filters import parse_for_filters
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
@@ -27,6 +27,24 @@ import tiddlywebplugins.status
 
 
 CORE_BAGS = ['system', 'common', 'tiddlyspace']
+
+
+def control_tiddler_get(store, tiddler):
+    environ = store.environ
+    http_host, _ = _determine_host(environ)
+    space_name = _determine_space(environ, http_host)
+    if space_name:
+        recipe_name = _determine_space_recipe(environ, space_name)
+        store_recipe = store.get(Recipe(recipe_name))
+        template = control.recipe_template(environ)
+        bags = [bag for bag, _ in store_recipe.get_recipe(template)]
+        if tiddler.bag not in bags:
+            tiddler_bag = store.get(Bag(tiddler.bag))
+            if tiddler_bag.policy.read != []:
+                raise HTTP403('Illegal bag access')
+
+
+HOOKS['tiddler']['get'].append(control_tiddler_get)
 
 
 def home(environ, start_response):
