@@ -24,8 +24,6 @@ import wsgi_intercept
 
 from wsgi_intercept import httplib2_intercept
 
-from tiddlyweb.store import Store
-
 from test.fixtures import make_test_env, get_auth
 
 

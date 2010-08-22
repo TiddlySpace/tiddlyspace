@@ -6,7 +6,6 @@ import wsgi_intercept
 import httplib2
 import simplejson
 
-from tiddlyweb.store import Store
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.recipe import Recipe
 

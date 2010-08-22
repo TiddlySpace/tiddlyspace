@@ -8,12 +8,6 @@ from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlywebplugins.utils import get_store
 
-import tiddlywebplugins.tiddlyspace
-
-from tiddlywebplugins.sqlalchemy import (sField, sRevision,
-        sBag, sRecipe, sUser, sPolicy, sRole)
-import tiddlywebplugins.mysql
-
 from tiddlyweb.config import config
 from tiddlywebplugins.instancer.util import spawn
 
@@ -25,7 +19,7 @@ SESSION_COUNT = 1
 
 def get_auth(username, password):
     http = httplib2.Http()
-    response, content = http.request(
+    response, _ = http.request(
             'http://0.0.0.0:8080/challenge/cookie_form',
             body='user=%s&password=%s' % (username, password),
             method='POST',
@@ -62,7 +56,6 @@ def make_test_env(module):
 
     from tiddlyweb.web import serve
     module.store = get_store(config)
-    session = module.store.storage.session
     def app_fn():
         return serve.load_app()
     module.app_fn = app_fn

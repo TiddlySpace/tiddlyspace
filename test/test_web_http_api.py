@@ -10,21 +10,14 @@ requests and some associated information.
 """
 
 import os
-import shutil
 
 from test.fixtures import make_test_env
 
 from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
 import httplib2
-import simplejson
 import yaml
 
-from base64 import b64encode
-from re import match
-
-
-from tiddlyweb.model.user import User
 
 base_url = 'http://0.0.0.0:8080'
 
@@ -40,7 +33,6 @@ def setup_module(module):
     TESTS = yaml.load(open('../test/httptest.yaml'))
 
 def teardown_module(module):
-    import os
     os.chdir('..')
 
 def test_assert_response():

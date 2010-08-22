@@ -4,7 +4,6 @@ import wsgi_intercept
 
 from wsgi_intercept import httplib2_intercept
 
-from tiddlyweb.store import Store
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
 

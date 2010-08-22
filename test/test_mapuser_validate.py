@@ -19,7 +19,6 @@ from wsgi_intercept import httplib2_intercept
 
 from tiddlyweb.model.user import User
 from tiddlyweb.model.tiddler import Tiddler
-from tiddlyweb.store import Store
 from tiddlyweb.web.util import make_cookie
 
 from test.fixtures import make_test_env

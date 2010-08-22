@@ -8,7 +8,6 @@ import simplejson
 
 from base64 import b64encode
 
-from tiddlyweb.store import Store
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User

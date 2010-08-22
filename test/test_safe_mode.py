@@ -12,9 +12,7 @@ import httplib2
 import simplejson
 import Cookie
 
-from tiddlyweb.store import Store
 from tiddlyweb.model.user import User
-from tiddlyweb.model.tiddler import Tiddler
 
 AUTH_COOKIE = None
 
