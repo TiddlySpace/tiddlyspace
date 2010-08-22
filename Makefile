@@ -20,14 +20,15 @@ jslib: qunit
 
 qunit:
 	mkdir -p src/test/qunit
+	mkdir -p src/test/lib
 	curl -o src/test/qunit/qunit.js \
 		http://github.com/jquery/qunit/raw/master/qunit/qunit.js
 	curl -o src/test/qunit/qunit.css \
 		http://github.com/jquery/qunit/raw/master/qunit/qunit.css
-	curl -o src/test/qunit/jquery.min.js \
-		http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js
-	curl -o src/test/qunit/jquery-json.min.js \
-		http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js
+	curl -o src/test/lib/jquery.js \
+		http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js
+	curl -o src/test/lib/jquery-json.js \
+		http://jquery-json.googlecode.com/files/jquery.json-2.2.js
 
 dist: clean remotes test
 	python setup.py sdist
