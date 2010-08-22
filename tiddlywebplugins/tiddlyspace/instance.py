@@ -6,8 +6,6 @@ from copy import deepcopy
 
 from tiddlywebplugins.instancer.util import get_tiddler_locations
 
-from tiddlyweb.util import merge_config
-
 from tiddlywebwiki.instance import (instance_config, store_contents,
     store_structure)
 

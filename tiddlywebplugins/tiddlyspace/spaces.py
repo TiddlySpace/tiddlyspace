@@ -116,7 +116,6 @@ def create_space(environ, start_response):
     Create a space if it does not yet exists. If it does
     raise 409.
     """
-    store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     space_name = urllib.unquote(space_name).decode('UTF-8')
     _validate_space_name(environ, space_name)
@@ -255,7 +254,8 @@ def _alien_domain(environ, space_name):
     Alien means not in the server_host subdomain or
     _the_ main domain.
     """
-    # Some other things.
+    # Some other things will eventually happen here, which
+    # is why environ is being passed in.
     if space_name == 'frontpage':
         return True
     return False

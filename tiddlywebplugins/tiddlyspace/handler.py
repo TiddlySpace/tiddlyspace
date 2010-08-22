@@ -41,7 +41,7 @@ def home(environ, start_response):
         usersign = environ['tiddlyweb.usersign']['name']
         try:
             store = environ['tiddlyweb.store']
-            user = store.get(User(usersign))
+            store.get(User(usersign))
         except NoUserError:
             usersign = 'GUEST'
         if usersign == 'GUEST':
@@ -109,7 +109,7 @@ def safe_mode(environ, start_response):
     are deleted from the store of the space in question.
     """
 
-    http_host, host_url = _determine_host(environ)
+    http_host, _ = _determine_host(environ)
     space_name = _determine_space(environ, http_host)
     recipe_name = _determine_space_recipe(environ, space_name)
     if recipe_name != '%s_private' % space_name:
@@ -140,7 +140,7 @@ def safe_mode(environ, start_response):
         recipe = store.get(Recipe(recipe_name))
         template = control.recipe_template(environ)
         recipe_list = recipe.get_recipe(template)
-        space_bags = [bag for bag, filter in recipe_list
+        space_bags = [bag for bag, _ in recipe_list
                 if bag.startswith('%s_' % space_name)]
         for title in core_plugin_tiddler_titles:
             for bag in space_bags:
@@ -229,7 +229,7 @@ def _determine_space_recipe(environ, space_name):
     bag = Bag('%s_private' % space_name)
     try:
         bag = store.get(bag)
-    except NoBagError, exc:
+    except NoBagError:
         raise HTTP404('Space for %s does not exist' % space_name)
     members = bag.policy.manage  # XXX: authoritative?
 
@@ -255,7 +255,7 @@ def _determine_space(environ, http_host):
         try:
             tiddler = store.get(tiddler)
             return tiddler.fields['mapped_space']
-        except (KeyError, NoBagError, NoTiddlerError), exc:
+        except (KeyError, NoBagError, NoTiddlerError):
             pass
     return None
 
@@ -324,12 +324,12 @@ class ControlView(object):
         if (req_uri.startswith('/bags') or
                 req_uri.startswith('/recipes') or
                 req_uri.startswith('/search')):
-            self._handle_core_request(environ, start_response, req_uri)
+            self._handle_core_request(environ, req_uri)
 
         return self.application(environ, start_response)
 
     # XXX too long!
-    def _handle_core_request(self, environ, start_response, req_uri):
+    def _handle_core_request(self, environ, req_uri):
         """
         Override a core request, adding filters or sending 404s where
         necessary to limit the view of entities.

@@ -3,8 +3,6 @@ Enhance the default HTML serialization so that when we display
 a single tiddler it includes a link to the tiddler in its space.
 """
 
-import urllib
-
 from tiddlyweb.wikitext import render_wikitext
 from tiddlyweb.serializations.html import Serialization as HTMLSerialization
 from tiddlyweb.web.util import encode_name
