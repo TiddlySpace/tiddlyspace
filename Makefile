@@ -30,6 +30,16 @@ qunit:
 	curl -o src/test/lib/jquery-json.js \
 		http://jquery-json.googlecode.com/files/jquery.json-2.2.js
 
+kopfloss: qunit
+	git clone git://github.com/FND/kopfloss.git src/test/kopfloss || true
+	{ \
+		cd src/test/kopfloss; \
+		pwd || true; \
+		git pull origin master; \
+		ln -s ../../qunit/qunit.js lib/qunit.js; \
+		cd -; \
+	}
+
 dist: clean remotes test
 	python setup.py sdist
 
