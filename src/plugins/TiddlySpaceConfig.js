@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.5.1|
+|''Version''|0.5.2|
 |''Description''|TiddlySpace configuration|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -110,7 +110,7 @@ var plugin = config.extensions.tiddlyspace = {
 		return name.match(/^[a-z][0-9a-z\-]*[0-9a-z]$/) ? true : false;
 	},
 	getAvatar: function(host, space) {
-		host = host ? this.getHost(host) : "";
+		host = host ? this.getHost(host, space.name) : "";
 		var bag = space.name ? "%0_public".format([space.name]) : "tiddlyspace";
 		return "%0/bags/%1/tiddlers/SiteIcon".format([host, bag]);
 	},
