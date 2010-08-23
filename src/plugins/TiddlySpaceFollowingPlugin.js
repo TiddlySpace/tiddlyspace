@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.4.10|
+|''Version''|0.4.11|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -127,7 +127,7 @@ var followMacro = config.macros.followTiddlers = {
 			var title = link.attr("title");
 			tiddlyspace.displayServerTiddler(null, title, "bags/%0_public".format([spaceName]));
 		};
-		var tsHost = host.replace("%0.", "");
+		var tsHost = host.format([tiddlyspace.currentSpace.name]);
 		for(var i = 0; i < tiddlers.length; i++) {
 			var tiddler = tiddlers[i];
 			var title = tiddler.title;
