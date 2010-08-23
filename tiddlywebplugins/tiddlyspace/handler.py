@@ -328,17 +328,28 @@ class DropPrivs(object):
             return
 
         store = environ['tiddlyweb.store']
-
         container_name = req_uri.split('/')[2]
+
         if req_uri.startswith('/bags/'):
             recipe_name = _determine_space_recipe(environ, space_name)
             space_recipe = store.get(Recipe(recipe_name))
             template = control.recipe_template(environ)
-            if container_name in [bag for bag, _
-                    in space_recipe.get_recipe(template)]:
-                return
-            if container_name in ADMIN_BAGS:
-                return
+            recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
+            if environ['REQUEST_METHOD'] == 'GET':
+                if container_name in recipe_bags:
+                    return
+                if container_name in ADMIN_BAGS:
+                    return
+            else:
+                base_bags = ['%s_public' % space_name,
+                        '%s_private' % space_name]
+                acceptable_bags = [bag for bag in recipe_bags if not (
+                    bag.endswith('_public') or bag.endswith('_private'))]
+                acceptable_bags.extend(base_bags)
+                acceptable_bags.extend(ADMIN_BAGS)  # XXX this leaves a big hole
+                print 'ab', req_uri, acceptable_bags
+                if container_name in acceptable_bags:
+                    return
 
         if req_uri.startswith('/recipes/'):
             space_public_name = '%s_public' % space_name
