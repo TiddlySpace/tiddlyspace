@@ -347,7 +347,6 @@ class DropPrivs(object):
                     bag.endswith('_public') or bag.endswith('_private'))]
                 acceptable_bags.extend(base_bags)
                 acceptable_bags.extend(ADMIN_BAGS)  # XXX this leaves a big hole
-                print 'ab', req_uri, acceptable_bags
                 if container_name in acceptable_bags:
                     return
 
@@ -389,9 +388,11 @@ class ControlView(object):
     def __call__(self, environ, start_response):
         req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
 
-        if (req_uri.startswith('/bags') or
-                req_uri.startswith('/recipes') or
-                req_uri.startswith('/search')):
+        if (req_uri.startswith('/bags')
+                or req_uri.startswith('/recipes')
+                or req_uri.startswith('/search')
+                or req_uri.startswith('/users')
+                or req_uri.startswith('/spaces')):
             self._handle_core_request(environ, req_uri)
 
         return self.application(environ, start_response)
@@ -406,9 +407,20 @@ class ControlView(object):
         to false
         """
         http_host, host_url = _determine_host(environ)
+
+        request_method = environ['REQUEST_METHOD']
+
+        if request_method != 'GET' and (req_uri.startswith('/users')
+                or req_uri.startswith('/spaces')
+                or req_uri.startswith('/bags/MAPUSER')):
+            if http_host != host_url:
+                raise HTTP404('%s not found' % req_uri)
+
         disable_ControlView = environ.get('HTTP_X_CONTROLVIEW') == 'false'
         if http_host != host_url and not disable_ControlView:
             space_name = _determine_space(environ, http_host)
+            if space_name == None:
+                return
             recipe_name = _determine_space_recipe(environ, space_name)
             store = environ['tiddlyweb.store']
             try:
