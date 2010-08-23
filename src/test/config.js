@@ -1,4 +1,4 @@
-(function() {
+(function(module) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
 
@@ -107,4 +107,4 @@ test("determineSpace from tiddler object", function() {
 	strictEqual(space.name, "alpha");
 });
 
-})();
+})(QUnit.module);

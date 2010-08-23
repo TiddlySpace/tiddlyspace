@@ -1,4 +1,4 @@
-(function($) {
+(function(module, $) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
 var plugin = config.extensions.TiddlySpaceInit;
@@ -140,4 +140,4 @@ test("update from v0.2", function() {
 	strictEqual(log.avatar, undefined);
 });
 
-})(jQuery);
+})(QUnit.module, jQuery);

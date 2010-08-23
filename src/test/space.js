@@ -1,4 +1,4 @@
-(function($) {
+(function(module, $) {
 
 var _request, _response;
 var _ajax = $.ajax;
@@ -113,4 +113,4 @@ test("removing members", function() {
 	strictEqual(_data[0], "jane");
 });
 
-})(jQuery);
+})(QUnit.module, jQuery);
