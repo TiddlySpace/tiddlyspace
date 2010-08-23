@@ -1,10 +1,10 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.5.0|
+|''Version''|0.5.1|
 |''Description''|TiddlySpace configuration|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
-|''Requires''|TiddlyWebConfig|
+|''Requires''|TiddlyWebConfig ServerSideSavingPlugin|
 !Code
 ***/
 //{{{
