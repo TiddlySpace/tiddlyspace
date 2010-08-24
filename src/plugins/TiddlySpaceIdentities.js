@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceIdentities|
-|''Version''||
+|''Version''|0.1.0|
 |''Description''||
-|''Status''|//unknown//|
-|''Source''|http://github.com/TiddlySpace/tiddlyspace|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceIdentities.js|
 |''Requires''|TiddlySpaceConfig chrjs|
 !HTMLForm
 <form method="POST" action="#">
@@ -30,7 +30,7 @@
 //{{{
 (function($) {
 
-var ns = config.extensions.tiddlyweb;
+var tweb = config.extensions.tiddlyweb;
 
 var macro = config.macros.TiddlySpaceIdentities = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -40,7 +40,7 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		ns.getUserInfo(function(user) {
+		tweb.getUserInfo(function(user) {
 			if(!user.anon) {
 				var container = $("<div />").appendTo(place);
 				macro.refresh(container);
@@ -50,7 +50,7 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	refresh: function(container) {
 		container.empty().append("<ul />").append(this.generateForm());
 		$.ajax({ // TODO: add (dynamically) to chrjs user extension?
-			url: "%0/users/%1/identities".format([ns.host, ns.username]),
+			url: "%0/users/%1/identities".format([tweb.host, tweb.username]),
 			type: "GET",
 			success: function(data, status, xhr) {
 				var identities = $.map(data, function(item, i) {
@@ -59,14 +59,14 @@ var macro = config.macros.TiddlySpaceIdentities = {
 				$("ul", container).append(identities);
 			},
 			error: function(xhr, error, exc) {
-				displayMessage(macro.locale.listError.format([ns.username]));
+				displayMessage(macro.locale.listError.format([tweb.username]));
 			}
 		});
 	},
 	generateForm: function() {
 		var challenger = "tiddlywebplugins.tiddlyspace.openid";
-		var uri = "%0/challenge/%1".format([ns.host, challenger]);
-		var redirect = ns.serverPrefix + "#auth:OpenID:";
+		var uri = "%0/challenge/%1".format([tweb.host, challenger]);
+		var redirect = tweb.serverPrefix + "#auth:OpenID:";
 		return $(this.formTemplate).attr("action", uri).submit(this.onSubmit).
 			find("legend").text(this.locale.addLabel).end().
 			find("[name=tiddlyweb_redirect]").val(redirect).end().
@@ -96,7 +96,7 @@ config.paramifiers.auth = {
 	addIdentity: function(name) {
 		var msg = config.paramifiers.auth.locale;
 		var tiddler = new tiddlyweb.Tiddler(name);
-		tiddler.bag = new tiddlyweb.Bag("MAPUSER", ns.host);
+		tiddler.bag = new tiddlyweb.Bag("MAPUSER", tweb.host);
 		var callback = function(data, status, xhr) {
 			displayMessage(msg.success.format([name]));
 			window.location = window.location.toString().split("#")[0] + "#";

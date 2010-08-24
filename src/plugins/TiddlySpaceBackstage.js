@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.0|
+|''Version''|0.5.1|
 |''Description''|Provides a TiddlySpace version of the backstage|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
@@ -9,6 +9,10 @@
 ***/
 //{{{
 (function($) {
+
+var tweb = config.extensions.tiddlyweb;
+var tiddlyspace = config.extensions.tiddlyspace;
+var imageMacro = config.macros.image;
 
 if(config.options.chkBackstage === undefined) {
 	config.options.chkBackstage = true;
@@ -44,7 +48,7 @@ var _show = backstage.show;
 backstage.show = function() {
 	// selectively hide backstage tasks based on user status
 	var tasks = $("#backstageToolbar .backstageTask").show();
-	config.extensions.tiddlyweb.getUserInfo(function(user) {
+	tweb.getUserInfo(function(user) {
 		if(user.anon) {
 			tasks.slice(1, 2).hide();
 		} else {
@@ -56,8 +60,6 @@ backstage.show = function() {
 };
 
 var _init = backstage.init;
-var tiddlyspace = config.extensions.tiddlyspace;
-var imageMacro = config.macros.image;
 backstage.init = function(){
 	_init.apply(this, arguments);
 
@@ -106,7 +108,6 @@ backstage.init = function(){
 		$('<span class="spaceName" />').text(spaceName).appendTo(btn);
 	}
 
-	var tweb = config.extensions.tiddlyweb;
 	tweb.getUserInfo(function(user) {
 		if(!user.anon) {
 			var src = tiddlyspace.getAvatar(tweb.status.server_host, { name: user.name });
