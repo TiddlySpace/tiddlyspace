@@ -389,10 +389,8 @@ class ControlView(object):
         req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
 
         if (req_uri.startswith('/bags')
-                or req_uri.startswith('/recipes')
                 or req_uri.startswith('/search')
-                or req_uri.startswith('/users')
-                or req_uri.startswith('/spaces')):
+                or req_uri.startswith('/recipes')):
             self._handle_core_request(environ, req_uri)
 
         return self.application(environ, start_response)
@@ -409,12 +407,6 @@ class ControlView(object):
         http_host, host_url = _determine_host(environ)
 
         request_method = environ['REQUEST_METHOD']
-
-        if request_method != 'GET' and (req_uri.startswith('/users')
-                or req_uri.startswith('/spaces')
-                or req_uri.startswith('/bags/MAPUSER')):
-            if http_host != host_url:
-                raise HTTP404('%s not found' % req_uri)
 
         disable_ControlView = environ.get('HTTP_X_CONTROLVIEW') == 'false'
         if http_host != host_url and not disable_ControlView:
