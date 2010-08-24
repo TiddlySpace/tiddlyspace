@@ -27,6 +27,7 @@ import tiddlywebplugins.status
 
 
 CORE_BAGS = ['system', 'common', 'tiddlyspace']
+ADMIN_BAGS = ['common', 'MAPUSER', 'MAPSPACE']
 
 
 def home(environ, start_response):
@@ -294,6 +295,72 @@ def _status_gather_data(environ):
 
 tiddlywebplugins.status._gather_data = _status_gather_data
 
+
+class DropPrivs(object):
+    """
+    If the incoming request is addressed to some entity not in the
+    current space, then drop privileges to GUEST.
+    """
+
+    def __init__(self, application):
+        self.application = application
+        self.stored_user = None
+
+    def __call__(self, environ, start_response):
+        req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
+        if (req_uri.startswith('/bags/')
+                or req_uri.startswith('/recipes/')):
+            self._handle_dropping_privs(environ, req_uri)
+
+        output = self.application(environ, start_response)
+        if self.stored_user:
+            environ['tiddlyweb.usersign'] = self.stored_user
+        return output
+
+    def _handle_dropping_privs(self, environ, req_uri):
+        if environ['tiddlyweb.usersign']['name'] == 'GUEST':
+            return
+
+        http_host, host_url = _determine_host(environ)
+        space_name = _determine_space(environ, http_host)
+
+        if space_name == None:
+            return
+
+        store = environ['tiddlyweb.store']
+        container_name = req_uri.split('/')[2]
+
+        if req_uri.startswith('/bags/'):
+            recipe_name = _determine_space_recipe(environ, space_name)
+            space_recipe = store.get(Recipe(recipe_name))
+            template = control.recipe_template(environ)
+            recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
+            if environ['REQUEST_METHOD'] == 'GET':
+                if container_name in recipe_bags:
+                    return
+                if container_name in ADMIN_BAGS:
+                    return
+            else:
+                base_bags = ['%s_public' % space_name,
+                        '%s_private' % space_name]
+                acceptable_bags = [bag for bag in recipe_bags if not (
+                    bag.endswith('_public') or bag.endswith('_private'))]
+                acceptable_bags.extend(base_bags)
+                acceptable_bags.extend(ADMIN_BAGS)  # XXX this leaves a big hole
+                if container_name in acceptable_bags:
+                    return
+
+        if req_uri.startswith('/recipes/'):
+            space_public_name = '%s_public' % space_name
+            space_private_name = '%s_private' % space_name
+            if container_name in [space_public_name, space_private_name]:
+                return
+
+        self.stored_user = environ['tiddlyweb.usersign']
+        environ['tiddlyweb.usersign'] = {'name': 'GUEST', 'roles': []}
+        return
+
+
 class AllowOrigin(object):
 
     def __init__(self, application):
@@ -321,9 +388,11 @@ class ControlView(object):
     def __call__(self, environ, start_response):
         req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
 
-        if (req_uri.startswith('/bags') or
-                req_uri.startswith('/recipes') or
-                req_uri.startswith('/search')):
+        if (req_uri.startswith('/bags')
+                or req_uri.startswith('/recipes')
+                or req_uri.startswith('/search')
+                or req_uri.startswith('/users')
+                or req_uri.startswith('/spaces')):
             self._handle_core_request(environ, req_uri)
 
         return self.application(environ, start_response)
@@ -338,9 +407,20 @@ class ControlView(object):
         to false
         """
         http_host, host_url = _determine_host(environ)
+
+        request_method = environ['REQUEST_METHOD']
+
+        if request_method != 'GET' and (req_uri.startswith('/users')
+                or req_uri.startswith('/spaces')
+                or req_uri.startswith('/bags/MAPUSER')):
+            if http_host != host_url:
+                raise HTTP404('%s not found' % req_uri)
+
         disable_ControlView = environ.get('HTTP_X_CONTROLVIEW') == 'false'
         if http_host != host_url and not disable_ControlView:
             space_name = _determine_space(environ, http_host)
+            if space_name == None:
+                return
             recipe_name = _determine_space_recipe(environ, space_name)
             store = environ['tiddlyweb.store']
             try:
@@ -356,9 +436,7 @@ class ControlView(object):
                 if (bag.endswith('_public') and
                         not bag.startswith('%s_p' % space_name)):
                     subscriptions.append(bag[:-7])
-            bags.insert(0, 'common')
-            bags.insert(0, 'MAPUSER')
-            bags.insert(0, 'MAPSPACE')
+            bags.extend(ADMIN_BAGS)
 
             filter_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
