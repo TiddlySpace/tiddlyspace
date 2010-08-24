@@ -56,8 +56,8 @@ macro.handler = function(place, macroName, params, wikifier,
 		// otherwise the click event is the popup AND the slider
 		$(".moreCommand", place)[0].onclick = macro.onClickMorePopUp;
 	}
-	else if (	parsedParams.icons && parsedParams.icons == "yes" && 
-				parsedParams.more && parsedParams.more == "slider") {
+	else if ( parsedParams.icons && parsedParams.icons == "yes" && 
+			parsedParams.more && parsedParams.more == "slider") {
 		// initialize the slider with icons.
 		$(".moreCommand", place)[0].onclick = macro.onClickMoreSlider;		
 	}
