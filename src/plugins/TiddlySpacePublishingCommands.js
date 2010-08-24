@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.5.1|
+|''Version''|0.5.3|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -66,6 +66,7 @@ var cmd = config.commands.publishTiddler = {
 				"server.workspace": newWorkspace || "bags/%0_%1".format([space.name, type]),
 				"server.page.revision": "false"
 			});
+			delete tiddler.fields["server.etag"];
 			adaptor.putTiddler(tiddler, null, null, callback);
 		};
 		publish(original, callback);
@@ -85,17 +86,19 @@ var cmd = config.commands.publishTiddler = {
 						workspace: newWorkspace
 					};
 					tiddler.title = oldTitle; // for cases where a rename occurs
-					adaptor.deleteTiddler(tiddler, context, {}, function() {
-						if(callback) {
-							callback();
-						} else {
-							store.removeTiddler(oldTitle);
-							story.closeTiddler(oldTitle);
-							store.addTiddler(ctx.tiddler);
-							story.refreshTiddler(newTitle, true);
-							story.displayTiddler(place, newTitle);
-						}
-					});
+					if(ctx.status) { // only do if a success
+						adaptor.deleteTiddler(tiddler, context, {}, function() {
+							if(callback) {
+								callback();
+							} else {
+								store.removeTiddler(oldTitle);
+								story.closeTiddler(oldTitle);
+								store.addTiddler(ctx.tiddler);
+								story.refreshTiddler(newTitle, true);
+								story.displayTiddler(place, newTitle);
+							}
+						});
+					}
 			});
 		}
 	},

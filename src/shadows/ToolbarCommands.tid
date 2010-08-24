@@ -1,5 +1,5 @@
 tags: excludeLists
 
-|~ViewToolbar|closeTiddler +editTiddler cloneTiddler > fields pubRev revisions syncing permalink references jump closeOthers|
+|~ViewToolbar|closeTiddler +editTiddler +cloneTiddler > fields pubRev revisions syncing permalink references jump closeOthers|
 |~EditToolbar|+saveTiddler saveDraft -cancelTiddler deleteTiddler|
 |~RevisionToolbar|> fields revert|
