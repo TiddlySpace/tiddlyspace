@@ -66,7 +66,7 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	generateForm: function() {
 		var challenger = "tiddlywebplugins.tiddlyspace.openid";
 		var uri = "%0/challenge/%1".format([tweb.host, challenger]);
-		var redirect = tweb.serverPrefix + "#auth:OpenID:";
+		var redirect = tweb.serverPrefix + "#auth:OpenID=";
 		return $(this.formTemplate).attr("action", uri).submit(this.onSubmit).
 			find("legend").text(this.locale.addLabel).end().
 			find("[name=tiddlyweb_redirect]").val(redirect).end().
@@ -88,7 +88,7 @@ config.paramifiers.auth = {
 	},
 
 	onstart: function(v) {
-		var identity = window.location.hash.split("auth:OpenID:")[1];
+		var identity = window.location.hash.split("auth:OpenID=")[1];
 		if(identity) {
 			this.addIdentity(identity);
 		}
