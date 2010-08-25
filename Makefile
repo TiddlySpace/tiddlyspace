@@ -7,6 +7,7 @@ wrap_jslib = curl -s $(2) | \
 	} > $(1)
 
 test:
+	src/test/run.sh
 	py.test -x test
 
 remotes: jslib
