@@ -56,11 +56,6 @@ macro.handler = function(place, macroName, params, wikifier,
 		// otherwise the click event is the popup AND the slider
 		$(".moreCommand", place)[0].onclick = macro.onClickMorePopUp;
 	}
-	else if ( parsedParams.icons && parsedParams.icons == "yes" && 
-			parsedParams.more && parsedParams.more == "slider") {
-		// initialize the slider with icons.
-		$(".moreCommand", place)[0].onclick = macro.onClickMoreSlider;		
-	}
 	return status;
 };
 
@@ -71,7 +66,7 @@ macro.refresh = function(place, params) {
 
 var imageMacro = config.macros.image;
 macro.augmentCommandButtons = function(toolbar) {
-	$(toolbar).children(".button").each(function(i, el) {
+	$(".button", toolbar).each(function(i, el) {
 		var cmd = el.className.match(/\bcommand_([^ ]+?)\b/); // XXX: gratuitous RegEx?
 		cmd = cmd ? cmd[1] : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
 		var icon = store.tiddlerExists(cmd) ? cmd : macro.icons[cmd];
@@ -81,15 +76,6 @@ macro.augmentCommandButtons = function(toolbar) {
 			imageMacro.renderImage(el, icon, { alt: text });
 		}
 	});
-};
-
-// OnClickMore slider
-macro.onClickMoreSlider = function(ev) {
-    var e = this.nextSibling;
-    e.style.display = "inline";
-    this.style.display = "none";
-    macro.augmentCommandButtons(e); 
-    return false;
 };
 
 // provide onClickMore to provide extra commands in a popup
