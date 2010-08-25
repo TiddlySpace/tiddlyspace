@@ -1,4 +1,3 @@
-tiddler: BinaryUploadPlugin.js
 tiddler: TiddlySpaceConfig.js
 tiddler: TiddlySpaceBackstage.js
 tiddler: TiddlySpaceInit.js
@@ -7,14 +6,6 @@ tiddler: TiddlySpaceIdentities.js
 tiddler: TiddlySpaceMembers.js
 tiddler: TiddlySpaceSpaces.js
 tiddler: TiddlySpaceInclusion.js
-tiddler: TiddlySpacePublishingCommands.js
-tiddler: TiddlySpacePublisher.js
-tiddler: TiddlySpacePubRevCommand.js
 tiddler: TiddlySpaceCloneCommand.js
 tiddler: TiddlySpaceChangePassword.js
-tiddler: TiddlySpaceToolbar.js
-tiddler: TiddlySpaceTiddlerIconsPlugin.js
-tiddler: TiddlySpaceRevisionView.js
-tiddler: TiddlySpaceRevertRevision.js
-tiddler: TiddlySpaceFollowingPlugin.js
-tiddler: ToggleTiddlerPrivacyPlugin.js
+
