@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.5.1|
+|''Version''|0.5.2|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -205,7 +205,13 @@ var originMacro = config.macros.tiddlerOrigin = {
 			labelOptions: { includeLabel: includeLabel },
 			imageOptions: imageMacro.getArguments(paramString, [])
 		};
-		options.space = tiddlyspace.determineSpace(tiddler, true);
+		if(tiddler && tiddler.fields["server.workspace"]) {
+			name = tiddler.fields["server.workspace"].replace("recipes/", "").
+			replace("bags/", "");
+		} else {
+			name = tiddler;
+		}
+		options.space = tiddlyspace.determineSpace(name, true);
 		var concertinaContentEl = $("<div />")[0];
 
 		var concertinaButton = originMacro.createConcertinaButton(place, concertinaContentEl);
