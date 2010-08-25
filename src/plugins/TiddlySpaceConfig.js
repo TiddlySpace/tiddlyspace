@@ -110,12 +110,15 @@ var plugin = config.extensions.tiddlyspace = {
 		return name.match(/^[a-z][0-9a-z\-]*[0-9a-z]$/) ? true : false;
 	},
 	// returns the URL for a space's avatar (SiteIcon) based on a server_host
-	// object and a space object
+	// object and an optional space name
 	// optional nocors argument prevents cross-domain URLs from being generated
 	getAvatar: function(host, space, nocors) {
-		var subdomain = nocors ? plugin.currentSpace.name : space.name;
+		if(space && typeof space != "string") { // backwards compatibility -- XXX: deprecated
+			space = space.name;
+		}
+		var subdomain = nocors ? plugin.currentSpace.name : space;
 		host = host ? this.getHost(host, subdomain) : "";
-		var bag = space.name ? "%0_public".format([space.name]) : "tiddlyspace";
+		var bag = space ? "%0_public".format([space]) : "tiddlyspace";
 		return "%0/bags/%1/tiddlers/SiteIcon".format([host, bag]);
 	},
 	// returns the URL based on a server_host object (scheme, host, port) and an

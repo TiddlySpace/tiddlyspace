@@ -151,16 +151,28 @@ test("getAvatar", function() {
 		port: "8080"
 	};
 
-	uri = tiddlyspace.getAvatar(server_host, { name: "fnd" });
+	uri = tiddlyspace.getAvatar(server_host);
+	strictEqual(uri, "http://example.org:8080/bags/tiddlyspace/tiddlers/SiteIcon");
+
+	uri = tiddlyspace.getAvatar(server_host, null, true);
+	strictEqual(uri, "http://foo.example.org:8080/bags/tiddlyspace/tiddlers/SiteIcon");
+
+	// test for backwards compatibility -- XXX: deprecated
+	uri = tiddlyspace.getAvatar(server_host, { name: "xxx" });
+	strictEqual(uri, "http://xxx.example.org:8080/bags/xxx_public/tiddlers/SiteIcon");
+	uri = tiddlyspace.getAvatar(server_host, { name: "xxx" }, true);
+	strictEqual(uri, "http://foo.example.org:8080/bags/xxx_public/tiddlers/SiteIcon");
+
+	uri = tiddlyspace.getAvatar(server_host, "fnd");
 	strictEqual(uri, "http://fnd.example.org:8080/bags/fnd_public/tiddlers/SiteIcon");
 
-	uri = tiddlyspace.getAvatar(server_host, { name: "fnd" }, true);
+	uri = tiddlyspace.getAvatar(server_host, "fnd", true);
 	strictEqual(uri, "http://foo.example.org:8080/bags/fnd_public/tiddlers/SiteIcon");
 
-	uri = tiddlyspace.getAvatar(server_host, { name: "jon" });
+	uri = tiddlyspace.getAvatar(server_host, "jon");
 	strictEqual(uri, "http://jon.example.org:8080/bags/jon_public/tiddlers/SiteIcon");
 
-	uri = tiddlyspace.getAvatar(server_host, { name: "jon" }, true);
+	uri = tiddlyspace.getAvatar(server_host, "jon", true);
 	strictEqual(uri, "http://foo.example.org:8080/bags/jon_public/tiddlers/SiteIcon");
 });
 
