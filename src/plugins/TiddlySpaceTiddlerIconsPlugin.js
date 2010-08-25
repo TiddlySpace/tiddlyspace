@@ -66,7 +66,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		}
 	} else {
 		getStatus(function(status) {
-			var uri = tiddlyspace.getAvatar(status.server_host, { name: value });
+			var uri = tiddlyspace.getAvatar(status.server_host, value);
 			imageMacro.renderImage(imagePlace, uri, imageOptions);
 			if(!value) {
 				value = "tiddlyspace";
@@ -222,7 +222,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		} else {
 			var label = locale.external.format([options.space.name || "tiddlyspace"]);
 			getStatus(function(status) {
-				var uri = tiddlyspace.getAvatar(status.server_host, options.space);
+				var uri = tiddlyspace.getAvatar(status.server_host, options.space.name);
 				imageMacro.renderImage(concertinaButton, uri, options.imageOptions);
 				var labelOptions = options.labelOptions;
 				labelOptions.label = label;
