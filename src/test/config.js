@@ -107,4 +107,61 @@ test("determineSpace from tiddler object", function() {
 	strictEqual(space.name, "alpha");
 });
 
+test("getHost", function() {
+	var server_host, uri;
+
+	server_host = {
+		scheme: "https",
+		host: "example.org",
+		port: "8080"
+	};
+	uri = tiddlyspace.getHost(server_host);
+	strictEqual(uri, "https://example.org:8080");
+
+	server_host = {
+		scheme: "http",
+		host: "www.example.com",
+		port: "80"
+	};
+	uri = tiddlyspace.getHost(server_host);
+	strictEqual(uri, "http://www.example.com");
+
+	server_host = {
+		scheme: "http",
+		host: "example.org",
+		port: "8080"
+	};
+	uri = tiddlyspace.getHost(server_host, "foo");
+	strictEqual(uri, "http://foo.example.org:8080");
+
+	server_host = {
+		scheme: "https",
+		host: "www.example.com",
+		port: "80"
+	};
+	uri = tiddlyspace.getHost(server_host, "foo");
+	strictEqual(uri, "https://foo.www.example.com");
+});
+
+test("getAvatar", function() {
+	var uri;
+	var server_host = {
+		scheme: "http",
+		host: "example.org",
+		port: "8080"
+	};
+
+	uri = tiddlyspace.getAvatar(server_host, { name: "fnd" });
+	strictEqual(uri, "http://fnd.example.org:8080/bags/fnd_public/tiddlers/SiteIcon");
+
+	uri = tiddlyspace.getAvatar(server_host, { name: "fnd" }, true);
+	strictEqual(uri, "http://foo.example.org:8080/bags/fnd_public/tiddlers/SiteIcon");
+
+	uri = tiddlyspace.getAvatar(server_host, { name: "jon" });
+	strictEqual(uri, "http://jon.example.org:8080/bags/jon_public/tiddlers/SiteIcon");
+
+	uri = tiddlyspace.getAvatar(server_host, { name: "jon" }, true);
+	strictEqual(uri, "http://foo.example.org:8080/bags/jon_public/tiddlers/SiteIcon");
+});
+
 })(QUnit.module);

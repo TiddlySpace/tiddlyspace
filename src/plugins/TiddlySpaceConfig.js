@@ -109,11 +109,17 @@ var plugin = config.extensions.tiddlyspace = {
 	isValidSpaceName: function(name) {
 		return name.match(/^[a-z][0-9a-z\-]*[0-9a-z]$/) ? true : false;
 	},
-	getAvatar: function(host, space) {
-		host = host ? this.getHost(host, space.name) : "";
+	// returns the URL for a space's avatar (SiteIcon) based on a server_host
+	// object and a space object
+	// optional nocors argument prevents cross-domain URLs from being generated
+	getAvatar: function(host, space, nocors) {
+		var subdomain = nocors ? plugin.currentSpace.name : space.name;
+		host = host ? this.getHost(host, subdomain) : "";
 		var bag = space.name ? "%0_public".format([space.name]) : "tiddlyspace";
 		return "%0/bags/%1/tiddlers/SiteIcon".format([host, bag]);
 	},
+	// returns the URL based on a server_host object (scheme, host, port) and an
+	// optional subdomain
 	getHost: function(host, subdomain) {
 		subdomain = subdomain ? subdomain + "." : "";
 		var url = "%0://%1%2".format([host.scheme, subdomain, host.host]);
