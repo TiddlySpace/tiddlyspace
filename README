@@ -1,6 +1,18 @@
 TiddlySpace
 A discoursive social model for TiddlyWiki
 
-website: http://tiddlyspace.com
-beta: http://tiddlyspace.labs.osmosoft.com
-repository: http://github.com/TiddlySpace/tiddlyspace
+TiddlySpace provides a shared hosting environment for lots of users
+using lots of TiddlyWikis, presented in "spaces". Each space can optionally
+include other spaces to add content and functionality. Content can easily
+be followed, copied, shared, and modified to create a network of learning
+and sharing.
+
+Public TiddlySpace Website: http://tiddlyspace.com
+Github Repository: http://github.com/TiddlySpace/tiddlyspace
+
+TiddlySpace is an open source project managed by Osmosoft with contributions
+from the TiddlyWiki and TiddlyWeb communities.
+
+Copyright (c) UnaMesa Association 2010
+
+It is licensed using the BSD License.
