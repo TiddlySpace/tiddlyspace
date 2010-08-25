@@ -5,8 +5,16 @@ var NOP = function() {};
 config = {
 	annotations: {},
 	extensions: {},
+	commands: {
+		deleteTiddler: {
+			
+		}
+	},
 	macros: {
-		search: {}
+		search: {},
+		view: {
+			views: {}
+		}
 	},
 	shadowTiddlers: {
 		ToolbarCommands: "|~ViewToolbar|closeTiddler closeOthers +editTiddler" +
@@ -17,6 +25,8 @@ config = {
 
 Tiddler = function(title) {
 	this.title = title;
+	this.fields = {};
+	this.tags = [];
 };
 Tiddler.prototype.incChangeCount = NOP;
 
@@ -48,6 +58,18 @@ store = new TiddlyWiki();
 
 refreshStyles = NOP;
 autoSaveChanges = NOP;
+
+TiddlyWiki.prototype.isDirty = function() {
+	return this.dirty;
+};
+
+TiddlyWiki.prototype.tiddlerExists = function(title) {
+	return this._tiddlers[title] ? true : false;
+};
+
+TiddlyWiki.prototype.isShadowTiddler = function(title) {
+	return config.shadowTiddlers[title] === undefined ? false : true;
+};
 
 Array.prototype.contains = function(item)
 {
