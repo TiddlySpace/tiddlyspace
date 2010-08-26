@@ -139,18 +139,20 @@ var cmd = config.commands.publishTiddler = {
 					{ title: newTitle, workspace: newWorkspace },
 					{}, {},
 					function(context) {
-						var newTiddler = context.tiddler;
-						// some some reason the old tiddler is not being removed from the store (hence next 3 lines)
-						var oldDirty = store.isDirty();
-						store.removeTiddler(oldTitle);
-						store.setDirty(oldDirty);
-						store.addTiddler(newTiddler); // note the tiddler may have changed name
-						if(callback) {
-							callback();
-						}
-						var old = story.refreshTiddler(oldTitle, true);
-						if(old) {
-							story.displayTiddler(old, newTitle);
+						if(context.status) {
+							var newTiddler = context.tiddler;
+							// some some reason the old tiddler is not being removed from the store (hence next 3 lines)
+							var oldDirty = store.isDirty();
+							store.removeTiddler(oldTitle);
+							store.setDirty(oldDirty);
+							store.addTiddler(newTiddler); // note the tiddler may have changed name
+							if(callback) {
+								callback();
+							}
+							var old = story.refreshTiddler(oldTitle, true);
+							if(old) {
+								story.displayTiddler(old, newTitle);
+							}
 						}
 					}
 				);
