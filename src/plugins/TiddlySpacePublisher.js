@@ -81,7 +81,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 				var title = rowNames[i];
 				var tiddler = store.getTiddler(title);
 				if(!publicWorkspace) {
-					publicWorkspace = cmd.getPublicWorkspace(tiddler);
+					publicWorkspace = cmd.toggleWorkspace(tiddler, "public");
 				}
 				macro.publishedTiddlers[title] = tiddler;
 				var newTiddler = {
