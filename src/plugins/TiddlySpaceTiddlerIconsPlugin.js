@@ -404,9 +404,9 @@ var originMacro = config.macros.tiddlerOrigin = {
 			var locale = originMacro.locale;
 			var deleteTiddler = function(type) {
 				type = type ? type.toLowerCase() : "public";
-				var workspace = cmd.toggleWorkspace(tiddler.fields["server.workspace"], type);
+				var bag = cmd.toggleBag(tiddler, type);
 				if(confirm(locale["%0ConfirmDelete".format([type])])) {
-					config.commands.deleteTiddler.deleteResource(tiddler, workspace);
+					config.commands.deleteTiddler.deleteResource(tiddler, bag);
 				}
 			};
 			var deletePublic = function(ev) {

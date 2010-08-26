@@ -37,6 +37,21 @@ var cmd = config.commands.publishTiddler = {
 			}, true);
 		}
 	},
+	toggleBag: function(bag, to) {
+		var newBag;
+		if(typeof bag != typeof "") {
+			var tiddler = bag;
+			bag = tiddler.fields["server.bag"];
+		}
+		if(bag.indexOf("_private") > -1) { // should make use of endsWith
+			to = to ? to : "public";
+			newBag = bag.replace("_private", "_" + to);
+		} else {
+			to = to ? to : "private";
+			newBag = bag.replace("_public", "_" + to);
+		}
+		return newBag;
+	},
 	toggleWorkspace: function(workspace, to) {
 		if(typeof workspace != typeof "") {
 			var tiddler = workspace;
@@ -167,24 +182,34 @@ config.commands.changeToPublic = {
 	}
 };
 
-config.commands.deleteTiddler.deleteResource = function(tiddler, workspace) {
-	var originalWorkspace = tiddler.fields["server.workspace"];
+config.commands.deleteTiddler.deleteResource = function(tiddler, bag) {
+	var workspace = "bags/%0".format([bag]);
+	var oldDirty = store.isDirty();
+	var originalBag = tiddler.fields["server.bag"];
+	var originalWorkspace = "bags/%0".format([originalBag]);
+	var deleteLocal = originalWorkspace == workspace;
 	var context = {
 		tiddler: tiddler,
 		workspace: workspace
 	};
+	tiddler.fields["server.bag"] = bag;
 	tiddler.fields["server.workspace"] = context.workspace;
 	tiddler.fields["server.page.revision"] = "false";
+	delete tiddler.fields["server.etag"];
 	var callback;
 	if(workspace == originalWorkspace) {
 		callback = config.extensions.ServerSideSavingPlugin.removeTiddlerCallback;
 	} else {
-		var oldDirty = store.isDirty();
 		callback = function(context, userParams) {
-			store.setDirty(oldDirty); // will fail to delete locally and throw an error
-			tiddler.fields["server.workspace"] = originalWorkspace;
-			story.refreshTiddler(tiddler.title, true);
-			story.displayTiddler(place, tiddler.title);
+			if(context.status) {
+				if(deleteLocal) { // remove it locally to trigger getting of public version
+					store.removeTiddler(tiddler.title);
+				}
+				store.setDirty(oldDirty); // will fail to delete locally and throw an error
+				tiddler.fields["server.workspace"] = originalWorkspace;
+				tiddler.fields["server.bag"] = originalBag;
+				story.refreshTiddler(tiddler.title, true);
+			}
 		};
 	}
 	tiddler.getAdaptor().deleteTiddler(tiddler, context, {}, callback);
@@ -198,8 +223,8 @@ config.commands.deletePublicTiddler = {
 	},
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var workspace = cmd.getPublicWorkspace(tiddler);
-		config.commands.deleteTiddler.deleteResource(tiddler, workspace);
+		var bag = cmd.toggleBag(tiddler, "public");
+		config.commands.deleteTiddler.deleteResource(tiddler, bag);
 	}
 };
 
@@ -208,8 +233,8 @@ config.commands.deletePrivateTiddler = {
 	tooltip: "delete any private versions of this tiddler",
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var workspace = cmd.getPrivateWorkspace(tiddler);
-		config.commands.deleteTiddler.deleteResource(tiddler, workspace);
+		var bag = cmd.toggleBag(tiddler, "private");
+		config.commands.deleteTiddler.deleteResource(tiddler, bag);
 	}
 };
 /* Save as draft command */
