@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.5.2|
+|''Version''|0.5.2dev|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -339,7 +339,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				var msg = checked ? locale.moveToPrivateKeep : locale.moveToPrivate;
 				var answer = confirm(msg);
 				if(answer) {
-					var privateWorkspace = cmd.getPrivateWorkspace(tiddler);
+					var privateWorkspace = cmd.toggleWorkspace(tiddler, "private");
 					cmd.moveTiddler(tiddler, {
 						title: tiddler.title,
 						fields: { "server.workspace": privateWorkspace }
@@ -372,8 +372,9 @@ var originMacro = config.macros.tiddlerOrigin = {
 			};
 			var doPublish = function(ev) {
 				var publishTo = tiddler.fields["server.publish.name"];
-				var workspace = tiddler.fields["server.workspace"];
-				var publicWorkspace = cmd.getPublicWorkspace(tiddler);
+				var workspace = "bags/%0".format([tiddler.fields["server.bag"]]);
+				tiddler.fields["server.workspace"] = workspace;
+				var publicWorkspace = cmd.toggleWorkspace(tiddler, "public");
 				var msg;
 				var checked = chk.attr("checked");
 				msg = checked ? locale.publishPrivateKeepPrivate : locale.publishPrivateDeletePrivate;

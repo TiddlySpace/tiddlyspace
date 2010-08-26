@@ -38,6 +38,11 @@ var cmd = config.commands.publishTiddler = {
 		}
 	},
 	toggleWorkspace: function(workspace, to) {
+		if(typeof workspace != typeof "") {
+			var tiddler = workspace;
+			var bag = tiddler.fields["server.bag"];
+			workspace = bag ? "bags/%0".format([bag]) : tiddler.fields["server.workspace"];
+		}
 		var newWorkspace;
 		if(workspace.indexOf("_private") > -1) { // should make use of endsWith
 			to = to ? to : "public";
@@ -146,7 +151,7 @@ config.commands.changeToPrivate = {
 	tooltip: "turn this public tiddler into a private tiddler",
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.getPrivateWorkspace(tiddler);
+		var newWorkspace = cmd.toggleWorkspace(tiddler, "private");
 		var newTiddler = { title: title, fields: { "server.workspace": newWorkspace }};
 		cmd.moveTiddler(tiddler, newTiddler, true);
 	}
@@ -156,7 +161,7 @@ config.commands.changeToPublic = {
 	tooltip: "turn this private tiddler into a public tiddler",
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.getPublicWorkspace(tiddler);
+		var newWorkspace = cmd.toggleWorkspace(tiddler, "public");
 		var newTiddler = { title: title, fields: { "server.workspace": newWorkspace }};
 		cmd.moveTiddler(tiddler, newTiddler, true);
 	}
