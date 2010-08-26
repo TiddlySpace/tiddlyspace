@@ -23,6 +23,15 @@ config = {
 	}
 };
 
+Story = function() {};
+
+Story.prototype = {
+	refreshTiddler: function() {
+		
+	}
+};
+story = new Story();
+
 Tiddler = function(title) {
 	this.title = title;
 	this.fields = {};
@@ -62,6 +71,11 @@ autoSaveChanges = NOP;
 TiddlyWiki.prototype.isDirty = function() {
 	return this.dirty;
 };
+
+TiddlyWiki.prototype.setDirty = function(dirty) {
+	this.dirty = dirty ? true : false;
+};
+
 
 TiddlyWiki.prototype.tiddlerExists = function(title) {
 	return this._tiddlers[title] ? true : false;
