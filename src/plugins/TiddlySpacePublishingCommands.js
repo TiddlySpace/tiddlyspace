@@ -68,14 +68,6 @@ var cmd = config.commands.publishTiddler = {
 		}
 		return newWorkspace;
 	},
-	getPrivateWorkspace: function(tiddler) {
-		var workspace = tiddler.fields["server.workspace"];
-		return workspace.replace("_public", "_private");
-	},
-	getPublicWorkspace: function(tiddler) {
-		var workspace = tiddler.fields["server.workspace"];
-		return workspace.replace("_private", "_public");
-	},
 	copyTiddler: function(title, newWorkspace, callback) {
 		var original = store.getTiddler(title);
 		var space = tiddlyspace.determineSpace(original);
