@@ -51,7 +51,7 @@ var macro = config.macros.setPrivacy = {
 		var status = "private";
 
 		var refreshIcon = function(type) {
-			var originMacro = config.macros.originMacro;
+			var originMacro = config.macros.tiddlerOrigin;
 			if(originButton && originMacro) {
 				$(originButton).empty();
 				originMacro.showPrivacyRoundel(tiddler, type, originButton, null, iconOptions);
