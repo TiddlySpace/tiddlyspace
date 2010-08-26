@@ -26,6 +26,11 @@ TiddlyWiki = function() {
 TiddlyWiki.prototype.getTiddler = function(title) {
 	return this._tiddlers[title];
 };
+
+TiddlyWiki.prototype.getTiddlerText = function(title) {
+	return this._tiddlers[title] ? this._tiddlers[title].text : false;
+};
+
 TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 		modified, tags, fields, clearChangeCount, created, creator) {
 	var tiddler = new Tiddler(newTitle);

@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceSpaces|
-|''Version''|0.5.0|
+|''Version''|0.5.1|
 |''Description''|TiddlySpace spaces management|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
@@ -27,7 +27,6 @@
 (function($) {
 
 var host = config.extensions.tiddlyweb.host;
-
 var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
@@ -42,33 +41,39 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var container = $("<div />").appendTo(place);
-		this.refresh(container);
+		this.refresh(container, params[0]);
 	},
-	refresh: function(container) {
-		container.empty().append("<ul />").append(this.generateForm());
-		$.ajax({ // XXX: DRY; cf. TiddlySpaceInclusion
-			url: host + "/spaces?mine=1",
-			type: "GET",
-			success: function(data, status, xhr) {
-				var spaces = $.map(data, function(item, i) {
-					var link = $("<a />", {
-						href: item.uri,
-						text: item.name
+	refresh: function(container, ui) {
+		container.empty();
+		$.data(container, "ui", ui);
+		if(ui == "add") {
+			container.append(this.generateForm())
+		} else {
+			container.append("<ul />");
+			$.ajax({ // XXX: DRY; cf. TiddlySpaceInclusion
+				url: host + "/spaces?mine=1",
+				type: "GET",
+				success: function(data, status, xhr) {
+					var spaces = $.map(data, function(item, i) {
+						var link = $("<a />", {
+							href: item.uri,
+							text: item.name
+						});
+						return $("<li />").append(link)[0];
 					});
-					return $("<li />").append(link)[0];
-				});
-				var el = $("ul", container);
-				if(data.length > 0) {
-					el.append(spaces);
-				} else { // XXX: should never occur!?
-					$('<p class="annotation" />').text(macro.locale.noSpaces).
-						replaceAll(el);
+					var el = $("ul", container);
+					if(data.length > 0) {
+						el.append(spaces);
+					} else { // XXX: should never occur!?
+						$('<p class="annotation" />').text(macro.locale.noSpaces).
+							replaceAll(el);
+					}
+				},
+				error: function(xhr, error, exc) {
+					displayMessage(macro.locale.listError.format([error]));
 				}
-			},
-			error: function(xhr, error, exc) {
-				displayMessage(macro.locale.listError.format([error]));
-			}
-		});
+			});
+		}
 	},
 	generateForm: function() {
 		return $(this.formTemplate).submit(this.onSubmit).
@@ -79,6 +84,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 	onSubmit: function(ev) {
 		var form = $(this).closest("form");
 		var container = form.closest("div");
+		var ui = $.data(container, "ui");
 		var space = form.find("[name=space]").val();
 		var subscribe = form.find("[name=subscribe]").attr("checked");
 		space = new tiddlyweb.Space(space, host);
@@ -94,7 +100,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			$("<li />").append(link).hide().appendTo(el).
 				slideDown(function() {
 					$(this).css("display", ""); // required to neutralize animation remnants
-					macro.refresh(container); // XXX: hack to add URL (see above)
+					macro.refresh(container, ui); // XXX: hack to add URL (see above)
 				});
 		};
 		var errback = function(xhr, error, exc) { // TODO: DRY (cf. TiddlySpaceLogin)
