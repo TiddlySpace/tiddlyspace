@@ -106,7 +106,7 @@ test("deleteResource private tiddler", function() {
 	// run
 	cmd.deleteResource(tiddler, "jon_private");
 	strictEqual(expectedPath, true);
-	strictEqual(store.tiddlerExists("foo"), false);
+	strictEqual(store.tiddlerExists("foo"), true); // the tiddler being deleted different to one in store
 	strictEqual(store.isDirty(), false);
 });
 
