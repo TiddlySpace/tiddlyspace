@@ -80,7 +80,6 @@ var cmd = config.commands.publishTiddler = {
 				"server.bag": bag,
 				"server.page.revision": "false"
 			});
-			delete tiddler.fields["server.etag"];
 			adaptor.putTiddler(tiddler, null, null, callback);
 		};
 		publish(original, callback);
