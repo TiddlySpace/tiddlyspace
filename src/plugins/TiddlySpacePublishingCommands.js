@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.5.3|
+|''Version''|0.6.0|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -74,8 +74,10 @@ var cmd = config.commands.publishTiddler = {
 		var adaptor = original.getAdaptor();
 		var publish = function(original, callback) {
 			var tiddler = $.extend(new Tiddler(original.title), original);
+			var bag = "%0_%1".format([space.name, space.type]);
 			tiddler.fields = $.extend({}, original.fields, {
-				"server.workspace": newWorkspace || "bags/%0_%1".format([space.name, type]),
+				"server.workspace": newWorkspace || "bags/".format([bag]),
+				"server.bag": bag,
 				"server.page.revision": "false"
 			});
 			delete tiddler.fields["server.etag"];
@@ -87,11 +89,12 @@ var cmd = config.commands.publishTiddler = {
 		if(withRevisions) {
 			this.moveTiddlerWithRevisions(tiddler, newTiddler, callback);
 		} else {
+			var _dirty = store.isDirty();
 			var adaptor = tiddler.getAdaptor();
 			var newTitle = newTiddler.title;
 			var oldTitle = tiddler.title;
+			var oldWorkspace = tiddler.fields["server.workspace"];
 			var newWorkspace = newTiddler.fields["server.workspace"];
-
 			cmd.copyTiddler(oldTitle, newWorkspace, function(ctx) {
 					var context = {
 						tiddler: tiddler,
@@ -121,19 +124,28 @@ var cmd = config.commands.publishTiddler = {
 	},
 	moveTiddlerWithRevisions: function(tiddler, newTiddler, callback) {
 		var adaptor = tiddler.getAdaptor();
-		var oldWorkspace = tiddler.fields["server.workspace"];
+		var oldBag = tiddler.fields["server.bag"];
 		var oldTitle = tiddler.title;
 		var newTitle = newTiddler.title;
-		var newWorkspace = newTiddler.fields["server.workspace"];
-
+		var newBag = newTiddler.fields["server.bag"];
+		var oldWorkspace = oldBag ? "bags/%0".format([oldBag]) : tiddler.fields["server.workspace"];
+		var newWorkspace = newBag ? "bags/%0".format([newBag]) : newTiddler.fields["server.workspace"];
+		newBag = newBag ? newBag : newWorkspace.split("/")[1];
+		var containsRecipe = oldWorkspace.indexOf("recipes/") > -1 || 
+			newWorkspace.indexOf("recipes/") > -1;
+		if(oldWorkspace == newWorkspace || containsRecipe) { // we are in a dangerous error state
+			return; // XXX: to do appropriate error messages
+		}
+		
 		// we first must delete any existing public revisions
 		tiddler.title = newTitle;
+		tiddler.fields["server.bag"] = newBag;
 		tiddler.fields["server.workspace"] = newWorkspace;
 		tiddler.fields["server.page.revision"] = "false"; // force this action
-
-		adaptor.deleteTiddler(tiddler, { workspace: newWorkspace }, {},
+		adaptor.deleteTiddler(tiddler, {}, {},
 			function(ctx) {
-				tiddler.fields["server.workspace"] = oldWorkspace; // rectify above change to workspace
+				tiddler.fields["server.workspace"] = oldWorkspace;
+				tiddler.fields["server.bag"] = oldBag; // rectify above change to workspace
 				adaptor.moveTiddler(
 					{ title: oldTitle, workspace: oldWorkspace },
 					{ title: newTitle, workspace: newWorkspace },
