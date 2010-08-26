@@ -66,7 +66,6 @@ var cmd = config.commands.publishTiddler = {
 				"server.workspace": newWorkspace || "bags/%0_%1".format([space.name, type]),
 				"server.page.revision": "false"
 			});
-			delete tiddler.fields["server.etag"];
 			adaptor.putTiddler(tiddler, null, null, callback);
 		};
 		publish(original, callback);
