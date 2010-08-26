@@ -99,17 +99,22 @@ var cmd = config.commands.publishTiddler = {
 					};
 					tiddler.title = oldTitle; // for cases where a rename occurs
 					if(ctx.status) { // only do if a success
-						adaptor.deleteTiddler(tiddler, context, {}, function() {
-							if(callback) {
-								callback();
-							} else {
-								store.removeTiddler(oldTitle);
-								story.closeTiddler(oldTitle);
-								store.addTiddler(ctx.tiddler);
-								story.refreshTiddler(newTitle, true);
-								story.displayTiddler(place, newTitle);
-							}
-						});
+						if(oldWorkspace != newWorkspace) {
+							adaptor.deleteTiddler(tiddler, context, {}, function() {
+								if(callback) {
+									callback();
+								} else {
+									store.removeTiddler(oldTitle);
+									story.closeTiddler(oldTitle);
+									store.addTiddler(ctx.tiddler);
+									story.refreshTiddler(newTitle, true);
+									story.displayTiddler(place, newTitle);
+								}
+								store.setDirty(_dirty);
+							});
+						} else {
+							story.refreshTiddler(newTitle, true);
+						}
 					}
 			});
 		}
