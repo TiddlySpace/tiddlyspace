@@ -180,7 +180,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			}
 		} else {
 			var serverTitle = tiddler.fields["server.title"];
-			if(serverTitle != tiddler.title) { // viewing a spawned public tiddler
+			if(serverTitle && serverTitle != tiddler.title) { // viewing a spawned public tiddler
 				callback(determineType(store.getTiddler(serverTitle), tiddler));
 			} else {
 				context = {
