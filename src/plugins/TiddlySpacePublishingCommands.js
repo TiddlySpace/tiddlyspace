@@ -88,6 +88,10 @@ var cmd = config.commands.publishTiddler = {
 		if(withRevisions) {
 			this.moveTiddlerWithRevisions(tiddler, newTiddler, callback);
 		} else {
+			var info = {
+				copyContext: {},
+				deleteContext: {}
+			};
 			var _dirty = store.isDirty();
 			var adaptor = tiddler.getAdaptor();
 			var newTitle = newTiddler.title;
@@ -95,6 +99,7 @@ var cmd = config.commands.publishTiddler = {
 			var oldWorkspace = tiddler.fields["server.workspace"];
 			var newWorkspace = newTiddler.fields["server.workspace"];
 			cmd.copyTiddler(oldTitle, newWorkspace, function(ctx) {
+					info.copyContext = ctx;
 					var context = {
 						tiddler: tiddler,
 						workspace: newWorkspace
@@ -102,19 +107,29 @@ var cmd = config.commands.publishTiddler = {
 					tiddler.title = oldTitle; // for cases where a rename occurs
 					if(ctx.status) { // only do if a success
 						if(oldWorkspace != newWorkspace) {
-							adaptor.deleteTiddler(tiddler, context, {}, function() {
-								if(callback) {
-									callback();
-								} else {
+							adaptor.deleteTiddler(tiddler, context, {}, function(ctx) {
+								info.deleteContext = ctx;
+								var el;
+								if(tiddler) {
+									store.addTiddler(tiddler);
+								}
+								if(oldTitle != newTitle) {
 									store.removeTiddler(oldTitle);
-									story.closeTiddler(oldTitle);
-									store.addTiddler(ctx.tiddler);
-									story.refreshTiddler(newTitle, true);
-									story.displayTiddler(place, newTitle);
+									el = story.closeTiddler(oldTitle);
+								}
+								el = el ? el : story.refreshTiddler(newTitle, true);
+								if(el) {
+									story.displayTiddler(el, newTitle);
+								}
+								if(callback) {
+									callback(info);
 								}
 								store.setDirty(_dirty);
 							});
 						} else {
+							if(callback) {
+								callback(info);
+							}
 							story.refreshTiddler(newTitle, true);
 						}
 					}
@@ -135,7 +150,7 @@ var cmd = config.commands.publishTiddler = {
 		if(oldWorkspace == newWorkspace || containsRecipe) { // we are in a dangerous error state
 			return; // XXX: to do appropriate error messages
 		}
-		
+		var info = {};
 		// we first must delete any existing public revisions
 		tiddler.title = newTitle;
 		tiddler.fields["server.bag"] = newBag;
@@ -143,6 +158,7 @@ var cmd = config.commands.publishTiddler = {
 		tiddler.fields["server.page.revision"] = "false"; // force this action
 		adaptor.deleteTiddler(tiddler, {}, {},
 			function(ctx) {
+				info.deleteContext = ctx;
 				tiddler.fields["server.workspace"] = oldWorkspace;
 				tiddler.fields["server.bag"] = oldBag; // rectify above change to workspace
 				adaptor.moveTiddler(
@@ -150,6 +166,7 @@ var cmd = config.commands.publishTiddler = {
 					{ title: newTitle, workspace: newWorkspace },
 					{}, {},
 					function(context) {
+						info.moveContext = context;
 						if(context.status) {
 							var newTiddler = context.tiddler;
 							// some some reason the old tiddler is not being removed from the store (hence next 3 lines)
@@ -157,13 +174,13 @@ var cmd = config.commands.publishTiddler = {
 							store.removeTiddler(oldTitle);
 							store.setDirty(oldDirty);
 							store.addTiddler(newTiddler); // note the tiddler may have changed name
-							if(callback) {
-								callback();
-							}
 							var old = story.refreshTiddler(oldTitle, true);
 							if(old) {
 								story.displayTiddler(old, newTitle);
 							}
+						}
+						if(callback) {
+							callback(info);
 						}
 					}
 				);

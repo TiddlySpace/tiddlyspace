@@ -46,6 +46,8 @@ TiddlyWiki.prototype.getTiddler = function(title) {
 	return this._tiddlers[title];
 };
 
+TiddlyWiki.prototype.addTiddler = function(tiddler) {};
+
 TiddlyWiki.prototype.getTiddlerText = function(title) {
 	var tiddler = this._tiddlers[title];
 	return tiddler ? tiddler.text : null;
