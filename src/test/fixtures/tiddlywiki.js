@@ -28,7 +28,8 @@ TiddlyWiki.prototype.getTiddler = function(title) {
 };
 
 TiddlyWiki.prototype.getTiddlerText = function(title) {
-	return this._tiddlers[title] ? this._tiddlers[title].text : false;
+	var tiddler = this._tiddlers[title];
+	return tiddler ? tiddler.text : null;
 };
 
 TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
