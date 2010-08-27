@@ -6,4 +6,5 @@ cd `dirname $0`/kopfloss
 	../../lib/chrjs.js ../../lib/chrjs.space.js ../space.js \
 	../fixtures/tiddlywiki.js ../fixtures/tiddlyweb.js ../fixtures/tiddlyspace.js \
 	../../plugins/TiddlySpaceConfig.js ../../test/config.js \
-	../../plugins/TiddlySpaceInit.js ../../test/init.js
+	../../plugins/TiddlySpaceInit.js ../../test/init.js \
+	#../../plugins/TiddlySpaceSpaces.js ../../test/test_TiddlySpaceSpaces.js

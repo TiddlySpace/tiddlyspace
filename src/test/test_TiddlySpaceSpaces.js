@@ -2,8 +2,6 @@
 
 var _ajax, _macro;
 
-var nop = function() {};
-
 module("TiddlySpaceSpaces plugin", {
 	setup: function() {
 		_macro = config.macros.TiddlySpaceSpaces;
@@ -26,10 +24,15 @@ test("add space form", function() {
 	var place = $("<div />");
 	config.macros.TiddlySpaceSpaces.handler(place, null, ["add"]);
 	strictEqual(place.find("form").length, 1);
+	strictEqual(place.find("ul").length, 0);
 });
 
 test("list spaces", function() {
 	var place = $("<div />");
+
+	config.macros.TiddlySpaceSpaces.handler(place, null, []);
+	strictEqual(place.find("form").length, 0);
+	strictEqual(place.find("ul").length, 1);
 
 	config.macros.TiddlySpaceSpaces.refresh(place, "list");
 	strictEqual($("ul", place).length, 1);
