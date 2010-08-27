@@ -39,9 +39,8 @@ cmd.cloneTiddler = {
 			fieldStash[title] = $.extend({}, tiddler.fields);
 			tiddler.fields["server.workspace"] = "bags/%0_private".
 				format([ns.currentSpace.name]);
-			$.each(["permissions", "page.revision"], function(i, item) {
-				delete tiddler.fields["server." + item];
-			});
+			tiddler.fields["server.permissions"] = "read, write, create"; // no delete
+			delete tiddler.fields["server.page.revision"];
 			// special handling for pseudo-shadow tiddlers
 			if(tiddler.fields["server.bag"] == "tiddlyspace") {
 				tiddler.tags.remove("excludeLists");
