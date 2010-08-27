@@ -307,6 +307,7 @@ class DropPrivs(object):
         self.stored_user = None
 
     def __call__(self, environ, start_response):
+        self.stored_user = None
         req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
         if (req_uri.startswith('/bags/')
                 or req_uri.startswith('/recipes/')):
@@ -315,6 +316,7 @@ class DropPrivs(object):
         output = self.application(environ, start_response)
         if self.stored_user:
             environ['tiddlyweb.usersign'] = self.stored_user
+        self.stored_user = None
         return output
 
     def _handle_dropping_privs(self, environ, req_uri):
