@@ -38,6 +38,28 @@
 
 var tweb = config.extensions.tiddlyweb;
 
+_getUserInfo = tweb.getUserInfo;
+tweb.getUserInfo = function(callback) {
+	_getUserInfo.call(tweb, function(user) {
+		if (!user.anon) {
+			// double check whether the user is real
+			$.ajax({
+				url: "%0/users/%1".format([tweb.host, user.name]),
+				type: "GET",
+				success: function() {
+					callback(user);
+				},
+				error: function() {
+					user.anon = true;
+					callback(user);
+				}
+			});
+		} else {
+			callback(user);
+		}
+	});
+};
+
 var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
