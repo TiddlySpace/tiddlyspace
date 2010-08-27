@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.5.1|
+|''Version''|0.5.2dev|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -180,7 +180,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			}
 		} else {
 			var serverTitle = tiddler.fields["server.title"];
-			if(serverTitle != tiddler.title) { // viewing a spawned public tiddler
+			if(serverTitle && serverTitle != tiddler.title) { // viewing a spawned public tiddler
 				callback(determineType(store.getTiddler(serverTitle), tiddler));
 			} else {
 				context = {
@@ -205,7 +205,13 @@ var originMacro = config.macros.tiddlerOrigin = {
 			labelOptions: { includeLabel: includeLabel },
 			imageOptions: imageMacro.getArguments(paramString, [])
 		};
-		options.space = tiddlyspace.determineSpace(tiddler, true);
+		if(tiddler && tiddler.fields["server.workspace"]) {
+			name = tiddler.fields["server.workspace"].replace("recipes/", "").
+			replace("bags/", "");
+		} else {
+			name = tiddler;
+		}
+		options.space = tiddlyspace.determineSpace(name, true);
 		var concertinaContentEl = $("<div />")[0];
 
 		var concertinaButton = originMacro.createConcertinaButton(place, concertinaContentEl);
@@ -247,9 +253,15 @@ var originMacro = config.macros.tiddlerOrigin = {
 		}
 		var fields1 = tiddler1.fields;
 		var fields2 = tiddler2.fields;
+		var allFields = fields1;
+		for(var field in fields2) {
+			if(typeof(allFields[field]) == "undefined") {
+				allFields[field] = false;
+			}
+		}
 		var sameFields = true;
 		var ignoreList = ["changecount", "doNotSave"];
-		for(var field in fields1) {
+		for(var field in allFields) {
 			if(field.indexOf("server.") !== 0 && !ignoreList.contains(field)) { // ignore server fields
 				if(!fields2[field]) {
 					sameFields = false;
@@ -327,7 +339,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				var msg = checked ? locale.moveToPrivateKeep : locale.moveToPrivate;
 				var answer = confirm(msg);
 				if(answer) {
-					var privateWorkspace = cmd.getPrivateWorkspace(tiddler);
+					var privateWorkspace = cmd.toggleWorkspace(tiddler, "private");
 					cmd.moveTiddler(tiddler, {
 						title: tiddler.title,
 						fields: { "server.workspace": privateWorkspace }
@@ -360,8 +372,9 @@ var originMacro = config.macros.tiddlerOrigin = {
 			};
 			var doPublish = function(ev) {
 				var publishTo = tiddler.fields["server.publish.name"];
-				var workspace = tiddler.fields["server.workspace"];
-				var publicWorkspace = cmd.getPublicWorkspace(tiddler);
+				var workspace = "bags/%0".format([tiddler.fields["server.bag"]]);
+				tiddler.fields["server.workspace"] = workspace;
+				var publicWorkspace = cmd.toggleWorkspace(tiddler, "public");
 				var msg;
 				var checked = chk.attr("checked");
 				msg = checked ? locale.publishPrivateKeepPrivate : locale.publishPrivateDeletePrivate;
@@ -391,9 +404,9 @@ var originMacro = config.macros.tiddlerOrigin = {
 			var locale = originMacro.locale;
 			var deleteTiddler = function(type) {
 				type = type ? type.toLowerCase() : "public";
-				var workspace = cmd.toggleWorkspace(tiddler.fields["server.workspace"], type);
+				var bag = cmd.toggleBag(tiddler, type);
 				if(confirm(locale["%0ConfirmDelete".format([type])])) {
-					config.commands.deleteTiddler.deleteResource(tiddler, workspace);
+					config.commands.deleteTiddler.deleteResource(tiddler, bag);
 				}
 			};
 			var deletePublic = function(ev) {
