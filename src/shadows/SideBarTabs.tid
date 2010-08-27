@@ -1,3 +1,4 @@
 tags: excludeLists
+modifier: osmosoft
 
 <<tabs txtMainTab "Recent" "Recently edited tiddlers" TabTimeline "All" "All tiddlers" TabAll "Tags" "All tags" TabTags "Missing" "Missing tiddlers" TabMoreMissing "Orphans" "Orphaned tiddlers" TabMoreOrphans "Shadows" "Shadowed tiddlers" TabMoreShadowed>>
