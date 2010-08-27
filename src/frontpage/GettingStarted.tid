@@ -1,3 +1,7 @@
 type: None
 
 Welcome to TiddlySpace.
+!Log In
+<<TiddlySpaceLogin>>
+!Sign Up
+<<TiddlySpaceRegister>>
