@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.5.2|
+|''Version''|0.5.3|
 |''Description''|TiddlySpace configuration|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -9,6 +9,8 @@
 ***/
 //{{{
 (function($) {
+
+var tweb = config.extensions.tiddlyweb;
 
 var recipe = config.defaultCustomFields["server.workspace"].split("recipes/")[1];
 
@@ -57,7 +59,7 @@ var determineContainer = function(tiddler, fuzzy) { // TODO: expose?
 	}
 };
 
-// hijack removeTiddlerCallback to restore tiddler from recipe cascade
+// hijack removeTiddlerCallback to restore tiddler from recipe cascade -- TODO: move into TiddlyWebWiki?
 var sssp = config.extensions.ServerSideSavingPlugin;
 var _removeTiddlerCallback = sssp.removeTiddlerCallback;
 sssp.removeTiddlerCallback = function(context, userParams) {
@@ -75,6 +77,30 @@ sssp.removeTiddlerCallback = function(context, userParams) {
 		};
 		context.adaptor.getTiddler(title, context, null, callback);
 	}
+};
+
+// hijack getUserInfo to treat unknown users as anonymous
+var _getUserInfo = tweb.getUserInfo;
+tweb.getUserInfo = function(callback) {
+	_getUserInfo.call(this, function(user) {
+		if(!user.anon) { // double-check whether the user is real
+			$.ajax({
+				url: "%0/users/%1".format([tweb.host, user.name]),
+				type: "GET",
+				success: function(data, status, xhr) {
+					user.anon = false;
+				},
+				error: function(xhr, error, exc) {
+					user.anon = true;
+				},
+				complete: function(xhr, status) {
+					callback(user);
+				}
+			});
+		} else {
+			callback(user);
+		}
+	});
 };
 
 // splits a string once using delimiter
@@ -134,7 +160,6 @@ var plugin = config.extensions.tiddlyspace = {
 	}
 };
 
-var tweb = config.extensions.tiddlyweb;
 tweb.serverPrefix = tweb.host.split("/")[3] || ""; // XXX: assumes root handler
 tweb.getStatus(function(status) {
 	var url = plugin.getHost(status.server_host);
