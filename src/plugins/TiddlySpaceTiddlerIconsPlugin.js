@@ -254,14 +254,15 @@ var originMacro = config.macros.tiddlerOrigin = {
 		var fields1 = tiddler1.fields;
 		var fields2 = tiddler2.fields;
 		var allFields = fields1;
-		for(var field in fields2) {
+		var field;
+		for(field in fields2) {
 			if(typeof(allFields[field]) == "undefined") {
 				allFields[field] = false;
 			}
 		}
 		var sameFields = true;
 		var ignoreList = ["changecount", "doNotSave"];
-		for(var field in allFields) {
+		for(field in allFields) {
 			if(field.indexOf("server.") !== 0 && !ignoreList.contains(field)) { // ignore server fields
 				if(!fields2[field]) {
 					sameFields = false;
