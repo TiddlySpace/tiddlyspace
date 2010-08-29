@@ -1,8 +1,9 @@
 /***
 |''Name''|TiddlySpaceUserControls|
-|''Version''||
-|''Description''||
-|''Source''||
+|''Version''|0.5.0|
+|''Description''|registration and login UIs|
+|''Status''|@@beta@@|
+|''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceUserControls.js|
 |''Requires''|TiddlySpaceConfig|
 !HTMLForm
 <form action="#">
@@ -38,19 +39,20 @@
 
 var tweb = config.extensions.tiddlyweb;
 
-_getUserInfo = tweb.getUserInfo;
+var _getUserInfo = tweb.getUserInfo;
 tweb.getUserInfo = function(callback) {
-	_getUserInfo.call(tweb, function(user) {
-		if (!user.anon) {
-			// double check whether the user is real
+	_getUserInfo.call(this, function(user) {
+		if(!user.anon) { // double-check whether the user is real
 			$.ajax({
 				url: "%0/users/%1".format([tweb.host, user.name]),
 				type: "GET",
-				success: function() {
-					callback(user);
+				success: function(data, status, xhr) {
+					user.anon = false;
 				},
-				error: function() {
+				error: function(xhr, error, exc) {
 					user.anon = true;
+				},
+				complete: function(xhr, status) {
 					callback(user);
 				}
 			});
