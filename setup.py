@@ -39,7 +39,7 @@ setup(
         'tiddlywebplugins.form==dev',
         'tiddlywebplugins.reflector>=0.2',
         'tiddlywebplugins.atom>=1.2.0',
-        'tiddlywebplugins.mysql>=0.9.2',
+        'tiddlywebplugins.mysql>=0.9.3',
         'tiddlywebplugins.sqlalchemy>=0.9.9',
     ],
     include_package_data = True,

@@ -227,12 +227,12 @@ def _determine_space_recipe(environ, space_name):
     """
     store = environ['tiddlyweb.store']
     user = environ['tiddlyweb.usersign']['name']
-    bag = Bag('%s_private' % space_name)
+    recipe = Recipe('%s_public' % space_name)
     try:
-        bag = store.get(bag)
-    except NoBagError:
+        recipe = store.get(recipe)
+    except NoRecipeError:
         raise HTTP404('Space for %s does not exist' % space_name)
-    members = bag.policy.manage  # XXX: authoritative?
+    members = recipe.policy.manage  # XXX: authoritative?
 
     space_type = 'private' if user in members else 'public'
     recipe_name = '%s_%s' % (space_name, space_type)
@@ -307,6 +307,7 @@ class DropPrivs(object):
         self.stored_user = None
 
     def __call__(self, environ, start_response):
+        self.stored_user = None
         req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
         if (req_uri.startswith('/bags/')
                 or req_uri.startswith('/recipes/')):
@@ -315,6 +316,7 @@ class DropPrivs(object):
         output = self.application(environ, start_response)
         if self.stored_user:
             environ['tiddlyweb.usersign'] = self.stored_user
+        self.stored_user = None
         return output
 
     def _handle_dropping_privs(self, environ, req_uri):
