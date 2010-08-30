@@ -93,23 +93,23 @@ spaces = {
 #  setup system space public bags and recipes
 for space, description in spaces.items():
     #setup bags
-    private_bag = '%s_private' % (space)
-    public_bag = '%s_public' % (space)
-    store_structure['bags'][public_bag] = {
+    private_name = '%s_private' % space
+    public_name = '%s_public' % space
+    store_structure['bags'][public_name] = {
         'desc': description,
         'policy': frontpage_policy,
     }
-    store_structure['bags'][private_bag] = deepcopy(
-        store_structure['bags'][public_bag])
-    store_structure['bags'][private_bag]['policy']['read'] = ['R:ADMIN']
+    store_structure['bags'][private_name] = deepcopy(
+        store_structure['bags'][public_name])
+    store_structure['bags'][private_name]['policy']['read'] = ['R:ADMIN']
 
     # setup recipes
-    store_structure['recipes'][public_bag] = {
+    store_structure['recipes'][public_name] = {
         'desc': description,
         'recipe': [
             ('system', ''),
             ('tiddlyspace', ''),
-            (public_bag, ''),
+            (public_name, ''),
         ],
         'policy': {
             'read': [],
@@ -120,11 +120,11 @@ for space, description in spaces.items():
         },
     }
     # private is same as public with a few tweaks
-    store_structure['recipes'][private_bag] = deepcopy(
-        store_structure['recipes'][public_bag])
-    store_structure['recipes'][private_bag]['policy']['read'] = ['R:ADMIN']
-    store_structure['recipes'][private_bag]['recipe'].append(
-        (private_bag, ''))
+    store_structure['recipes'][private_name] = deepcopy(
+        store_structure['recipes'][public_name])
+    store_structure['recipes'][private_name]['policy']['read'] = ['R:ADMIN']
+    store_structure['recipes'][private_name]['recipe'].append(
+        (private_name, ''))
 
 store_structure['bags']['MAPUSER'] = {
     'desc': 'maps extracted user credentials to canonical username',

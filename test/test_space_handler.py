@@ -22,10 +22,10 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
 
 from test.fixtures import make_test_env, make_fake_space, get_auth
-SYSTEM_SPACES = ['system-plugins', 'system-info', 'system-images', \
+SYSTEM_SPACES = ['system-plugins', 'system-info', 'system-images',
     'system-theme']
-SYSTEM_URLS = ['http://system-plugins.0.0.0.0:8080/', \
-    'http://system-info.0.0.0.0:8080/', \
+SYSTEM_URLS = ['http://system-plugins.0.0.0.0:8080/',
+    'http://system-info.0.0.0.0:8080/',
     'http://system-images.0.0.0.0:8080/', 'http://system-theme.0.0.0.0:8080/']
 
 
