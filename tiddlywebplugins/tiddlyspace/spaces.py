@@ -21,7 +21,7 @@ SPACE_NAME_PATTERN = re.compile(r"^[a-z][0-9a-z\-]*[0-9a-z]$")
 
 try:
     JSONDecodeError = simplejson.decoder.JSONDecodeError
-except AttributeError: # Python 2.6+
+except AttributeError:  # Python 2.6+
     JSONDecodeError = ValueError
 
 
@@ -29,18 +29,18 @@ def add_spaces_routes(selector):
     """
     Set up the routes and handlers used by spaces.
     """
-    selector.add('/spaces', # list all spaces
+    selector.add('/spaces',  # list all spaces
             GET=list_spaces)
     selector.add('/spaces/{space_name:segment}',
-            GET=confirm_space, # confirm space exists
+            GET=confirm_space,  # confirm space exists
             PUT=create_space,  # create a new space
-            POST=subscribe_space, # subscribe a space to this space
+            POST=subscribe_space,  # subscribe a space to this space
             )
-    selector.add('/spaces/{space_name:segment}/members', # list space members
+    selector.add('/spaces/{space_name:segment}/members',  # list space members
             GET=list_space_members)
     selector.add('/spaces/{space_name:segment}/members/{user_name:segment}',
-            PUT=add_space_member, # add member to space
-            DELETE=delete_space_member) # delete from from space
+            PUT=add_space_member,  # add member to space
+            DELETE=delete_space_member)  # delete from from space
 
 
 def add_space_member(environ, start_response):
@@ -203,7 +203,7 @@ def subscribe_space(environ, start_response):
     try:
         public_name = '%s_public' % space_name
         private_name = '%s_private' % space_name
-        store.get(Bag(public_name)) # checked for existence, but not used
+        store.get(Bag(public_name))  # checked for existence, but not used
         private_bag = store.get(Bag(private_name))
         public_recipe = store.get(Recipe(public_name))
         private_recipe = store.get(Recipe(private_name))
@@ -211,7 +211,6 @@ def subscribe_space(environ, start_response):
         raise HTTP404('space %s does not exist' % space_name)
 
     private_bag.policy.allows(current_user, 'manage')
-
     subscriptions, unsubscriptions = _get_subscription_info(environ)
 
     public_recipe_list = public_recipe.get_recipe()
@@ -322,7 +321,7 @@ def _space_uri(environ, space_name):
             else:
                 uri = '%s://%s/' % (scheme, host)
         else:
-            uri = '%s://%s/' % (scheme, space_name) # XXX This is a stub
+            uri = '%s://%s/' % (scheme, space_name)  # XXX This is a stub
     return uri
 
 
@@ -365,12 +364,20 @@ def _make_space(environ, space_name):
     public_recipe.set_recipe([
         ('system', ''),
         ('tiddlyspace', ''),
+        ('system-plugins_public', ''),
+        ('system-info_public', ''),
+        ('system-images_public', ''),
+        ('system-theme_public', ''),
         (public_recipe.name, ''),
         ])
     private_recipe = Recipe('%s_private' % space_name)
     private_recipe.set_recipe([
         ('system', ''),
         ('tiddlyspace', ''),
+        ('system-plugins_public', ''),
+        ('system-info_public', ''),
+        ('system-images_public', ''),
+        ('system-theme_public', ''),
         (public_recipe.name, ''),
         (private_recipe.name, ''),
         ])
