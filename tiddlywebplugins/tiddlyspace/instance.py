@@ -92,9 +92,9 @@ spaces = {
 
 #  setup system space public bags and recipes
 for space, description in spaces.items():
-    #setup bags
-    private_name = '%s_private' % space
     public_name = '%s_public' % space
+    private_name = '%s_private' % space
+
     store_structure['bags'][public_name] = {
         'desc': description,
         'policy': frontpage_policy,
@@ -103,7 +103,6 @@ for space, description in spaces.items():
         store_structure['bags'][public_name])
     store_structure['bags'][private_name]['policy']['read'] = ['R:ADMIN']
 
-    # setup recipes
     store_structure['recipes'][public_name] = {
         'desc': description,
         'recipe': [
@@ -119,7 +118,7 @@ for space, description in spaces.items():
             'owner': 'administrator',
         },
     }
-    # private is same as public with a few tweaks
+
     store_structure['recipes'][private_name] = deepcopy(
         store_structure['recipes'][public_name])
     store_structure['recipes'][private_name]['policy']['read'] = ['R:ADMIN']
