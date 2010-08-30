@@ -1,9 +1,10 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Description''|TiddlySpace configuration|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
+|''CoreVersion''|2.6.1|
 |''Requires''|TiddlyWebConfig ServerSideSavingPlugin|
 !Code
 ***/
@@ -127,9 +128,15 @@ TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 	}
 };
 
+var coreBags = ["system", "tiddlyspace"];
+var systemSpaces = ["plugins", "info", "images", "theme"];
+systemSpaces = $.map(systemSpaces, function(item, i) {
+	return "system-%0_public".format(item);
+});
+
 var plugin = config.extensions.tiddlyspace = {
 	currentSpace: determineSpace(recipe),
-	coreBags: ["system", "tiddlyspace"],
+	coreBags: coreBags.concat(systemSpaces),
 
 	determineSpace: determineSpace,
 	isValidSpaceName: function(name) {
