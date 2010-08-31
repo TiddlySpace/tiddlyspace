@@ -43,7 +43,6 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
 		label: "Login",
-		logoutLabel: "Log out",
 		success: "logged in as %0",
 		loginError: "error logging in %0: %1",
 		forbiddenError: "login failed for <em>%0</em>: username and password do not match"
@@ -75,11 +74,6 @@ var tsl = config.macros.TiddlySpaceLogin = {
 					find(".annotation").hide().end().
 					find("[type=submit]").val(msg.label).end().
 					appendTo(container);
-			} else {
-				$("<a />", {
-					href: tweb.host + "/logout",
-					text: msg.logoutLabel
-				}).appendTo(container);
 			}
 		});
 	},
@@ -145,6 +139,21 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	},
 	redirect: function() {
 		window.location = tweb.host;
+	}
+};
+
+config.macros.TiddlySpaceLogout = {
+	locale: {
+		label: "Log out"
+	},
+
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		var form = $('<form method="POST" />', { className: macroName }).
+			attr("action", tweb.host + "/logout");
+		$("<button />", { text: this.locale.label }).
+			click(function(ev) { form.submit(); }).
+			appendTo(form);
+		form.appendTo(place);
 	}
 };
 
