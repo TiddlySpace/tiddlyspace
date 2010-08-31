@@ -114,8 +114,8 @@ body #backstageArea {
 
 #backstage #backstagePanel {
 	width: 90%;
-	margin-left: 3em;
-	padding: 1em;
+	margin-left: 1em;
+	padding: 0em;
 }
 
 #backstageToolbar a {
@@ -220,10 +220,6 @@ a.backstageTask {
 
 .backstagePanelBody .tabContents .button {
 	display: block;
-}
-
-.backstagePanelBody {
-	padding: 1em;
 }
 
 .backstagePanelBody .tab {
