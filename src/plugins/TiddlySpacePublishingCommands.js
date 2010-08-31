@@ -1,11 +1,11 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.6.0|
+|''Version''|0.7.0|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpacePublishingCommands.js|
-|''Requires''|TiddlySpaceConfig ServerSideSavingPlugin|
+|''Requires''|TiddlySpaceConfig|
 !Code
 ***/
 //{{{
@@ -224,23 +224,29 @@ config.commands.deleteTiddler.deleteResource = function(tiddler, bag, userCallba
 	tiddler.fields["server.bag"] = bag;
 	tiddler.fields["server.workspace"] = context.workspace;
 	tiddler.fields["server.page.revision"] = "false";
+	var defaultWorkspace = config.defaultCustomFields["server.workspace"];
 	delete tiddler.fields["server.etag"];
 	var callback;
-	if(workspace == originalWorkspace) {
-		callback = config.extensions.ServerSideSavingPlugin.removeTiddlerCallback;
+	if(deleteLocal) {
+		var _dirty = store.isDirty();
+		callback = function(context, userParams) {
+			var title = tiddler.title;
+			store.removeTiddler(title);
+			context.adaptor.getTiddler(title, { workspace: defaultWorkspace }, null, function(context) {
+				if(context.status) {
+					store.addTiddler(context.tiddler);
+					story.refreshTiddler(title, null, true);
+					userCallback(context);
+				}
+				store.setDirty(_dirty);
+			});
+		};
 	} else {
 		callback = function(context, userParams) {
 			if(context.status) {
-				var el = story.refreshTiddler(tiddler.title, true);
-				if(deleteLocal) { // remove it locally to trigger getting of public version
-					store.removeTiddler(tiddler.title);
-				} else {
-					tiddler.fields["server.workspace"] = originalWorkspace;
-					tiddler.fields["server.bag"] = originalBag;
-				}
-				if(el) {
-					story.displayTiddler(el, tiddler.title);
-				}
+				tiddler.fields["server.workspace"] = originalWorkspace;
+				tiddler.fields["server.bag"] = originalBag;
+				story.refreshTiddler(tiddler.title, null, true);
 				store.setDirty(oldDirty); // will fail to delete locally and throw an error
 			}
 			if(userCallback) {
