@@ -235,13 +235,17 @@ a.backstageTask {
 	border: 0px;
 }
 
-#backstage div.txtSpaceTab li {
+#backstage .txtSpaceTab li {
 	border: 1px solid #ddd;
 	background: #eee;
 	list-style: none;
 	margin: 0.5em;
 	padding: 0.5em;
 	width: 80%;
+}
+
+#backstage .txtSpaceTab li.annotation {
+	border: 2px solid [[ColorPalette::SecondaryMid]];
 }
 
 #backstage div  li.listLink {
@@ -262,6 +266,10 @@ a.backstageTask {
 	float: right;
 }
 
+#backstage fieldset {
+	border: solid 1px [[ColorPalette::Background]];
+}
+
 #backstage .viewer table,#backstage table.twtable {
 	border: 0px;
 }
@@ -270,7 +278,27 @@ a.backstageTask {
 	padding: 0.1em 0.3em 0;
 }
 
+#backstage .wizard, 
+#backstage .wizardFooter {
+	background: none;
+}
+
 .viewer td, .viewer tr, .twtable td, .twtable tr {
 	border: 1px solid #eee;
+}
+
+.myspaces ul li {
+	background-color: [[ColorPalette::Background]];
+	border: solid 1px [[ColorPalette::TertiaryMid]];
+	display: block;
+	float: left;
+	list-style: none;
+	margin-right: 1em;
+	padding: 0.5em;
+}
+
+.backstageClear {
+	clear: both;
+	display: block;
 }
 /*}}}*/
