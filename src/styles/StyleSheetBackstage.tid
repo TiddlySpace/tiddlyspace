@@ -14,7 +14,7 @@ modifier: osmosoft
 	margin: 1px auto auto -200px;
 	font-weight: bold;
 	width: 200px;
-	font-size: 1.8em;
+	font-size: 1.4em;
 	padding: 0;
 	text-align: center;
 	top: 0;
@@ -28,7 +28,7 @@ modifier: osmosoft
 
 #backstageLogo .logoText {
 	position: absolute;
-	top: 12px;
+	top: 2px;
 }
 
 #backstageArea {
@@ -38,7 +38,7 @@ modifier: osmosoft
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222);
 	/* For Internet Explorer 8 */
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222)";
-	height: 48px;
+	height: 26px;
 	border-bottom: solid 1px black;
 }
 
@@ -124,7 +124,7 @@ body #backstageArea {
 
 #backstageArea a.backstageSelTab,
 #backstageToolbar .backstageTask {
-	line-height: 46px;
+	line-height: 26px;
 	color: #767676;
 }
 
@@ -225,8 +225,9 @@ a.backstageTask {
 .backstagePanelBody .tabContents .button {
 	display: block;
 }
+
 .backstagePanelBody {
-	padding:1em;
+	padding: 1em;
 }
 
 .backstagePanelBody .tab {
@@ -270,13 +271,12 @@ a.backstageTask {
 }
 
 #backstage div.txtSpaceTab li .deleteButton {
-	float:right;
+	float: right;
 }
 
 #backstage .viewer table,#backstage table.twtable {
 	border: 0px;
 }
-
 
 #backstageToolbar a.task_space,  #backstageToolbar a.task_user {
 	-moz-border-radius-topleft: 0.4em;

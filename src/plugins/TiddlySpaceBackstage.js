@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.1|
+|''Version''|0.5.2|
 |''Description''|Provides a TiddlySpace version of the backstage|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
@@ -83,13 +83,13 @@ backstage.init = function(){
 	altText = $(hideBtn).text();
 	$(hideBtn).empty();
 	imageMacro.renderImage(hideBtn, "close.svg",
-		{ alt: altText, width: 48, height: 48 });
+		{ alt: altText, width: 24, height: 24 });
 
 	var backstageToolbar = $("#backstageToolbar")[0];
 	var backstageLogo = $('<div id="backstageLogo" />').
 		prependTo(backstageToolbar)[0];
 	var iconName = readOnly ? "publicIcon" : "privateAndPublicIcon";
-	imageMacro.renderImage(backstageLogo, iconName, { width: 48, height: 48 });
+	imageMacro.renderImage(backstageLogo, iconName, { width: 24, height: 24 });
 	// construct the tiddlyspace logo
 	$('<span class="logoText"><span class="privateLightText">tiddly</span>' +
 			'<span class="publicLightText">space</span></span>').
@@ -103,7 +103,7 @@ backstage.init = function(){
 		btn.empty();
 		var uri = "/bags/%0_public/tiddlers/SiteIcon".format([spaceName]);
 		imageMacro.renderImage(btn[0], uri,
-			{ imageClass:"spaceSiteIcon", height: 48, width: 48 });
+			{ imageClass:"spaceSiteIcon", height: 24, width: 24 });
 		$("<span />").html(config.tasks.space.text).appendTo(btn);
 		$('<span class="spaceName" />').text(spaceName).appendTo(btn);
 	}
@@ -113,14 +113,14 @@ backstage.init = function(){
 			var src = tiddlyspace.getAvatar(tweb.status.server_host, user.name);
 			var container = $("<span />").appendTo("[task=user]", backstageArea)[0];
 			imageMacro.renderImage(container, src,
-				{ imageClass:"userSiteIcon", height: 48, width: 48 });
+				{ imageClass:"userSiteIcon", height: 24, width: 24 });
 		}
 
 		// override login button to show default avatar
 		var loginBtn = $("[task=login]", backstageArea);
 		loginBtn.html("<span>%0</span>".format([config.tasks.login.text]));
 		imageMacro.renderImage(loginBtn[0], "/bags/tiddlyspace/tiddlers/SiteIcon",
-			{ imageClass:"userSiteIcon", height: 48, width: 48 });
+			{ imageClass:"userSiteIcon", height: 24, width: 24 });
 
 		var tasks = $(".backstageTask");
 		for(var i = 0; i < tasks.length; i++) {
