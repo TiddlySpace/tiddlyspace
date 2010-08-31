@@ -67,8 +67,8 @@ macro.refresh = function(place, params) {
 var imageMacro = config.macros.image;
 macro.augmentCommandButtons = function(toolbar) {
 	$(".button", toolbar).each(function(i, el) {
-		var cmd = el.className.match(/\bcommand_([^ ]+?)\b/); // XXX: gratuitous RegEx?
-		cmd = cmd ? cmd[1] : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
+		var cmd = $(el).attr("commandname");
+		cmd = cmd ? cmd : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
 		var icon = store.tiddlerExists(cmd) ? cmd : macro.icons[cmd];
 		var text = $(el).text();
 		if(store.tiddlerExists(icon)) {
