@@ -87,7 +87,7 @@ spaces = {
     'system-theme': 'TiddlySpace default theme',
     'system-info': 'TiddlySpace default information tiddlers',
     'system-plugins': 'TiddlySpace system plugins',
-    'system-images': 'TiddlySpace default images and Icons',
+    'system-images': 'TiddlySpace default images and icons',
 }
 
 #  setup system space public bags and recipes
