@@ -148,7 +148,7 @@ config.macros.TiddlySpaceLogout = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var form = $('<form method="POST" />', { className: macroName }).
+		var form = $('<form method="POST" />').addClass(macroName).
 			attr("action", tweb.host + "/logout");
 		$("<button />", { text: this.locale.label }).
 			click(function(ev) { form.submit(); }).
