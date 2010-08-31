@@ -65,8 +65,9 @@ test("deleteResource (where bag is different from tiddler)", function() {
 	tiddler.getAdaptor = function() {
 		var adaptor = {
 			deleteTiddler: function(tiddler, context, userParams, callback) {
-				if(tiddler.fields["server.workspace"] == "bags/jon_public"
-					&& !tiddler.fields["server.etag"]) {
+				if(tiddler.fields["server.workspace"] == "bags/jon_public" &&
+					tiddler.fields["server.bag"] == "jon_public" && 
+					!tiddler.fields["server.etag"]) {
 						expectedPath = true;
 					}
 					callback({status: true});
@@ -123,6 +124,7 @@ test("copyTiddler", function() {
 			putTiddler: function(tiddler, context, userParams, callback) {
 				var fields = tiddler.fields;
 				if(fields["server.workspace"] == "bags/jon_public" &&
+					fields["server.bag"] == "jon_public" &&
 					fields["server.page.revision"] == "false") {
 					expected = true;
 				}
@@ -130,7 +132,7 @@ test("copyTiddler", function() {
 		};
 		return adaptor;
 	};
-	cmd.copyTiddler("pig", "bags/jon_public");
+	cmd.copyTiddler("pig", "jon_public");
 
 	strictEqual(true, expected);
 });
@@ -145,13 +147,14 @@ test("moveTiddler from private to public with rename (without revisions)", funct
 			callback({status: true}); // signal it was a success
 		}
 	};
+	tiddler.fields["server.bag"] = "jon_private";
 	tiddler.fields["server.workspace"] = "bags/jon_private";
 	tiddler.getAdaptor = function() {
 		var adaptor = {
 			deleteTiddler: function(tiddler, context, userParams, callback) {
 				if(expected == 1) {
 					if(tiddler.title == "pig" &&
-						tiddler.fields["server.workspace"] == "bags/jon_private") {
+						tiddler.fields["server.bag"] == "jon_private") {
 						expected = 2;
 					}
 				}
@@ -159,7 +162,7 @@ test("moveTiddler from private to public with rename (without revisions)", funct
 		};
 		return adaptor;
 	};
-	var newTiddler = { title: "babe", fields: { "server.workspace": "bags/jon_public" } };
+	var newTiddler = { title: "babe", fields: { "server.bag": "jon_public" } };
 	cmd.moveTiddler(tiddler, newTiddler, false);
 	strictEqual(2, expected);
 });
@@ -172,6 +175,7 @@ test("moveTiddler put fails (without revisions)", function() {
 			callback({status: false}); // the copy failed for some reason
 	};
 
+	tiddler.fields["server.bag"] = "jon_private";
 	tiddler.fields["server.workspace"] = "bags/jon_private";
 	tiddler.getAdaptor = function() {
 		var adaptor = {
@@ -181,7 +185,7 @@ test("moveTiddler put fails (without revisions)", function() {
 		};
 		return adaptor;
 	};
-	var newTiddler = { title: "babe", fields: { "server.workspace": "bags/jon_public" } };
+	var newTiddler = { title: "babe", fields: { "server.bag": "jon_public" } };
 	cmd.moveTiddler(tiddler, newTiddler, false);
 	strictEqual(true, happy);
 });
@@ -190,9 +194,14 @@ test("moveTiddler from private to private (without revisions)", function() {
 	var cmd = config.commands.publishTiddler;
 	var tiddler = new Tiddler("pig");
 	var happyPath = true;
-	config.commands.publishTiddler.copyTiddler = function(oldTitle, newWorkspace, callback) {
+	config.commands.publishTiddler.copyTiddler = function(oldTitle, newBag, callback) {
+		if(newBag != "jon_private")  {
+			happyPath = false;
+		}
 		callback({status: true});
 	};
+
+	tiddler.fields["server.bag"] = "jon_private";
 	tiddler.fields["server.workspace"] = "bags/jon_private";
 	// add to store.
 	tiddler.getAdaptor = function() {
@@ -203,7 +212,7 @@ test("moveTiddler from private to private (without revisions)", function() {
 		};
 		return adaptor;
 	};
-	var newTiddler = { fields: { "server.workspace": "bags/jon_private" } };
+	var newTiddler = { fields: { "server.bag": "jon_private" } };
 	cmd.moveTiddler(tiddler, newTiddler, false);
 	strictEqual(true, happyPath);
 });
@@ -228,7 +237,7 @@ test("moveTiddlerWithRevisions (attempt from bag back to same bag)", function() 
 		};
 		return adaptor;
 	};
-	var newTiddler = { title: "pig", fields: { "server.workspace": "bags/jon_private" } };
+	var newTiddler = { title: "pig", fields: { "server.bag" : "jon_private", "server.workspace": "bags/jon_private" } };
 	cmd.moveTiddlerWithRevisions(tiddler, newTiddler, false);
 	strictEqual(attemptedDelete, false);
 });
@@ -241,6 +250,7 @@ test("moveTiddlerWithRevisions and rename", function() {
 	config.commands.publishTiddler.copyTiddler = function(oldTitle, newWorkspace, callback) {
 		callback({status: true});
 	};
+	tiddler.fields["server.bag"] = "jon_private";
 	tiddler.fields["server.workspace"] = "bags/jon_private";
 	// add to store.
 	tiddler.getAdaptor = function() {
@@ -249,7 +259,8 @@ test("moveTiddlerWithRevisions and rename", function() {
 				happyPath = false;
 				var workspace = tiddler.fields["server.workspace"];
 				if(pathStep === 0) {
-					if(tiddler.title == "cow" && workspace == "bags/jon_public") { // delete existing tiddler in that bag
+					if(tiddler.title == "cow" && tiddler.fields["server.bag"] == "jon_public" &&
+						workspace == "bags/jon_public") { // delete existing tiddler in that bag
 						pathStep = 1;
 						callback({status: true}); // successful delete
 					}
@@ -263,9 +274,88 @@ test("moveTiddlerWithRevisions and rename", function() {
 		};
 		return adaptor;
 	};
-	var newTiddler = { title: "cow", fields: { "server.workspace": "bags/jon_public" } };
+	var newTiddler = { title: "cow", fields: { "server.bag": "jon_public", "server.workspace": "bags/jon_public" } };
 	cmd.moveTiddlerWithRevisions(tiddler, newTiddler, false);
 	strictEqual(2, pathStep);
 });
 
+test("moveTiddler check the callback where no delete", function() {
+	var cmd = config.commands.publishTiddler;
+	var tiddler = new Tiddler("pig");
+	var asExpected = false;
+	var callback = function(context) {
+		if(!context.deleteContext.data && context.copyContext.status == true
+			&& context.copyContext.statusText == "hello there") {
+			asExpected = true;
+		}
+	};
+	config.commands.publishTiddler.copyTiddler = function(oldTitle, newWorkspace, callback) {
+		callback({status: true, statusText: "hello there"}); // signal it was a success
+	};
+	tiddler.fields["server.bag"] = "jon_private";
+	tiddler.getAdaptor = function() {
+		var adaptor = {
+			deleteTiddler: function(tiddler, context, userParams, callback) {
+				callback({data: "foo"});
+			}
+		};
+		return adaptor;
+	};
+	var newTiddler = { title: "pig", fields: { "server.bag": "jon_private" } };
+	cmd.moveTiddler(tiddler, newTiddler, false, callback);
+	strictEqual(asExpected, true);
+});
+
+test("moveTiddler  check the content of callbacks", function() {
+	var cmd = config.commands.publishTiddler;
+	var tiddler = new Tiddler("pig");
+	var asExpected = false;
+	var callback = function(context) {
+		if(context.deleteContext.data == "foo" && context.copyContext.status == true
+			&& context.copyContext.statusText == "hello there") {
+			asExpected = true;
+		}
+	};
+	config.commands.publishTiddler.copyTiddler = function(oldTitle, newBag, callback) {
+		callback({status: true, statusText: "hello there"}); // signal it was a success
+	};
+	tiddler.fields["server.bag"] = "jon_private";
+	tiddler.getAdaptor = function() {
+		var adaptor = {
+			deleteTiddler: function(tiddler, context, userParams, callback) {
+				callback({data: "foo"});
+			}
+		};
+		return adaptor;
+	};
+	var newTiddler = { title: "pig", fields: { "server.bag": "jon_public" } };
+	cmd.moveTiddler(tiddler, newTiddler, false, callback);
+	strictEqual(asExpected, true);
+});
+
+test("moveTiddlerWithRevisions check the content of callbacks", function() {
+	var cmd = config.commands.publishTiddler;
+	var tiddler = new Tiddler("pig");
+	var actual;
+	var callback = function(info) {
+		actual = info;
+	};
+	tiddler.fields["server.bag"] = "jon_private";
+	// add to store.
+	tiddler.getAdaptor = function() {
+		var adaptor = {
+			deleteTiddler: function(tiddler, context, userParams, callback) {
+				callback({deleteSuccess: "hurray", tiddler: tiddler})
+			},
+			moveTiddler: function(from, to, context, userParams, callback) {
+				callback({moveSuccess: true, tiddler: tiddler});
+			}
+		};
+		return adaptor;
+	};
+	var newTiddler = { title: "pig", fields: { "server.bag": "jon_public" } };
+	cmd.moveTiddlerWithRevisions(tiddler, newTiddler, callback);
+	strictEqual(actual.moveContext.moveSuccess, true);
+	strictEqual(actual.deleteContext.deleteSuccess, "hurray");
+});
 })(QUnit.module, jQuery);

@@ -68,16 +68,14 @@ var cmd = config.commands.publishTiddler = {
 		}
 		return newWorkspace;
 	},
-	copyTiddler: function(title, newWorkspace, callback) {
+	copyTiddler: function(title, newBag, callback) {
 		var original = store.getTiddler(title);
-		var space = tiddlyspace.determineSpace(original);
 		var adaptor = original.getAdaptor();
 		var publish = function(original, callback) {
 			var tiddler = $.extend(new Tiddler(original.title), original);
-			var bag = "%0_%1".format([space.name, space.type]);
 			tiddler.fields = $.extend({}, original.fields, {
-				"server.workspace": newWorkspace || "bags/".format([bag]),
-				"server.bag": bag,
+				"server.bag": newBag,
+				"server.workspace": "bags/%0".format([newBag]),
 				"server.page.revision": "false"
 			});
 			adaptor.putTiddler(tiddler, null, null, callback);
@@ -96,9 +94,11 @@ var cmd = config.commands.publishTiddler = {
 			var adaptor = tiddler.getAdaptor();
 			var newTitle = newTiddler.title;
 			var oldTitle = tiddler.title;
-			var oldWorkspace = tiddler.fields["server.workspace"];
-			var newWorkspace = newTiddler.fields["server.workspace"];
-			cmd.copyTiddler(oldTitle, newWorkspace, function(ctx) {
+			delete tiddler.fields["server.workspace"];
+			var oldBag = tiddler.fields["server.bag"];
+			var newBag = newTiddler.fields["server.bag"];
+			var newWorkspace = "bags/%0".format([newBag]);
+			cmd.copyTiddler(oldTitle, newBag, function(ctx) {
 					info.copyContext = ctx;
 					var context = {
 						tiddler: tiddler,
@@ -106,11 +106,13 @@ var cmd = config.commands.publishTiddler = {
 					};
 					tiddler.title = oldTitle; // for cases where a rename occurs
 					if(ctx.status) { // only do if a success
-						if(oldWorkspace != newWorkspace) {
+						if(oldBag != newBag) {
 							adaptor.deleteTiddler(tiddler, context, {}, function(ctx) {
 								info.deleteContext = ctx;
 								var el;
 								if(tiddler) {
+									tiddler.fields["server.workspace"] = newWorkspace;
+									tiddler.fields["server.bag"] = newBag;
 									store.addTiddler(tiddler);
 								}
 								if(oldTitle != newTitle) {
@@ -142,15 +144,14 @@ var cmd = config.commands.publishTiddler = {
 		var oldTitle = tiddler.title;
 		var newTitle = newTiddler.title;
 		var newBag = newTiddler.fields["server.bag"];
-		var oldWorkspace = oldBag ? "bags/%0".format([oldBag]) : tiddler.fields["server.workspace"];
-		var newWorkspace = newBag ? "bags/%0".format([newBag]) : newTiddler.fields["server.workspace"];
-		newBag = newBag ? newBag : newWorkspace.split("/")[1];
-		var containsRecipe = oldWorkspace.indexOf("recipes/") > -1 || 
-			newWorkspace.indexOf("recipes/") > -1;
-		if(oldWorkspace == newWorkspace || containsRecipe) { // we are in a dangerous error state
-			return; // XXX: to do appropriate error messages
-		}
+		delete tiddler.fields["server.workspace"];
+		delete newTiddler.fields["server.workspace"];
+		var oldWorkspace = "bags/%0".format([oldBag]);
+		var newWorkspace = "bags/%0".format([newBag]);
 		var info = {};
+		if(oldBag == newBag) { // we are in a dangerous error state
+			return callback ? callback(info) : false;
+		}
 		// we first must delete any existing public revisions
 		tiddler.title = newTitle;
 		tiddler.fields["server.bag"] = newBag;
@@ -169,6 +170,7 @@ var cmd = config.commands.publishTiddler = {
 						info.moveContext = context;
 						if(context.status) {
 							var newTiddler = context.tiddler;
+							newTiddler.fields["server.workspace"] = newWorkspace;
 							// some some reason the old tiddler is not being removed from the store (hence next 3 lines)
 							var oldDirty = store.isDirty();
 							store.removeTiddler(oldTitle);
@@ -193,8 +195,8 @@ config.commands.changeToPrivate = {
 	tooltip: "turn this public tiddler into a private tiddler",
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.toggleWorkspace(tiddler, "private");
-		var newTiddler = { title: title, fields: { "server.workspace": newWorkspace }};
+		var newBag = cmd.toggleBag(tiddler, "private");
+		var newTiddler = { title: title, fields: { "server.bag": newBag }};
 		cmd.moveTiddler(tiddler, newTiddler, true);
 	}
 };
@@ -203,13 +205,13 @@ config.commands.changeToPublic = {
 	tooltip: "turn this private tiddler into a public tiddler",
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
-		var newWorkspace = cmd.toggleWorkspace(tiddler, "public");
-		var newTiddler = { title: title, fields: { "server.workspace": newWorkspace }};
+		var newBag = cmd.toggleBag(tiddler, "public");
+		var newTiddler = { title: title, fields: { "server.workspace": newBag }};
 		cmd.moveTiddler(tiddler, newTiddler, true);
 	}
 };
 
-config.commands.deleteTiddler.deleteResource = function(tiddler, bag) {
+config.commands.deleteTiddler.deleteResource = function(tiddler, bag, userCallback) {
 	var workspace = "bags/%0".format([bag]);
 	var oldDirty = store.isDirty();
 	var originalBag = tiddler.fields["server.bag"];
@@ -229,13 +231,20 @@ config.commands.deleteTiddler.deleteResource = function(tiddler, bag) {
 	} else {
 		callback = function(context, userParams) {
 			if(context.status) {
+				var el = story.refreshTiddler(tiddler.title, true);
 				if(deleteLocal) { // remove it locally to trigger getting of public version
 					store.removeTiddler(tiddler.title);
+				} else {
+					tiddler.fields["server.workspace"] = originalWorkspace;
+					tiddler.fields["server.bag"] = originalBag;
+				}
+				if(el) {
+					story.displayTiddler(el, tiddler.title);
 				}
 				store.setDirty(oldDirty); // will fail to delete locally and throw an error
-				tiddler.fields["server.workspace"] = originalWorkspace;
-				tiddler.fields["server.bag"] = originalBag;
-				story.refreshTiddler(tiddler.title, true);
+			}
+			if(userCallback) {
+				userCallback(context);
 			}
 		};
 	}
