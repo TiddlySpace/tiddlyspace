@@ -203,10 +203,6 @@ a.backstageTask {
 	float: none;
 }
 
-.textRight {
-	text-align: right;
-}
-
 #backstage .deleteButton {
 	margin-left: 0.3em;
 	font-weight: bold;
@@ -231,10 +227,6 @@ a.backstageTask {
 }
 
 .backstagePanelBody .tab {
-	-moz-border-radius-topleft: 0.4em;
-	-webkit-border-top-left-radius: 0.4em;
-	-moz-border-radius-topright: 0.4em;
-	-webkit-border-top-right-radius: 0.4em;
 	margin: 0 0 0 0.6em;
 	padding: 0.4em 0.5em 1px 0.5em;
 }
@@ -276,13 +268,6 @@ a.backstageTask {
 
 #backstage .viewer table,#backstage table.twtable {
 	border: 0px;
-}
-
-#backstageToolbar a.task_space,  #backstageToolbar a.task_user {
-	-moz-border-radius-topleft: 0.4em;
-	-webkit-border-top-left-radius: 0.4em;
-	-moz-border-radius-topright: 0.4em;
-	-webkit-border-top-right-radius: 0.4em;
 }
 
 #backstageToolbar img {
