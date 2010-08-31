@@ -47,7 +47,7 @@ dist: clean remotes test
 release: dist pypi
 
 deploy: release
-	./deploy.sh nodist $(ARGS)
+	./deploy.sh $(ARGS)
 
 pypi: test
 	python setup.py sdist upload

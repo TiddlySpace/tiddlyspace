@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Usage:
-#   $ ./deploy.sh [nodist] [quick] [logname]
+#   $ ./deploy.sh [quick] [<logname>]
 
 package_name="tiddlywebplugins.tiddlyspace"
 host="tiddlyspace.com"
