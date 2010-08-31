@@ -4,7 +4,7 @@
 |''Description''|Provides a batch publishing tool for managing lots of tiddlers in TiddlySpace|
 |''Requires''|TiddlySpacePublishCommand TiddlySpaceTiddlerIconsPlugin|
 |''Author''|Jon Robson|
-|''Version''|0.2.0|
+|''Version''|0.3.0|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpacePublisher.js|
 |''License''|[[BSD|http://www.opensource.org/licenses/bsd-license.php]]|
 !Usage
@@ -80,13 +80,13 @@ var macro = config.macros.TiddlySpacePublisher = {
 			for(var i = 0; i < rowNames.length; i++) {
 				var title = rowNames[i];
 				var tiddler = store.getTiddler(title);
-				if(!publicWorkspace) {
-					publicWorkspace = cmd.toggleWorkspace(tiddler, "public");
+				if(!publicBag) {
+					publicBag = cmd.toggleBag(tiddler, "public");
 				}
 				macro.publishedTiddlers[title] = tiddler;
 				var newTiddler = {
 					title: tiddler.title,
-					fields: { "server.workspace": publicWorkspace }
+					fields: { "server.bag": publicBag }
 				};
 				config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, true, callback);
 			}

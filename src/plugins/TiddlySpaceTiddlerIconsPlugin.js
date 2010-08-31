@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.5.2dev|
+|''Version''|0.6|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -107,7 +107,8 @@ var originMacro = config.macros.tiddlerOrigin = {
 		moveToPrivate: "Are you sure you want to make this private? It will no longer be publically available to non-members of the space and you will lose any existing revisions.",
 		moveToPrivateKeep: "Are you sure you want to make this tiddler and all its revisions private? It will no longer be publically available to non-members of the space.",
 		"publicConfirmDelete": "Are you sure you want to delete all the public revisions of this tiddler?",
-		"privateConfirmDelete": "Are you sure you want to delete all the private revisions of this tiddler?"
+		"privateConfirmDelete": "Are you sure you want to delete all the private revisions of this tiddler?",
+		pleaseWait: "please wait.."
 	},
 	createConcertinaButton: function(place, concertinaContent) {
 		var concertinaButton = $('<a class="originButton" href="javascript:;" />').
@@ -335,16 +336,28 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"public": function(place, tiddler) {
 			var locale = originMacro.locale;
 			var chk = $('<input type="checkbox" checked="true" name="retainPublicRevisions" />');
+			var inProgress = false;
 			var doPublish = function(ev) {
+				if(inProgress) {
+					return;
+				}
 				var checked = chk.attr("checked");
 				var msg = checked ? locale.moveToPrivateKeep : locale.moveToPrivate;
 				var answer = confirm(msg);
 				if(answer) {
-					var privateWorkspace = cmd.toggleWorkspace(tiddler, "private");
+					inProgress = true;
+					var target = $(ev.target);
+					var oldText = target.text();
+					target.text(locale.pleaseWait);
+					var onComplete = function(info) {
+						target.text(oldText);
+						inProgress = false;
+					};
+					var privateBag= cmd.toggleBag(tiddler, "private");
 					cmd.moveTiddler(tiddler, {
 						title: tiddler.title,
-						fields: { "server.workspace": privateWorkspace }
-					}, chk.attr("checked"));
+						fields: { "server.bag": privateBag }
+					}, chk.attr("checked"), onComplete);
 				}
 			};
 			var toggleCheckbox = function(ev) {
@@ -371,11 +384,15 @@ var originMacro = config.macros.tiddlerOrigin = {
 					chk.attr("checked", false);
 				}
 			};
+			var inProgress;
 			var doPublish = function(ev) {
+				if(inProgress) {
+					return;
+				}
 				var publishTo = tiddler.fields["server.publish.name"];
 				var workspace = "bags/%0".format([tiddler.fields["server.bag"]]);
 				tiddler.fields["server.workspace"] = workspace;
-				var publicWorkspace = cmd.toggleWorkspace(tiddler, "public");
+				var publicBag = cmd.toggleBag(tiddler, "public");
 				var msg;
 				var checked = chk.attr("checked");
 				msg = checked ? locale.publishPrivateKeepPrivate : locale.publishPrivateDeletePrivate;
@@ -385,10 +402,18 @@ var originMacro = config.macros.tiddlerOrigin = {
 				store.addTiddler(tiddler);
 				var answer = confirm(msg);
 				if(answer) {
+					inProgress = true;
+					var target = $(ev.target);
+					var oldText = target.text();
+					target.text(locale.pleaseWait);
+					var onComplete = function(info) {
+						target.text(oldText);
+						inProgress = false;
+					};
 					cmd.moveTiddler(tiddler, {
 						title: newTitle,
-						fields: { "server.workspace": publicWorkspace }
-					}, checked);
+						fields: { "server.bag": publicBag }
+					}, checked, onComplete);
 				}
 			};
 			var link = $('<a class="publishButton" />').text(locale.makePublic).
@@ -403,18 +428,30 @@ var originMacro = config.macros.tiddlerOrigin = {
 		},
 		privateAndPublic: function(place, tiddler) {
 			var locale = originMacro.locale;
-			var deleteTiddler = function(type) {
+			var inProgress;
+			var deleteTiddler = function(ev, type) {
+				if(inProgress) {
+					return;
+				}
 				type = type ? type.toLowerCase() : "public";
 				var bag = cmd.toggleBag(tiddler, type);
 				if(confirm(locale["%0ConfirmDelete".format([type])])) {
-					config.commands.deleteTiddler.deleteResource(tiddler, bag);
+					inProgress = true;
+					var target = $(ev.target);
+					var oldText = target.text();
+					target.text(locale.pleaseWait);
+					var onComplete = function(info) {
+						target.text(oldText);
+						inProgress = false;
+					};
+					config.commands.deleteTiddler.deleteResource(tiddler, bag, onComplete);
 				}
 			};
 			var deletePublic = function(ev) {
-				deleteTiddler("public");
+				deleteTiddler(ev, "public");
 			};
 			var deletePrivate = function(ev) {
-				deleteTiddler("private");
+				deleteTiddler(ev, "private");
 			};
 			$('<a class="publishButton" />').text(locale.deletePublic).
 				click(deletePublic).appendTo(place);
