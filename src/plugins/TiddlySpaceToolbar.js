@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceToolbar|
 |''Description''|augments tiddler toolbar commands with SVG icons|
 |''Author''|Osmosoft|
-|''Version''|0.6.1|
+|''Version''|0.6.2|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceToolbar.js|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
