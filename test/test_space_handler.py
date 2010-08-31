@@ -22,6 +22,11 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
 
 from test.fixtures import make_test_env, make_fake_space, get_auth
+SYSTEM_SPACES = ['system-plugins', 'system-info', 'system-images',
+    'system-theme']
+SYSTEM_URLS = ['http://system-plugins.0.0.0.0:8080/',
+    'http://system-info.0.0.0.0:8080/',
+    'http://system-images.0.0.0.0:8080/', 'http://system-theme.0.0.0.0:8080/']
 
 
 def setup_module(module):
@@ -58,8 +63,12 @@ def test_spaces_list():
     info = simplejson.loads(content)
     uris = [uri for _, uri in [item.values() for item in info]]
     names = [name for name, _ in [item.values() for item in info]]
-    assert sorted(uris) == ['http://0.0.0.0:8080/', 'http://cdent.0.0.0.0:8080/']
-    assert sorted(names) == ['cdent', 'frontpage']
+    expected_uris = ['http://0.0.0.0:8080/', 'http://cdent.0.0.0.0:8080/']
+    expected_uris.extend(SYSTEM_URLS)
+    expected_names = ['cdent', 'frontpage']
+    expected_names.extend(SYSTEM_SPACES)
+    assert sorted(uris) == sorted(expected_uris)
+    assert sorted(names) == sorted(expected_names)
 
     make_fake_space(store, 'fnd')
     response, content = http.request('http://0.0.0.0:8080/spaces',
@@ -164,10 +173,14 @@ def test_create_space():
     assert recipe.policy.create == ['cdent']
     assert recipe.policy.delete == ['cdent']
     recipe_list = recipe.get_recipe()
-    assert len(recipe_list) == 3
+    assert len(recipe_list) == 7
     assert recipe_list[0][0] == 'system'
     assert recipe_list[1][0] == 'tiddlyspace'
-    assert recipe_list[2][0] == 'extra_public'
+    assert recipe_list[2][0] == 'system-plugins_public'
+    assert recipe_list[3][0] == 'system-info_public'
+    assert recipe_list[4][0] == 'system-images_public'
+    assert recipe_list[5][0] == 'system-theme_public'
+    assert recipe_list[6][0] == 'extra_public'
 
     recipe = store.get(Recipe('extra_private'))
     recipe_list = recipe.get_recipe()
@@ -178,11 +191,15 @@ def test_create_space():
     assert recipe.policy.write == ['cdent']
     assert recipe.policy.create == ['cdent']
     assert recipe.policy.delete == ['cdent']
-    assert len(recipe_list) == 4
+    assert len(recipe_list) == 8
     assert recipe_list[0][0] == 'system'
     assert recipe_list[1][0] == 'tiddlyspace'
-    assert recipe_list[2][0] == 'extra_public'
-    assert recipe_list[3][0] == 'extra_private'
+    assert recipe_list[2][0] == 'system-plugins_public'
+    assert recipe_list[3][0] == 'system-info_public'
+    assert recipe_list[4][0] == 'system-images_public'
+    assert recipe_list[5][0] == 'system-theme_public'
+    assert recipe_list[6][0] == 'extra_public'
+    assert recipe_list[7][0] == 'extra_private'
 
 
 def test_reserved_space_name():
@@ -216,7 +233,7 @@ def test_chars_in_space():
         ('foo-bar', '201'),
         ('foo-bar-baz', '201'),
         ('-foo', '409'),
-        ('foo-', '409')
+        ('foo-', '409'),
     ]
 
     cookie = get_auth('cdent', 'cow')
