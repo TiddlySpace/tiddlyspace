@@ -45,14 +45,13 @@ TiddlyWiki = function() {
 TiddlyWiki.prototype.getTiddler = function(title) {
 	return this._tiddlers[title];
 };
-
-TiddlyWiki.prototype.addTiddler = function(tiddler) {};
-
+TiddlyWiki.prototype.addTiddler = function(tiddler) {
+	this._tiddlers[tiddler.title] = tiddler;
+};
 TiddlyWiki.prototype.getTiddlerText = function(title) {
 	var tiddler = this._tiddlers[title];
 	return tiddler ? tiddler.text : null;
 };
-
 TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 		modified, tags, fields, clearChangeCount, created, creator) {
 	var tiddler = new Tiddler(newTitle);
@@ -63,7 +62,7 @@ TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 	tiddler.tags = tags;
 	tiddler.text = newBody;
 	tiddler.fields = fields;
-	this._tiddlers[tiddler.title] = tiddler;
+	this.addTiddler(tiddler);
 	return tiddler;
 }
 TiddlyWiki.prototype.removeTiddler = function(title) {
