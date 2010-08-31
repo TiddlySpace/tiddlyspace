@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Description''|TiddlySpace configuration|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -114,6 +114,7 @@ var split = function(str, sep, mode) {
 };
 
 // hijack saveTiddler to accept Tiddler instance
+// optionally triggers autoSaveChanges if second argument is true
 var _saveTiddler = TiddlyWiki.prototype.saveTiddler;
 TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 		modified, tags, fields, clearChangeCount, created, creator) {
@@ -121,6 +122,9 @@ TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 		var t = $.extend(new Tiddler(title.title), title);
 		t = _saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
 			t.modified, t.tags, t.fields, false, t.created, t.creator]);
+		if(newTitle === true) { // overloading second argument
+			autoSaveChanges(null, [t]);
+		}
 		return t;
 	} else {
 		return _saveTiddler.apply(this, arguments);
