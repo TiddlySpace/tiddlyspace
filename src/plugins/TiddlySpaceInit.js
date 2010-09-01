@@ -100,18 +100,19 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		var callback = function(data, status, xhr) {}; // avatar already exists; do nothing
 		var errback = function(xhr, error, exc) {
 			// copy default avatar -- XXX: assumes error cause was 404
+			var _notify = function(tid, status, xhr) {
+				displayMessage("created avatar"); // TODO: i18n
+			};
+			var _callback = function(tid, status, xhr) {
+				tid.title = avatar;
+				tid.bag.name = pubBag;
+				tid.put(_notify, notify); // TODO: add to current session document (via adaptor?)
+			};
 			tweb.getUserInfo(function(user) {
-				var avatarTitle = currentSpace.name == user.name ? "defaultUserIcon" : "defaultSiteIcon"; 
+				var avatarTitle = currentSpace.name == user.name ?
+					"defaultUserIcon" : "defaultSiteIcon";
 				var tid = new tiddlyweb.Tiddler(avatarTitle);
 				tid.bag = new tiddlyweb.Bag("common", host);
-				var _notify = function(tid, status, xhr) {
-					displayMessage("created avatar"); // TODO: i18n
-				};
-				var _callback = function(tid, status, xhr) {
-					tid.title = avatar;
-					tid.bag.name = pubBag;
-					tid.put(_notify, notify); // TODO: add to current session document (via adaptor?)
-				};
 				tid.get(_callback, notify);
 			});
 		};
