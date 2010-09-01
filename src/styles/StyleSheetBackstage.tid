@@ -113,9 +113,9 @@ body #backstageArea {
 }
 
 #backstage #backstagePanel {
-	width: 90%;
-	margin-left: 1em;
+	margin-left: 5%;
 	padding: 0em;
+	margin-right: 5%;
 }
 
 #backstageToolbar a {
@@ -156,7 +156,7 @@ a:hover .spaceName {
 #backstageToolbar .task_space {
 	position: absolute;
 	top: 0px;
-	left: 0px;
+	left: 5%;
 }
 
 #backstageToolbar .task_user span,
@@ -170,7 +170,7 @@ a:hover .spaceName {
 	display: block;
 	position: absolute;
 	top: 0px;
-	right: 50px;
+	right: 5%;
 }
 
 #backstageToolbar .task_login img {
@@ -301,4 +301,5 @@ a.backstageTask {
 	clear: both;
 	display: block;
 }
+
 /*}}}*/
