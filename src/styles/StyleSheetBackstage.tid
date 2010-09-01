@@ -287,7 +287,7 @@ a.backstageTask {
 	border: 1px solid #eee;
 }
 
-.myspaces ul li {
+#backstage .inlineList ul li {
 	background-color: [[ColorPalette::Background]];
 	border: solid 1px [[ColorPalette::TertiaryMid]];
 	display: block;
@@ -297,9 +297,9 @@ a.backstageTask {
 	padding: 0.5em;
 }
 
-.backstageClear {
+.backstageClear, .inlineList form {
 	clear: both;
 	display: block;
+	margin-top: 3em;
 }
-
 /*}}}*/

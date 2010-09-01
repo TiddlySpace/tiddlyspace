@@ -3,7 +3,7 @@ modifier: osmosoft
 
 <<TiddlySpaceSpaces add>>
 You are currently a member of the following spaces.
-{{myspaces{
+{{inlineList{
 <<TiddlySpaceSpaces list>>
 }}}
 {{backstageClear{}}}
