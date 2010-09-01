@@ -14,12 +14,17 @@ modifier: osmosoft
 	margin: 1px auto auto -200px;
 	font-weight: bold;
 	width: 200px;
-	font-size: 1.4em;
+	line-height:24px;
+	font-size: 1.2em;
 	padding: 0;
 	text-align: center;
 	top: 0;
 	position: absolute;
 	left: 50%;
+}
+
+#backstageLogo .svgIcon {
+	margin-top:-2px;
 }
 
 #backstageLogo .svgIconText {
@@ -28,17 +33,22 @@ modifier: osmosoft
 
 #backstageLogo .logoText {
 	position: absolute;
-	top: 2px;
+	top: 0px;
+	margin-left: 5px;
 }
 
 #backstageArea {
+	z-index: 49;
+	color: white;
+	background-color: black;
 	background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #222),color-stop(0.5, #333),color-stop(1, #555));
 	background: -moz-linear-gradient(center bottom,#222 0%, #333 50%, #555 100%);
 	/* For Internet Explorer 5.5 - 7 */
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222);
 	/* For Internet Explorer 8 */
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222)";
-	height: 26px;
+	height: 24px;
+	padding: 0;
 	border-bottom: solid 1px black;
 }
 
@@ -77,18 +87,13 @@ modifier: osmosoft
 	top: 50px;
 }
 
-body #backstageArea {
-	z-index: 49;
-	color: white;
-	background-color: black;
-}
-
 #backstageToolbar {
 	position: relative;
 }
 
 #backstageArea a {
 	padding: 0px;
+	margin-left: 0px;
 	color: white;
 	background: none;
 }
@@ -124,7 +129,7 @@ body #backstageArea {
 
 #backstageArea a.backstageSelTab,
 #backstageToolbar .backstageTask {
-	line-height: 26px;
+	line-height: 24px;
 	color: #767676;
 }
 
@@ -156,7 +161,7 @@ a:hover .spaceName {
 #backstageToolbar .task_space {
 	position: absolute;
 	top: 0px;
-	left: 5%;
+	left: 0%;
 }
 
 #backstageToolbar .task_user span,
@@ -275,7 +280,7 @@ a.backstageTask {
 }
 
 #backstageToolbar img {
-	padding: 0.1em 0.3em 0;
+	padding: 0;
 }
 
 #backstage .wizard, 
