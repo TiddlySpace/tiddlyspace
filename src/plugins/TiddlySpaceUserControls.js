@@ -159,7 +159,7 @@ config.macros.TiddlySpaceLogout = {
 
 var tsr = config.macros.TiddlySpaceRegister = {
 	locale: {
-		label: "Register",
+		label: "Sign Up",
 		userSuccess: "created user %0",
 		userError: "user <em>%0</em> already exists",
 		spaceSuccess: "created space %0",
