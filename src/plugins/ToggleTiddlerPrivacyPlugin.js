@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.5.5|
+|''Version''|0.5.6|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
@@ -19,23 +19,29 @@ Allows you to set the default privacy value (Default is private)
 //{{{
 (function($) {
 
+var tiddlyspace = config.extensions.tiddlyspace;
 var macro = config.macros.setPrivacy = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var el = $(story.findContainingTiddler(place));
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var container = $("<div />").addClass("privacySettings").appendTo(place)[0];
-		var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
+		var currentSpace = tiddlyspace.currentSpace.name;
 		var currentWorkspace = tiddler ? tiddler.fields["server.workspace"] : false;
-		var currentBag = tiddler.fields["server.bag"] || "";
 		var isNewTiddler = el.hasClass("missing") || !currentWorkspace; // XXX: is this reliable?
-		var isExternal = currentBag.indexOf("/%0_".format([currentSpace])) > -1 ||
-			currentBag == "tiddlyspace";
+		var isExternal = macro.isExternal(tiddler);
 		if(isNewTiddler || isExternal) {
 			var userDefault = args.defaultValue;
 			userDefault = userDefault ? "bags/%0_%1".format([currentSpace, userDefault[0]]) : false;
 			var defaultValue = currentWorkspace || userDefault || false;
 			macro.createRoundel(container, tiddler, currentSpace, defaultValue);
 		}
+	},
+	isExternal: function(tiddler) {
+		var currentSpace = tiddlyspace.currentSpace.name;
+		var currentBag = tiddler.fields["server.bag"] || "";
+		var startsWith = "%0_".format([currentSpace]);
+		return  currentBag.indexOf(startsWith) != 0 ||
+			currentBag == "tiddlyspace";
 	},
 	createRoundel: function(container, tiddler, currentSpace, defaultValue) {
 		var iconOptions = { labelOptions: { includeLabel: "true" } };
