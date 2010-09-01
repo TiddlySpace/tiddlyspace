@@ -358,4 +358,39 @@ test("moveTiddlerWithRevisions check the content of callbacks", function() {
 	strictEqual(actual.moveContext.moveSuccess, true);
 	strictEqual(actual.deleteContext.deleteSuccess, "hurray");
 });
+
+test("publishTiddler command button", function() {
+	var cmd = config.commands.publishTiddler;
+	var tiddler = new Tiddler("pig");
+	var asExpected = true;
+	tiddler.fields["server.workspace"] = "foo/bar";
+	tiddler.fields["server.bag"] = "jon_private";
+	// add to store.
+	store.saveTiddler(tiddler);
+	store.getTiddler("pig").getAdaptor = function() {
+		var adaptor = {
+			deleteTiddler: function(tiddler) {
+				if(tiddler.fields["server.bag"] != "jon_private") {
+					asExpected = false;
+				}
+				if(tiddler.fields["server.workspace"] != "bags/jon_private") {
+					asExpected = false;
+				}
+			},
+			putTiddler: function(tiddler, context, userParams, callback) {
+				if(tiddler.fields["server.bag"] != "jon_public") {
+					asExpected = false;
+				}
+				if(tiddler.fields["server.workspace"] != "bags/jon_public") {
+					asExpected = false;
+				}
+			}
+		};
+		return adaptor;
+	};
+
+	cmd.handler(null, null, "pig");
+	strictEqual(asExpected, true);
+});
+
 })(QUnit.module, jQuery);

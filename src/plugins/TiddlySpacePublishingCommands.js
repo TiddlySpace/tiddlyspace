@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.7.0|
+|''Version''|0.7.1|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -29,12 +29,11 @@ var cmd = config.commands.publishTiddler = {
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
 		if(tiddler) {
-			var newWorkspace = tiddler.fields["server.workspace"];
-			newWorkspace = cmd.toggleWorkspace(newWorkspace);
+			var newBag = cmd.toggleBag(tiddler.fields["server.bag"]);
 			this.moveTiddler(tiddler, {
 				title: tiddler.title,
-				fields: { "server.workspace": newWorkspace }
-			}, true);
+				fields: { "server.bag": newBag }
+			});
 		}
 	},
 	toggleBag: function(bag, to) {
