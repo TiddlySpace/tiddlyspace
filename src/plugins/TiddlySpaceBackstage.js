@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Description''|Provides a TiddlySpace version of the backstage|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
@@ -119,7 +119,7 @@ backstage.init = function(){
 		// override login button to show default avatar
 		var loginBtn = $("[task=login]", backstageArea);
 		loginBtn.html("<span>%0</span>".format([config.tasks.login.text]));
-		imageMacro.renderImage(loginBtn[0], "/bags/common/tiddlers/defaultSiteIcon",
+		imageMacro.renderImage(loginBtn[0], "/bags/common/tiddlers/defaultUserIcon",
 			{ imageClass:"userSiteIcon", height: 24, width: 24 });
 
 		var tasks = $(".backstageTask");
