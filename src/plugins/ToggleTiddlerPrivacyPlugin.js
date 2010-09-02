@@ -20,7 +20,8 @@ Allows you to set the default privacy value (Default is private)
 (function($) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
-var macro = config.macros.setPrivacy = {
+
+config.macros.setPrivacy = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var el = $(story.findContainingTiddler(place));
 		var args = paramString.parseParams("name", null, true, false, true)[0];
@@ -28,12 +29,11 @@ var macro = config.macros.setPrivacy = {
 		var currentSpace = tiddlyspace.currentSpace.name;
 		var currentWorkspace = tiddler ? tiddler.fields["server.workspace"] : false;
 		var isNewTiddler = el.hasClass("missing") || !currentWorkspace; // XXX: is this reliable?
-		var isExternal = macro.isExternal(tiddler);
-		if(isNewTiddler || isExternal) {
+		if(isNewTiddler || this.isExternal(tiddler)) {
 			var userDefault = args.defaultValue;
 			userDefault = userDefault ? "bags/%0_%1".format([currentSpace, userDefault[0]]) : false;
 			var defaultValue = currentWorkspace || userDefault || false;
-			macro.createRoundel(container, tiddler, currentSpace, defaultValue);
+			this.createRoundel(container, tiddler, currentSpace, defaultValue);
 		}
 	},
 	isExternal: function(tiddler) {
