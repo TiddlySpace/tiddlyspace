@@ -1,12 +1,8 @@
-tiddler: backstage.svg.tid
-tiddler: close.svg.tid
 tiddler: cancelTiddler.tid
 tiddler: closeTiddler.tid
 tiddler: editTiddler.tid
 tiddler: deleteTiddler.tid
 tiddler: moreCommand.tid
-tiddler: publicIcon.tid
-tiddler: privateIcon.tid
 tiddler: privateAndPublicIcon.tid
 tiddler: privateNotPublicIcon.tid
 tiddler: saveDraft.tid
