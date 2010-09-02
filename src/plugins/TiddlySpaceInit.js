@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.1|
+|''Version''|0.6.2|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -99,7 +99,10 @@ var plugin = config.extensions.TiddlySpaceInit = {
 
 		var callback = function(data, status, xhr) {}; // avatar already exists; do nothing
 		var errback = function(xhr, error, exc) {
-			// copy default avatar -- XXX: assumes error cause was 404
+			if(xhr.status != 404) {
+				return;
+			}
+			// copy default avatar
 			var _notify = function(tid, status, xhr) {
 				displayMessage("created avatar"); // TODO: i18n
 			};
