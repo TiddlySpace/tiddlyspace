@@ -203,7 +203,6 @@ var followMacro = config.macros.followTiddlers = {
 	},
 	getFollowers: function(callback, username) {
 		// returns a list of spaces being followed by the existing space
-		var adaptor = store.getTiddlers()[0].getAdaptor();
 		var followersCallback = function(user) {
 			var followers = [];
 			if(!user.anon) {
@@ -216,6 +215,7 @@ var followMacro = config.macros.followTiddlers = {
 					}
 					callback(followers);
 				} else {
+					var adaptor = store.getTiddlers()[0].getAdaptor();
 					if(followMacro.follower_names_cache[username]) {
 						// use cached list to save ajax requests
 						return callback(followMacro.follower_names_cache[username]);
