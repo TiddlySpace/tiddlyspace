@@ -6,7 +6,7 @@ tiddler: icons/SiteIcon.tid
 tiddler: icons/favicon.ico.tid
 tiddler: icons/backstage.svg.tid
 tiddler: icons/close.svg.tid
-tiddler: publicIcon.tid
-tiddler: privateIcon.tid
+tiddler: icons/publicIcon.tid
+tiddler: icons/privateIcon.tid
 tiddler: styles/StyleSheetBackstage.tid
 tiddler: shadows/MarkupPreHead.tid
