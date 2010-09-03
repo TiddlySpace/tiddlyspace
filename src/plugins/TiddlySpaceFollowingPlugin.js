@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.0|
+|''Version''|0.5.1|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -199,11 +199,11 @@ var followMacro = config.macros.followTiddlers = {
 				querySegments.push("bag:%0_public".format([encodeURI(follower)]));
 			}
 		}
-		return "(%0)".format([querySegments.join("%20OR%20")]);
+		var searchArg = "(%0)".format([querySegments.join("%20OR%20")]);
+		return querySegments.length > 0 ? searchArg : false;
 	},
 	getFollowers: function(callback, username) {
 		// returns a list of spaces being followed by the existing space
-		var adaptor = store.getTiddlers()[0].getAdaptor();
 		var followersCallback = function(user) {
 			var followers = [];
 			if(!user.anon) {
@@ -216,6 +216,7 @@ var followMacro = config.macros.followTiddlers = {
 					}
 					callback(followers);
 				} else {
+					var adaptor = store.getTiddlers()[0].getAdaptor();
 					if(followMacro.follower_names_cache[username]) {
 						// use cached list to save ajax requests
 						return callback(followMacro.follower_names_cache[username]);
