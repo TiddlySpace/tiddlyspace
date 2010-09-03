@@ -21,7 +21,7 @@ Allows you to set the default privacy value (Default is private)
 
 var tiddlyspace = config.extensions.tiddlyspace;
 
-var macro = config.macros.setPrivacy = {
+config.macros.setPrivacy = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var el = $(story.findContainingTiddler(place));
 		var args = paramString.parseParams("name", null, true, false, true)[0];
@@ -33,18 +33,16 @@ var macro = config.macros.setPrivacy = {
 			var userDefault = args.defaultValue;
 			userDefault = userDefault ? "bags/%0_%1".format([currentSpace, userDefault[0]]) : false;
 			var defaultValue = currentWorkspace || userDefault || false;
-			var options = config.macros.tiddlerOrigin ? 
+			var options = config.macros.tiddlerOrigin ?
 				config.macros.tiddlerOrigin.getOptions(params, paramString) : false;
 			this.createRoundel(container, tiddler, currentSpace, defaultValue, options);
 		}
 	},
 
 	isExternal: function(tiddler) {
-		var currentSpace = tiddlyspace.currentSpace.name;
-		var currentBag = tiddler.fields["server.bag"] || "";
-		var startsWith = "%0_".format([currentSpace]);
-		return  currentBag.indexOf(startsWith) != 0 ||
-			currentBag == "tiddlyspace";
+		var bag = tiddler.fields["server.bag"] || "";
+		var prefix = "%0_".format([tiddlyspace.currentSpace.name]);
+		return bag.indexOf(prefix) != 0 || bag == "tiddlyspace";
 	},
 	createRoundel: function(container, tiddler, currentSpace, defaultValue, options) {
 		var el = $(story.findContainingTiddler(container));
