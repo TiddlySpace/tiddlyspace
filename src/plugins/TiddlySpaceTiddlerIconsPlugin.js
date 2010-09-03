@@ -110,6 +110,27 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"privateConfirmDelete": "Are you sure you want to delete all the private revisions of this tiddler?",
 		pleaseWait: "please wait.."
 	},
+	handler: function(place, macroName, params,wikifier, paramString, tiddler){
+		var adaptor = tiddler.getAdaptor();
+		var locale = originMacro.locale;
+		var type = "private";
+		if(tiddler && tiddler.fields["server.workspace"]) {
+			name = tiddler.fields["server.workspace"].replace("recipes/", "").
+			replace("bags/", "");
+		} else {
+			name = tiddler;
+		}
+		var options = originMacro.getOptions(params, paramString);
+		options.space = tiddlyspace.determineSpace(name, true);
+		var concertinaContentEl = $("<div />")[0];
+
+		var concertinaButton = originMacro.createConcertinaButton(place, concertinaContentEl);
+		type = originMacro.determineTiddlerType(tiddler, options, function(type) {
+			originMacro.renderIcon(tiddler, type, concertinaButton,
+				concertinaContentEl, options);
+		});
+	},
+
 	createConcertinaButton: function(place, concertinaContent) {
 		var concertinaButton = $('<a class="originButton" href="javascript:;" />').
 			click(function(ev) {
@@ -207,26 +228,6 @@ var originMacro = config.macros.tiddlerOrigin = {
 		var parsedParams = parsedParams[0];
 		var includeLabel = !parsedParams.label || ( parsedParams.label && parsedParams.label[0] == "yes" );
 		return { includeLabel: includeLabel };
-	},
-	handler: function(place, macroName, params,wikifier, paramString, tiddler){
-		var adaptor = tiddler.getAdaptor();
-		var locale = originMacro.locale;
-		var type = "private";
-		if(tiddler && tiddler.fields["server.workspace"]) {
-			name = tiddler.fields["server.workspace"].replace("recipes/", "").
-			replace("bags/", "");
-		} else {
-			name = tiddler;
-		}
-		var options = originMacro.getOptions(params, paramString);
-		options.space = tiddlyspace.determineSpace(name, true);
-		var concertinaContentEl = $("<div />")[0];
-
-		var concertinaButton = originMacro.createConcertinaButton(place, concertinaContentEl);
-		type = originMacro.determineTiddlerType(tiddler, options, function(type) {
-			originMacro.renderIcon(tiddler, type, concertinaButton,
-				concertinaContentEl, options);
-		});
 	},
 	renderIcon: function(tiddler, type, concertinaButton, concertinaContentEl, options) {
 		var locale = originMacro.locale;

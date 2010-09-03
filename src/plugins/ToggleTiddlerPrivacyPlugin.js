@@ -38,6 +38,7 @@ var macro = config.macros.setPrivacy = {
 			this.createRoundel(container, tiddler, currentSpace, defaultValue, options);
 		}
 	},
+
 	isExternal: function(tiddler) {
 		var currentSpace = tiddlyspace.currentSpace.name;
 		var currentBag = tiddler.fields["server.bag"] || "";
