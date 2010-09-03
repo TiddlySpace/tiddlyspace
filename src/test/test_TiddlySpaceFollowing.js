@@ -1,10 +1,12 @@
 (function(module, $) {
 
+var _getTaggedTiddlers;
 var taggedTiddlers = [];
+
 module("TiddlySpaceFollowing", {
 	setup: function() {
 		taggedTiddlers = [];
-		 _getTaggedTiddlers = store.getTaggedTiddlers;
+		_getTaggedTiddlers = store.getTaggedTiddlers;
 		store.getTaggedTiddlers = function() {
 			return taggedTiddlers;
 		};
@@ -23,7 +25,7 @@ test("_constructBagQuery", function() {
 	actual.push(followMacro._constructBagQuery(["foo"]));
 	actual.push(followMacro._constructBagQuery(["foo", "bar", "dum"]));
 	actual.push(followMacro._constructBagQuery([]));
-	same(actual, [false,"(bag:bar_public%20OR%20bag:dum_public)", false]);
+	same(actual, [false, "(bag:bar_public%20OR%20bag:dum_public)", false]);
 });
 
 test("getFollowers (local version)", function() {
