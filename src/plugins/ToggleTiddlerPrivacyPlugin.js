@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.5.6|
+|''Version''|0.5.7|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
@@ -21,7 +21,7 @@ Allows you to set the default privacy value (Default is private)
 
 var tiddlyspace = config.extensions.tiddlyspace;
 
-config.macros.setPrivacy = {
+var macro = config.macros.setPrivacy = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var el = $(story.findContainingTiddler(place));
 		var args = paramString.parseParams("name", null, true, false, true)[0];
@@ -33,7 +33,9 @@ config.macros.setPrivacy = {
 			var userDefault = args.defaultValue;
 			userDefault = userDefault ? "bags/%0_%1".format([currentSpace, userDefault[0]]) : false;
 			var defaultValue = currentWorkspace || userDefault || false;
-			this.createRoundel(container, tiddler, currentSpace, defaultValue);
+			var options = config.macros.tiddlerOrigin ? 
+				config.macros.tiddlerOrigin.getOptions(params, paramString) : false;
+			this.createRoundel(container, tiddler, currentSpace, defaultValue, options);
 		}
 	},
 	isExternal: function(tiddler) {
@@ -43,8 +45,7 @@ config.macros.setPrivacy = {
 		return  currentBag.indexOf(startsWith) != 0 ||
 			currentBag == "tiddlyspace";
 	},
-	createRoundel: function(container, tiddler, currentSpace, defaultValue) {
-		var iconOptions = { labelOptions: { includeLabel: "true" } };
+	createRoundel: function(container, tiddler, currentSpace, defaultValue, options) {
 		var el = $(story.findContainingTiddler(container));
 		var originButton = $(".originButton", el)[0];
 		var privateWorkspace = "bags/%0_private".format([currentSpace]);
@@ -60,7 +61,7 @@ config.macros.setPrivacy = {
 			var originMacro = config.macros.tiddlerOrigin;
 			if(originButton && originMacro) {
 				$(originButton).empty();
-				originMacro.showPrivacyRoundel(tiddler, type, originButton, null, iconOptions);
+				originMacro.showPrivacyRoundel(tiddler, type, originButton, null, options);
 			}
 		};
 		var setWorkspace = function(workspace) {
