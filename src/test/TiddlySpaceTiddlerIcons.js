@@ -1,6 +1,7 @@
 (function(module, $) {
 
 var _areIdentical;
+
 module("TiddlySpaceTiddlerIcons", {
 	setup: function() {
 		_areIdentical = config.macros.tiddlerOrigin.areIdentical;
@@ -188,6 +189,17 @@ test("areIdentical (text, tags and title with different server. fields)", functi
 	// run
 	var actual = originMacro.areIdentical(tiddler, tiddler2);
 	strictEqual(false, actual);
+});
+
+test("_getLabelOptions", function() {
+	var macro = config.macros.tiddlerOrigin;
+
+	var options = macro._getLabelOptions([{}]);
+	var options2 = macro._getLabelOptions([{ label: ["yes"] }]);
+	var options3 = macro._getLabelOptions([{ label: ["no"], width: ["20"], height: ["20"] }]);
+	strictEqual(options.includeLabel, true); // make sure its the default
+	strictEqual(options2.includeLabel, true);
+	strictEqual(options3.includeLabel, false);
 });
 
 })(QUnit.module, jQuery);

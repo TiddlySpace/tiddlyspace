@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.6|
+|''Version''|0.6.1|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -196,22 +196,29 @@ var originMacro = config.macros.tiddlerOrigin = {
 			}
 		}
 	},
+	getOptions: function(params, paramString) {
+		var options = {
+			labelOptions: originMacro._getLabelOptions(paramString.parseParams("name")),
+			imageOptions: imageMacro.getArguments(paramString, [])
+		};
+		return options;
+	},
+	_getLabelOptions: function(parsedParams) {
+		var parsedParams = parsedParams[0];
+		var includeLabel = !parsedParams.label || ( parsedParams.label && parsedParams.label[0] == "yes" );
+		return { includeLabel: includeLabel };
+	},
 	handler: function(place, macroName, params,wikifier, paramString, tiddler){
 		var adaptor = tiddler.getAdaptor();
 		var locale = originMacro.locale;
 		var type = "private";
-		var parsedParams = paramString.parseParams("name")[0];
-		var includeLabel = parsedParams.label && parsedParams.label[0] == "yes";
-		var options = {
-			labelOptions: { includeLabel: includeLabel },
-			imageOptions: imageMacro.getArguments(paramString, [])
-		};
 		if(tiddler && tiddler.fields["server.workspace"]) {
 			name = tiddler.fields["server.workspace"].replace("recipes/", "").
 			replace("bags/", "");
 		} else {
 			name = tiddler;
 		}
+		var options = originMacro.getOptions(params, paramString);
 		options.space = tiddlyspace.determineSpace(name, true);
 		var concertinaContentEl = $("<div />")[0];
 
