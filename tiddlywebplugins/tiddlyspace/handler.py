@@ -26,7 +26,9 @@ from tiddlywebplugins.utils import require_any_user
 import tiddlywebplugins.status
 
 
-CORE_BAGS = ['system', 'common', 'tiddlyspace']
+CORE_BAGS = ['system', 'common', 'tiddlyspace',
+        'system-info_public', 'system-plugins_public', 'system-theme_public',
+        'system-images_public']
 ADMIN_BAGS = ['common', 'MAPUSER', 'MAPSPACE']
 
 
