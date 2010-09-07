@@ -41,7 +41,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		charError: "error: invalid space name - must only contain lowercase " +
 			"letters, digits or hyphens",
 		noSpaces: "you have no spaces",
-		addSpace: "creating your new space..."
+		addSpace: "creating your new space...",
+		loadingSpaces: "please wait while we load your spaces..."
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -55,12 +56,14 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 	},
 	refresh: function(container) {
 		container = $(container);
-		container.attr("refresh", "macro").attr("macroName", "TiddlySpaceSpaces").
-			addClass("listTiddlySpaceSpaces").empty().append("<ul />");
+		container.text(macro.locale.loadingSpaces).addClass("inProgress").
+			attr("refresh", "macro").attr("macroName", "TiddlySpaceSpaces").
+			addClass("listTiddlySpaceSpaces");
 		$.ajax({ // XXX: DRY; cf. TiddlySpaceInclusion
 			url: host + "/spaces?mine=1",
 			type: "GET",
 			success: function(data, status, xhr) {
+				container.empty().removeClass("inProgress").append("<ul />");
 				var spaces = $.map(data, function(item, i) {
 					var link = $("<a />", {
 						href: item.uri,
