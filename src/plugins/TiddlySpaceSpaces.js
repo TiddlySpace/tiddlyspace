@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceSpaces|
-|''Version''|0.5.1|
+|''Version''|0.5.2|
 |''Description''|TiddlySpace spaces management|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
@@ -49,7 +49,9 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		}
 	},
 	refresh: function(container) {
-		container.empty().append("<ul />");
+		container = $(container);
+		container.attr("refresh", "macro").attr("macroName", "TiddlySpaceSpaces").
+			addClass("listTiddlySpaceSpaces").empty().append("<ul />");
 		$.ajax({ // XXX: DRY; cf. TiddlySpaceInclusion
 			url: host + "/spaces?mine=1",
 			type: "GET",
@@ -93,13 +95,9 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 				config.macros.TiddlySpaceInclusion.inclusion(
 					ns.currentSpace.name, space.name);
 			}
-			var link = $('<a href="javascript:;" />').text(space.name); // TODO: calculate URL
-			var el = $("ul", container);
-			$("<li />").append(link).hide().appendTo(el).
-				slideDown(function() {
-					$(this).css("display", ""); // required to neutralize animation remnants
-					macro.refresh(container); // XXX: hack to add URL (see above)
-				});
+			$(".listTiddlySpaceSpaces").each(function(i, el) {
+				refreshElements(el.parentNode);
+			});
 		};
 		var errback = function(xhr, error, exc) { // TODO: DRY (cf. TiddlySpaceLogin)
 			var ctx = {
