@@ -100,6 +100,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var target = ev.target;
 		var form = $(target).closest("form");
 		var container = form.closest("div");
+		$(".annotation", container).hide();
+		$(".error", container).removeClass("error");
 		var statusMessage = $(".status", container);
 		var space = form.find("[name=space]").val();
 		var subscribe = form.find("[name=subscribe]").attr("checked");
