@@ -41,8 +41,10 @@ def make_test_env(module):
         
     os.system('mysqladmin -f drop tiddlyspacetest create tiddlyspacetest')
     if SESSION_COUNT > 1:
+        del sys.modules['tiddlywebplugins.tiddlyspace.store']
         del sys.modules['tiddlywebplugins.mysql']
         del sys.modules['tiddlywebplugins.sqlalchemy']
+        import tiddlywebplugins.tiddlyspace.store
         import tiddlywebplugins.mysql
         import tiddlywebplugins.sqlalchemy
     SESSION_COUNT += 1
