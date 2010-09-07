@@ -152,7 +152,11 @@ def list_spaces(environ, start_response):
     current_user = environ['tiddlyweb.usersign']['name']
     if mine:
         spaces = []
-        recipe_names = store.storage.user_spaces(current_user)
+        try:
+            recipe_name = store.storage.cached_store.storage.user_spaces(
+                    current_user)
+        except AttributeError:
+            recipe_names = store.storage.user_spaces(current_user)
         for recipe in recipe_names:
             spaces.append(_recipe_space_name(recipe))
     else:
