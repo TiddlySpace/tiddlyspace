@@ -1,26 +1,30 @@
 /***
 |''Name''|TiddlySpaceSpaces|
-|''Version''|0.5.2|
+|''Version''|0.5.5|
 |''Description''|TiddlySpace spaces management|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
 |''Requires''|TiddlyWebConfig TiddlySpaceInclusion TiddlySpaceUserControls|
 !HTMLForm
-<form action="#">
-	<fieldset>
-		<legend />
-		<dl>
-			<dt>Name:</dt>
-			<dd><input type="text" name="space" /></dd>
-		</dl>
-		<p>
-			<input type="checkbox" name="subscribe" />
-			Include the current space in the new space.
-		</p>
-		<p class="annotation" />
-		<input type="submit" />
-	</fieldset>
-</form>
+<div class='createSpace'>
+	<div class='status'></div>
+	<form action="#">
+		<fieldset>
+			<legend />
+			<dl>
+				<dt>Name:</dt>
+				<dd><input type="text" name="space" /></dd>
+			</dl>
+			<p>
+				<input type="checkbox" name="subscribe" />
+				Include the current space in the new space.
+			</p>
+			<p class="success" />
+			<p class="annotation" />
+			<input type="submit" />
+		</fieldset>
+	</form>
+</div>
 !Code
 ***/
 //{{{
@@ -36,14 +40,15 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		conflictError: "space <em>%0</em> already exists",
 		charError: "error: invalid space name - must only contain lowercase " +
 			"letters, digits or hyphens",
-		noSpaces: "you have no spaces"
+		noSpaces: "you have no spaces",
+		addSpace: "creating your new space..."
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var container = $("<div />").appendTo(place);
 		var mode = params[0] || "list";
 		if(mode == "add") {
-			container.append(this.generateForm());
+			this.generateForm(container);
 		} else {
 			this.refresh(container);
 		}
@@ -76,15 +81,23 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			}
 		});
 	},
-	generateForm: function() {
-		return $(this.formTemplate).submit(this.onSubmit).
-			find("legend").text(this.locale.addLabel).end().
-			find(".annotation").hide().end().
-			find("[type=submit]").val(this.locale.addLabel).end();
+	generateForm: function(container) {
+		var locale = macro.locale;
+		$(this.formTemplate).submit(function(ev) {
+			$(".status", container).text(locale.addSpace).show();
+			$("form", container).hide();
+			ev.preventDefault();
+			return macro.onSubmit(ev);
+		}).
+		find("legend").text(this.locale.addLabel).end().
+		find(".annotation").hide().end().
+		find("[type=submit]").val(this.locale.addLabel).end().appendTo(container);
 	},
 	onSubmit: function(ev) {
-		var form = $(this).closest("form");
+		var target = ev.target;
+		var form = $(target).closest("form");
 		var container = form.closest("div");
+		var statusMessage = $(".status", container);
 		var space = form.find("[name=space]").val();
 		var subscribe = form.find("[name=subscribe]").attr("checked");
 		space = new tiddlyweb.Space(space, host);
@@ -98,6 +111,9 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			$(".listTiddlySpaceSpaces").each(function(i, el) {
 				refreshElements(el.parentNode);
 			});
+			form.fadeIn("slow");
+			$("input[type=text]", form).val("");
+			statusMessage.hide();
 		};
 		var errback = function(xhr, error, exc) { // TODO: DRY (cf. TiddlySpaceLogin)
 			var ctx = {
@@ -105,6 +121,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 				form: form,
 				selector: "[name=space]"
 			};
+			form.show();
+			statusMessage.hide();
 			displayError(xhr, error, exc, ctx);
 		};
 		if(ns.isValidSpaceName(space.name)) {
