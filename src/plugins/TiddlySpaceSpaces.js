@@ -88,7 +88,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var locale = macro.locale;
 		$(this.formTemplate).submit(function(ev) {
 			$(".status", container).text(locale.addSpace).show();
-			$("form", container).hide();
+			$("form", container).fadeOut("slow");
 			ev.preventDefault();
 			return macro.onSubmit(ev);
 		}).
@@ -114,7 +114,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			$(".listTiddlySpaceSpaces").each(function(i, el) {
 				refreshElements(el.parentNode);
 			});
-			form.fadeIn("slow");
+			form.stop(true, true).fadeIn("slow");
 			$("input[type=text]", form).val("");
 			statusMessage.hide();
 		};
@@ -124,7 +124,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 				form: form,
 				selector: "[name=space]"
 			};
-			form.show();
+			form.stop(true, true).fadeIn("slow");
 			statusMessage.hide();
 			displayError(xhr, error, exc, ctx);
 		};
