@@ -3,7 +3,7 @@
 |''Description''|Provides a batch publishing tool for managing lots of tiddlers in TiddlySpace|
 |''Requires''|TiddlySpacePublishCommand TiddlySpaceTiddlerIconsPlugin|
 |''Author''|Jon Robson|
-|''Version''|0.4.0|
+|''Version''|0.4.1|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpacePublisher.js|
 |''License''|[[BSD|http://www.opensource.org/licenses/bsd-license.php]]|
 !Usage
@@ -91,6 +91,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 		}
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		tiddler = tiddler ? tiddler : store.getTiddlers()[0];
 		var wizard = new Wizard();
 		var locale = macro.locale;
 		wizard.createWizard(place, locale.title);
