@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.4|
+|''Version''|0.3.6|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -123,7 +123,7 @@ var macro = config.macros.binaryUpload ={
 			var target = $(ev.target);
 			var fileName = target.val();
 			var titleInput = $("input[name=title]", place);
-			if(titleInput.hasClass("notEdited") || !titleInput.val()) {
+			if((includeFields[fieldName] && titleInput.hasClass("notEdited")) || !titleInput.val()) {
 				titleInput.val(fileName);
 			}
 			titleInput.removeClass("notEdited"); // allow editing on this element.
@@ -170,6 +170,12 @@ var macro = config.macros.binaryUpload ={
 			if(context.status) {
 				store.addTiddler(context.tiddler);
 				story.displayTiddler(place, title);
+				var image = config.macros.image;
+				if(image && image.refreshImage) {
+					image.refreshImage("/%0/tiddlers/%1".format([workspace, title]));
+					image.refreshImage(title);
+					image.refreshImage("%0/%1/tiddlers/%2".format([config.extensions.tiddlyweb.host, workspace, title]));
+				}
 			} else {
 				displayMessage(locale.loadError.format([title]));
 			}
