@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInclusion|
-|''Version''|0.5.1|
+|''Version''|0.5.2|
 |''Description''|provides user interfaces for managing TiddlySpace inclusions|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceInclusion.js|
@@ -30,7 +30,8 @@
 (function($) {
 
 var tweb = config.extensions.tiddlyweb;
-var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
+var tiddlyspace = config.extensions.tiddlyspace;
+var currentSpace = tiddlyspace.currentSpace.name;
 
 var macro = config.macros.TiddlySpaceInclusion = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -48,7 +49,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		noSpaceError: "space <em>%0</em> does not exist",
 		conflictError: "space <em>%0</em> is already included in <em>%1</em>",
 		noInclusions: "no spaces are included",
-		recursiveInclusions: "Spaces included by the removed space are highlighted and should be removed manually.",
+		recursiveInclusions: "Spaces that were included by the removed space and not part of the core TiddlySpace application are highlighted and can be removed manually if wished.",
 		reloadPrompt: "The page must be reloaded for inclusion to take effect. Reload now?"
 	},
 
@@ -92,7 +93,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			var items = $.map(inclusions, function(item, i) { // TODO: DRY (cf. displayMembers)
 				var link = $("<a />").text(item);
 				tweb.getStatus(function(status) {
-					var uri = config.extensions.tiddlyspace.getHost(
+					var uri = tiddlyspace.getHost(
 						status.server_host, item);
 					link.attr("href", uri);
 				});
@@ -174,6 +175,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			displayMessage(macro.locale.delError.format([username, error]));
 		};
 		if(confirm(msg)) {
+			var coreBags = tiddlyspace.coreBags;
 			var recipe = new tiddlyweb.Recipe(provider + "_public", tweb.host);
 			recipe.get(function(recipe, status, xhr) {
 				var inclusions = $.map(recipe.recipe, function(item, i) { // XXX: duplicated from above
@@ -183,14 +185,16 @@ var macro = config.macros.TiddlySpaceInclusion = {
 				var recursiveMatch = false;
 				btn.closest("ul").find("li").each(function(i, node) {
 					var space = $(".deleteButton", node).data("space"); // XXX: relying on button is hacky
-					if($.inArray(space, inclusions) != -1) {
+					if($.inArray(space, inclusions) != -1 && $.inArray("%0_public".format([space]), coreBags) == -1) {
 						recursiveMatch = true;
 						$(node).addClass("annotation"); // TODO: proper highlighting
 					}
 				});
+				var annotation = btn.closest("." + macro.name).find("> .annotation");
 				if(recursiveMatch) {
-					btn.closest("." + macro.name).find("> .annotation").
-						text(macro.locale.recursiveInclusions).slideDown();
+					annotation.text(macro.locale.recursiveInclusions).slideDown();
+				} else {
+					annotation.hide();
 				}
 			});
 			macro.inclusion(provider, currentSpace, callback, errback, true);
