@@ -55,6 +55,7 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		pos = value.indexOf("_private");
 		value = value.substr(0, pos);
 	}
+	value = value.toLowerCase();
 	getStatus(function(status) {
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var labelPrefix = args.labelPrefix ? args.labelPrefix[0] : "";
