@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.6.1|
+|''Version''|0.6.2dev|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -55,26 +55,29 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		pos = value.indexOf("_private");
 		value = value.substr(0, pos);
 	}
-
-	var args = paramString.parseParams("name", null, true, false, true)[0];
-	var labelPrefix = args.labelPrefix ? args.labelPrefix[0] : "";
-	var labelSuffix = args.labelSuffix ? args.labelSuffix[0] : "";
-	if(!store.tiddlerExists(tiddler.title) || value == "None") { // some core tiddlers lack modifier
-		value = "unknown";
-		if(store.tiddlerExists("missingIcon")) {
-			imageMacro.renderImage(imagePlace, "missingIcon", imageOptions);
-		}
-	} else {
-		getStatus(function(status) {
+	getStatus(function(status) {
+		var args = paramString.parseParams("name", null, true, false, true)[0];
+		var labelPrefix = args.labelPrefix ? args.labelPrefix[0] : "";
+		var labelSuffix = args.labelSuffix ? args.labelSuffix[0] : "";
+		var link;
+		if(!store.tiddlerExists(tiddler.title) || value == "None") { // some core tiddlers lack modifier
+			value = "unknown";
+			link = value;
+			if(store.tiddlerExists("missingIcon")) {
+				imageMacro.renderImage(imagePlace, "missingIcon", imageOptions);
+			}
+		} else {
+			var spaceURI = tiddlyspace.getHost(status.server_host, value);
+			link = $("<a />").attr("href", spaceURI).text(value);
 			var uri = tiddlyspace.getAvatar(status.server_host, value);
 			imageMacro.renderImage(imagePlace, uri, imageOptions);
 			if(!value) {
 				value = "tiddlyspace";
 			}
-		});
-	}
-	$('<div class="label" />').text(labelPrefix + value + labelSuffix).
-		appendTo(container);
+		}
+		$('<div class="label" />').append(labelPrefix).append(link).append(labelSuffix).
+			appendTo(container);
+	});
 	$(container).attr("title", value).attr("alt", value);
 };
 
@@ -235,8 +238,11 @@ var originMacro = config.macros.tiddlerOrigin = {
 			originMacro.showPrivacyRoundel(tiddler, type, concertinaButton,
 				concertinaContentEl, options);
 		} else {
-			var label = locale.external.format([options.space.name || "tiddlyspace"]);
 			getStatus(function(status) {
+				var name = options.space.name;
+				name = name ? '<a href="%0">%1</a>'.format([
+					tiddlyspace.getHost(status.server_host, name), name]) : "tiddlyspace";
+				var label = locale.external.format([name]);
 				var uri = tiddlyspace.getAvatar(status.server_host, options.space.name);
 				imageMacro.renderImage(concertinaButton, uri, options.imageOptions);
 				var labelOptions = options.labelOptions;
@@ -302,7 +308,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			removeClass("private public external privateAndPublic privateNotPublic shadow").
 			addClass(type);
 		if(options && options.includeLabel) {
-			$('<div class="roundelLabel" />').text(label || locale.unknown).appendTo(concertinaButton);
+			$('<div class="roundelLabel" />').html(label || locale.unknown).appendTo(concertinaButton);
 		}
 		$(concertinaButton).attr("title", label);
 	},
