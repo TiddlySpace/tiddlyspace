@@ -1,11 +1,11 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.2|
+|''Version''|0.6.3|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
 |''CoreVersion''|2.6.1|
-|''Requires''|TiddlySpaceConfig RandomColorPalettePlugin chrjs|
+|''Requires''|TiddlySpaceConfig RandomColorPalettePlugin chrjs ImageMacroPlugin|
 !TODO
 * robust error notification and recovery
 !Code
@@ -105,6 +105,11 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			// copy default avatar
 			var _notify = function(tid, status, xhr) {
 				displayMessage("created avatar"); // TODO: i18n
+				var image = config.macros.image;
+				if(image && image.refreshImage) {
+					image.refreshImage("/bags/%0_public/tiddlers/SiteIcon".format([currentSpace.name]));
+					image.refreshImage("SiteIcon");
+				}
 			};
 			var _callback = function(tid, status, xhr) {
 				tid.title = avatar;
