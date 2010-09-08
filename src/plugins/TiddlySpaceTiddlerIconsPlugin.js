@@ -60,11 +60,14 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		var labelPrefix = args.labelPrefix ? args.labelPrefix[0] : "";
 		var labelSuffix = args.labelSuffix ? args.labelSuffix[0] : "";
 		var link;
+		var noLabel;
 		if(!store.tiddlerExists(tiddler.title) || value == "None") { // some core tiddlers lack modifier
 			value = "unknown";
 			link = value;
 			if(store.tiddlerExists("missingIcon")) {
 				imageMacro.renderImage(imagePlace, "missingIcon", imageOptions);
+			} else {
+				noLabel = true;
 			}
 		} else {
 			var spaceURI = tiddlyspace.getHost(status.server_host, value);
@@ -75,8 +78,10 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 				value = "tiddlyspace";
 			}
 		}
-		$('<div class="label" />').append(labelPrefix).append(link).append(labelSuffix).
+		if(!noLabel) {
+			$('<div class="label" />').append(labelPrefix).append(link).append(labelSuffix).
 			appendTo(container);
+		}
 	});
 	$(container).attr("title", value).attr("alt", value);
 };
@@ -293,7 +298,13 @@ var originMacro = config.macros.tiddlerOrigin = {
 		// to do: not this is not enough.. we also need to check if the public tiddler is the same as..
 		// .. the private tiddler to determine whether this is a draft
 		// use of hashes would be useful here.
-		imageMacro.renderImage(concertinaButton, "%0Icon".format([privacyType]), options.imageOptions);
+		var icon = "%0Icon".format([privacyType]);
+		if(privacyType == "shadow") {
+			if(!store.tiddlerExists(icon)) {
+				icon = "bags/tiddlyspace/tiddlers/SiteIcon";
+			}
+		}
+		imageMacro.renderImage(concertinaButton, icon, options.imageOptions);
 		originMacro.showLabel(concertinaButton, privacyType, options.labelOptions);
 		originMacro.fillConcertina(concertinaContentEl, privacyType, thisTiddler);
 	},
