@@ -63,16 +63,20 @@ var macro = config.macros.TiddlySpaceMembers = {
 		this.space.members().get(callback, errback);
 	},
 	displayMembers: function(members, container) {
-		var items = $.map(members, function(member, i) {
-			var link = $('<a href="javascript:;" />').text(member); // TODO: link to space
-			var btn = $('<a class="deleteButton" href="javascript:;" />').
-				text("x"). // TODO: i18n (use icon!?)
-				attr("title", macro.locale.delTooltip).
-				data("username", member).click(macro.onClick);
-			return $("<li />").append(link).append(btn)[0];
+		config.extensions.tiddlyweb.getStatus(function(status) {
+			var items = $.map(members, function(member, i) {
+				var uri = config.extensions.tiddlyspace.getHost(
+					status.server_host, member);
+				var link = $("<a />").attr("href", uri).text(member);
+				var btn = $('<a class="deleteButton" href="javascript:;" />').
+					text("x"). // TODO: i18n (use icon!?)
+					attr("title", macro.locale.delTooltip).
+					data("username", member).click(macro.onClick);
+				return $("<li />").append(link).append(btn)[0];
+			});
+			$("<ul />").addClass("spaceMembersList").append(items).appendTo(container);
+			macro.generateForm(container);
 		});
-		$("<ul />").addClass("spaceMembersList").append(items).appendTo(container);
-		this.generateForm(container);
 	},
 	generateForm: function(container) {
 		var submitFunction = function(ev) {
