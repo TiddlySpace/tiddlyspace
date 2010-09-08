@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.5|
+|''Version''|0.3.6|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -123,7 +123,7 @@ var macro = config.macros.binaryUpload ={
 			var target = $(ev.target);
 			var fileName = target.val();
 			var titleInput = $("input[name=title]", place);
-			if(titleInput.hasClass("notEdited") || !titleInput.val()) {
+			if((includeFields[fieldName] && titleInput.hasClass("notEdited")) || !titleInput.val()) {
 				titleInput.val(fileName);
 			}
 			titleInput.removeClass("notEdited"); // allow editing on this element.
