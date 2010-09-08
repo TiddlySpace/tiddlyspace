@@ -1,22 +1,25 @@
 /***
 |''Name''|TiddlySpaceMembers|
-|''Version''|0.5.0|
+|''Version''|0.5.2|
 |''Description''|provides a UI for managing space members|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceMembers.js|
 |''Requires''|TiddlySpaceConfig TiddlySpaceUserControls|
 !HTMLForm
-<form action="#">
-	<fieldset>
-		<legend />
-		<dl>
-			<dt>Username:</dt>
-			<dd><input type="text" name="username" /></dd>
-		</dl>
-		<p class="annotation" />
-		<input type="submit" />
-	</fieldset>
-</form>
+<div class='memberForm'>
+	<div class='messageArea'></div>
+	<form action="#">
+		<fieldset>
+			<legend />
+			<dl>
+				<dt>Username:</dt>
+				<dd><input type="text" name="username" /></dd>
+			</dl>
+			<p class="annotation" />
+			<input type="submit" />
+		</fieldset>
+	</form>
+</div>
 !Code
 ***/
 //{{{
@@ -31,7 +34,8 @@ var macro = config.macros.TiddlySpaceMembers = {
 		noUserError: "user <em>%0</em> does not exist",
 		delTooltip: "click to remove member",
 		delPrompt: "Are you sure you want to remove member %0?",
-		delError: "error removing member %0: %1"
+		delError: "error removing member %0: %1",
+		addMessage: "please wait..."
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -67,22 +71,37 @@ var macro = config.macros.TiddlySpaceMembers = {
 				data("username", member).click(macro.onClick);
 			return $("<li />").append(link).append(btn)[0];
 		});
-		$("<ul />").append(items).appendTo(container);
-		this.generateForm().appendTo(container);
+		$("<ul />").addClass("spaceMembersList").append(items).appendTo(container);
+		this.generateForm(container);
 	},
-	generateForm: function() {
-		return $(this.formTemplate).submit(this.onSubmit).
+	generateForm: function(container) {
+		var submitFunction = function(ev) {
+			ev.preventDefault();
+			$(".messageArea", container).text(macro.locale.addMessage).show();
+			$("form", container).fadeOut("slow");
+			return macro.onSubmit(ev);
+		};
+		return $(this.formTemplate).submit(submitFunction).
 			find("legend").text(this.locale.addLabel).end().
 			find(".annotation").hide().end().
-			find("[type=submit]").val(this.locale.addLabel).end();
+			find("[type=submit]").val(this.locale.addLabel).end().appendTo(container);
+	},
+	clearErrors: function(place) {
+		$(".annotation", place).hide();
+		$(".error", place).removeClass("error");
 	},
 	onSubmit: function(ev) {
-		var form = $(this).closest("form");
+		var form = $(ev.target).closest("form");
+		var container = form.closest(".memberForm");
+		macro.clearErrors(container);
 		var selector = "[name=username]";
 		var username = form.find(selector).val();
 		var callback = function(data, status, xhr) {
-			var container = form.closest("div");
-			macro.refresh(container);
+			$("form", container).stop(true, true).fadeIn("slow");
+			$(".messageArea", container).hide();
+			$(".spaceMembersList").each(function(i, el) {
+				macro.refresh($(el.parentNode));
+			});
 		};
 		var errback = function(xhr, error, exc) {
 			var ctx = {
@@ -90,6 +109,8 @@ var macro = config.macros.TiddlySpaceMembers = {
 				form: form,
 				selector: selector
 			};
+			$(form).stop(true, true).fadeIn("slow");
+			$(".messageArea", container).hide();
 			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
 		};
 		macro.space.members().add(username, callback, errback);
