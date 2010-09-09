@@ -169,20 +169,21 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	}
 };
 
-config.macros.TiddlySpaceLogout = {
+var logoutMacro = config.macros.TiddlySpaceLogout = {
 	locale: {
 		label: "Log out"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		var container = $("<div />").appendTo(place)[0];
 		tweb.getUserInfo(function(user) {
 			if(!user.anon) {
 				var form = $('<form method="POST" />').addClass(macroName).
 					attr("action", tweb.host + "/logout");
-				$("<button />", { text: this.locale.label }).
+				$("<button />", { text: logoutMacro.locale.label }).
 					click(function(ev) { form.submit(); }).
 					appendTo(form);
-				form.appendTo(place);
+				form.appendTo(container);
 			}
 		});
 	}
