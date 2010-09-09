@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceUserControls|
-|''Version''|0.5.0|
+|''Version''|0.5.2|
 |''Description''|registration and login UIs|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceUserControls.js|
@@ -24,7 +24,10 @@ Shows a registration form.
 			<dt class="_basic">Password:</dt>
 			<dd class="_basic">
 				<input type="password" name="password" />
-				<input type="password" name="password_confirm" class="_register" />
+			</dd>
+			<dt class="_basic _register" >Confirm Password:</dt>
+			<dd class="_basic _register" >
+				<input type="password" name="password_confirm" />
 			</dd>
 			<dt class="_openid">OpenID:</dt>
 			<dd class="_openid"><input type="text" name="openid" autocapitalize="off" autocorrect="off" /></dd>
