@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.6.3|
+|''Version''|0.6.4|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -246,13 +246,16 @@ var originMacro = config.macros.tiddlerOrigin = {
 		} else {
 			getStatus(function(status) {
 				var name = options.space.name;
+				var tooltip = name ? name : "tiddlyspace";
 				name = name ? '<a href="%0">%1</a>'.format([
 					tiddlyspace.getHost(status.server_host, name), name]) : "tiddlyspace";
 				var label = locale.external.format([name]);
+				tooltip = locale.external.format([tooltip]);
 				var uri = tiddlyspace.getAvatar(status.server_host, options.space.name);
 				imageMacro.renderImage(concertinaButton, uri, options.imageOptions);
 				var labelOptions = options.labelOptions;
 				labelOptions.label = label;
+				labelOptions.tooltip = tooltip;
 				originMacro.showLabel(concertinaButton, type, labelOptions);
 				originMacro.fillConcertina(concertinaContentEl, type, tiddler);
 			});
@@ -314,15 +317,15 @@ var originMacro = config.macros.tiddlerOrigin = {
 
 		var tidEl = $(story.findContainingTiddler(concertinaButton));
 
-		label = options.label ? options.label : locale[type];
-
+		var label = options.label ? options.label : locale[type];
+		var tooltip = options.tooltip ? options.tooltip : locale[type];
 		tidEl.
 			removeClass("private public external privateAndPublic privateNotPublic shadow").
 			addClass(type);
 		if(options && options.includeLabel) {
 			$('<div class="roundelLabel" />').html(label || locale.unknown).appendTo(concertinaButton);
 		}
-		$(concertinaButton).attr("title", label);
+		$(concertinaButton).attr("title", tooltip);
 	},
 	fillConcertina: function(place, privacyType, tiddler) {
 		if(!place) {
