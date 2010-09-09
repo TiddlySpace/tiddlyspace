@@ -5,6 +5,15 @@
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceUserControls.js|
 |''Requires''|TiddlySpaceConfig|
+!Usage
+{{{<<TiddlySpaceLogin>>}}}
+Shows a login box. If the user is logged in shows a login message. You can define this message by making use of the message parameter: {{{<<TiddlySpaceLogin message:"hello %0">>}}}
+
+{{{<<TiddlySpaceLogout>>}}}
+Shows a logout button.
+
+{{{<<TiddlySpaceRegister>>}}}
+Shows a registration form.
 !HTMLForm
 <form action="#">
 	<fieldset>
@@ -43,7 +52,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
 		label: "Login",
-		success: "logged in as %0",
+		success: "You are currently logged in as %0.",
 		loginError: "error logging in %0: %1",
 		forbiddenError: "login failed for <em>%0</em>: username and password do not match"
 	},
@@ -52,9 +61,12 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		var type = params[0];
 		this.name = macroName;
 		var container = $("<div />", { className: this.name }).appendTo(place);
-		this.refresh(container, type);
+		var args = paramString.parseParams("name", null, true, false, true)[0];
+		var options = {};
+		options.message = args.message ? args.message[0] : false;
+		this.refresh(container, type, options);
 	},
-	refresh: function(container, type) {
+	refresh: function(container, type, options) {
 		var msg = this.locale;
 		type = type || "basic";
 		var selector = type == "openid" ? "._basic" : "._openid";
@@ -74,7 +86,19 @@ var tsl = config.macros.TiddlySpaceLogin = {
 					find(".annotation").hide().end().
 					find("[type=submit]").val(msg.label).end().
 					appendTo(container);
+			} else {
+				tsl.printLoggedInMessage(container, user.name, options);
 			}
+		});
+	},
+	printLoggedInMessage: function(container, user, options) {
+		options = options ? options : {};
+		tweb.getStatus(function(status) {
+			var uri = config.extensions.tiddlyspace.getHost(
+				status.server_host, user);
+			var link = '<a href="%0">%1</a>'.format([uri, user]);
+			var msg = options.message ? options.message : tsl.locale.success;
+			$(container).html(msg.format([link]));
 		});
 	},
 	onSelect: function(ev) {
