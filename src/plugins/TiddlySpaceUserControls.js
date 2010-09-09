@@ -1,10 +1,19 @@
 /***
 |''Name''|TiddlySpaceUserControls|
-|''Version''|0.5.0|
+|''Version''|0.5.2|
 |''Description''|registration and login UIs|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceUserControls.js|
 |''Requires''|TiddlySpaceConfig|
+!Usage
+{{{<<TiddlySpaceLogin>>}}}
+Shows a login box. If the user is logged in shows a login message. You can define this message by making use of the message parameter: {{{<<TiddlySpaceLogin message:"hello %0">>}}}
+
+{{{<<TiddlySpaceLogout>>}}}
+Shows a logout button.
+
+{{{<<TiddlySpaceRegister>>}}}
+Shows a registration form.
 !HTMLForm
 <form action="#">
 	<fieldset>
@@ -15,7 +24,10 @@
 			<dt class="_basic">Password:</dt>
 			<dd class="_basic">
 				<input type="password" name="password" />
-				<input type="password" name="password_confirm" class="_register" />
+			</dd>
+			<dt class="_basic _register" >Confirm Password:</dt>
+			<dd class="_basic _register" >
+				<input type="password" name="password_confirm" />
 			</dd>
 			<dt class="_openid">OpenID:</dt>
 			<dd class="_openid"><input type="text" name="openid" autocapitalize="off" autocorrect="off" /></dd>
@@ -43,7 +55,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
 		label: "Login",
-		success: "logged in as %0",
+		success: "You are currently logged in as %0.",
 		loginError: "error logging in %0: %1",
 		forbiddenError: "login failed for <em>%0</em>: username and password do not match"
 	},
@@ -52,9 +64,12 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		var type = params[0];
 		this.name = macroName;
 		var container = $("<div />", { className: this.name }).appendTo(place);
-		this.refresh(container, type);
+		var args = paramString.parseParams("name", null, true, false, true)[0];
+		var options = {};
+		options.message = args.message ? args.message[0] : false;
+		this.refresh(container, type, options);
 	},
-	refresh: function(container, type) {
+	refresh: function(container, type, options) {
 		var msg = this.locale;
 		type = type || "basic";
 		var selector = type == "openid" ? "._basic" : "._openid";
@@ -74,7 +89,19 @@ var tsl = config.macros.TiddlySpaceLogin = {
 					find(".annotation").hide().end().
 					find("[type=submit]").val(msg.label).end().
 					appendTo(container);
+			} else {
+				tsl.printLoggedInMessage(container, user.name, options);
 			}
+		});
+	},
+	printLoggedInMessage: function(container, user, options) {
+		options = options ? options : {};
+		tweb.getStatus(function(status) {
+			var uri = config.extensions.tiddlyspace.getHost(
+				status.server_host, user);
+			var link = '<a href="%0">%1</a>'.format([uri, user]);
+			var msg = options.message ? options.message : tsl.locale.success;
+			$(container).html(msg.format([link]));
 		});
 	},
 	onSelect: function(ev) {
@@ -142,18 +169,23 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	}
 };
 
-config.macros.TiddlySpaceLogout = {
+var logoutMacro = config.macros.TiddlySpaceLogout = {
 	locale: {
 		label: "Log out"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var form = $('<form method="POST" />').addClass(macroName).
-			attr("action", tweb.host + "/logout");
-		$("<button />", { text: this.locale.label }).
-			click(function(ev) { form.submit(); }).
-			appendTo(form);
-		form.appendTo(place);
+		var container = $("<div />").appendTo(place)[0];
+		tweb.getUserInfo(function(user) {
+			if(!user.anon) {
+				var form = $('<form method="POST" />').addClass(macroName).
+					attr("action", tweb.host + "/logout");
+				$("<button />", { text: logoutMacro.locale.label }).
+					click(function(ev) { form.submit(); }).
+					appendTo(form);
+				form.appendTo(container);
+			}
+		});
 	}
 };
 
