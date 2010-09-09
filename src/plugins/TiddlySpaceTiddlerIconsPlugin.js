@@ -1,11 +1,11 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.6.4|
+|''Version''|0.6.5|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceTiddlerIconsPlugin.js|
-|''Requires''|TiddlySpaceConfig BinaryTiddlersPlugin ImageMacroPlugin TiddlySpacePublishingCommands|
+|''Requires''|TiddlySpaceConfig BinaryTiddlersPlugin ImageMacroPlugin TiddlySpaceConcertinaPlugin TiddlySpacePublishingCommands|
 !Notes
 Provides an additional SiteIcon view for use with view macro
 {{{<<view modifier SiteIcon>>}}}
@@ -39,6 +39,7 @@ var imageMacro = config.macros.image;
 var tiddlyspace = config.extensions.tiddlyspace;
 var getStatus = config.extensions.tiddlyweb.getStatus;
 var cmd = config.commands.publishTiddler;
+var concertinaMacro = config.macros.concertina;
 
 config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		paramString, tiddler) {
@@ -133,31 +134,13 @@ var originMacro = config.macros.tiddlerOrigin = {
 		options.space = tiddlyspace.determineSpace(name, true);
 		var concertinaContentEl = $("<div />")[0];
 
-		var concertinaButton = originMacro.createConcertinaButton(place, concertinaContentEl);
+		var concertinaButton = concertinaMacro.register(place, macroName, "originButton", concertinaContentEl);
 		type = originMacro.determineTiddlerType(tiddler, options, function(type) {
 			originMacro.renderIcon(tiddler, type, concertinaButton,
 				concertinaContentEl, options);
 		});
 	},
 
-	createConcertinaButton: function(place, concertinaContent) {
-		var concertinaButton = $('<a class="originButton" href="javascript:;" />').
-			click(function(ev) {
-				var tidEl = $(story.findContainingTiddler(place));
-				var concertina = $(".concertina", tidEl);
-				concertina.empty().
-					append(concertinaContent);
-				if(concertina.attr("openedby") == "origin") {
-					tidEl.removeClass("concertinaOn");
-					concertina.slideUp(500).attr("openedby", "");
-				} else {
-					tidEl.addClass("concertinaOn");
-					concertina.slideDown(500).
-						attr("openedby", "origin");
-				}
-			}).appendTo(place);
-			return concertinaButton[0];
-	},
 	determineTiddlerType: function(tiddler, options, callback) {
 		var isShadow = store.isShadowTiddler(tiddler.title);
 		var exists = store.tiddlerExists(tiddler.title);
