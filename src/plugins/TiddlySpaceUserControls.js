@@ -175,12 +175,16 @@ config.macros.TiddlySpaceLogout = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var form = $('<form method="POST" />').addClass(macroName).
-			attr("action", tweb.host + "/logout");
-		$("<button />", { text: this.locale.label }).
-			click(function(ev) { form.submit(); }).
-			appendTo(form);
-		form.appendTo(place);
+		tweb.getUserInfo(function(user) {
+			if(!user.anon) {
+				var form = $('<form method="POST" />').addClass(macroName).
+					attr("action", tweb.host + "/logout");
+				$("<button />", { text: this.locale.label }).
+					click(function(ev) { form.submit(); }).
+					appendTo(form);
+				form.appendTo(place);
+			}
+		});
 	}
 };
 
