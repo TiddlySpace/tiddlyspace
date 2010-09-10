@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceIdentities|
-|''Version''|0.1.0|
+|''Version''|0.1.1|
 |''Description''||
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceIdentities.js|
@@ -40,15 +40,20 @@ var macro = config.macros.TiddlySpaceIdentities = {
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		tweb.getUserInfo(function(user) {
-			if(!user.anon) {
-				var container = $("<div />").appendTo(place);
-				macro.refresh(container);
-			}
-		});
+		var mode = params[0] || "list";
+		if(mode == "add") {
+			$(place).append(macro.generateForm());
+		} else if(mode == "list") {
+			tweb.getUserInfo(function(user) {
+				if(!user.anon) {
+					var container = $("<div />").addClass("listIdentities").appendTo(place);
+					macro.refresh(container);
+				}
+			});
+		}
 	},
 	refresh: function(container) {
-		container.empty().append("<ul />").append(this.generateForm());
+		container.empty().append("<ul />");
 		$.ajax({ // TODO: add (dynamically) to chrjs user extension?
 			url: "%0/users/%1/identities".format([tweb.host, tweb.username]),
 			type: "GET",
