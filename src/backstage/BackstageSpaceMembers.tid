@@ -1,6 +1,0 @@
-tags: excludeLists
-modifier: osmosoft
-
-The following people are members of the space ''<<message extensions.tiddlyspace.currentSpace.name>>''. Only members have access to the private tiddlers in a space.
-<<TiddlySpaceMembers list>>
-<<TiddlySpaceMembers add>>
