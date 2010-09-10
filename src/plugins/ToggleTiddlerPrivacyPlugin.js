@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.5.7|
+|''Version''|0.5.8|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
@@ -59,7 +59,6 @@ config.macros.setPrivacy = {
 		var refreshIcon = function(type) {
 			var originMacro = config.macros.tiddlerOrigin;
 			if(originButton && originMacro) {
-				$(originButton).empty();
 				originMacro.showPrivacyRoundel(tiddler, type, originButton, null, options);
 			}
 		};

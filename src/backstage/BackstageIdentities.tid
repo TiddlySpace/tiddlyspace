@@ -1,9 +1,0 @@
-tags: excludeLists
-modifier: osmosoft
-
-You can associate your account with multiple identities. If you have an open id for example you could log into TiddlySpace with that as well as a TiddlySpace user account.
-<<TiddlySpaceIdentities add>>
-{{inlineList{
-	<<TiddlySpaceIdentities list>>
-}}}
-{{backstageClear{}}}
