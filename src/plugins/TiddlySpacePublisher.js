@@ -187,6 +187,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 var unpublishedTabText = 'Unpublished "Manage unpublished tiddlers" TabUnpublished';
 config.shadowTiddlers.TabMore = config.shadowTiddlers.TabMore.replace(
 	"TabMoreShadowed", "TabMoreShadowed %0".format([unpublishedTabText]));
+config.shadowTiddlers.TabUnpublished = "<<TiddlySpacePublisher>>";
 
 })(jQuery);
 //}}}
