@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.6.5|
+|''Version''|0.6.6|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -285,15 +285,20 @@ var originMacro = config.macros.tiddlerOrigin = {
 		// to do: not this is not enough.. we also need to check if the public tiddler is the same as..
 		// .. the private tiddler to determine whether this is a draft
 		// use of hashes would be useful here.
+		$(concertinaButton).empty();
 		var icon = "%0Icon".format([privacyType]);
 		if(privacyType == "shadow") {
 			if(!store.tiddlerExists(icon)) {
 				icon = "bags/tiddlyspace/tiddlers/SiteIcon";
 			}
 		}
-		imageMacro.renderImage(concertinaButton, icon, options.imageOptions);
-		originMacro.showLabel(concertinaButton, privacyType, options.labelOptions);
-		originMacro.fillConcertina(concertinaContentEl, privacyType, thisTiddler);
+		if(privacyType == "missing" && !store.tiddlerExists(icon)) {
+			return; // the user is not making use of the missingIcon
+		} else {
+			imageMacro.renderImage(concertinaButton, icon, options.imageOptions);
+			originMacro.showLabel(concertinaButton, privacyType, options.labelOptions);
+			originMacro.fillConcertina(concertinaContentEl, privacyType, thisTiddler);
+		}
 	},
 	showLabel: function(concertinaButton, type, options) {
 		var locale = originMacro.locale;
