@@ -1,0 +1,65 @@
+tags: excludeLists
+modifier: osmosoft
+
+!User
+{{textRight{
+<<TiddlySpaceLogout>>
+<<tabs txtUserTab
+	"Your Identities" "Manage your identities" [[Backstage##Identities]]
+	"Your Spaces" "Maintain your spaces and create new ones" [[Backstage##UserSpaces]]
+	"Your Password" "Change your password" [[Backstage##Password]]
+>>
+}}}
+
+!Space
+<<tabs txtSpaceTab
+	members Members [[Backstage##SpaceMembers]]
+	includes "include spaces" [[Backstage##SpaceInclusions]]
+	tiddlers "tiddlers control panel" [[Backstage##Tiddlers]]
+	plugins "Manage installed plugins" PluginManager
+	options "TiddlyWiki options" [[Backstage##Options]]
+	tweaks "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions
+	"import" "Import tiddlers from a TiddlyWiki" [[Backstage##FileImport]]
+>>
+
+!FileImport
+<<fileImport>>
+
+!Identities
+You can associate your account with multiple identities. If you have an open id for example you could log into TiddlySpace with that as well as a TiddlySpace user account.
+<<TiddlySpaceIdentities add>>
+{{inlineList{
+	<<TiddlySpaceIdentities list>>
+}}}
+{{backstageClear{}}}
+
+!Login
+<<TiddlySpaceLogin>>
+<<TiddlySpaceRegister>>
+
+!Options
+<<search>><<closeAll>><<permaview>><<newTiddler>><<newJournal "DD MMM YYYY" "journal">><<saveChanges>><<slider chkSliderOptionsPanel OptionsPanel "options »" "Change TiddlyWiki advanced options">>
+
+!Password
+<<TiddlySpaceChangePassword>>
+
+!SpaceInclusions
+This space includes the public tiddlers from the following spaces:
+<<TiddlySpaceInclusion list>>
+<<TiddlySpaceInclusion passive>>
+
+!SpaceMembers
+The following people are members of the space ''<<message extensions.tiddlyspace.currentSpace.name>>''. Only members have access to the private tiddlers in a space.
+<<TiddlySpaceMembers list>>
+<<TiddlySpaceMembers add>>
+
+!Tiddlers
+<<tabs txtMainTab "Timeline" "Timeline" TabTimeline "All" "All tiddlers" TabAll "Tags" "All tags" TabTags "More" "More lists" TabMore>>
+
+!UserSpaces
+<<TiddlySpaceSpaces add>>
+You are currently a member of the following spaces.
+{{inlineList{
+<<TiddlySpaceSpaces list>>
+}}}
+{{backstageClear{}}}

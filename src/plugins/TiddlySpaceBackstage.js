@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.4|
+|''Version''|0.5.5|
 |''Description''|Provides a TiddlySpace version of the backstage|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
@@ -23,21 +23,21 @@ config.backstageTasks = [];
 config.tasks.login = {
 	text: "login",
 	tooltip: "TiddlySpace login",
-	content: "<<tiddler BackstageLogin>>"
+	content: "<<tiddler Backstage##Login>>"
 };
 config.backstageTasks.push("login");
 
 config.tasks.user = {
 	text: "user:&nbsp;",
 	tooltip: "user control panel",
-	content: "<<tiddler BackstageUser>>"
+	content: "<<tiddler Backstage##User>>"
 };
 config.backstageTasks.push("user");
 
 config.tasks.space = {
 	text: "space:&nbsp;",
 	tooltip: "space control panel",
-	content: "<<tiddler BackstageSpace>>",
+	content: "<<tiddler Backstage##Space>>",
 	className: "right"
 };
 config.backstageTasks.push("space");

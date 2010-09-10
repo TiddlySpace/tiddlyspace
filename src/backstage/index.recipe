@@ -1,11 +1,1 @@
-tiddler: BackstageLogin.tid
-tiddler: BackstageUser.tid
-tiddler: BackstagePassword.tid
-tiddler: BackstageSpace.tid
-tiddler: BackstageTiddlers.tid
-tiddler: BackstageOptions.tid
-tiddler: BackstageUserSpaces.tid
-tiddler: BackstageIdentities.tid
-tiddler: BackstageSpaceMembers.tid
-tiddler: BackstageSpaceInclusions.tid
-tiddler: BackstageFileImport.tid
+tiddler: Backstage.tid
