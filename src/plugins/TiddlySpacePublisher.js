@@ -3,7 +3,7 @@
 |''Description''|Provides a batch publishing tool for managing lots of tiddlers in TiddlySpace|
 |''Requires''|TiddlySpacePublishCommand TiddlySpaceTiddlerIconsPlugin|
 |''Author''|Jon Robson|
-|''Version''|0.4.1|
+|''Version''|0.4.2|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpacePublisher.js|
 |''License''|[[BSD|http://www.opensource.org/licenses/bsd-license.php]]|
 !Usage
@@ -87,7 +87,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 				title: tiddler.title,
 				fields: { "server.bag": publicBag }
 			};
-			config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, true, callback);
+			config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, false, callback);
 		}
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
