@@ -5,6 +5,9 @@
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceMembers.js|
 |''Requires''|TiddlySpaceConfig TiddlySpaceUserControls|
+!Usage
+<<TiddlySpaceMembers list>> provides list of members
+<<TiddlySpaceMembers add>> creates a form to add new members.
 !HTMLForm
 <div class='memberForm'>
 	<div class='messageArea'></div>
@@ -42,9 +45,14 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var space = config.extensions.tiddlyspace.currentSpace.name;
 		var host = config.extensions.tiddlyweb.host;
 		this.space = new tiddlyweb.Space(space, host); // XXX: singleton
-		var container = $("<div />").appendTo(place);
+		var mode = params[0];
 		if(!readOnly) {
-			this.refresh(container);
+			if(mode == "add") {
+				macro.generateForm(place);
+			} else {
+				var container = $("<div />").appendTo(place);
+				macro.refresh(container);
+			}
 		} else {
 			var msg = this.locale.authError.format([this.space.name]);
 			this.notify(msg, container);
@@ -75,7 +83,6 @@ var macro = config.macros.TiddlySpaceMembers = {
 				return $("<li />").append(link).append(btn)[0];
 			});
 			$("<ul />").addClass("spaceMembersList").append(items).appendTo(container);
-			macro.generateForm(container);
 		});
 	},
 	generateForm: function(container) {
