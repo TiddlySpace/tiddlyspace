@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.1|
+|''Version''|0.5.2|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -156,38 +156,32 @@ var followMacro = config.macros.followTiddlers = {
 				$("<li />").text(followMacro.locale.noTiddlersFromFollowers).appendTo(ul);
 			}
 		}
-		var container = $('<div class="followButton" />').
-		click(function(ev) {
-			followMacro.followingOnClick(ev,ul[0]);
-		}).appendTo(place)[0];
-		$('<a class="followedTiddlers">%0</a>'.format([txt])).
-			appendTo('<div class="followedTiddlers" />').appendTo(container);
-	},
-	followingOnClick: function(ev, list) {
-		var target = ev.target;
-		var el = $(story.findContainingTiddler(target));
-		var place = $(".concertina", el)[0];
 		var headerTxt = followMacro.locale.followListHeader;
 		var contentEl = $("<div />").
 			append('<div class="followHeader">%0</div>'.format([headerTxt])).
-			append(list);
-		if(!place) {
-			var popup = Popup.create(target,"div");
-			addClass(popup ,"taggedTiddlerList followList");
-			place = popup;
-			$(popup).append(contentEl);
-			Popup.show();
+			append(ul[0]);
+		var el = $(story.findContainingTiddler(place));
+		var concertina = $(".concertina", el)[0];
+		var btn;
+		if(!config.macros.concertina || !concertina) {
+			btn = $('<div class="followButton" />').
+				click(function(ev) {
+					followMacro.followingOnClick(ev,ul[0]);
+				}).appendTo(place)[0];
 		} else {
-			if($(place).attr("openedby") == "followTiddlers") {
-				el.removeClass("concertinaOn");
-				$(place).attr("openedby","").empty().append(contentEl).
-					slideUp(500);
-			} else {
-				el.addClass("concertinaOn");
-				$(place).empty().append(contentEl).slideDown(500).
-					attr("openedby", "followTiddlers");
-			}
+			btn = config.macros.concertina.register(place, "followTiddlers", "followButton", contentEl);
 		}
+
+		$('<a class="followedTiddlers">%0</a>'.format([txt])).
+			appendTo('<div class="followedTiddlers" />').appendTo(btn);
+	},
+	followingOnClick: function(ev, list) {
+		var target = ev.target;
+		var popup = Popup.create(target,"div");
+		addClass(popup ,"taggedTiddlerList followList");
+		place = popup;
+		$(popup).append(contentEl);
+		Popup.show();
 		ev.stopPropagation();
 	},
 	_constructBagQuery: function(followers) {
