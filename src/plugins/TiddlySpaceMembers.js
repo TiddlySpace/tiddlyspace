@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceMembers|
-|''Version''|0.5.2|
+|''Version''|0.5.3|
 |''Description''|provides a UI for managing space members|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceMembers.js|
@@ -46,21 +46,23 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var host = config.extensions.tiddlyweb.host;
 		this.space = new tiddlyweb.Space(space, host); // XXX: singleton
 		var mode = params[0];
+		var container;
 		if(!readOnly) {
 			if(mode == "add") {
 				macro.generateForm(place);
 			} else {
-				var container = $("<div />").appendTo(place);
+				container = $("<div />").appendTo(place);
 				macro.refresh(container);
 			}
 		} else {
 			var msg = this.locale.authError.format([this.space.name]);
+			container = $("<div />").appendTo(place);
 			this.notify(msg, container);
 		}
 	},
 	refresh: function(container) {
 		var callback = function(data, status, xhr) {
-			container.empty();
+			$(container).empty();
 			macro.displayMembers(data, container);
 		};
 		var errback = function(xhr, error, exc) {
