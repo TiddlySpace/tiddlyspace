@@ -145,8 +145,20 @@ config.macros.viewRevisions = me = {
 			.removeAttr("revName")
 			.removeClass("revisions");
 
+		//remove any revisions still in the store
+		var revisions = $(".revisions");
+		$(".revisions").each(function(index, revision) {
+			var revName = revision.attributes["revname"].value;
+			var revNo = revision.attributes["revision"].value;
+			var title = revName + me.revSuffix.format([revNo]);
+
+			if (store.getTiddler(title)) {
+				store.deleteTiddler(title);
+			}
+		});
+
 		//delete the previous revisions
-		$(".revisions").remove();
+		revisions.remove();
 
 		//remove the cloak
 		$(".revisionCloak").remove();
