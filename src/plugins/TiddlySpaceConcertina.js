@@ -55,3 +55,4 @@ var macro = config.macros.concertina = {
 };
 
 })(jQuery);
+//}}}
