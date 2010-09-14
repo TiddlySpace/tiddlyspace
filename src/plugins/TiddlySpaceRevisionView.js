@@ -148,12 +148,16 @@ config.macros.viewRevisions = me = {
 		//remove any revisions still in the store
 		var revisions = $(".revisions");
 		$(".revisions").each(function(index, revision) {
-			var revName = revision.attributes["revname"].value;
-			var revNo = revision.attributes["revision"].value;
-			var title = revName + me.revSuffix.format([revNo]);
+			var revAttributes = revision.attributes;
+			if ((revAttributes["revname"]) && 
+					(revAttributes["revision"])) {
+				var revName = revAttributes["revname"].value;
+				var revNo = revAttributes["revision"].value;
+				var title = revName + me.revSuffix.format([revNo]);
 
-			if (store.getTiddler(title)) {
-				store.deleteTiddler(title);
+				if (store.getTiddler(title)) {
+					store.deleteTiddler(title);
+				}
 			}
 		});
 
