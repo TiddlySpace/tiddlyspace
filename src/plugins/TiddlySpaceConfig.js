@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.5.4|
+|''Version''|0.5.5|
 |''Description''|TiddlySpace configuration|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -175,8 +175,10 @@ tweb.getStatus(function(status) {
 
 // set global read-only mode based on membership heuristics
 var indicator = store.getTiddler("SiteTitle") || tiddler;
-readOnly = !(recipe.split("_").pop() == "private" ||
-	tweb.hasPermission("write", indicator));
+if(window.location.protocol != "file:") {
+	readOnly = !(recipe.split("_").pop() == "private" ||
+		tweb.hasPermission("write", indicator));
+}
 
 // ensure backstage is always initialized
 // required to circumvent TiddlyWiki's read-only based handling
