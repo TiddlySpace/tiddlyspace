@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceToolbar|
 |''Description''|augments tiddler toolbar commands with SVG icons|
 |''Author''|Osmosoft|
-|''Version''|0.6.2|
+|''Version''|0.6.3|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceToolbar.js|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -56,6 +56,9 @@ macro.handler = function(place, macroName, params, wikifier,
 		// otherwise the click event is the popup AND the slider
 		$(".moreCommand", place)[0].onclick = macro.onClickMorePopUp;
 	}
+	$(".lessCommand ~ .button", place).appendTo(place);
+	$(".lessCommand", place).remove();
+	
 	return status;
 };
 
