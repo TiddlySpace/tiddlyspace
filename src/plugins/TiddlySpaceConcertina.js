@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConcertinaPlugin|
-|''Version''|0.2.0|
+|''Version''|0.3.0|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides an interface for macros to register interactions with the concertina|
@@ -35,9 +35,14 @@ var macro = config.macros.concertina = {
 			addClass(options.buttonClass).
 			click(function(ev) {
 				var tidEl = $(story.findContainingTiddler(place));
-				var concertina = $(".concertina", tidEl).empty().
-					append(options.append);
-
+				var concertina = $(".concertina", tidEl);
+				$("[concertina]", concertina).hide();
+				// show the active content
+				var content = $("[concertina=%0]".format([openerMacro]), concertina).show();
+				if(content.length === 0) {
+					 $("<div />").addClass("concertinaContent").
+						attr("concertina", openerMacro).appendTo(concertina).append(options.append);
+				}
 				if(concertina.attr("openedby") == openerMacro) {
 					tidEl.removeClass("concertinaOn");
 					concertina.removeClass(macro._activeMacroClasses.join(" "))
