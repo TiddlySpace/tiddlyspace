@@ -112,7 +112,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"deletePrivate": "Delete the private version of this tiddler",
 		"deletePublic": "Delete the public version of this tiddler",
 		publishPrivateDeletePrivate: "Are you sure you want to make this tiddler public?",
-		publishPrivateKeepPrivate: "Are you sure you want to publish this tiddler?\nNote that this will overwrite any existing publish version.",
+		publishPrivateKeepPrivate: "Are you sure you want to publish this tiddler?\nNote that this will overwrite any existing public version.",
 		retainPrivateRevisions: "Also copy over the private revisions of this tiddler",
 		retainPublicRevisions: "Also copy over the public revisions of this tiddler",
 		moveToPrivate: "Are you sure you want to make this tiddler private? Only members will be able to see it.",
