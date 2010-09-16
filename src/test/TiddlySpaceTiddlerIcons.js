@@ -202,4 +202,41 @@ test("_getLabelOptions", function() {
 	strictEqual(options3.includeLabel, false);
 });
 
+var _readOnly;
+module("TiddlySpaceTiddlerIcons readOnly mode", {
+	setup: function() {
+		_readOnly = readOnly;
+		readOnly = true;
+	},
+	teardown: function() {
+		readOnly = _readOnly;
+	}
+});
+
+test("check concertina commands do not appear in readonly mode", function() {
+	// setup
+	var macro = config.macros.tiddlerOrigin;
+	var place1 = $("<div />")[0];
+	var place2 = $("<div />")[0];
+	var place3 = $("<div />")[0];
+	var place4 = $("<div />")[0];
+	var tiddler = new Tiddler("foo");
+	tiddler.getAdaptor = function() {
+		return function() {};
+	};
+	// run
+	macro.concertinaCommands.public(place1, tiddler);
+	macro.concertinaCommands.private(place2, tiddler);
+	macro.concertinaCommands.privateAndPublic(place3, tiddler);
+	macro.concertinaCommands.privateNotPublic(place4, tiddler);
+
+	// verify
+	var selector = "input[type=checkbox], .publishButton";
+	strictEqual($(selector, place1).length, 0);
+	strictEqual($(selector, place2).length, 0);
+	strictEqual($(selector, place3).length, 0);
+	strictEqual($(selector, place4).length, 0);
+
+});
+
 })(QUnit.module, jQuery);
