@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceToolbar|
 |''Description''|augments tiddler toolbar commands with SVG icons|
 |''Author''|Osmosoft|
-|''Version''|0.6.3|
+|''Version''|0.6.4|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceToolbar.js|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -16,6 +16,7 @@ replaces tiddler toolbar commands with SVG icons if available
 requires [[ImageMacroPlugin|http://svn.tiddlywiki.org/Trunk/contributors/JonRobson/plugins/ImageMacroPlugin/plugins/ImageMacroPlugin.tid]]
 
 SVG icons are drawn from tiddlers titled {{{<command>.svg}}}
+In readonly mode a tiddler called {{{<command>ReadOnly.svg}}} will be used if it exists.
 !TODO
 * rename (IconToolbarPlugin?)
 !Code
@@ -74,6 +75,12 @@ macro.augmentCommandButtons = function(toolbar) {
 		cmd = cmd ? cmd : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
 		var icon = store.tiddlerExists(cmd) ? cmd : macro.icons[cmd];
 		var text = $(el).text();
+		if(readOnly) {
+			var readOnlyAlternative = "%0ReadOnly".format([icon]);
+			if(store.tiddlerExists(readOnlyAlternative)) {
+				icon = readOnlyAlternative;
+			}
+		}
 		if(store.tiddlerExists(icon)) {
 			$(el).empty();
 			imageMacro.renderImage(el, icon, { alt: text });
