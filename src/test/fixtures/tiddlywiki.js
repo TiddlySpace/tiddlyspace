@@ -2,6 +2,7 @@
 
 var NOP = function() {};
 
+readOnly = false;
 config = {
 	annotations: {},
 	extensions: {},
