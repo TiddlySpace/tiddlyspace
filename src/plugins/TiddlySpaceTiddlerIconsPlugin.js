@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.6.7|
+|''Version''|0.6.8dev|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -111,11 +111,11 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"makePrivate": "Make this tiddler private",
 		"deletePrivate": "Delete the private version of this tiddler",
 		"deletePublic": "Delete the public version of this tiddler",
-		publishPrivateDeletePrivate: "Are you sure you want to publish this tiddler?\nNote that all private versions of this tiddler will be deleted however all public versions will be retained.\n Hit cancel to abort.",
-		publishPrivateKeepPrivate: "Are you sure you want to publish this tiddler?\nNote that any existing public versions of this tiddler will be deleted. Hit cancel to abort.",
+		publishPrivateDeletePrivate: "Are you sure you want to make this tiddler public?",
+		publishPrivateKeepPrivate: "Are you sure you want to publish this tiddler?\nNote that this will overwrite any existing publish version.",
 		retainPrivateRevisions: "Also copy over the private revisions of this tiddler",
 		retainPublicRevisions: "Also copy over the public revisions of this tiddler",
-		moveToPrivate: "Are you sure you want to make this private? It will no longer be publically available to non-members of the space and you will lose any existing revisions.",
+		moveToPrivate: "Are you sure you want to make this tiddler private? Only members will be able to see it.",
 		moveToPrivateKeep: "Are you sure you want to make this tiddler and all its revisions private? It will no longer be publically available to non-members of the space.",
 		"publicConfirmDelete": "Are you sure you want to delete all the public revisions of this tiddler?",
 		"privateConfirmDelete": "Are you sure you want to delete all the private revisions of this tiddler?",
@@ -218,7 +218,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		return options;
 	},
 	_getLabelOptions: function(parsedParams) {
-		var parsedParams = parsedParams[0];
+		parsedParams = parsedParams[0];
 		var includeLabel = !parsedParams.label || ( parsedParams.label && parsedParams.label[0] == "yes" );
 		return { includeLabel: includeLabel };
 	},
@@ -354,13 +354,12 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"public": function(place, tiddler) {
 			if(!readOnly) {
 				var locale = originMacro.locale;
-				var chk = $('<input type="checkbox" checked="true" name="retainPublicRevisions" />');
 				var inProgress = false;
 				var doPublish = function(ev) {
 					if(inProgress) {
 						return;
 					}
-					var checked = chk.attr("checked");
+					var checked = false;
 					var msg = checked ? locale.moveToPrivateKeep : locale.moveToPrivate;
 					var answer = confirm(msg);
 					if(answer) {
@@ -376,34 +375,16 @@ var originMacro = config.macros.tiddlerOrigin = {
 						cmd.moveTiddler(tiddler, {
 							title: tiddler.title,
 							fields: { "server.bag": privateBag }
-						}, chk.attr("checked"), onComplete);
-					}
-				};
-				var toggleCheckbox = function(ev) {
-					if (chk.attr("checked")) {
-						chk.attr("checked", true);
-					} else {
-						chk.attr("checked", false);
+						}, checked, onComplete);
 					}
 				};
 				var link = $('<a class="publishButton" />').text(locale.makePrivate).
-				click(doPublish).appendTo(place);
-				chk.appendTo(place);
-				$("<span />").click(toggleCheckbox).
-					text(locale.retainPublicRevisions).appendTo(place);
+					click(doPublish).appendTo(place);
 			}
 		},
 		"private": function(place, tiddler) {
 			var locale = originMacro.locale;
 			var adaptor = tiddler.getAdaptor();
-			var chk = $('<input type="checkbox" checked="true" name="retainRevisions" />');
-			var toggleCheckbox = function(ev) {
-				if (chk.attr("checked")) {
-					chk.attr("checked", true);
-				} else {
-					chk.attr("checked", false);
-				}
-			};
 			var inProgress;
 			var doPublish = function(ev) {
 				if(inProgress) {
@@ -414,7 +395,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				tiddler.fields["server.workspace"] = workspace;
 				var publicBag = cmd.toggleBag(tiddler, "public");
 				var msg;
-				var checked = chk.attr("checked");
+				var checked = false;
 				msg = checked ? locale.publishPrivateKeepPrivate : locale.publishPrivateDeletePrivate;
 				var title = tiddler.title;
 				var newTitle = publishTo || tiddler.title;
@@ -439,9 +420,6 @@ var originMacro = config.macros.tiddlerOrigin = {
 			if(!readOnly) {
 				var link = $('<a class="publishButton" />').text(locale.makePublic).
 					click(doPublish).appendTo(place);
-					chk.appendTo(place);
-				$("<span />").click(toggleCheckbox).
-					text(locale.retainPrivateRevisions).appendTo(place);
 			}
 		},
 		privateNotPublic: function(place, tiddler) {
