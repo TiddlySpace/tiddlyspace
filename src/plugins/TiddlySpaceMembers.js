@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceMembers|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Description''|provides a UI for managing space members|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceMembers.js|
@@ -31,6 +31,7 @@
 var macro = config.macros.TiddlySpaceMembers = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
+		authAddError: "You must be a member to add members to this space.",
 		authError: "list of members is only visible to members of space <em>%0</em>",
 		listError: "error retrieving members for space <em>%0</em>: %1",
 		addLabel: "Add member",
@@ -46,6 +47,8 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var host = config.extensions.tiddlyweb.host;
 		this.space = new tiddlyweb.Space(space, host); // XXX: singleton
 		var mode = params[0];
+		var args = paramString.parseParams("anon",null,true,false,false);
+		var hideErrors = args.hideErrors ? true : false
 		var container;
 		if(!readOnly) {
 			if(mode == "add") {
@@ -55,9 +58,16 @@ var macro = config.macros.TiddlySpaceMembers = {
 				macro.refresh(container);
 			}
 		} else {
-			var msg = this.locale.authError.format([this.space.name]);
+			var msg;
+			if(mode == "add") {
+				msg = this.locale.authAddError.format([this.space.name]);
+			} else {
+				msg = this.locale.authError.format([this.space.name]);
+			}
 			container = $("<div />").appendTo(place);
-			this.notify(msg, container);
+			if(!hideErrors) {
+				this.notify(msg, container);
+			}
 		}
 	},
 	refresh: function(container) {
