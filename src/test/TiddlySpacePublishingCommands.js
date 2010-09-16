@@ -1,13 +1,17 @@
 (function(module, $) {
 
 var _copy;
+var _readOnly;
 module("TiddlySpacePublishingCommands", {
 	setup: function() {
 		_copy = config.commands.publishTiddler.copyTiddler;
+		_readOnly = readOnly;
+		readOnly = false;
 	},
 	teardown: function() {
 		store.removeTiddler("pig");
 		config.commands.publishTiddler.copyTiddler = _copy;
+		readOnly = _readOnly;
 	}
 });
 
@@ -391,6 +395,87 @@ test("publishTiddler command button", function() {
 
 	cmd.handler(null, null, "pig");
 	strictEqual(asExpected, true);
+});
+
+test("enabled commands (private)", function() {
+	var tiddler = new Tiddler("foo");
+	tiddler.fields = {"server.bag": "foo_private"};
+	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
+	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
+	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
+	var publishEnabled = config.commands.publishTiddler.isEnabled(tiddler);
+	var changeToPrivateEnabled = config.commands.changeToPrivate.isEnabled(tiddler);
+	var changeToPublicEnabled = config.commands.changeToPublic.isEnabled(tiddler);
+
+	strictEqual(deletePublicEnabled, true);
+	strictEqual(deletePrivateEnabled, false);
+	strictEqual(draftEnabled, false);
+	strictEqual(publishEnabled, true);
+	strictEqual(changeToPrivateEnabled, false);
+	strictEqual(changeToPublicEnabled, true);
+});
+
+test("enabled commands (public)", function() {
+	var tiddler = new Tiddler("foo");
+	tiddler.fields = {"server.bag": "foo_public"};
+	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
+	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
+	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
+	var publishEnabled = config.commands.publishTiddler.isEnabled(tiddler);
+	var changeToPrivateEnabled = config.commands.changeToPrivate.isEnabled(tiddler);
+	var changeToPublicEnabled = config.commands.changeToPublic.isEnabled(tiddler);
+
+	strictEqual(deletePublicEnabled, false);
+	strictEqual(deletePrivateEnabled, true);
+	strictEqual(draftEnabled, true);
+	strictEqual(publishEnabled, false);
+	strictEqual(changeToPrivateEnabled, true);
+	strictEqual(changeToPublicEnabled, false);
+});
+
+test("enabled commands (included)", function() {
+	var tiddler = new Tiddler("foo");
+	tiddler.fields = {"server.bag": "xyz_public"};
+	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
+	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
+	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
+	var publishEnabled = config.commands.publishTiddler.isEnabled(tiddler);
+	var changeToPrivateEnabled = config.commands.changeToPrivate.isEnabled(tiddler);
+	var changeToPublicEnabled = config.commands.changeToPublic.isEnabled(tiddler);
+
+	strictEqual(deletePublicEnabled, false);
+	strictEqual(deletePrivateEnabled, false);
+	strictEqual(draftEnabled, false);
+	strictEqual(publishEnabled, false);
+	strictEqual(changeToPrivateEnabled, false);
+	strictEqual(changeToPublicEnabled, false);
+});
+
+module("TiddlySpacePublishingCommands readOnly mode", {
+	setup: function() {
+		_readOnly = readOnly;
+		readOnly = true;
+	},
+	teardown: function() {
+		readOnly = _readOnly;
+	}
+});
+
+test("what is enabled in readOnly mode", function() {
+	var tiddler = new Tiddler("foo");
+	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
+	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
+	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
+	var publishEnabled = config.commands.publishTiddler.isEnabled(tiddler);
+	var changeToPrivateEnabled = config.commands.changeToPrivate.isEnabled(tiddler);
+	var changeToPublicEnabled = config.commands.changeToPublic.isEnabled(tiddler);
+
+	strictEqual(deletePublicEnabled, false);
+	strictEqual(deletePrivateEnabled, false);
+	strictEqual(draftEnabled, false);
+	strictEqual(publishEnabled, false);
+	strictEqual(changeToPrivateEnabled, false);
+	strictEqual(changeToPublicEnabled, false);
 });
 
 })(QUnit.module, jQuery);
