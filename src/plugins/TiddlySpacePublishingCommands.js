@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.7.1|
+|''Version''|0.7.2|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -12,6 +12,19 @@
 (function($) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
+tiddlyspace.getTiddlerStatusType = function(tiddler) {
+	var bag = tiddler.fields["server.bag"];
+	var currentSpace = tiddlyspace.currentSpace.name;
+	var privateBag = "%0_private".format([currentSpace]);
+	var publicBag = "%0_public".format([currentSpace]);
+	if(bag == privateBag) {
+		return "private";
+	} else if (bag == publicBag) {
+		return "public";
+	} else {
+		return "external";
+	}
+};
 
 var cmd = config.commands.publishTiddler = {
 	text: "publish",
@@ -19,12 +32,12 @@ var cmd = config.commands.publishTiddler = {
 	errorMsg: "Error publishing %0: %1",
 
 	isEnabled: function(tiddler) {
-		if(readOnly || !store.tiddlerExists(tiddler.title)) {
+		var type = tiddlyspace.getTiddlerStatusType(tiddler);
+		if(!readOnly && type == "private") {
+			return true;
+		} else {
 			return false;
 		}
-		var space = tiddlyspace.determineSpace(tiddler, true);
-		return space && space.name == tiddlyspace.currentSpace.name &&
-			space.type == "private";
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
@@ -192,6 +205,14 @@ var cmd = config.commands.publishTiddler = {
 config.commands.changeToPrivate = {
 	text: "make private",
 	tooltip: "turn this public tiddler into a private tiddler",
+	isEnabled: function(tiddler) {
+		var type = tiddlyspace.getTiddlerStatusType(tiddler);
+		if(!readOnly && type == "public") {
+			return true;
+		} else {
+			return false;
+		}
+	},
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
 		var newBag = cmd.toggleBag(tiddler, "private");
@@ -202,6 +223,14 @@ config.commands.changeToPrivate = {
 config.commands.changeToPublic = {
 	text: "make public",
 	tooltip: "turn this private tiddler into a public tiddler",
+	isEnabled: function(tiddler) {
+		var type = tiddlyspace.getTiddlerStatusType(tiddler);
+		if(!readOnly && type == "private") {
+			return true;
+		} else {
+			return false;
+		}
+	},
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
 		var newBag = cmd.toggleBag(tiddler, "public");
@@ -260,7 +289,12 @@ config.commands.deletePublicTiddler = {
 	text: "delete public",
 	tooltip: "Delete any public versions of this tiddler",
 	isEnabled: function(tiddler) {
-		return tiddler.fields["server.workspace"];
+		var type = tiddlyspace.getTiddlerStatusType(tiddler);
+		if(!readOnly && type == "private") {
+			return true;
+		} else {
+			return false;
+		}
 	},
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
@@ -272,6 +306,14 @@ config.commands.deletePublicTiddler = {
 config.commands.deletePrivateTiddler = {
 	text: "delete private",
 	tooltip: "delete any private versions of this tiddler",
+	isEnabled: function(tiddler) {
+		var type = tiddlyspace.getTiddlerStatusType(tiddler);
+		if(!readOnly && type == "public") {
+			return true;
+		} else {
+			return false;
+		}
+	},
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
 		var bag = cmd.toggleBag(tiddler, "private");
@@ -283,13 +325,9 @@ config.commands.saveDraft = {
 	text: "save draft",
 	tooltip: "Save as a private draft",
 	isEnabled: function(tiddler) {
-		if(tiddler) {
-			var workspace = tiddler.fields["server.workspace"];
-			if(workspace && workspace.indexOf("_public") > -1) {
-				return true;
-			} else {
-				return false;
-			}
+		var type = tiddlyspace.getTiddlerStatusType(tiddler);
+		if(!readOnly && type == "public") {
+			return true;
 		} else {
 			return false;
 		}
