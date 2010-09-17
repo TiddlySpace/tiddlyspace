@@ -3,3 +3,12 @@ modifier: osmosoft
 
 !Spaces
 <<groupBy server.bag>>
+
+!Private
+<<tsList Private>>
+
+!Public
+<<tsList Public>>
+
+!Drafts
+<<tsList Draft>>
