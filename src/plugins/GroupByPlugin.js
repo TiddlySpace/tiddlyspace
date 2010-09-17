@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.5.2|
+|''Version''|0.5.3|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
@@ -16,6 +16,10 @@ group tiddlers by year.
 
 {{{<<groupBy tags exclude:excludeLists exclude:systemConfig>>}}}
 group tiddlers by tag but exclude the tags with values excludeLists and systemConfig
+
+Within that group you can also exclude things by filter
+{{{groupBy modifier filter:[tag[film]]}}}
+will group tiddlers tagged with film by modifier. 
 ***/
 //{{{
 (function($) {
@@ -68,7 +72,7 @@ var macro = config.macros.groupBy = {
 		var excludeValues = args.exclude || [];
 		var values = {};
 		var options = { dateFormat: $(place).attr("dateFormat") };
-		var tiddlers = store.getTiddlers();
+		var tiddlers = args.filter ? store.filterTiddlers(args.filter[0]) : store.getTiddlers();
 		var field = $(place).attr("fieldName");
 		var morpher = macro.morpher[field] || function(value) {
 			return value;
