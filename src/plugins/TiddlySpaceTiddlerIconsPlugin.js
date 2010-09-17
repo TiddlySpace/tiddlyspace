@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.6.8dev|
+|''Version''|0.6.8|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -154,8 +154,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			if(space && space.name == tiddlyspace.currentSpace.name) {
 				var parts = tiddler.fields["server.workspace"].split("_"); // TODO: use the split function in TiddlySpaceConfig
 				var spaceType = parts[parts.length - 1];
-				var type = ["public", "private"].contains(spaceType) ? spaceType : false;
-				originMacro.distinguishPublicPrivateType(tiddler, options, type, callback);
+				callback(spaceType);
 			} else {
 				callback("external");
 			}
@@ -390,7 +389,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				if(inProgress) {
 					return;
 				}
-				var publishTo = tiddler.fields["server.publish.name"];
+				var publishTo = tiddler.fields["publish.name"] || tiddler.title;
 				var workspace = "bags/%0".format([tiddler.fields["server.bag"]]);
 				tiddler.fields["server.workspace"] = workspace;
 				var publicBag = cmd.toggleBag(tiddler, "public");
