@@ -2,7 +2,7 @@
 |''Name''|ListTiddlerPrivacyPlugin|
 |''Description''|provide an async list macro and list public, private and draft tiddlers|
 |''Author''|Ben Gillies|
-|''Version''|0.2.0|
+|''Version''|0.3.0|
 |''Status''|@@experimental@@|
 |''Source''|<...>|
 |''CodeRepository''|<...>|
@@ -14,12 +14,12 @@
 <<tsList Draft>>
 }}}
 !Requires
-TiddlySpaceTiddlerIconsPlugin
 TiddlySpaceConfig
 !Code
 ***/
 //{{{
 (function($) {
+var ns = config.extensions.tiddlyspace;
 
 var tsList = config.macros.tsList = {
 	locale: {
@@ -53,88 +53,47 @@ var tsList = config.macros.tsList = {
 	}
 };
 
-// return all tiddlers from private and public bags
-tsList.getAllSpaceTiddlers = function(space, callback) {
-	var bags = ["%0_private", "%0_public"];
-	var privateBag = new tiddlyweb.Bag(bags[0].format([space]), "/");
-	var publicBag = new tiddlyweb.Bag(bags[1].format([space]), "/");
-
-	privateBag.tiddlers().get(function(privateTiddlers) {
-		publicBag.tiddlers().get(function(publicTiddlers) {
-			callback(privateTiddlers, publicTiddlers);
-		}, function(xhr, error, exc) {
-			throw "Failed to load tiddlers";
-		}, "fat=1");
-	}, function(xhr, error, exc) {
-		throw "Failed to load tiddlers";
-	}, "fat=1");
-};
-
-tsList.isIn = function(title, tiddlerList) {
-	for (var i = 0; i < tiddlerList.length; i++) {
-		if (title === tiddlerList[i].title) {
-			return tiddlerList[i];
-		}
-	}
-
-	return false;
-};
-
 tsList.Private = {
 	handler: function(params, callback) {
-		var space = config.extensions.tiddlyspace.currentSpace.name;
-		tsList.getAllSpaceTiddlers(space, function(Private, Public) {
-			var trulyPrivate = $.map(Private, function(tiddler, index) {
-				return (tsList.isIn(tiddler.title, Public) ||
-					tiddler.fields['server.publish.name']) ? null : tiddler;
-			});
-
-			callback(trulyPrivate);
+		var privateTiddlers = [];
+		store.forEachTiddler(function(title, tiddler) {
+			if (("%0_private".format([ns.currentSpace.name]) ===
+					tiddler.fields["server.bag"]) &&
+					(!tiddler.fields["publish.name"])) {
+				privateTiddlers.pushUnique(tiddler);
+			}
 		});
+
+		callback(privateTiddlers);
 	}
 };
 
 tsList.Public = {
 	handler: function(params, callback) {
-		var space = config.extensions.tiddlyspace.currentSpace.name;
-		var areIdentical = config.macros.tiddlerOrigin.areIdentical;
-		tsList.getAllSpaceTiddlers(space, function(Private, Public) {
-			var trulyPublic = $.map(Public, function(tiddler, index) {
-				var privateTiddler = tsList.isIn(tiddler.title, Private);
-				if ((!privateTiddler) || (areIdentical(tiddler, privateTiddler))) {
-					return tiddler;
-				} else {
-					return null;
-				}
-			});
-
-			callback(trulyPublic);
+		var publicTiddlers = [];
+		store.forEachTiddler(function(title, tiddler) {
+			if ("%0_public".format([ns.currentSpace.name]) ===
+					tiddler.fields["server.bag"]) {
+				publicTiddlers.pushUnique(tiddler);
+			}
 		});
+
+		callback(publicTiddlers);
 	}
 };
 
 tsList.Draft = {
 	handler: function(params, callback) {
-		var space = config.extensions.tiddlyspace.currentSpace.name;
-		var areIdentical = config.macros.tiddlerOrigin.areIdentical;
-		tsList.getAllSpaceTiddlers(space, function(Private, Public) {
-			var Drafts = $.map(Public, function(tiddler, index) {
-				var privateTiddler = tsList.isIn(tiddler.title, Private);
-				if ((privateTiddler) && (!areIdentical(tiddler, privateTiddler))) {
-					return tiddler;
-				} else {
-					return null;
-				}
-			});
-
-			store.forEachTiddler(function(title, tiddler) {
-				if (tiddler.fields['server.publish.name']) {
-					Drafts.pushUnique(tiddler);
-				}
-			});
-
-			callback(Drafts);
+		var draftTiddlers = [];
+		store.forEachTiddler(function(title, tiddler) {
+			if (("%0_private".format([ns.currentSpace.name]) ===
+					tiddler.fields["server.bag"]) &&
+					(tiddler.fields["publish.name"])) {
+				draftTiddlers.pushUnique(tiddler);
+			}
 		});
+
+		callback(draftTiddlers);
 	}
 };
 
