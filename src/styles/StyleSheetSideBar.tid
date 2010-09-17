@@ -66,8 +66,8 @@ dd {
 	border-width: 1px 1px 1px 3px;
 	float: left;
 	border-color: [[ColorPalette::TertiaryMid]];
-	*height: expression(this.scrollHeight < 301? "300px" : "auto");
-	min-height: 25em;
+	*height: expression(this.scrollHeight < 481? "480px" : "auto");
+	min-height: 30em;
 	background-color: [[ColorPalette::TertiaryPale]];
 }
 

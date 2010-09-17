@@ -70,7 +70,8 @@ def friendly_uri(environ, start_response):
         space_name = _determine_space(environ, http_host)
         recipe_name = _determine_space_recipe(environ, space_name)
         # tiddler_name already in uri
-        environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name
+        environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
+            'UTF-8')
         return get_tiddler(environ, start_response)
 
 
@@ -166,9 +167,9 @@ def safe_mode(environ, start_response):
                 (recipe.name, exc))
     tiddlers_to_send = Tiddlers()
     for tiddler in candidate_tiddlers:
+        if not tiddler.store:
+            tiddler = store.get(tiddler)
         if tiddler.bag not in CORE_BAGS:
-            if not tiddler.store:
-                tiddler = store.get(tiddler)
             if 'systemConfig' in tiddler.tags:
                 tiddler.tags.append('systemConfigDisable')
         tiddler.recipe = recipe.name

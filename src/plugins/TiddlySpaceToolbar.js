@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceToolbar|
 |''Description''|augments tiddler toolbar commands with SVG icons|
 |''Author''|Osmosoft|
-|''Version''|0.6.3|
+|''Version''|0.6.4|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceToolbar.js|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -16,8 +16,10 @@ replaces tiddler toolbar commands with SVG icons if available
 requires [[ImageMacroPlugin|http://svn.tiddlywiki.org/Trunk/contributors/JonRobson/plugins/ImageMacroPlugin/plugins/ImageMacroPlugin.tid]]
 
 SVG icons are drawn from tiddlers titled {{{<command>.svg}}}
+In readonly mode a tiddler called {{{<command>ReadOnly.svg}}} will be used if it exists.
 !TODO
 * rename (IconToolbarPlugin?)
+* support more than one more popup menu in the toolbar.
 !Code
 ***/
 //{{{
@@ -54,11 +56,13 @@ macro.handler = function(place, macroName, params, wikifier,
 	if(parsedParams.more && parsedParams.more == "popup") {
 		// note we must override the onclick event like in createTiddlyButton
 		// otherwise the click event is the popup AND the slider
-		$(".moreCommand", place)[0].onclick = macro.onClickMorePopUp;
+		$(".moreCommand", place).each(function(i, el) {
+			el.onclick = macro.onClickMorePopUp;
+		});
+		// buttons that are after a less command should not be in more menu.
+		$(".lessCommand ~ .button", place).appendTo(place);
+		$(".lessCommand", place).remove();
 	}
-	$(".lessCommand ~ .button", place).appendTo(place);
-	$(".lessCommand", place).remove();
-	
 	return status;
 };
 
@@ -74,6 +78,12 @@ macro.augmentCommandButtons = function(toolbar) {
 		cmd = cmd ? cmd : "moreCommand"; // XXX: special-casing of moreCommand due to ticket #1234
 		var icon = store.tiddlerExists(cmd) ? cmd : macro.icons[cmd];
 		var text = $(el).text();
+		if(readOnly) {
+			var readOnlyAlternative = "%0ReadOnly".format([icon]);
+			if(store.tiddlerExists(readOnlyAlternative)) {
+				icon = readOnlyAlternative;
+			}
+		}
 		if(store.tiddlerExists(icon)) {
 			$(el).empty();
 			imageMacro.renderImage(el, icon, { alt: text });
@@ -85,17 +95,19 @@ macro.augmentCommandButtons = function(toolbar) {
 macro.onClickMorePopUp = function(ev) {
 	ev = ev || window.event;
 	var sibling = this.nextSibling;
-	var commands = sibling.childNodes;
-	var popup = Popup.create(this);
-	addClass(popup ,"taggedTiddlerList");
-	for(var i = 0; i < commands.length; i++) {
-		var li = createTiddlyElement(popup, "li", null);
-		var oldCommand = commands[i];
-		var command = oldCommand.cloneNode(true);
-		command.onclick = oldCommand.onclick;
-		li.appendChild(command);
+	if(sibling) {
+		var commands = sibling.childNodes;
+		var popup = Popup.create(this);
+		addClass(popup, "taggedTiddlerList");
+		for(var i = 0; i < commands.length; i++) {
+			var li = createTiddlyElement(popup, "li", null);
+			var oldCommand = commands[i];
+			var command = oldCommand.cloneNode(true);
+			command.onclick = oldCommand.onclick;
+			li.appendChild(command);
+		}
+		Popup.show();
 	}
-	Popup.show();
 	ev.cancelBubble = true;
 	if(ev.stopPropagation) {
 		ev.stopPropagation();
