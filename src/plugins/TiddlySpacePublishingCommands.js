@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.7.2|
+|''Version''|0.7.3|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -44,7 +44,7 @@ var cmd = config.commands.publishTiddler = {
 		if(tiddler) {
 			var newBag = cmd.toggleBag(tiddler.fields["server.bag"]);
 			this.moveTiddler(tiddler, {
-				title: tiddler.title,
+				title: tiddler.fields["publish.name"] || tiddler.title,
 				fields: { "server.bag": newBag }
 			});
 		}
@@ -80,16 +80,18 @@ var cmd = config.commands.publishTiddler = {
 		}
 		return newWorkspace;
 	},
-	copyTiddler: function(title, newBag, callback) {
+	copyTiddler: function(title, newTitle, newBag, callback) {
 		var original = store.getTiddler(title);
+		newTitle = newTitle ? newTitle : title;
 		var adaptor = original.getAdaptor();
 		var publish = function(original, callback) {
-			var tiddler = $.extend(new Tiddler(original.title), original);
+			var tiddler = $.extend(new Tiddler(newTitle), original);
 			tiddler.fields = $.extend({}, original.fields, {
 				"server.bag": newBag,
 				"server.workspace": "bags/%0".format([newBag]),
 				"server.page.revision": "false"
 			});
+			tiddler.title = newTitle;
 			adaptor.putTiddler(tiddler, null, null, callback);
 		};
 		publish(original, callback);
@@ -110,12 +112,13 @@ var cmd = config.commands.publishTiddler = {
 			var oldBag = tiddler.fields["server.bag"];
 			var newBag = newTiddler.fields["server.bag"];
 			var newWorkspace = "bags/%0".format([newBag]);
-			cmd.copyTiddler(oldTitle, newBag, function(ctx) {
+			cmd.copyTiddler(oldTitle, newTitle, newBag, function(ctx) {
 					info.copyContext = ctx;
 					var context = {
 						tiddler: tiddler,
 						workspace: newWorkspace
 					};
+					store.addTiddler(ctx.tiddler);
 					tiddler.title = oldTitle; // for cases where a rename occurs
 					if(ctx.status) { // only do if a success
 						if(oldBag != newBag) {
@@ -125,15 +128,16 @@ var cmd = config.commands.publishTiddler = {
 								if(tiddler) {
 									tiddler.fields["server.workspace"] = newWorkspace;
 									tiddler.fields["server.bag"] = newBag;
-									store.addTiddler(tiddler);
 								}
+								el = el ? el : story.refreshTiddler(oldTitle, null, true);
 								if(oldTitle != newTitle) {
 									store.removeTiddler(oldTitle);
-									el = story.closeTiddler(oldTitle);
 								}
-								el = el ? el : story.refreshTiddler(newTitle, true);
 								if(el) {
 									story.displayTiddler(el, newTitle);
+								}
+								if(oldTitle != newTitle) {
+									story.closeTiddler(oldTitle);
 								}
 								if(callback) {
 									callback(info);
@@ -144,7 +148,7 @@ var cmd = config.commands.publishTiddler = {
 							if(callback) {
 								callback(info);
 							}
-							story.refreshTiddler(newTitle, true);
+							story.refreshTiddler(newTitle, null, true);
 						}
 					}
 			});
@@ -188,7 +192,7 @@ var cmd = config.commands.publishTiddler = {
 							store.removeTiddler(oldTitle);
 							store.setDirty(oldDirty);
 							store.addTiddler(newTiddler); // note the tiddler may have changed name
-							var old = story.refreshTiddler(oldTitle, true);
+							var old = story.refreshTiddler(oldTitle, null, true);
 							if(old) {
 								story.displayTiddler(old, newTitle);
 							}
@@ -234,7 +238,8 @@ config.commands.changeToPublic = {
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
 		var newBag = cmd.toggleBag(tiddler, "public");
-		var newTiddler = { title: title, fields: { "server.workspace": newBag }};
+		var publishTitle = tiddler.fields["publish.name"] || title;
+		var newTiddler = { title: publishTitle, fields: { "server.workspace": newBag }};
 		cmd.moveTiddler(tiddler, newTiddler, true);
 	}
 };
@@ -352,7 +357,7 @@ config.commands.saveDraft = {
 			}
 		}
 
-		extendedFields["server.publish.name"] = title;
+		extendedFields["publish.name"] = title;
 		extendedFields["server.workspace"] = privateWorkspace;
 		var newDate = new Date();
 		for(var n in fields) {
