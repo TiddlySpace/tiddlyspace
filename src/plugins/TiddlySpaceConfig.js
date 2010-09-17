@@ -188,6 +188,11 @@ config.macros.backstageInit = {
 	}
 };
 
+if(config.options.chkNewTiddlersArePrivate) {
+	config.defaultCustomFields["server.workspace"] = "bags/%0_private".format([plugin.currentSpace.name]);
+} else {
+	config.defaultCustomFields["server.workspace"] = "bags/%0_public".format([plugin.currentSpace.name]);
+}
 // register style sheet for backstage separately (important)
 store.addNotification("StyleSheetBackstage", refreshStyles);
 

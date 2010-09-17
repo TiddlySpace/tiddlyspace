@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.6.0|
+|''Version''|0.6.1|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
@@ -22,7 +22,9 @@ Allows you to set the default privacy value (Default is private)
 var tiddlyspace = config.extensions.tiddlyspace;
 
 var macro = config.macros.setPrivacy = {
-	DEFAULT_STATE: "private",
+	getSpaceSetting: function() {
+		return config.options.chkNewTiddlersArePrivate ? "private" : "public"
+	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		if(readOnly) {
@@ -93,7 +95,7 @@ var macro = config.macros.setPrivacy = {
 		$("<label />").text("private").appendTo(container); // TODO: i18n
 		var rPublic = rbtn.clone().val("public").addClass("isPublic").appendTo(container);
 		$("<label />").text("public").appendTo(container); // TODO: i18n
-		var status = macro.DEFAULT_STATE;
+		var status = macro.getSpaceSetting();
 		var el = story.findContainingTiddler(container);
 		$("[type=radio]", container).click(function(ev) {
 			var btn = $(ev.target);
@@ -107,7 +109,7 @@ var macro = config.macros.setPrivacy = {
 			}
 		});
 		if(!defaultValue) {
-			defaultValue = macro.DEFAULT_STATE == "public" ? publicBag : privateBag;
+			defaultValue = macro.getSpaceSetting() == "public" ? publicBag : privateBag;
 		}
 		// TODO: replace with a hijack of displayTiddler?
 		window.setTimeout(function() {

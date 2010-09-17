@@ -38,6 +38,8 @@ You can associate your account with multiple identities. If you have an open id 
 <<TiddlySpaceRegister>>
 
 !Options
+<<option chkNewTiddlersArePrivate>> New tiddlers default to private.
+
 <<search>><<closeAll>><<permaview>><<newTiddler>><<newJournal "DD MMM YYYY" "journal">><<saveChanges>><<slider chkSliderOptionsPanel OptionsPanel "options »" "Change TiddlyWiki advanced options">>
 
 !Password
