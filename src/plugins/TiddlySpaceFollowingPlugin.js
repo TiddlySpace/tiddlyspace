@@ -81,7 +81,7 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace) {
 
 var followMacro = config.macros.followTiddlers = {
 	locale: {
-		followListHeader: "Here are tiddlers from spaces you follow using the follow tag which match this name.",
+		followListHeader: "Here are tiddlers from spaces you follow using the follow tag which use this title.",
 		noTiddlersFromFollowers: "None of the spaces you follow contain a tiddler with this name.",
 		errorMessage: "There was a problem retrieving tiddlers from the server. Please try again later."
 	},
@@ -139,12 +139,13 @@ var followMacro = config.macros.followTiddlers = {
 			imageMacro.renderImage(li[0],
 				"%0/bags/%1_public/tiddlers/SiteIcon".format([tsHost, spaceName]),
 				{ imageClass: "siteIcon" });
-			li.append(link);
+			var label = $("<span />").addClass("label").appendTo(li);
+			label.append(link);
 			var modifierLink = host.format([modifier]);
 			var spaceLink = host.format([spaceName]);
 			$('<span>&nbsp;(last modified by <a href="%2">%0</a> in <a href="%3">%1</a>)</span>'.
 				format([modifier, spaceName, modifierLink, spaceLink])).
-				appendTo(li);
+				appendTo(label);
 			ul.append(li);
 		}
 		var txt = tiddlers.length;
@@ -158,8 +159,8 @@ var followMacro = config.macros.followTiddlers = {
 		}
 		var headerTxt = followMacro.locale.followListHeader;
 		var contentEl = $("<div />").
-			append('<div class="followHeader">%0</div>'.format([headerTxt])).
-			append(ul[0]);
+			append('<div class="followHeader listTitle">%0</div>'.format([headerTxt])).
+			prependTo(ul);
 		var el = $(story.findContainingTiddler(place));
 		var concertina = $(".concertina", el)[0];
 		var btn;
