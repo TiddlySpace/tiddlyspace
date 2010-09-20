@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceRevisionView|
 |''Description''|Show tiddler revisions in a stack of cards view|
 |''Author''|BenGillies|
-|''Version''|0.1.1|
+|''Version''|0.1.3|
 |''Status''|beta|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -24,12 +24,11 @@ date is clicked.
 //{{{
 (function($) {
 
-var me;
-config.macros.viewRevisions = me = {
+var me = config.macros.viewRevisions = {
 	revisionTemplate: "RevisionTemplate",
-	revSuffix: " [rev. #%0]",
-	defaultPageSize: 10,
-	defaultLinkText: "View Revisions",
+	revSuffix: " [rev. #%0]", //text to append to each tiddler title
+	defaultPageSize: 5, //default number of revisions to show
+	defaultLinkText: "View Revisions", //when there's nothing else to use
 	offsetTop: 30, //in px
 	offsetLeft: 10, //in px
 	shiftDownDelay: 50, //in ms
@@ -39,7 +38,6 @@ config.macros.viewRevisions = me = {
 		params = paramString.parseParams(null, null, true)[0];
 		var tiddlerElem = story.findContainingTiddler(place);
 
-		//var revButton = $('<span class="button openRevisions" />')
 		var revButton;
 		var pageSize = parseInt(params.page[0], 10) || me.defaultPageSize;
 		var linkObj = params.link ? params.link[0] || me.defaultLinkText : false;
@@ -50,7 +48,6 @@ config.macros.viewRevisions = me = {
 		} else {
 			revButton = place;
 		}
-		//wikify(linkObj, revButton[0], null, tiddler);
 
 		$(revButton).click(function() {
 			if (!$(tiddlerElem).hasClass("revisions")) {
@@ -60,6 +57,8 @@ config.macros.viewRevisions = me = {
 			}
 		});
 	},
+
+	// initialisation for revision view
 	showRevisions: function(tiddlerElem, tiddler, pageSize) {
 		var context = {
 			host: tiddler.fields["server.host"],
@@ -89,6 +88,8 @@ config.macros.viewRevisions = me = {
 					me.expandStack(context, userParams);
 				});
 	},
+
+	// fetch the actual revision and put it in the tiddler div
 	showRevision: function(place, revision, callback) {
 		var context = {
 			host: revision.fields["server.host"],
@@ -115,10 +116,13 @@ config.macros.viewRevisions = me = {
 				var revElem = userParams.revElem;
 				$(revElem).attr('id', story.tiddlerId(tiddler.title));
 				$(revElem).attr("refresh", "tiddler");
-				story.refreshTiddler(tiddler.title, me.revisionTemplate, true);
+				var template = (store.getTiddler(me.revisionTemplate)) ?
+					me.revisionTemplate : "ViewTemplate";
+				story.refreshTiddler(tiddler.title, template, true);
 				callback(tiddler);
 			});
 	},
+
 	createCloak: function(promoteElem) {
 		//store for later
 		$(promoteElem).attr("zindex", $(promoteElem).css("z-index"));
@@ -133,6 +137,8 @@ config.macros.viewRevisions = me = {
 
 		$(promoteElem).css("z-index", me.zIndex + 1);
 	},
+
+	// clean up stuff. Remove all evidence of revision view.
 	closeRevisions: function(promoteElem) {
 		//revert the original tiddler back to its previous state
 		$(promoteElem)
@@ -167,6 +173,8 @@ config.macros.viewRevisions = me = {
 		//remove the cloak
 		$(".revisionCloak").remove();
 	},
+
+	// calback from getting list of revisions.
 	expandStack: function(context, userParams) {
 		var pageSize = userParams.pageSize;
 
@@ -180,6 +188,8 @@ config.macros.viewRevisions = me = {
 				from + pageSize - 1);
 		}
 	},
+
+	//place the next div above and behind the previous one.
 	displayNextRevision: function(tiddlerElem, userParams, context, from, to) {
 		var revision = context.revisions[from];
 		function callback() {
@@ -197,6 +207,7 @@ config.macros.viewRevisions = me = {
 		}
 		me.shiftVisibleDown(userParams.title, callback);
 	},
+
 	createRevisionObject: function(tiddlerElem, context, userParams, text) {
 		var newPosition = me.calculatePosition(tiddlerElem, context);
 		return $('<div class="revisions tiddler" />')
@@ -212,6 +223,8 @@ config.macros.viewRevisions = me = {
 			.append(text)
 			.insertBefore(tiddlerElem);
 	},
+
+	// move the already present revisions down by 1 to fit the next one in
 	shiftVisibleDown: function(title, callback) {
 		var revisions = $("[revName=%0].revisions".format([title]));
 		var revisionCount = revisions.length;
@@ -224,6 +237,8 @@ config.macros.viewRevisions = me = {
 					}
 				});
 	},
+
+	// where we put the new revision
 	calculatePosition: function(elem, context) {
 		var offset = $(elem).offset();
 		var currentPosition = $(elem).position();
@@ -233,13 +248,15 @@ config.macros.viewRevisions = me = {
 		if ((context.restrictLeft) ||
 				((offset.left - me.offsetLeft) <
 				$("#contentWrapper").offset().left)) {
-			newPosition.left = 0;
+			newPosition.left = $(elem).position().left;
 			context.restrictLeft = true;
 		} else {
 			newPosition.left = currentPosition.left - me.offsetLeft;
 		}
 		return newPosition;
 	},
+
+	// equivalent of displayNextRevision, but for the more button
 	showMoreButton: function(tiddlerElem, context, userParams, moreIndex) {
 		userParams.from = moreIndex + 1;
 		me.shiftVisibleDown(userParams.title, function() {
@@ -261,9 +278,11 @@ config.macros.viewRevisions = me = {
 			$(more).css("float", "right");
 		});
 	},
+
 	stripRevFromTitle: function(revisionTitle) {
 		return revisionTitle.split(/ ?\[rev\. #[0-9]+\]$/)[0];
 	},
+
 	onClickRevision: function(revElem, revision, callback) {
 		// don't do anything if we are still loading
 		if ($(".revisions").hasClass("loading")) {
@@ -289,7 +308,7 @@ config.macros.viewRevisions = me = {
 			$(revElem).removeAttr("prevPos").removeClass("viewRevision");
 		} else {
 			var viewRevision = function() {
-				var prevPos = $(revElem).offset().left;
+				var prevPos = $(revElem).position().left;
 				$(revElem).addClass("viewRevision").attr("prevPos", prevPos);
 				$(".revisions").addClass("loading");
 				me.showRevision(revElem, revision, function(rev) {
@@ -309,12 +328,13 @@ config.macros.viewRevisions = me = {
 			}
 		}
 	},
+
 	slideOut: function(revElem, revision, title, callback) {
 		var leftMostPos = $("[revName=%0].revisions".format([title]))
 			.offset().left;
 		var width = $(revElem).width();
 		var originalLeftPos = $(story.getTiddler(title))
-			.offset().left;
+			.position().left;
 
 		var slideAmount = leftMostPos + width - me.visibleSlideAmount;
 		$("[revName=%0].revisions:not(.viewRevision)".format([title]))
@@ -324,6 +344,7 @@ config.macros.viewRevisions = me = {
 			.css("height", "auto")
 			.animate({left: originalLeftPos}, 1000, callback);
 	},
+
 	slideIn: function(revElem, revision, title, callback) {
 		var slideAmount = $(revElem).offset().left -
 			$(story.getTiddler(title)).offset().left;
@@ -347,6 +368,7 @@ config.macros.slideRevision = revBtn = {
 		var btn = revBtn.getRevisionText(place, tiddler);
 		$(place).append(btn);
 	},
+
 	getRevisionText: function(place, revision) {
 		var text = revBtn.btnText.format([revision.modifier,
 			revision.modified.formatString("0hh:0mm"),
