@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceSpaces|
-|''Version''|0.5.5|
+|''Version''|0.5.6|
 |''Description''|TiddlySpace spaces management|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
@@ -139,6 +139,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 				form: form,
 				selector: "[name=space]"
 			};
+			form.stop(true, true).fadeIn("slow");
+			statusMessage.hide();
 			displayError(xhr, null, null, ctx);
 		}
 		return false;
