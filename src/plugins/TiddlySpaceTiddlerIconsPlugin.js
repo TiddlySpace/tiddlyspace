@@ -317,11 +317,12 @@ var originMacro = config.macros.tiddlerOrigin = {
 	},
 	confirm: function(ev, msg, onYes) {
 		onYes = onYes ? onYes : function(ev) {};
-		var popup = Popup.create(ev.target, "div");
+		var btn = $(".originButton", $(ev.target).parents())[0];
+		var popup = Popup.create(btn);
 		$(popup).addClass("confirmationPopup");
 		$("<div />").addClass("message").text(msg).appendTo(popup);
-		$("<button />").text("yes").appendTo(popup).click(onYes);
-		$("<button />").text("no").click(function(ev) {
+		$("<button />").addClass("button").text("yes").appendTo(popup).click(onYes);
+		$("<button />").addClass("button").text("no").click(function(ev) {
 			Popup.remove();
 		}).appendTo(popup);
 		Popup.show();
@@ -330,70 +331,41 @@ var originMacro = config.macros.tiddlerOrigin = {
 	},
 	iconCommands: {
 		"public": function(ev, tiddler) {
-			var locale = originMacro.locale;
-			var inProgress = false;
-			var doPublish = function(ev) {
-				if(inProgress) {
-					return;
-				}
-				var checked = false;
-				var msg = checked ? locale.moveToPrivateKeep : locale.moveToPrivate;
+			if(!readOnly) {
+				var locale = originMacro.locale;
+				var msg = locale.moveToPrivate;
 				originMacro.confirm(ev, msg, function(ev) {
-					inProgress = true;
 					var target = $(ev.target);
-					var oldText = target.text();
-					target.text(locale.pleaseWait);
-					var onComplete = function(info) {
-						target.text(oldText);
-						inProgress = false;
-					};
+					var onComplete = function(info) {};
 					var privateBag = cmd.toggleBag(tiddler, "private");
 					cmd.moveTiddler(tiddler, {
 						title: tiddler.title,
 						fields: { "server.bag": privateBag }
-					}, checked, onComplete);
+					}, false, onComplete);
 				});
-			};
-			if(!readOnly) {
-				doPublish(ev);
 			}
 		},
 		"private": function(ev, tiddler) {
-			var locale = originMacro.locale;
-			var adaptor = tiddler.getAdaptor();
-			var inProgress;
-			var doPublish = function(ev) {
-				if(inProgress) {
-					return;
-				}
+			if(!readOnly) {
+				var locale = originMacro.locale;
+				var adaptor = tiddler.getAdaptor();
 				var publishTo = tiddler.fields["publish.name"] || tiddler.title;
 				var workspace = "bags/%0".format([tiddler.fields["server.bag"]]);
 				tiddler.fields["server.workspace"] = workspace;
 				var publicBag = cmd.toggleBag(tiddler, "public");
 				var msg;
-				var checked = false;
-				msg = checked ? locale.publishPrivateKeepPrivate : locale.publishPrivateDeletePrivate;
+				msg = locale.publishPrivateDeletePrivate;
 				var title = tiddler.title;
 				var newTitle = publishTo || tiddler.title;
 				tiddler.fields["server.page.revision"] = "false";
 				store.addTiddler(tiddler);
 				originMacro.confirm(ev, msg, function(ev) {
-					inProgress = true;
-					var target = $(ev.target);
-					var oldText = target.text();
-					target.text(locale.pleaseWait);
-					var onComplete = function(info) {
-						target.text(oldText);
-						inProgress = false;
-					};
+					var onComplete = function(info) {};
 					cmd.moveTiddler(tiddler, {
 						title: newTitle,
 						fields: { "server.bag": publicBag }
-					}, checked, onComplete);
+					}, false, onComplete);
 				});
-			};
-			if(!readOnly) {
-				doPublish(ev);
 			}
 		}
 	}
