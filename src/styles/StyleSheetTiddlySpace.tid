@@ -40,6 +40,45 @@ body {
 	background-color: black;
 }
 
+#popup {
+	background-color: [[ColorPalette::TertiaryPale]];
+}
+
+.confirmationPopup, .followList {
+	font-size: 0.7em;
+	padding: 1em;
+	border: solid 1px black;
+}
+
+#popup .followTiddlersList a {
+	display: inline;
+	padding: 0;
+}
+
+#popup li a {
+	color: [[ColorPalette::PrimaryMid]];
+	font-weight: bold;
+}
+#popup li a:hover {
+	color: [[ColorPalette::PrimaryMid]];
+	background: none;
+}
+
+#popup li.listTitle {
+	border-bottom: 1px solid black;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+#popup.followList {
+	margin-left: 50px;
+	margin-top: -30px;
+}
+
+.followTiddlersList .label {
+	margin-left: 5px;
+	line-height: 48px;
+}
 [[StyleSheetHeader]]
 [[StyleSheetMenuBar]]
 [[StyleSheetSideBar]]
