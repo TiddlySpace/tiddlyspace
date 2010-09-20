@@ -116,7 +116,9 @@ var me = config.macros.viewRevisions = {
 				var revElem = userParams.revElem;
 				$(revElem).attr('id', story.tiddlerId(tiddler.title));
 				$(revElem).attr("refresh", "tiddler");
-				story.refreshTiddler(tiddler.title, me.revisionTemplate, true);
+				var template = (store.getTiddler(me.revisionTemplate)) ?
+					me.revisionTemplate : "ViewTemplate";
+				story.refreshTiddler(tiddler.title, template, true);
 				callback(tiddler);
 			});
 	},
