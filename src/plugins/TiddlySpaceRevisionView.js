@@ -246,7 +246,7 @@ var me = config.macros.viewRevisions = {
 		if ((context.restrictLeft) ||
 				((offset.left - me.offsetLeft) <
 				$("#contentWrapper").offset().left)) {
-			newPosition.left = 0;
+			newPosition.left = $(elem).position().left;
 			context.restrictLeft = true;
 		} else {
 			newPosition.left = currentPosition.left - me.offsetLeft;
