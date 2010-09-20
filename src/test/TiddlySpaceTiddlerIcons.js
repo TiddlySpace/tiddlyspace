@@ -1,16 +1,32 @@
 (function(module, $) {
 
 var _areIdentical;
-
+var _Popup;
 module("TiddlySpaceTiddlerIcons", {
 	setup: function() {
 		_areIdentical = config.macros.tiddlerOrigin.areIdentical;
+		Popup = {
+			create: function(place) {
+				var popup = $("<div />").attr("id", "test_ttt_popup").appendTo(document.body);
+				this.el = popup;
+				return popup;
+			},
+			show: function() {
+				$(this.el).show();
+				this.hidden = false;
+			},
+			remove: function() {
+				this.hidden = true;
+			}
+		}
+		_Popup = Popup;
 	},
 	teardown: function() {
 		store.removeTiddler("foo");
 		store.removeTiddler("foo2");
 		store.removeTiddler("boo [public]");
 		config.macros.tiddlerOrigin.areIdentical = _areIdentical;
+		Popup = _Popup;
 	}
 });
 
@@ -218,25 +234,44 @@ test("check concertina commands do not appear in readonly mode", function() {
 	var macro = config.macros.tiddlerOrigin;
 	var place1 = $("<div />")[0];
 	var place2 = $("<div />")[0];
-	var place3 = $("<div />")[0];
-	var place4 = $("<div />")[0];
 	var tiddler = new Tiddler("foo");
 	tiddler.getAdaptor = function() {
 		return function() {};
 	};
 	// run
-	macro.concertinaCommands.public(place1, tiddler);
-	macro.concertinaCommands.private(place2, tiddler);
-	macro.concertinaCommands.privateAndPublic(place3, tiddler);
-	macro.concertinaCommands.privateNotPublic(place4, tiddler);
+	macro.iconCommands.public(place1, tiddler);
+	macro.iconCommands.private(place2, tiddler);
 
 	// verify
 	var selector = "input[type=checkbox], .publishButton";
 	strictEqual($(selector, place1).length, 0);
 	strictEqual($(selector, place2).length, 0);
-	strictEqual($(selector, place3).length, 0);
-	strictEqual($(selector, place4).length, 0);
 
 });
 
+test("confirm", function() {
+	var macro = config.macros.tiddlerOrigin;
+	var place = $("<div />");
+	var ev = {
+		target: place, 
+		stopPropagation: function(){}
+	};
+	// run
+	var clicked = false;
+	macro.confirm(ev, "hello", function(ev) {
+		clicked = true;
+	});
+	place = document.getElementById("test_ttt_popup");
+	strictEqual($(".message", place).text(), "hello");
+	strictEqual($("button", place).length, 2);
+	var yes = $("button", place)[0];
+	var no = $("button", place)[1];
+	no.click();
+	strictEqual(Popup.hidden, true);
+
+	strictEqual(clicked, false);
+	yes.click();
+	strictEqual(clicked, true);
+	
+});
 })(QUnit.module, jQuery);
