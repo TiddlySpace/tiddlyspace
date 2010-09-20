@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceRevisionView|
 |''Description''|Show tiddler revisions in a stack of cards view|
 |''Author''|BenGillies|
-|''Version''|0.1.2|
+|''Version''|0.1.3|
 |''Status''|beta|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -306,7 +306,7 @@ var me = config.macros.viewRevisions = {
 			$(revElem).removeAttr("prevPos").removeClass("viewRevision");
 		} else {
 			var viewRevision = function() {
-				var prevPos = $(revElem).offset().left;
+				var prevPos = $(revElem).position().left;
 				$(revElem).addClass("viewRevision").attr("prevPos", prevPos);
 				$(".revisions").addClass("loading");
 				me.showRevision(revElem, revision, function(rev) {
@@ -332,7 +332,7 @@ var me = config.macros.viewRevisions = {
 			.offset().left;
 		var width = $(revElem).width();
 		var originalLeftPos = $(story.getTiddler(title))
-			.offset().left;
+			.position().left;
 
 		var slideAmount = leftMostPos + width - me.visibleSlideAmount;
 		$("[revName=%0].revisions:not(.viewRevision)".format([title]))
