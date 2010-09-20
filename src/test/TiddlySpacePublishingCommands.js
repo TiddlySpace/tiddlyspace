@@ -136,7 +136,7 @@ test("copyTiddler", function() {
 		};
 		return adaptor;
 	};
-	cmd.copyTiddler("pig", "jon_public");
+	cmd.copyTiddler("pig", false, "jon_public");
 
 	strictEqual(true, expected);
 });
@@ -145,10 +145,10 @@ test("moveTiddler from private to public with rename (without revisions)", funct
 	var cmd = config.commands.publishTiddler;
 	var tiddler = new Tiddler("pig");
 	var expected = 0;
-	config.commands.publishTiddler.copyTiddler = function(oldTitle, newWorkspace, callback) {
+	config.commands.publishTiddler.copyTiddler = function(oldTitle, newTitle, newWorkspace, callback) {
 		if(expected === 0) { // copy is the first thing that should happen.
 			expected = 1;
-			callback({status: true}); // signal it was a success
+			callback({status: true, tiddler: tiddler}); // signal it was a success
 		}
 	};
 	tiddler.fields["server.bag"] = "jon_private";
@@ -175,8 +175,8 @@ test("moveTiddler put fails (without revisions)", function() {
 	var cmd = config.commands.publishTiddler;
 	var tiddler = new Tiddler("pig");
 	var happy = true;
-	config.commands.publishTiddler.copyTiddler = function(oldTitle, newWorkspace, callback) {
-			callback({status: false}); // the copy failed for some reason
+	config.commands.publishTiddler.copyTiddler = function(oldTitle, newTitle, newWorkspace, callback) {
+			callback({status: false, tiddler: tiddler}); // the copy failed for some reason
 	};
 
 	tiddler.fields["server.bag"] = "jon_private";
@@ -198,11 +198,11 @@ test("moveTiddler from private to private (without revisions)", function() {
 	var cmd = config.commands.publishTiddler;
 	var tiddler = new Tiddler("pig");
 	var happyPath = true;
-	config.commands.publishTiddler.copyTiddler = function(oldTitle, newBag, callback) {
+	config.commands.publishTiddler.copyTiddler = function(oldTitle, newTitle, newBag, callback) {
 		if(newBag != "jon_private")  {
 			happyPath = false;
 		}
-		callback({status: true});
+		callback({status: true, tiddler: tiddler});
 	};
 
 	tiddler.fields["server.bag"] = "jon_private";
@@ -251,7 +251,7 @@ test("moveTiddlerWithRevisions and rename", function() {
 	var tiddler = new Tiddler("pig");
 	var pathStep = 0;
 
-	config.commands.publishTiddler.copyTiddler = function(oldTitle, newWorkspace, callback) {
+	config.commands.publishTiddler.copyTiddler = function(oldTitle, newTitle, newWorkspace, callback) {
 		callback({status: true});
 	};
 	tiddler.fields["server.bag"] = "jon_private";
@@ -293,8 +293,8 @@ test("moveTiddler check the callback where no delete", function() {
 			asExpected = true;
 		}
 	};
-	config.commands.publishTiddler.copyTiddler = function(oldTitle, newWorkspace, callback) {
-		callback({status: true, statusText: "hello there"}); // signal it was a success
+	config.commands.publishTiddler.copyTiddler = function(oldTitle, newTitle, newWorkspace, callback) {
+		callback({status: true, statusText: "hello there", tiddler: tiddler}); // signal it was a success
 	};
 	tiddler.fields["server.bag"] = "jon_private";
 	tiddler.getAdaptor = function() {
@@ -320,8 +320,8 @@ test("moveTiddler  check the content of callbacks", function() {
 			asExpected = true;
 		}
 	};
-	config.commands.publishTiddler.copyTiddler = function(oldTitle, newBag, callback) {
-		callback({status: true, statusText: "hello there"}); // signal it was a success
+	config.commands.publishTiddler.copyTiddler = function(oldTitle, newTitle, newBag, callback) {
+		callback({status: true, statusText: "hello there", tiddler: tiddler}); // signal it was a success
 	};
 	tiddler.fields["server.bag"] = "jon_private";
 	tiddler.getAdaptor = function() {
