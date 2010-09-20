@@ -55,6 +55,7 @@ var macro = config.macros.setPrivacy = {
 		var refreshIcon = function(type) {
 			var originMacro = config.macros.tiddlerOrigin;
 			if(originButton && originMacro) {
+				options.noclick = true;
 				originMacro.showPrivacyRoundel(tiddler, type, originButton, options);
 			}
 		};

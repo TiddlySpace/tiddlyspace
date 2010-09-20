@@ -293,7 +293,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 			imageMacro.renderImage(button, icon, options.imageOptions);
 			originMacro.showLabel(button, privacyType, options.labelOptions);
 			var cmd = originMacro.iconCommands[privacyType];
-			if(cmd) {
+			if(cmd && thisTiddler && !options.noclick) {
 				$(button).click(function(ev) {
 					cmd(ev, thisTiddler);
 				});
@@ -347,7 +347,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 						target.text(oldText);
 						inProgress = false;
 					};
-					var privateBag= cmd.toggleBag(tiddler, "private");
+					var privateBag = cmd.toggleBag(tiddler, "private");
 					cmd.moveTiddler(tiddler, {
 						title: tiddler.title,
 						fields: { "server.bag": privateBag }
