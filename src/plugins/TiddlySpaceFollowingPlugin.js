@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.2|
+|''Version''|0.5.3|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -166,7 +166,7 @@ var followMacro = config.macros.followTiddlers = {
 		if(!config.macros.concertina || !concertina) {
 			btn = $('<div class="followButton" />').
 				click(function(ev) {
-					followMacro.followingOnClick(ev,ul[0]);
+					followMacro.followingOnClick(ev, ul[0]);
 				}).appendTo(place)[0];
 		} else {
 			btn = config.macros.concertina.register(place, "followTiddlers", "followButton", contentEl);
@@ -178,11 +178,11 @@ var followMacro = config.macros.followTiddlers = {
 	followingOnClick: function(ev, list) {
 		var target = ev.target;
 		var popup = Popup.create(target,"div");
-		addClass(popup ,"taggedTiddlerList followList");
-		place = popup;
-		$(popup).append(contentEl);
+		$(popup).addClass("taggedTiddlerList followList");
+		$(popup).append(list);
 		Popup.show();
 		ev.stopPropagation();
+		return false;
 	},
 	_constructBagQuery: function(followers) {
 		var querySegments = [];
