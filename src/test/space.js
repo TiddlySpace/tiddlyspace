@@ -6,12 +6,17 @@ var nop = function() {};
 
 module("space resource", {
 	setup: function() {
+		var xhr = {
+			getResponseHeader: function(name) {
+				return "value";
+			}
+		};
 		$.ajax = function(options) {
 			var data = options.data ? $.evalJSON(options.data) : _response;
 			_request = options;
-			options.success(data, null, null);
-			options.error(null, null, null);
-			options.complete && options.complete(data, null, null);
+			options.success(data, null, xhr);
+			options.error(null, null, xhr);
+			options.complete && options.complete(data, null, xhr);
 		};
 	},
 	teardown: function() {
