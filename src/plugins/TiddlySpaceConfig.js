@@ -164,6 +164,25 @@ var plugin = config.extensions.tiddlyspace = {
 			url += ":" + port;
 		}
 		return url;
+	},
+	_disabledTabs: [],
+	disableTab: function(tabTiddler) {
+		if(typeof(tabTiddler) == "string") {
+			plugin._disabledTabs.push(tabTiddler);
+		} else {
+			for(var i = 0; i < tabTiddler.length; i++) {
+				plugin.disableTab(tabTiddler[i]);
+			}
+		}
+	},
+	isDisabledTab: function(tabTitle) {
+		var match = new RegExp("(?:\\[\\[([^\\]]+)\\]\\])","mg").exec(tabTitle);
+		var tabIdentifier = match ? match[1] : tabTitle;
+		if(plugin._disabledTabs.contains(tabIdentifier)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 };
 
@@ -188,6 +207,17 @@ config.macros.backstageInit = {
 	}
 };
 
+var _tabsMacro = config.macros.tabs.handler;
+config.macros.tabs.handler = function(place, macroName, params) {
+	var newParams = [params[0]]; // keep cookie name
+	for(var i = 1; i < params.length; i += 3) {
+		var tabTitle = params[i + 2];
+		if(!plugin.isDisabledTab(tabTitle)){
+			newParams = newParams.concat(params[i], params[i + 1], tabTitle);
+		}
+	}
+	_tabsMacro.apply(this, [place, macroName, newParams]);
+};
 // register style sheet for backstage separately (important)
 store.addNotification("StyleSheetBackstage", refreshStyles);
 

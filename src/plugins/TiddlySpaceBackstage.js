@@ -10,6 +10,8 @@
 //{{{
 (function($) {
 
+var disabled_tabs_for_nonmembers = ["PluginManager", "Backstage##FileImport", 
+	"Backstage##SpaceMembers", "TiddlySpaceTabs##Private", "TiddlySpaceTabs##Drafts"];
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
 var imageMacro = config.macros.image;
@@ -46,11 +48,12 @@ config.messages.backstage.prompt = "";
 // initialize state
 var _show = backstage.show;
 backstage.show = function() {
-	// selectively hide backstage tasks based on user status
+	// selectively hide backstage tasks and tabs based on user status
 	var tasks = $("#backstageToolbar .backstageTask").show();
 	tweb.getUserInfo(function(user) {
 		if(user.anon) {
 			tasks.slice(1, 2).hide();
+			tiddlyspace.disableTab(disabled_tabs_for_nonmembers);
 		} else {
 			tasks.eq(0).hide();
 		}
@@ -58,6 +61,9 @@ backstage.show = function() {
 	// display backstage
 	return _show.apply(this, arguments);
 };
+if(readOnly) {
+	tiddlyspace.disableTab(disabled_tabs_for_nonmembers);
+}
 
 var _init = backstage.init;
 backstage.init = function(){

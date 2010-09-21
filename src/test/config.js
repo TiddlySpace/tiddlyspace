@@ -176,4 +176,22 @@ test("getAvatar", function() {
 	strictEqual(uri, "http://foo.example.org:8080/bags/jon_public/tiddlers/SiteIcon");
 });
 
+test("disabling tabs", function() {
+	var tiddlyspace = config.extensions.tiddlyspace;
+	// run
+	tiddlyspace.disableTab("Backstage");
+	tiddlyspace.disableTab("Foo##Hello");
+	tiddlyspace.disableTab("Foo##Hello"); // running twice shouldn't break anything
+	tiddlyspace.disableTab("Foo##Goodbye");
+	tiddlyspace.disableTab(["Foo##What", "Hello"]);
+
+	// test
+	strictEqual(tiddlyspace.isDisabledTab("Backstage"), true);
+	strictEqual(tiddlyspace.isDisabledTab("Foo"), false);
+	strictEqual(tiddlyspace.isDisabledTab("Foo##Hello"), true);
+	strictEqual(tiddlyspace.isDisabledTab("[[Foo##Goodbye]]"), true);
+	strictEqual(tiddlyspace.isDisabledTab("Foo##What"), true);
+	strictEqual(tiddlyspace.isDisabledTab("Hello"), true);
+});
+
 })(QUnit.module);
