@@ -188,6 +188,14 @@ config.macros.backstageInit = {
 	}
 };
 
+// disable evaluated macro parameters for security reasons
+var _parseParams = String.prototype.parseParams;
+String.prototype.parseParams = function(defaultName, defaultValue, allowEval,
+		noNames, cascadeDefaults) {
+	arguments[2] = false;
+	return _parseParams.apply(this, arguments);
+};
+
 // register style sheet for backstage separately (important)
 store.addNotification("StyleSheetBackstage", refreshStyles);
 
