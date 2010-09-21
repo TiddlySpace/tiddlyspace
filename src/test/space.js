@@ -4,14 +4,22 @@ var _request, _response;
 var _ajax = $.ajax;
 var nop = function() {};
 
+var XHR = function(headers) {
+	this._headers = headers || {};
+};
+XHR.prototype.getResponseHeader = function(name) {
+	return this._headers[name.toLowerCase()];
+};
+
 module("space resource", {
 	setup: function() {
+		var xhr = new XHR();
 		$.ajax = function(options) {
 			var data = options.data ? $.evalJSON(options.data) : _response;
 			_request = options;
-			options.success(data, null, null);
-			options.error(null, null, null);
-			options.complete && options.complete(data, null, null);
+			options.success(data, null, xhr);
+			options.error(xhr, null, null);
+			options.complete && options.complete(data, null, xhr);
 		};
 	},
 	teardown: function() {
@@ -55,7 +63,7 @@ test("creation", function() {
 	_data = _orig = null;
 	space = new tiddlyweb.Space("Foo", "/");
 	space.create(callback, nop);
-	strictEqual(_data.name, undefined); // not submitting any data
+	strictEqual(_data.name, "Foo");
 
 	_data = _orig = null;
 	space = new tiddlyweb.Space("Bar");
