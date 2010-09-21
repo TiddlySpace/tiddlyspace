@@ -152,13 +152,9 @@ var plugin = config.extensions.tiddlyspace = {
 		}
 	},
 	isDisabledTab: function(tabTitle) {
-		var match = new RegExp("(?:\\[\\[([^\\]]+)\\]\\])","mg").exec(tabTitle);
+		var match = new RegExp("(?:\\[\\[([^\\]]+)\\]\\])", "mg").exec(tabTitle);
 		var tabIdentifier = match ? match[1] : tabTitle;
-		if(plugin._disabledTabs.contains(tabIdentifier)) {
-			return true;
-		} else {
-			return false;
-		}
+		return plugin._disabledTabs.contains(tabIdentifier);
 	}
 };
 
@@ -202,6 +198,7 @@ config.macros.tabs.handler = function(place, macroName, params) {
 	}
 	_tabsMacro.apply(this, [place, macroName, newParams]);
 };
+
 // register style sheet for backstage separately (important)
 store.addNotification("StyleSheetBackstage", refreshStyles);
 
