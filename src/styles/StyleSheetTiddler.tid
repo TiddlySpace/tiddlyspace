@@ -129,7 +129,6 @@ modifier: osmosoft
 /* for following */
 #popup .siteIcon {
 	float: left;
-	height: 25px;
 }
 
 .content {

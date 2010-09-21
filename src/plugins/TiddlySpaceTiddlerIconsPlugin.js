@@ -1,11 +1,11 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.6.8|
+|''Version''|0.7.0|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceTiddlerIconsPlugin.js|
-|''Requires''|TiddlySpaceConfig BinaryTiddlersPlugin ImageMacroPlugin TiddlySpaceConcertinaPlugin TiddlySpacePublishingCommands|
+|''Requires''|TiddlySpaceConfig BinaryTiddlersPlugin ImageMacroPlugin TiddlySpacePublishingCommands|
 !Notes
 Provides an additional SiteIcon view for use with view macro
 {{{<<view modifier SiteIcon>>}}}
@@ -40,7 +40,6 @@ var tiddlyspace = config.extensions.tiddlyspace;
 var getStatus = config.extensions.tiddlyweb.getStatus;
 var cmds = config.commands;
 var cmd = cmds.publishTiddler;
-var concertinaMacro = config.macros.concertina;
 
 config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		paramString, tiddler) {
@@ -98,7 +97,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"public": "public",
 		"privateAndPublic": "public and private tiddler",
 		"privateNotPublic": "private different to public",
-		"external": "from %0",
+		"external": "from %0 space",
 		"missing_info": "This tiddler does not currently exist in the space.\nIt is possible you reached this via a broken link",
 		"external_info": "This tiddler was written by %0 in the %1 space. \nIt is visible to all at:\n%2",
 		"private_info": "This tiddler is currently private.\n It is visible to only members of this space at:\n%2\n\n",
@@ -133,12 +132,9 @@ var originMacro = config.macros.tiddlerOrigin = {
 		}
 		var options = originMacro.getOptions(params, paramString);
 		options.space = tiddlyspace.determineSpace(name, true);
-		var concertinaContentEl = $("<div />")[0];
-
-		var concertinaButton = concertinaMacro.register(place, macroName, "originButton", concertinaContentEl);
-		type = originMacro.determineTiddlerType(tiddler, options, function(type) {
-			originMacro.renderIcon(tiddler, type, concertinaButton,
-				concertinaContentEl, options);
+		var btn = $("<div />").addClass("originButton").appendTo(place)[0];
+		originMacro.determineTiddlerType(tiddler, options, function(type) {
+			originMacro.renderIcon(tiddler, type, btn, options);
 		});
 	},
 
@@ -221,11 +217,11 @@ var originMacro = config.macros.tiddlerOrigin = {
 		var includeLabel = !parsedParams.label || ( parsedParams.label && parsedParams.label[0] == "yes" );
 		return { includeLabel: includeLabel };
 	},
-	renderIcon: function(tiddler, type, concertinaButton, concertinaContentEl, options) {
+	renderIcon: function(tiddler, type, button, options) {
 		var locale = originMacro.locale;
 		if(type != "external") {
-			originMacro.showPrivacyRoundel(tiddler, type, concertinaButton,
-				concertinaContentEl, options);
+			originMacro.showPrivacyRoundel(tiddler, type, button,
+				options);
 		} else {
 			getStatus(function(status) {
 				var name = options.space.name;
@@ -235,12 +231,11 @@ var originMacro = config.macros.tiddlerOrigin = {
 				var label = locale.external.format([name]);
 				tooltip = locale.external.format([tooltip]);
 				var uri = tiddlyspace.getAvatar(status.server_host, options.space.name);
-				imageMacro.renderImage(concertinaButton, uri, options.imageOptions);
+				imageMacro.renderImage(button, uri, options.imageOptions);
 				var labelOptions = options.labelOptions;
 				labelOptions.label = label;
 				labelOptions.tooltip = tooltip;
-				originMacro.showLabel(concertinaButton, type, labelOptions);
-				originMacro.fillConcertina(concertinaContentEl, type, tiddler);
+				originMacro.showLabel(button, type, labelOptions);
 			});
 		}
 	},
@@ -280,12 +275,12 @@ var originMacro = config.macros.tiddlerOrigin = {
 		}
 		return sameText && sameTags &&  sameFields;
 	},
-	showPrivacyRoundel: function(thisTiddler, privacyType, concertinaButton, concertinaContentEl, options) {
+	showPrivacyRoundel: function(thisTiddler, privacyType, button, options) {
 		// there is a public tiddler as well as the current tiddler!
 		// to do: not this is not enough.. we also need to check if the public tiddler is the same as..
 		// .. the private tiddler to determine whether this is a draft
 		// use of hashes would be useful here.
-		$(concertinaButton).empty();
+		$(button).empty();
 		var icon = "%0Icon".format([privacyType]);
 		if(privacyType == "shadow") {
 			if(!store.tiddlerExists(icon)) {
@@ -295,15 +290,20 @@ var originMacro = config.macros.tiddlerOrigin = {
 		if(privacyType == "missing" && !store.tiddlerExists(icon)) {
 			return; // the user is not making use of the missingIcon
 		} else {
-			imageMacro.renderImage(concertinaButton, icon, options.imageOptions);
-			originMacro.showLabel(concertinaButton, privacyType, options.labelOptions);
-			originMacro.fillConcertina(concertinaContentEl, privacyType, thisTiddler);
+			imageMacro.renderImage(button, icon, options.imageOptions);
+			originMacro.showLabel(button, privacyType, options.labelOptions);
+			var cmd = originMacro.iconCommands[privacyType];
+			if(cmd && thisTiddler && !options.noclick) {
+				$(button).click(function(ev) {
+					cmd(ev, thisTiddler);
+				});
+			}
 		}
 	},
-	showLabel: function(concertinaButton, type, options) {
+	showLabel: function(button, type, options) {
 		var locale = originMacro.locale;
 
-		var tidEl = $(story.findContainingTiddler(concertinaButton));
+		var tidEl = $(story.findContainingTiddler(button));
 
 		var label = options.label ? options.label : locale[type];
 		var tooltip = options.tooltip ? options.tooltip : locale[type];
@@ -311,152 +311,61 @@ var originMacro = config.macros.tiddlerOrigin = {
 			removeClass("private public external privateAndPublic privateNotPublic shadow").
 			addClass(type);
 		if(options && options.includeLabel) {
-			$('<div class="roundelLabel" />').html(label || locale.unknown).appendTo(concertinaButton);
+			$('<div class="roundelLabel" />').html(label || locale.unknown).appendTo(button);
 		}
-		$(concertinaButton).attr("title", tooltip);
+		$(button).attr("title", tooltip);
 	},
-	fillConcertina: function(place, privacyType, tiddler) {
-		if(!place) {
-			return;
-		} else {
-			var locale = originMacro.locale;
-			var space = tiddlyspace.determineSpace(tiddler);
-			space = space.name ? space.name : false;
-			getStatus(function(status) {
-				var modifier = tiddler.modifier;
-				if(modifier == "None") {
-					modifier = locale.unknownUser;
-				}
-				var spaceLink, link;
-				var title = tiddler.fields["server.title"] || tiddler.title;
-				if(!space) {
-					space = "core";
-					link = "[[/%0|/%0]]".format([title]);
-				} else {
-					spaceLink = tiddlyspace.getHost(status.server_host, space);
-					space = "[[%0|%1]]".format([space, spaceLink]);
-					link = "[[%0/%1|%0/%1]]".format([spaceLink, title]);
-				}
-
-				var localeString = locale["%0_info".format([privacyType])];
-				if(localeString){
-					wikify(localeString.format([modifier, space, link]), place);
-				}
-				var command = originMacro.concertinaCommands[privacyType];
-				if(command && tiddler) {
-					command(place, tiddler);
-				}
-			});
-		}
+	confirm: function(ev, msg, onYes) {
+		onYes = onYes ? onYes : function(ev) {};
+		var btn = $(".originButton", $(ev.target).parents())[0];
+		var popup = Popup.create(btn);
+		$(popup).addClass("confirmationPopup");
+		$("<div />").addClass("message").text(msg).appendTo(popup);
+		$("<button />").addClass("button").text("yes").appendTo(popup).click(onYes);
+		$("<button />").addClass("button").text("no").click(function(ev) {
+			Popup.remove();
+		}).appendTo(popup);
+		Popup.show();
+		ev.stopPropagation();
+		return false;
 	},
-	concertinaCommands: {
-		"public": function(place, tiddler) {
+	iconCommands: {
+		"public": function(ev, tiddler) {
 			if(!readOnly) {
 				var locale = originMacro.locale;
-				var inProgress = false;
-				var doPublish = function(ev) {
-					if(inProgress) {
-						return;
-					}
-					var checked = false;
-					var msg = checked ? locale.moveToPrivateKeep : locale.moveToPrivate;
-					var answer = confirm(msg);
-					if(answer) {
-						inProgress = true;
-						var target = $(ev.target);
-						var oldText = target.text();
-						target.text(locale.pleaseWait);
-						var onComplete = function(info) {
-							target.text(oldText);
-							inProgress = false;
-						};
-						var privateBag= cmd.toggleBag(tiddler, "private");
-						cmd.moveTiddler(tiddler, {
-							title: tiddler.title,
-							fields: { "server.bag": privateBag }
-						}, checked, onComplete);
-					}
-				};
-				var link = $('<a class="publishButton" />').text(locale.makePrivate).
-					click(doPublish).appendTo(place);
+				var msg = locale.moveToPrivate;
+				originMacro.confirm(ev, msg, function(ev) {
+					var target = $(ev.target);
+					var onComplete = function(info) {};
+					var privateBag = cmd.toggleBag(tiddler, "private");
+					cmd.moveTiddler(tiddler, {
+						title: tiddler.title,
+						fields: { "server.bag": privateBag }
+					}, false, onComplete);
+				});
 			}
 		},
-		"private": function(place, tiddler) {
-			var locale = originMacro.locale;
-			var adaptor = tiddler.getAdaptor();
-			var inProgress;
-			var doPublish = function(ev) {
-				if(inProgress) {
-					return;
-				}
+		"private": function(ev, tiddler) {
+			if(!readOnly) {
+				var locale = originMacro.locale;
+				var adaptor = tiddler.getAdaptor();
 				var publishTo = tiddler.fields["publish.name"] || tiddler.title;
 				var workspace = "bags/%0".format([tiddler.fields["server.bag"]]);
 				tiddler.fields["server.workspace"] = workspace;
 				var publicBag = cmd.toggleBag(tiddler, "public");
 				var msg;
-				var checked = false;
-				msg = checked ? locale.publishPrivateKeepPrivate : locale.publishPrivateDeletePrivate;
+				msg = locale.publishPrivateDeletePrivate;
 				var title = tiddler.title;
 				var newTitle = publishTo || tiddler.title;
 				tiddler.fields["server.page.revision"] = "false";
 				store.addTiddler(tiddler);
-				var answer = confirm(msg);
-				if(answer) {
-					inProgress = true;
-					var target = $(ev.target);
-					var oldText = target.text();
-					target.text(locale.pleaseWait);
-					var onComplete = function(info) {
-						target.text(oldText);
-						inProgress = false;
-					};
+				originMacro.confirm(ev, msg, function(ev) {
+					var onComplete = function(info) {};
 					cmd.moveTiddler(tiddler, {
 						title: newTitle,
 						fields: { "server.bag": publicBag }
-					}, checked, onComplete);
-				}
-			};
-			if(!readOnly) {
-				var link = $('<a class="publishButton" />').text(locale.makePublic).
-					click(doPublish).appendTo(place);
-			}
-		},
-		privateNotPublic: function(place, tiddler) {
-			originMacro.concertinaCommands["private"](place, tiddler);
-			originMacro.concertinaCommands.privateAndPublic(place, tiddler);
-		},
-		privateAndPublic: function(place, tiddler) {
-			var locale = originMacro.locale;
-			var inProgress;
-			var deleteTiddler = function(ev, type) {
-				if(inProgress) {
-					return;
-				}
-				type = type ? type.toLowerCase() : "public";
-				var bag = cmd.toggleBag(tiddler, type);
-				if(confirm(locale["%0ConfirmDelete".format([type])])) {
-					inProgress = true;
-					var target = $(ev.target);
-					var oldText = target.text();
-					target.text(locale.pleaseWait);
-					var onComplete = function(info) {
-						target.text(oldText);
-						inProgress = false;
-					};
-					config.commands.deleteTiddler.deleteResource(tiddler, bag, onComplete);
-				}
-			};
-			if(!readOnly) {
-				var deletePublic = function(ev) {
-					deleteTiddler(ev, "public");
-				};
-				var deletePrivate = function(ev) {
-					deleteTiddler(ev, "private");
-				};
-				$('<a class="publishButton" />').text(locale.deletePublic).
-					click(deletePublic).appendTo(place);
-				$('<a class="publishButton" />').text(locale.deletePrivate).
-					click(deletePrivate).appendTo(place);
+					}, false, onComplete);
+				});
 			}
 		}
 	}
