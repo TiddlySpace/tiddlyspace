@@ -114,6 +114,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			var _callback = function(tid, status, xhr) {
 				tid.title = avatar;
 				tid.bag.name = pubBag;
+				delete tid.etag;
 				tid.put(_notify, notify); // TODO: add to current session document (via adaptor?)
 			};
 			tweb.getUserInfo(function(user) {
