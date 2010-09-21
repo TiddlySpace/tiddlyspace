@@ -293,6 +293,13 @@ original_gather_data = tiddlywebplugins.status._gather_data
 def _status_gather_data(environ):
     data = original_gather_data(environ)
     data['server_host'] = environ['tiddlyweb.config']['server_host']
+    # ensure user is known
+    usersign = environ['tiddlyweb.usersign']['name']
+    store = environ['tiddlyweb.store']
+    try:
+        store.get(User(usersign))
+    except NoUserError:
+        data['username'] = 'GUEST'
     return data
 
 
