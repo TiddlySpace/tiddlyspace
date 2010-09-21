@@ -34,6 +34,7 @@ setup(
         'tiddlywebplugins.openid2>=0.5',
         'tiddlywebplugins.cookiedomain>=0.6',
         'tiddlywebplugins.mselect',
+        'tiddlywebplugins.oom',
         'tiddlywebplugins.prettyerror>=0.8',
         'tiddlywebplugins.pathinfohack>=0.8',
         'tiddlywebplugins.form==dev',
