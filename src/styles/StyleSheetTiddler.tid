@@ -240,6 +240,11 @@ modifier: osmosoft
 	display: block;
 }
 
+.public .originButton,
+.private .originButton {
+	cursor: pointer;
+}
+
 .modifierIcon {
 	margin-right: 2em;
 	position: relative;
