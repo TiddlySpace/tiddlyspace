@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.7.3|
+|''Version''|0.7.4|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -143,6 +143,7 @@ var cmd = config.commands.publishTiddler = {
 									callback(info);
 								}
 								store.setDirty(_dirty);
+								story.refreshTiddler(newTitle, null, true); // for drafts
 							});
 						} else {
 							if(callback) {
@@ -196,6 +197,7 @@ var cmd = config.commands.publishTiddler = {
 							if(old) {
 								story.displayTiddler(old, newTitle);
 							}
+							story.refreshTiddler(newTitle, null, true); // for case of drafts
 						}
 						if(callback) {
 							callback(info);
@@ -326,7 +328,7 @@ config.commands.deletePrivateTiddler = {
 	}
 };
 /* Save as draft command */
-config.commands.saveDraft = {
+var saveDraftCmd = config.commands.saveDraft = {
 	text: "save draft",
 	tooltip: "Save as a private draft",
 	isEnabled: function(tiddler) {
@@ -337,15 +339,7 @@ config.commands.saveDraft = {
 			return false;
 		}
 	},
-	handler: function(ev, src, title) {
-		// TODO: when creating a draft also copy over revisions from the public version
-		var tiddler = store.getTiddler(title); // original tiddler
-		var tidEl = story.getTiddler(title);
-		var fields = {};
-		story.gatherSaveFields(tidEl, fields);
-		var extendedFields = merge({}, config.defaultCustomFields);
-		var currentSpace = tiddlyspace.currentSpace.name;
-		var privateWorkspace = "recipes/%0_private".format([currentSpace]);
+	getDraftTitle: function(title) {
 		var draftTitle;
 		var draftNum = "";
 		while(!draftTitle) {
@@ -356,21 +350,47 @@ config.commands.saveDraft = {
 				draftTitle = suggestedTitle;
 			}
 		}
-
-		extendedFields["publish.name"] = title;
-		extendedFields["server.workspace"] = privateWorkspace;
-		var newDate = new Date();
-		for(var n in fields) {
-			if(!TiddlyWiki.isStandardField(n)) {
-				extendedFields[n] = fields[n];
+		return draftTitle;
+	},
+	createDraftTiddler: function(title, gatheredFields) {
+		var tiddler = store.getTiddler(title);
+		var draftTitle = saveDraftCmd.getDraftTitle(title);
+		var draftTiddler = new Tiddler(draftTitle);
+		if(tiddler) {
+			$.extend(true, draftTiddler, tiddler);
+		} else {
+			$.extend(draftTiddler.fields, config.defaultCustomFields);
+		}
+		for(var fieldName in gatheredFields) {
+			if(TiddlyWiki.isStandardField(fieldName)) {
+				draftTiddler[fieldName] = gatheredFields[fieldName];
+			} else {
+				draftTiddler.fields[fieldName] = gatheredFields[fieldName];
 			}
 		}
-		tiddler = store.saveTiddler(draftTitle, draftTitle, fields.text, config.options.txtUserName,
-			newDate, fields.tags, extendedFields);
-		autoSaveChanges(null, [tiddler]);
+		var currentSpace = tiddlyspace.currentSpace.name;
+		var privateBag = "%0_private".format([currentSpace])
+		var privateWorkspace = "bags/%0".format([privateBag]);
+		draftTiddler.title = draftTitle;
+		draftTiddler.fields["publish.name"] = title;
+		draftTiddler.fields["server.workspace"] = privateWorkspace;
+		draftTiddler.fields["server.bag"] = privateBag;
+		draftTiddler.fields["server.title"] = draftTitle;
+		draftTiddler.fields["server.page.revision"] = "false";
+		delete draftTiddler.fields["server.etag"];
+		return draftTiddler;
+	},
+	handler: function(ev, src, title) {
+		var tiddler = store.getTiddler(title); // original tiddler
+		var tidEl = story.getTiddler(title);
+		var uiFields = {};
+		story.gatherSaveFields(tidEl, uiFields);
+		var tid = saveDraftCmd.createDraftTiddler(title, uiFields);
+		tid = store.saveTiddler(tid.title, tid.title, tid.text, tid.modifier,
+			new Date(), tid.tags, tid.fields);
+		autoSaveChanges(null, [tid]);
 		story.closeTiddler(title);
-		story.displayTiddler(src, draftTitle);
-		return draftTitle;
+		story.displayTiddler(src, tid.title);
 	}
 };
 

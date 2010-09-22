@@ -1,18 +1,87 @@
 (function(module, $) {
 
-var _copy;
-var _readOnly;
+var _copy, _readOnly, _isStandardField;
 module("TiddlySpacePublishingCommands", {
 	setup: function() {
 		_copy = config.commands.publishTiddler.copyTiddler;
 		_readOnly = readOnly;
+		_isStandardField = TiddlyWiki.isStandardField;
+		TiddlyWiki.isStandardField = function(field) {
+			if(field == "title" || field == "tags" || field == "text") {
+				return true;
+			} else {
+				return false;
+			}
+		}
 		readOnly = false;
 	},
 	teardown: function() {
-		store.removeTiddler("pig");
+		var toDelete = ["pig", "foo", "foo [draft]", "foo [draft2]", "foo [draft3]", 
+			"foo [draft5]", "bar [draft]"];
+		for(var i = 0; i < toDelete.length; i++) {
+			store.removeTiddler(toDelete[i]);
+		}
+		TiddlyWiki.isStandardField = _isStandardField;
 		config.commands.publishTiddler.copyTiddler = _copy;
 		readOnly = _readOnly;
 	}
+});
+
+test("getDraftTitle", function() {
+	// setup
+	var cmd = config.commands.saveDraft;
+	store.saveTiddler(new Tiddler("foo [draft]"));
+	store.saveTiddler(new Tiddler("foo [draft2]"));
+	store.saveTiddler(new Tiddler("foo [draft3]"));
+	store.saveTiddler(new Tiddler("foo [draft5]"));
+	store.saveTiddler(new Tiddler("bar [draft]"));
+
+	// run
+	var title1 = cmd.getDraftTitle("foo");
+	var title2 = cmd.getDraftTitle("bar");
+	var title3 = cmd.getDraftTitle("dum");
+
+	// verify
+	strictEqual(title1, "foo [draft4]");
+	strictEqual(title2, "bar [draft2]");
+	strictEqual(title3, "dum [draft]");
+});
+
+test("createDraftTiddler", function() {
+	// setup
+	var cmd = config.commands.saveDraft;
+	var tiddler = new Tiddler("foo");
+	tiddler.tags = ["foo", "bar"];
+	tiddler.text = "not a draft";
+	tiddler.fields["geo.long"] = "3";
+	tiddler.fields["geo.lat"] = "2";
+	tiddler.fields["server.title"] = "foo";
+	tiddler.fields["server.page.revision"] = "10";
+	tiddler.fields["server.etag"] = "xyz10xyz";
+	tiddler.fields["server.bag"] = "foo_public";
+	store.saveTiddler(tiddler);
+	var gatheredFields = { text: "a draft", bar: "xyz", tags: "foo [[link 2]]" };
+
+	// run
+	var draftTiddler = cmd.createDraftTiddler("foo", gatheredFields);
+
+	// verify
+	var fields = draftTiddler.fields;
+	strictEqual(draftTiddler.title, "foo [draft]");
+	strictEqual(draftTiddler.tags, "foo [[link 2]]");
+	strictEqual(draftTiddler.text, "a draft");
+	strictEqual(fields["server.bag"], "foo_private");
+	strictEqual(fields["server.page.revision"], "false");
+	strictEqual(fields["server.title"], "foo [draft]");
+	strictEqual(fields["server.workspace"], "bags/foo_private");
+	strictEqual(fields["publish.name"], "foo");
+	strictEqual(fields["geo.long"], "3");
+	strictEqual(fields["geo.lat"], "2");
+	strictEqual(typeof(fields["server.etag"]), "undefined")
+
+	tiddler = store.getTiddler("foo");
+	strictEqual(tiddler.fields["server.bag"], "foo_public", "checks old tiddler retained");
+	strictEqual(typeof(tiddler.fields["server.workspace"]), "undefined", "checks old tiddler retained");
 });
 
 test("toggleWorkspace", function() {
