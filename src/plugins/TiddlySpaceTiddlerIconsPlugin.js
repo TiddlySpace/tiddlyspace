@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.7.0|
+|''Version''|0.7.1|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -118,7 +118,11 @@ var originMacro = config.macros.tiddlerOrigin = {
 		moveToPrivateKeep: "Are you sure you want to make this tiddler and all its revisions private? It will no longer be publically available to non-members of the space.",
 		"publicConfirmDelete": "Are you sure you want to delete all the public revisions of this tiddler?",
 		"privateConfirmDelete": "Are you sure you want to delete all the private revisions of this tiddler?",
-		pleaseWait: "please wait.."
+		pleaseWait: "please wait..",
+		keepPublic: "keep public",
+		keepPrivate: "keep private",
+		makePublic: "make public",
+		makePrivate: "make private"
 	},
 	handler: function(place, macroName, params,wikifier, paramString, tiddler){
 		var adaptor = tiddler.getAdaptor();
@@ -315,14 +319,15 @@ var originMacro = config.macros.tiddlerOrigin = {
 		}
 		$(button).attr("title", tooltip);
 	},
-	confirm: function(ev, msg, onYes) {
+	confirm: function(ev, msg, onYes, options) {
+		options = options ? options : {};
 		onYes = onYes ? onYes : function(ev) {};
 		var btn = $(".originButton", $(ev.target).parents())[0];
 		var popup = Popup.create(btn);
 		$(popup).addClass("confirmationPopup");
 		$("<div />").addClass("message").text(msg).appendTo(popup);
-		$("<button />").addClass("button").text("yes").appendTo(popup).click(onYes);
-		$("<button />").addClass("button").text("no").click(function(ev) {
+		$("<button />").addClass("button").text(options.yesLabel || "yes").appendTo(popup).click(onYes);
+		$("<button />").addClass("button").text(options.noLabel || "no").click(function(ev) {
 			Popup.remove();
 		}).appendTo(popup);
 		Popup.show();
@@ -342,7 +347,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 						title: tiddler.title,
 						fields: { "server.bag": privateBag }
 					}, false, onComplete);
-				});
+				}, { yesLabel: locale.makePrivate, noLabel: locale.keepPublic });
 			}
 		},
 		"private": function(ev, tiddler) {
@@ -365,7 +370,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 						title: newTitle,
 						fields: { "server.bag": publicBag }
 					}, false, onComplete);
-				});
+				}, { yesLabel: locale.makePublic, noLabel: locale.keepPrivate });
 			}
 		}
 	}
