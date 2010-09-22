@@ -1,4 +1,4 @@
-tags: excludeLists
+tags: systemConfig excludeLists excludeSearch
 modifier: osmosoft
 
 !User

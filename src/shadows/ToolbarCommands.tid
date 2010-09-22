@@ -1,5 +1,4 @@
-tags: excludeLists
-modifier: osmosoft
+tags: systemConfig excludeLists excludeSearchmodifier: osmosoft
 
 |~ViewToolbar|closeTiddler +editTiddler +cloneTiddler > fields publishTiddler pubRev revisions syncing permalink references jump closeOthers|
 |~EditToolbar|+saveTiddler saveDraft -cancelTiddler deleteTiddler|
