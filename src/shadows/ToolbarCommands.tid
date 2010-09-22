@@ -1,6 +1,6 @@
 tags: excludeLists
 modifier: osmosoft
 
-|~ViewToolbar|closeTiddler +editTiddler +cloneTiddler > fields publishTiddler pubRev revisions syncing permalink references jump closeOthers|
+|~ViewToolbar|closeTiddler +editTiddler +cloneTiddler > fields changeToPrivate changeToPublic revisions syncing permalink references jump closeOthers|
 |~EditToolbar|+saveTiddler saveDraft -cancelTiddler deleteTiddler|
 |~RevisionToolbar|> fields revert|

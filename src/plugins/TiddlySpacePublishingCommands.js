@@ -27,8 +27,8 @@ tiddlyspace.getTiddlerStatusType = function(tiddler) {
 };
 
 var cmd = config.commands.publishTiddler = {
-	text: "publish",
-	tooltip: "Change the public/private state of this tiddler",
+	text: "make public",
+	tooltip: "Change this private tiddler into a public tiddler",
 	errorMsg: "Error publishing %0: %1",
 
 	isEnabled: function(tiddler) {
@@ -223,28 +223,10 @@ config.commands.changeToPrivate = {
 		var tiddler = store.getTiddler(title);
 		var newBag = cmd.toggleBag(tiddler, "private");
 		var newTiddler = { title: title, fields: { "server.bag": newBag }};
-		cmd.moveTiddler(tiddler, newTiddler, true);
+		cmd.moveTiddler(tiddler, newTiddler, false);
 	}
 };
-config.commands.changeToPublic = {
-	text: "make public",
-	tooltip: "turn this private tiddler into a public tiddler",
-	isEnabled: function(tiddler) {
-		var type = tiddlyspace.getTiddlerStatusType(tiddler);
-		if(!readOnly && type == "private") {
-			return true;
-		} else {
-			return false;
-		}
-	},
-	handler: function(event, src, title) {
-		var tiddler = store.getTiddler(title);
-		var newBag = cmd.toggleBag(tiddler, "public");
-		var publishTitle = tiddler.fields["publish.name"] || title;
-		var newTiddler = { title: publishTitle, fields: { "server.workspace": newBag }};
-		cmd.moveTiddler(tiddler, newTiddler, true);
-	}
-};
+config.commands.changeToPublic = config.commands.publishTiddler;
 
 config.commands.deleteTiddler.deleteResource = function(tiddler, bag, userCallback) {
 	var workspace = "bags/%0".format([bag]);
