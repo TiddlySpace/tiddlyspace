@@ -1,5 +1,4 @@
-tags: excludeLists
-modifier: osmosoft
+tags: systemConfig excludeLists excludeSearchmodifier: osmosoft
 
 !Spaces
 <<groupBy server.bag>>

@@ -1,4 +1,4 @@
-tags: excludeLists
+tags: excludeSearch excludeLists
 modifier: osmosoft
 
 <<closeAll>><<permaview>><<newTiddler>>
