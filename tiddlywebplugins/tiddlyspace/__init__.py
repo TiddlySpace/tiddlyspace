@@ -21,7 +21,7 @@ from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 
 
-__version__ = '0.9.19'
+__version__ = '0.9.21'
 
 
 def init(config):
@@ -34,6 +34,7 @@ def init(config):
     import tiddlywebplugins.magicuser
     import tiddlywebplugins.socialusers
     import tiddlywebplugins.mselect
+    import tiddlywebplugins.oom
     import tiddlywebplugins.cookiedomain
     import tiddlywebplugins.tiddlyspace.validator
     #import tiddlywebplugins.prettyerror
@@ -87,6 +88,7 @@ def init(config):
     tiddlywebplugins.magicuser.init(config)
     tiddlywebplugins.socialusers.init(config)
     tiddlywebplugins.mselect.init(config)
+    tiddlywebplugins.oom.init(config)
     tiddlywebplugins.cookiedomain.init(config)
     #tiddlywebplugins.prettyerror.init(config)
     tiddlywebplugins.pathinfohack.init(config)
