@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.5.5|
+|''Version''|0.5.6|
 |''Description''|TiddlySpace configuration|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -180,10 +180,13 @@ config.macros.backstageInit = {
 };
 
 // disable evaluated macro parameters for security reasons
+config.evaluateMacroParameters = "none";
 var _parseParams = String.prototype.parseParams;
 String.prototype.parseParams = function(defaultName, defaultValue, allowEval,
 		noNames, cascadeDefaults) {
-	arguments[2] = false;
+	if(config.evaluateMacroParameters == "none") {
+		arguments[2] = false;
+	}
 	return _parseParams.apply(this, arguments);
 };
 
