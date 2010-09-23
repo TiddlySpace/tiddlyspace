@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -35,7 +35,7 @@ If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default 
 (function($) {
 
 config.annotations.FollowersTemplate = "This tiddler is used in the display of tiddlers from spaces you are following. Use the wildcard $1 for the space name, $2 for the space uri and $3 for the tiddler text.";
-config.shadowTiddlers.FollowersTemplate = "[[$1|$2]]";
+config.shadowTiddlers.FollowersTemplate = "[[$1]] [[visit space|@$2]]";
 
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
@@ -291,6 +291,10 @@ var followersMacro = config.macros.followers = {
 				success: function(tiddlers) {
 					$(place).empty();
 					var list = $("<ul />").appendTo(place);
+					tiddlers = tiddlers.sort(function(a, b) {
+						return a.bag < b.bag ? -1 : 1;
+					});
+
 					for(var i = 0; i < tiddlers.length; i++) {
 						var tiddler = tiddlers[i];
 						var spaceName = tiddler[field];
@@ -299,7 +303,7 @@ var followersMacro = config.macros.followers = {
 						}
 						var spaceURI = host.format([spaceName]);
 						var item = $('<li class="spaceName" />').appendTo(list)[0];
-						config.macros.tiddler.handler(item,null,null,null,
+						config.macros.tiddler.handler(item, null, null, null,
 							'name:%0 with:"%1" with:"%2" with:"%3"'.
 								format([options.template, spaceName, spaceURI, tiddler.text]));
 					}
