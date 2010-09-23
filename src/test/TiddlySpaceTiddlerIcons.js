@@ -4,12 +4,12 @@ var _areIdentical;
 var _Popup;
 module("TiddlySpaceTiddlerIcons", {
 	setup: function() {
+		var popup = $("<div />").attr("id", "test_ttt_popup").appendTo(document.body);
 		_areIdentical = config.macros.tiddlerOrigin.areIdentical;
 		Popup = {
 			create: function(place) {
-				var popup = $("<div />").attr("id", "test_ttt_popup").appendTo(document.body);
 				this.el = popup;
-				return popup;
+				return document.getElementById("test_ttt_popup");
 			},
 			show: function() {
 				$(this.el).show();
@@ -25,11 +25,40 @@ module("TiddlySpaceTiddlerIcons", {
 		store.removeTiddler("foo");
 		store.removeTiddler("foo2");
 		store.removeTiddler("boo [public]");
+		var popup = document.getElementById("test_ttt_popup");
+		if(popup) {
+			popup.parentNode.removeChild(popup);
+		}
 		config.macros.tiddlerOrigin.areIdentical = _areIdentical;
 		Popup = _Popup;
 	}
 });
 
+test("confirm", function() {
+	var macro = config.macros.tiddlerOrigin;
+	var place = $("<div />");
+	var ev = {
+		target: place, 
+		stopPropagation: function(){}
+	};
+	// run
+	var clicked = false;
+	macro.confirm(ev, "hello", function(ev) {
+		clicked = true;
+	});
+	place = document.getElementById("test_ttt_popup");
+	strictEqual($(".message", place).text(), "hello");
+	strictEqual($("button", place).length, 2);
+	var yes = $("button", place)[0];
+	var no = $("button", place)[1];
+	no.click();
+	strictEqual(Popup.hidden, true);
+
+	strictEqual(clicked, false);
+	yes.click();
+	strictEqual(clicked, true);
+	
+});
 test("determineTiddlerType (shadow)", function() {
 	var tiddler = new Tiddler("ToolbarCommands");
 	var result = "";
@@ -247,31 +276,5 @@ test("check concertina commands do not appear in readonly mode", function() {
 	strictEqual($(selector, place1).length, 0);
 	strictEqual($(selector, place2).length, 0);
 
-});
-
-test("confirm", function() {
-	var macro = config.macros.tiddlerOrigin;
-	var place = $("<div />");
-	var ev = {
-		target: place, 
-		stopPropagation: function(){}
-	};
-	// run
-	var clicked = false;
-	macro.confirm(ev, "hello", function(ev) {
-		clicked = true;
-	});
-	place = document.getElementById("test_ttt_popup");
-	strictEqual($(".message", place).text(), "hello");
-	strictEqual($("button", place).length, 2);
-	var yes = $("button", place)[0];
-	var no = $("button", place)[1];
-	no.click();
-	strictEqual(Popup.hidden, true);
-
-	strictEqual(clicked, false);
-	yes.click();
-	strictEqual(clicked, true);
-	
 });
 })(QUnit.module, jQuery);
