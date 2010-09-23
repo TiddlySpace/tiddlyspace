@@ -444,26 +444,26 @@ class ControlView(object):
 
             filter_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
-                filter_string = 'mselect='
+                filter_string = 'oom=name:'
                 if recipe_name.endswith('_private'):
-                    filter_parts = ['name:%s_%s' % (space_name, status)
+                    filter_parts = ['%s_%s' % (space_name, status)
                             for status in ('private', 'public')]
                 else:
-                    filter_parts = ['name:%s_public' % space_name]
+                    filter_parts = ['%s_public' % space_name]
                 for subscription in subscriptions:
-                    filter_parts.append('name:%s_public' % subscription)
+                    filter_parts.append('%s_public' % subscription)
                 filter_string += ','.join(filter_parts)
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
-                filter_string = 'mselect='
+                filter_string = 'oom=name:'
                 filter_parts = []
                 for bag in bags:
-                    filter_parts.append('name:%s' % bag)
+                    filter_parts.append('%s' % bag)
                 filter_string += ','.join(filter_parts)
             elif req_uri.startswith('/search') and req_uri.count('/') == 1:
-                filter_string = 'mselect='
+                filter_string = 'oom=bag:'
                 filter_parts = []
                 for bag in bags:
-                    filter_parts.append('bag:%s' % bag)
+                    filter_parts.append('%s' % bag)
                 filter_string += ','.join(filter_parts)
             else:
                 entity_name = req_uri.split('/')[2]

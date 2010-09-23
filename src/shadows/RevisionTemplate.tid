@@ -1,4 +1,4 @@
-tags: excludeLists excludeMissing
+tags: excludeLists excludeMissing excludeSearch
 modifier: osmosoft
 
 <!--{{{-->

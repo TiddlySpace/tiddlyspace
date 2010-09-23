@@ -281,7 +281,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 	},
 	showPrivacyRoundel: function(thisTiddler, privacyType, button, options) {
 		// there is a public tiddler as well as the current tiddler!
-		// to do: not this is not enough.. we also need to check if the public tiddler is the same as..
+		// TODO: not this is not enough.. we also need to check if the public tiddler is the same as..
 		// .. the private tiddler to determine whether this is a draft
 		// use of hashes would be useful here.
 		$(button).empty();

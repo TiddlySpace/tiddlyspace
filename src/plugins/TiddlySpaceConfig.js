@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.5.5|
+|''Version''|0.5.6|
 |''Description''|TiddlySpace configuration|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -109,6 +109,7 @@ var systemSpaces = ["plugins", "info", "images", "theme"];
 systemSpaces = $.map(systemSpaces, function(item, i) {
 	return "system-%0_public".format(item);
 });
+var disabledTabs = [];
 
 var plugin = config.extensions.tiddlyspace = {
 	currentSpace: determineSpace(recipe),
@@ -141,10 +142,9 @@ var plugin = config.extensions.tiddlyspace = {
 		}
 		return url;
 	},
-	_disabledTabs: [],
 	disableTab: function(tabTiddler) {
 		if(typeof(tabTiddler) == "string") {
-			plugin._disabledTabs.push(tabTiddler);
+			disabledTabs.push(tabTiddler);
 		} else {
 			for(var i = 0; i < tabTiddler.length; i++) {
 				plugin.disableTab(tabTiddler[i]);
@@ -154,7 +154,7 @@ var plugin = config.extensions.tiddlyspace = {
 	isDisabledTab: function(tabTitle) {
 		var match = new RegExp("(?:\\[\\[([^\\]]+)\\]\\])", "mg").exec(tabTitle);
 		var tabIdentifier = match ? match[1] : tabTitle;
-		return plugin._disabledTabs.contains(tabIdentifier);
+		return disabledTabs.contains(tabIdentifier);
 	}
 };
 
@@ -180,10 +180,13 @@ config.macros.backstageInit = {
 };
 
 // disable evaluated macro parameters for security reasons
+config.evaluateMacroParameters = "none";
 var _parseParams = String.prototype.parseParams;
 String.prototype.parseParams = function(defaultName, defaultValue, allowEval,
 		noNames, cascadeDefaults) {
-	arguments[2] = false;
+	if(config.evaluateMacroParameters == "none") {
+		arguments[2] = false;
+	}
 	return _parseParams.apply(this, arguments);
 };
 

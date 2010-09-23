@@ -1,4 +1,4 @@
-tags: excludeLists
+tags: excludeSearch excludeLists
 modifier: osmosoft
 
 /*{{{*/
@@ -238,6 +238,11 @@ modifier: osmosoft
 	font-size: 0.8em;
 	text-align: center;
 	display: block;
+}
+
+.public .originButton,
+.private .originButton {
+	cursor: pointer;
 }
 
 .modifierIcon {

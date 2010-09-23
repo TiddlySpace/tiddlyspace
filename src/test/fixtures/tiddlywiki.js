@@ -12,10 +12,11 @@ config = {
 		}
 	},
 	macros: {
-		search: {},
 		view: {
 			views: {}
-		}
+		},
+		search: {},
+		tabs: {}
 	},
 	shadowTiddlers: {
 		ToolbarCommands: "|~ViewToolbar|closeTiddler closeOthers +editTiddler" +
