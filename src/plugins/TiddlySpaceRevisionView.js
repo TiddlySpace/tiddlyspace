@@ -64,7 +64,7 @@ var me = config.macros.viewRevisions = {
 			host: tiddler.fields["server.host"],
 			workspace: tiddler.fields["server.workspace"]
 		};
-		$(tiddlerElem).addClass('revisions');
+		$(tiddlerElem).addClass("revisions");
 		$(tiddlerElem).attr("revName", tiddler.title);
 		$("a", ".toolbar", tiddlerElem).each(function(index, btn) {
 			var _onclick = btn.onclick;
@@ -114,7 +114,7 @@ var me = config.macros.viewRevisions = {
 
 				//now, populate the existing div
 				var revElem = userParams.revElem;
-				$(revElem).attr('id', story.tiddlerId(tiddler.title));
+				$(revElem).attr("id", story.tiddlerId(tiddler.title));
 				$(revElem).attr("refresh", "tiddler");
 				var template = (store.getTiddler(me.revisionTemplate)) ?
 					me.revisionTemplate : "ViewTemplate";
@@ -155,10 +155,10 @@ var me = config.macros.viewRevisions = {
 		var revisions = $(".revisions");
 		$(".revisions").each(function(index, revision) {
 			var revAttributes = revision.attributes;
-			if ((revAttributes["revname"]) && 
-					(revAttributes["revision"])) {
-				var revName = revAttributes["revname"].value;
-				var revNo = revAttributes["revision"].value;
+			if ((revAttributes.revname) &&
+					(revAttributes.revision)) {
+				var revName = revAttributes.revname.value;
+				var revNo = revAttributes.revision.value;
 				var title = revName + me.revSuffix.format([revNo]);
 
 				if (store.getTiddler(title)) {
@@ -228,7 +228,7 @@ var me = config.macros.viewRevisions = {
 	shiftVisibleDown: function(title, callback) {
 		var revisions = $("[revName=%0].revisions".format([title]));
 		var revisionCount = revisions.length;
-		
+
 		$(revisions).animate({top: "+=" + me.offsetTop},
 				me.shiftDownDelay, function() {
 					revisionCount -= 1;

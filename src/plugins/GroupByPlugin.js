@@ -19,7 +19,7 @@ group tiddlers by tag but exclude the tags with values excludeLists and systemCo
 
 Within that group you can also exclude things by filter
 {{{groupBy modifier filter:[tag[film]]}}}
-will group tiddlers tagged with film by modifier. 
+will group tiddlers tagged with film by modifier.
 ***/
 //{{{
 (function($) {

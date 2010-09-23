@@ -10,7 +10,7 @@
 //{{{
 (function($) {
 
-var disabled_tabs_for_nonmembers = ["PluginManager", "Backstage##FileImport", 
+var disabled_tabs_for_nonmembers = ["PluginManager", "Backstage##FileImport",
 	"Backstage##SpaceMembers", "TiddlySpaceTabs##Private", "TiddlySpaceTabs##Drafts"];
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;

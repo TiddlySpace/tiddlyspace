@@ -351,7 +351,7 @@ var saveDraftCmd = config.commands.saveDraft = {
 			}
 		}
 		var currentSpace = tiddlyspace.currentSpace.name;
-		var privateBag = "%0_private".format([currentSpace])
+		var privateBag = "%0_private".format([currentSpace]);
 		var privateWorkspace = "bags/%0".format([privateBag]);
 		draftTiddler.title = draftTitle;
 		draftTiddler.fields["publish.name"] = title;

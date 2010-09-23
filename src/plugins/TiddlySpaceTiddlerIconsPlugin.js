@@ -106,8 +106,6 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"privateNotPublic_info": "This tiddler is currently public, with a different private revision. You are currently viewing the private version.\nIt is visible to all at:\n%2\nbut the content will differ depending on permissions.\n\n",
 		"shadow_info": "This tiddler is a special tiddler that is part of the TiddlySpace application. It has no uri.",
 		"unknownUser": "an unknown user",
-		"makePublic": "Make this tiddler public",
-		"makePrivate": "Make this tiddler private",
 		"deletePrivate": "Delete the private version of this tiddler",
 		"deletePublic": "Delete the public version of this tiddler",
 		publishPrivateDeletePrivate: "Are you sure you want to make this tiddler public?",
