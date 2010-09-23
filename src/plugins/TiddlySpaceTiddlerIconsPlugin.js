@@ -206,9 +206,12 @@ var originMacro = config.macros.tiddlerOrigin = {
 		}
 	},
 	getOptions: function(params, paramString) {
+		var parsedParams = paramString.parseParams("name");
 		var options = {
-			labelOptions: originMacro._getLabelOptions(paramString.parseParams("name")),
-			imageOptions: imageMacro.getArguments(paramString, [])
+			labelOptions: originMacro._getLabelOptions(parsedParams),
+			imageOptions: imageMacro.getArguments(paramString, []),
+			noclick: parsedParams[0].interactive && 
+				parsedParams[0].interactive[0] == "no" ? true : false
 		};
 		return options;
 	},
