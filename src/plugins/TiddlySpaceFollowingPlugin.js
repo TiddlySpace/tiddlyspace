@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.4|
+|''Version''|0.5.5|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -29,25 +29,35 @@ If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default 
 .followTiddlersList li .externalImage, .followTiddlersList li .image {
 	display: inline;
 }
+.scanResults li {
+	list-style: none;
+}
+!To do
+mangle external links to work in their new environment.
+
 !Code
 ***/
 //{{{
 (function($) {
 
-config.annotations.FollowersTemplate = "This tiddler is used in the display of tiddlers from spaces you are following. Use the wildcard $1 for the space name, $2 for the space uri and $3 for the tiddler text.";
-config.shadowTiddlers.FollowersTemplate = "[[$1]] [[visit space|@$2]]";
-
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
 var imageMacro = config.macros.image;
 
+config.annotations.ScanTemplate = "This tiddler is used in the display of tiddlers from spaces you are following. Use the wildcard {{{$1}}} for the space name the tiddler came from and {{{$2}}} for the tiddler text.";
+tweb.getStatus(function(status) { // get true avatar
+	var avatar = tiddlyspace.getAvatar(status.server_host, "$1");
+	config.shadowTiddlers.ScanTemplate = "<<image %0 24 24>> [[$1]] [[visit space|@$1]]".format([avatar]);
+});
+
 var name = "StyleSheetFollowing";
+tiddler = {title: "TiddlySpaceFollowingPlugin"};
 config.shadowTiddlers[name] = store.getTiddlerText(tiddler.title +
      "##StyleSheet");
 store.addNotification(name, refreshStyles);
 
 // provide support for sucking in tiddlers from the server
-tiddlyspace.displayServerTiddler = function(src, title, workspace) {
+tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 	var adaptor = store.getTiddlers()[0].getAdaptor();
 	tweb.getStatus(function(status) {
 		var context = {
@@ -62,7 +72,7 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace) {
 		} else {
 			space = "@%0".format([space]);
 		}
-		var callback = function(context, userParams) {
+		var getCallback = function(context, userParams) {
 			var tiddler = context.tiddler;
 			tiddler.fields.doNotSave = "true";
 			tiddler.title = "%0 [%1]".format([title, space]);
@@ -73,9 +83,36 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace) {
 			if(refresh) {
 				story.refreshTiddler(tiddler.title, null, true);
 			}
-			return el;
+			if(callback) {
+				tiddlyspace.displayReplyButton(el, tiddler);
+				callback(el, tiddler);
+			}
 		};
-		adaptor.getTiddler(title, context, null, callback);
+		adaptor.getTiddler(title, context, null, getCallback);
+		
+	});
+};
+tiddlyspace.displayReplyButton = function(el, tiddler) {
+	var btn = $("<button />").addClass("reply").text("reply").appendTo(el);
+	var publicBag = "%0_public".format([tiddlyspace.currentSpace.name]);
+	var serverTitle = tiddler.fields["server.title"];
+	btn.click(function(ev) {
+		story.displayTiddler(ev.target, serverTitle, DEFAULT_EDIT_TEMPLATE, false, null, null);
+		var tiddlerEl = story.getTiddler(serverTitle);
+		var yourTiddler = store.getTiddler(serverTitle);
+		var text = yourTiddler ? yourTiddler.text : "";
+		if(!yourTiddler) {
+			var newFields = {};
+			merge(newFields, config.defaultCustomFields);
+			merge(newFields, { "server.workspace": "bags/%0".format([publicBag]) });
+			var customFields = String.encodeHashMap(newFields);
+			if(customFields) {
+				story.addCustomFields(tiddlerEl, customFields);
+			}
+		}
+		var replyTemplate = "in reply to @%0:\n<<<\n%1\n<<<\n\n%2".format([tiddler.modifier, tiddler.text, text]);
+		$("[edit=text]", tiddlerEl).val(replyTemplate);
+
 	});
 };
 
@@ -84,6 +121,9 @@ var followMacro = config.macros.followTiddlers = {
 		followListHeader: "Here are tiddlers from spaces you follow using the follow tag which use this title.",
 		noTiddlersFromFollowers: "None of the spaces you follow contain a tiddler with this name.",
 		errorMessage: "There was a problem retrieving tiddlers from the server. Please try again later."
+	},
+	init: function() {
+		followMacro.lookup = {};
 	},
 	beforeSend: function(xhr) {
 		xhr.setRequestHeader("X-ControlView", "false");
@@ -97,28 +137,49 @@ var followMacro = config.macros.followTiddlers = {
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
+		var btn = $('<div class="followButton" />').appendTo(place)[0];
+		var options = {};
 		var user = params[1] || false; // allows a user to use the macro on another username
 		this.getFollowers(function(followers) {
 			var bagQuery = followMacro._constructBagQuery(followers);
 			followMacro.getHosts(function(host, tsHost) {
+				options.host = tsHost;
+				options.ignore = tiddler.fields["server.bag"];
 				if(followers.length > 0) { // only run the search if we have a list of followers
-					var url = '%0/search?q=title:"%1" %2'.
-						format([host, encodeURI(title), bagQuery]);
-					ajaxReq({
-						dataType: "json",
-						beforeSend: followMacro.beforeSend,
-						url: url,
-						success: function(tiddlers) {
-							followMacro.constructInterface(place, tiddlers, { host: tsHost });
-						}
-					});
+					for(var i = 0; i < followers.length; i++) {
+						followMacro.makeQuery(btn, title, followers[i], options);
+					}
 				} else {
-					followMacro.constructInterface(place, [], {});
+					followMacro.constructInterface(btn, [], options);
 				}
 			});
 		}, user);
 	},
+	makeQuery: function(container, title, bag, options) {
+		if(!followMacro.lookup[title]) {
+			followMacro.lookup[title] = { tested: [], tiddlers: [] };
+		}
+		if(followMacro.lookup[title].tested.contains(bag)) {
+			followMacro.constructInterface(container, followMacro.lookup[title].tiddlers, options);
+		} else {
+			followMacro.lookup[title].tested.pushUnique(bag);
+			ajaxReq({
+				dataType: "json",
+				beforeSend: followMacro.beforeSend,
+				url: "/bags/%0_public/tiddlers/%1".format([bag, title]),
+				success: function(tiddler) {
+					followMacro.lookup[title].tiddlers.push(tiddler);
+					followMacro.constructInterface(container, followMacro.lookup[title].tiddlers, options);
+				},
+				error: function() {
+					followMacro.constructInterface(container, followMacro.lookup[title].tiddlers, options);
+				}
+			});
+		}
+	},
 	constructInterface: function(place, tiddlers, options) {
+		$(place).empty();
+		var ignore = 0;
 		var ul = $('<ul class="followTiddlersList" />');
 		var host = options.host || "";
 		var handler = function(ev) {
@@ -130,25 +191,29 @@ var followMacro = config.macros.followTiddlers = {
 		for(var i = 0; i < tiddlers.length; i++) {
 			var tiddler = tiddlers[i];
 			var title = tiddler.title;
-			var spaceName = tiddler.bag.replace(/([^_]*)_public/i, "$1");
-			var tsHost = host.format([spaceName]);
-			var modifier = tiddler.modifier;
-			var link = $('<a href="#" title="%0" class="alienTiddlerLink">%0</a>'.format([title])).
-				attr("space", spaceName).click(handler);
-			var li = $("<li />");
-			imageMacro.renderImage(li[0],
-				"%0/bags/%1_public/tiddlers/SiteIcon".format([tsHost, spaceName]),
-				{ imageClass: "siteIcon" });
-			var label = $("<span />").addClass("label").appendTo(li);
-			label.append(link);
-			var modifierLink = host.format([modifier]);
-			var spaceLink = host.format([spaceName]);
-			$('<span>&nbsp;(last modified by <a href="%2">%0</a> in <a href="%3">%1</a>)</span>'.
-				format([modifier, spaceName, modifierLink, spaceLink])).
-				appendTo(label);
-			ul.append(li);
+			if(tiddler.bag != options.ignore) {
+				var spaceName = tiddler.bag.replace(/([^_]*)_public/i, "$1");
+				var tsHost = host.format([spaceName]);
+				var modifier = tiddler.modifier;
+				var link = $('<a href="#" title="%0" class="alienTiddlerLink">%0</a>'.format([title])).
+					attr("space", spaceName);
+				var li = $("<li />");
+				imageMacro.renderImage(li[0],
+					"%0/bags/%1_public/tiddlers/SiteIcon".format([tsHost, spaceName]),
+					{ imageClass: "siteIcon" });
+				var label = $("<span />").addClass("label").appendTo(li);
+				label.append(link);
+				var modifierLink = host.format([modifier]);
+				var spaceLink = host.format([spaceName]);
+				$('<span>&nbsp;(last modified by <a href="%2">%0</a> in <a href="%3">%1</a>)</span>'.
+					format([modifier, spaceName, modifierLink, spaceLink])).
+					appendTo(label);
+				ul.append(li);
+			} else {
+				ignore += 1;
+			}
 		}
-		var txt = tiddlers.length;
+		var txt = tiddlers.length - ignore;
 		if(tiddlers.length === 0) {
 			if(options.error) {
 				txt = "?";
@@ -162,17 +227,12 @@ var followMacro = config.macros.followTiddlers = {
 			append('<div class="followHeader listTitle">%0</div>'.format([headerTxt])).
 			prependTo(ul);
 		var el = $(story.findContainingTiddler(place));
-		var concertina = $(".concertina", el)[0];
-		var btn;
-		if(!config.macros.concertina || !concertina) {
-			btn = $('<div class="followButton" />').
-				click(function(ev) {
-					followMacro.followingOnClick(ev, ul[0]);
-				}).appendTo(place)[0];
-		} else {
-			btn = config.macros.concertina.register(place, "followTiddlers", "followButton", contentEl);
-		}
-
+		var btn = $(place).click(function(ev) {
+				var popup = followMacro.followingOnClick(ev, ul[0]);
+				$(".alienTiddlerLink", popup).click(handler);
+			})[0];
+		var className = txt > 0 ? "hasReplies" : "noReplies";
+		$(place).addClass(className);
 		$('<a class="followedTiddlers">%0</a>'.format([txt])).
 			appendTo('<div class="followedTiddlers" />').appendTo(btn);
 	},
@@ -183,7 +243,7 @@ var followMacro = config.macros.followTiddlers = {
 		$(popup).append(list);
 		Popup.show();
 		ev.stopPropagation();
-		return false;
+		return popup;
 	},
 	_constructBagQuery: function(followers) {
 		var querySegments = [];
@@ -197,6 +257,10 @@ var followMacro = config.macros.followTiddlers = {
 		var searchArg = "(%0)".format([querySegments.join("%20OR%20")]);
 		return querySegments.length > 0 ? searchArg : false;
 	},
+	getFollowerSpaceName: function(title) {
+		title = title.toLowerCase();
+		return title.indexOf("@") === 0 ? title.substr(1, title.length) : title; 
+	},
 	getFollowers: function(callback, username) {
 		// returns a list of spaces being followed by the existing space
 		var followersCallback = function(user) {
@@ -207,7 +271,7 @@ var followMacro = config.macros.followTiddlers = {
 					// just get the tiddlers in the local store
 					var followerTiddlers = store.getTaggedTiddlers(followMacro.followTag);
 					for(var i = 0; i < followerTiddlers.length; i++) {
-						followers.push(followerTiddlers[i].title);
+						followers.push(followMacro.getFollowerSpaceName(followerTiddlers[i].title));
 					}
 					callback(followers);
 				} else {
@@ -226,7 +290,7 @@ var followMacro = config.macros.followTiddlers = {
 						var tiddlerListCallback = function(context){
 							var tiddlers = context.tiddlers || [];
 							for(var i = 0; i < tiddlers.length; i++) {
-								followers.push(tiddlers[i].title);
+								followers.push(followMacro.getFollowerSpaceName(tiddlers[i].title));
 							}
 							followMacro.follower_names_cache[username] = followers;
 							callback(followers);
@@ -244,42 +308,21 @@ var followMacro = config.macros.followTiddlers = {
 	}
 };
 
-var followersMacro = config.macros.followers = {
-	locale: {
-		loggedOut: "Please login to see the list of followers",
-		noSupport: "We were unable to retrieve followers as your browser does not support following.",
-		pleaseWait: "Please wait while we look this up...",
-		error: "Whoops something went wrong. I was unable to find the followers of this user.",
-		noone: "No-one. :("
-	},
-	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var locale = followersMacro.locale;
-		var args = paramString.parseParams("name", null, true, false, true)[0];
-		var fat = args.fat ? "&fat=y" : "";
-		var username = params[0] || false;
-		var container = $('<div class="followers" />').text(locale.pleaseWait).
-			appendTo(place)[0];
-		var followersCallback = function(user) {
-			if(user.anon) {
-				$("<span />").text(locale.loggedOut).appendTo(container);
-			} else {
-				followMacro.getHosts(function(host, tsHost) {
-					var url = '%0/search?q=(title:"%1" AND tag:%2)%3'.
-						format([host, user.name,followMacro.followTag, fat]);
-					followersMacro.listUsers(container, url, locale,
-						{ field: "bag", link: true, host: tsHost });
-				});
-			}
-		};
-		if(!username) {
-			tweb.getUserInfo(followersCallback);
-		} else {
-			followersCallback({ name: username });
-		}
-	},
-	listUsers: function(place, url, locale, options) {
+var scanMacro = config.macros.tsScan = {
+	scan: function(place, inputs, tag, options) {
 		options = options ? options: {};
-		options.template = options.template ? options.template : "FollowersTemplate";
+		options.template = options.template ? options.template : "ScanTemplate";
+		searchField = options.searchField || "title";
+		var host = options.host.format([tiddlyspace.currentSpace.name]);
+		var locale = followersMacro.locale;
+		var titleQuery = [];
+		for(var i = 0; i < inputs.length; i++) {
+			titleQuery.push('%0:"%1"'.format([searchField, inputs[i]]));
+		}
+		var query = titleQuery.join(" OR ");
+		query = tag ? "(%0) AND tag:%1".format([query, tag]) : query;
+		query = options.fat ? "%0&fat=y".format([query]) : query;
+		var url = '%0/search?q=%1'.format([host, query]);
 		locale = locale ? locale : {};
 		var host = options.host || "/";
 		var field = options.field;
@@ -301,11 +344,13 @@ var followersMacro = config.macros.followers = {
 						if(field == "bag") {
 							spaceName = spaceName.replace("_public", "");
 						}
+						spaceName = followMacro.getFollowerSpaceName(spaceName);
 						var spaceURI = host.format([spaceName]);
 						var item = $('<li class="spaceName" />').appendTo(list)[0];
+						var paramString = 'name:%0 with:"%1" with:"%2"'.
+							format([options.template, spaceName, tiddler.text]);
 						config.macros.tiddler.handler(item, null, null, null,
-							'name:%0 with:"%1" with:"%2" with:"%3"'.
-								format([options.template, spaceName, spaceURI, tiddler.text]));
+							paramString);
 					}
 					if(tiddlers.length === 0) {
 						$("<li />").text(locale.noone).appendTo(list);
@@ -317,6 +362,49 @@ var followersMacro = config.macros.followers = {
 			});
 		} catch(e) {
 			$('<span class="error"/>').text(locale.noSupport).appendTo(place);
+		}
+	},
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		var args = paramString.parseParams("name", null, true, false, true)[0];
+		var tag = args.tag ? args.tag[0] : false;
+		var titles = args.title || [params[0]];
+		var fat = args.fat;
+		var container = $("<div />").addClass("scanResults").appendTo(place)[0];
+		followMacro.getHosts(function(host, tsHost) {
+			scanMacro.scan(container, titles, tag, { field: "bag", host: tsHost, fat: args.fat });
+		});
+	}
+};
+
+var followersMacro = config.macros.followers = {
+	locale: {
+		loggedOut: "Please login to see the list of followers",
+		noSupport: "We were unable to retrieve followers as your browser does not support following.",
+		pleaseWait: "Please wait while we look this up...",
+		error: "Whoops something went wrong. I was unable to find the followers of this user.",
+		noone: "No-one. :("
+	},
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		var locale = followersMacro.locale;
+		var args = paramString.parseParams("name", null, true, false, true)[0];
+		var username = params[0] || false;
+		var container = $('<div class="followers" />').text(locale.pleaseWait).
+			appendTo(place)[0];
+		var followersCallback = function(user) {
+			if(user.anon) {
+				$("<span />").text(locale.loggedOut).appendTo(container);
+			} else {
+				followMacro.getHosts(function(host, tsHost) {
+					scanMacro.scan(container, [user.name, "@%0".format([user.name])], 
+						followMacro.followTag,
+						{ field: "bag", host: tsHost, fat: args.fat });
+				});
+			}
+		};
+		if(!username) {
+			followersCallback({ name: tiddlyspace.currentSpace.name });
+		} else {
+			followersCallback({ name: username });
 		}
 	}
 };
@@ -341,15 +429,13 @@ var followingMacro = config.macros.following = {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
 				followMacro.getHosts(function(host) {
-					var url =  '%0/search?q=(bag:"%1_public" AND tag:%2)%3'.
-						format([host, user.name,followMacro.followTag, fat]);
-					followersMacro.listUsers(container, url, locale,
-						{ field: "title", link: true });
+					scanMacro.scan(container, [user.name], followMacro.followTag,
+						{ field: "bag", searchField: "title", fat: fat, host: host});
 				});
 			}
 		};
 		if(!username) {
-			tweb.getUserInfo(followingCallback);
+			followingCallback({ name: tiddlyspace.currentSpace.name });
 		} else {
 			followingCallback({ name: username });
 		}
