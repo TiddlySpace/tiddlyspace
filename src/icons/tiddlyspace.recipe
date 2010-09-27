@@ -4,7 +4,5 @@ tiddler: editTiddler.tid
 tiddler: editTiddlerReadOnly.tid
 tiddler: deleteTiddler.tid
 tiddler: moreCommand.tid
-tiddler: privateAndPublicIcon.tid
-tiddler: privateNotPublicIcon.tid
 tiddler: saveDraft.tid
 tiddler: saveTiddler.tid

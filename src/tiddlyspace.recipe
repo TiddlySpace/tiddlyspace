@@ -8,5 +8,7 @@ tiddler: icons/backstage.svg.tid
 tiddler: icons/close.svg.tid
 tiddler: icons/publicIcon.tid
 tiddler: icons/privateIcon.tid
+tiddler: icons/privateAndPublicIcon.tid
+tiddler: icons/privateNotPublicIcon.tid
 tiddler: styles/StyleSheetBackstage.tid
 tiddler: shadows/MarkupPreHead.tid
