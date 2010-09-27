@@ -39,6 +39,7 @@ def init(config):
     import tiddlywebplugins.tiddlyspace.validator
     #import tiddlywebplugins.prettyerror
     import tiddlywebplugins.pathinfohack
+    import tiddlywebplugins.hashmaker
     import tiddlywebplugins.form
     import tiddlywebplugins.reflector
 
@@ -92,6 +93,7 @@ def init(config):
     tiddlywebplugins.cookiedomain.init(config)
     #tiddlywebplugins.prettyerror.init(config)
     tiddlywebplugins.pathinfohack.init(config)
+    tiddlywebplugins.hashmaker.init(config)
     tiddlywebplugins.form.init(config)
     tiddlywebplugins.reflector.init(config)
 

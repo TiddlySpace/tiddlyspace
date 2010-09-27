@@ -6,6 +6,7 @@ to provide special optimized functionality.
 from tiddlywebplugins.sqlalchemy import (sRecipe, sPolicy,
         text_, recipe_policy_table)
 from tiddlywebplugins.mysql import Store as MySQLStore
+from tiddlywebplugins.hashmaker import hash_tiddler
 
 
 class Store(MySQLStore):
@@ -24,3 +25,10 @@ class Store(MySQLStore):
                 .filter(sPolicy.constraint=='manage')
                 .filter(sRecipe.name.like('%_public')))
         return (name[0] for name in query.all())
+
+    def tiddler_put(self, tiddler):
+        """
+        Write a _hash field on the tiddler, then store it.
+        """
+        hash_tiddler(self.environ, tiddler)
+        return MySQLStore.tiddler_put(self, tiddler)
