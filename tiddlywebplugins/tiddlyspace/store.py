@@ -30,5 +30,5 @@ class Store(MySQLStore):
         """
         Write a _hash field on the tiddler, then store it.
         """
-        hash_tiddler(self.environ, tiddler)
+        hash_tiddler(self.environ, tiddler, overwrite=True)
         return MySQLStore.tiddler_put(self, tiddler)
