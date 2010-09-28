@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.7.1|
+|''Version''|0.7.4|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -25,7 +25,8 @@ width / height : define a width or height of the outputted icon
 label: if label parameter is set to yes, a label will accompany the icon.
 
 !!additional view parameters
-labelPrefix / labelSuffix : prefix or suffix the label with additional text. eg. labelPrefix:'modified by '
+* labelPrefix / labelSuffix : prefix or suffix the label with additional text. eg. labelPrefix:'modified by '
+* spaceLink: if set to "yes" will make any avatars link to the corresponding space. <<originMacro spaceLink:yes>>
 !Code
 ***/
 //{{{
@@ -44,8 +45,8 @@ var cmd = cmds.publishTiddler;
 config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		paramString, tiddler) {
 	var container = $('<div class="siteIcon" />').prependTo(place);
-	var extraArgs = params.splice(2, params.length - 2).join(" ");
-	var imageOptions = imageMacro.getArguments(extraArgs, []);
+	var extraArgs = params.splice(2, params.length - 2);
+	var options = originMacro.getOptions(extraArgs, extraArgs.join(" "));
 	var imagePlace = $("<div />").appendTo(container)[0];
 	var pos;
 	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
@@ -67,15 +68,14 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 			value = "unknown";
 			link = value;
 			if(store.tiddlerExists("missingIcon")) {
-				imageMacro.renderImage(imagePlace, "missingIcon", imageOptions);
+				imageMacro.renderImage(imagePlace, "missingIcon", options.imageOptions);
 			} else {
 				noLabel = true;
 			}
 		} else {
 			var spaceURI = tiddlyspace.getHost(status.server_host, value);
 			link = $("<a />").attr("href", spaceURI).text(value);
-			var uri = tiddlyspace.getAvatar(status.server_host, value);
-			imageMacro.renderImage(imagePlace, uri, imageOptions);
+			originMacro.renderAvatar(imagePlace, status, value, options)
 			if(!value) {
 				value = "tiddlyspace";
 			}
@@ -213,14 +213,26 @@ var originMacro = config.macros.tiddlerOrigin = {
 			labelOptions: originMacro._getLabelOptions(parsedParams),
 			imageOptions: imageMacro.getArguments(paramString, []),
 			noclick: parsedParams[0].interactive && 
-				parsedParams[0].interactive[0] == "no" ? true : false
+				parsedParams[0].interactive[0] == "no" ? true : false,
 		};
+		if(!options.noclick) {
+			options.spaceLink = parsedParams[0].spaceLink ? true : false;
+		}
 		return options;
 	},
 	_getLabelOptions: function(parsedParams) {
 		parsedParams = parsedParams[0];
 		var includeLabel = !parsedParams.label || ( parsedParams.label && parsedParams.label[0] == "yes" );
 		return { includeLabel: includeLabel };
+	},
+	renderAvatar: function(container, status, space, options) {
+		var imageOptions = options.imageOptions;
+		var spaceURI = tiddlyspace.getHost(status.server_host, space);
+		if(options.spaceLink && !imageOptions.link) {
+			imageOptions.link = spaceURI;
+		}
+		var uri = tiddlyspace.getAvatar(status.server_host, space);
+		imageMacro.renderImage(container, uri, options.imageOptions);
 	},
 	renderIcon: function(tiddler, type, button, options) {
 		var locale = originMacro.locale;
@@ -235,8 +247,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 					tiddlyspace.getHost(status.server_host, name), name]) : "tiddlyspace";
 				var label = locale.external.format([name]);
 				tooltip = locale.external.format([tooltip]);
-				var uri = tiddlyspace.getAvatar(status.server_host, options.space.name);
-				imageMacro.renderImage(button, uri, options.imageOptions);
+				originMacro.renderAvatar(button, status, options.space.name, options);
 				var labelOptions = options.labelOptions;
 				labelOptions.label = label;
 				labelOptions.tooltip = tooltip;
