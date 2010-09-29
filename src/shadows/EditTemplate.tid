@@ -2,22 +2,27 @@ tags: excludeSearch excludeLists
 modifier: osmosoft
 
 <!--{{{-->
-<div class='toolbar' macro='toolbar [[ToolbarCommands::EditToolbar]] icons:yes interactive:no'></div>
-<div class='heading'>
-	<div class='spaceSiteIcon' macro='tiddlerOrigin label:yes height:48 width:48'></div>
-	<div class='modifierIcon'
-		macro='view modifier SiteIcon label:yes height:48 width:48 labelPrefix:"last modified by "'>
-	</div>
+<div class='toolbar'
+	macro='toolbar [[ToolbarCommands::EditToolbar]] icons:yes'>
+</div>
+<div class='heading editorHeading'>
 	<div class='editor title' macro='edit title'></div>
 	<div class='tagClear'></div>
 </div>
 <div class='annotationsBox' macro='annotations'>
-	<div macro='setPrivacy'></div>
+	<div class='editSpaceSiteIcon'
+		macro='tiddlerOrigin height:16 width:16 label:no interactive:no'>
+	</div>
+	<div class="privacyEdit" macro='setPrivacy label:no interactive:no'></div>
+	<div class='tagClear'></div>
 </div>
 <div class='editor' macro='edit text'></div>
-<div class='editor' macro='edit tags'></div>
 <div class='editorFooter'>
-	<span macro='message views.editor.tagPrompt'></span>
-	<span macro='tagChooser excludeLists'></span>
+	<div class='tagTitle'>tags</div>
+	<div class='editor' macro='edit tags'></div>
+	<div class='tagAnnotation'>
+		<span macro='message views.editor.tagPrompt'></span>
+		<span macro='tagChooser excludeLists'></span>
+	</div>
 </div>
 <!--}}}-->
