@@ -220,6 +220,11 @@ def _determine_host(environ):
         host_url = '%s:%s' % (server_host['host'], port)
 
     http_host = environ.get('HTTP_HOST', host_url)
+    if ':' in http_host:
+        for port in [':80', ':443']:
+            if http_host.endswith(port):
+                http_host = http_host.replace(port, '')
+                break
     return http_host, host_url
 
 
