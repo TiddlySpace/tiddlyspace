@@ -202,6 +202,14 @@ config.macros.tabs.handler = function(place, macroName, params) {
 	_tabsMacro.apply(this, [place, macroName, newParams]);
 };
 
+// disable ControlView for XHRs by default
+$.ajaxSetup({
+	beforeSend: function(xhr) {
+		xhr.setRequestHeader("X-ControlView", "false");
+	}
+});
+
+
 // register style sheet for backstage separately (important)
 store.addNotification("StyleSheetBackstage", refreshStyles);
 
