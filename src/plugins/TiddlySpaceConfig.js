@@ -209,7 +209,6 @@ $.ajaxSetup({
 	}
 });
 
-
 // register style sheet for backstage separately (important)
 store.addNotification("StyleSheetBackstage", refreshStyles);
 
