@@ -3,18 +3,82 @@ modifier: osmosoft
 
 /*{{{*/
 body {
-	font-size: 1.0em;
+	font-size: 1em;
 	font-family: helvetica, arial, sans-serif;
-	background-color: [[ColorPalette::Background]];
+	background-color: #fff;
+	color: [[ColorPalette::Foreground]];
+}
+
+#popup {
+	background-color: [[ColorPalette::TertiaryPale]];
+}
+
+.confirmationPopup, .followList {
+	font-size: 0.7em;
+	padding: 1em;
+	border: solid 1px #000;
+}
+
+.followList .listTitle {
+	text-decoration: underline;
+}
+
+#popup .followTiddlersList a {
+	display: inline;
+	padding: 0;
+}
+
+#popup li a {
+	color: [[ColorPalette::PrimaryMid]];
+	font-weight: bold;
+}
+
+#popup li a:hover {
+	color: [[ColorPalette::PrimaryMid]];
+	background: none;
+}
+
+#popup li.listTitle {
+	border-bottom: 1px solid #000;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+#popup.followList {
+	margin-left: 50px;
+	margin-top: -30px;
+}
+
+.followTiddlersList .label {
+	display: block;
+	left: 10px;
+	top: 0px;
+	line-height: 16px;
+	position: relative;
+}
+
+#popup .followTiddlersList .siteIcon{
+	height: auto;
+}
+
+#popup .followTiddlersList li{
+	clear: both;
+	display: block;
+	height: 48px;
+	margin-bottom: 8px;
+	position: relative;
+}
+
+#popup .followTiddlersList a{
+	display: inline;
 }
 
 #displayArea {
 	margin: 0;
+	top: 0px;
+	left: 0px;
+	width: 100%;
 	position: relative;
-}
-
-#tiddlerDisplay {
-	margin: 2em 23em 0 2em;
 }
 
 .public {
@@ -37,50 +101,369 @@ body {
 	padding: 0;
 	opacity: 0.5;
 	filter: alpha(opacity=50);
-	background-color: black;
+	background-color: #000;
 }
 
-#popup {
-	background-color: [[ColorPalette::TertiaryPale]];
+/* *** Header *** */
+.headerForeground {
+	background-color: [[ColorPalette::PrimaryMid]];
+	float: left;
+	margin-left: 72px;
+	margin-right: 16px;
+	margin-top: 24px;
+	padding: 0;
+	position: relative;
+	top: 0;
 }
 
-.confirmationPopup, .followList {
+.clearFloat {
+	clear: both;
+}
+
+#contentWrapper {
+	position: relative;
+	padding-top: 1px;
+	top: -1px;
+}
+
+#tiddlerDisplay {
+	_position: relative; /* ie 6*/
+}
+
+.header {
+	position: relative;
+	background-color: [[ColorPalette::PrimaryMid]];
+	_width: 100%; /* ie 6 demands */
+}
+
+.siteTitle {
+	clear: both;
+	display: block;
+	font-size: 32px;
+	height: 32px;
+	font-weight: bold;
+	line-height: 32px;
+}
+
+.siteSubtitle {
+	display: block;
+	font-size: 14px;
+	height: 16px;
+	margin-bottom: 8px;
+}
+
+#sidebarSearch {
+	padding: 0;
+	position: absolute;
+	right: 80px;
+	top: 8px;
+	width: 176px;
+}
+
+#sidebarSearch .txtOptionInput {
+	width: 100%;
+	margin-top: 5px;
+	_color: #bbb; /* ie6 danger */
+}
+
+#sidebarSearch .txtOptionInput:focus {
+	color: #000;
+}
+
+#sidebarSearch .searchButton {
+	display: none;
+}
+
+/* *** Menu Bar *** */
+
+#mainMenu {
+	position: static;
+	text-align: left;
+	margin-left: 72px;
+	float: left;
+	width: auto;
+	padding: 0;
+	font-size: 1em;
+	line-height: normal;
+}
+
+#sidebarOptions {
+	margin-right: 72px;
+	float: right;
+	font-size: 1.1em;
+	line-height: 1.6em;
+	min-height: 1em;
+	padding-top: 0;
+}
+
+#sidebarOptions a {
+	margin-right: 8px;
+}
+
+#mainMenu a:hover {
+	background-color: [[ColorPalette::PrimaryMid]];
+	color: [[ColorPalette::Background]]
+}
+
+.confirmationPopup .button,
+#sidebarOptions .button {
+	cursor: pointer;
+	display: block;
+	float: left;
 	font-size: 0.7em;
-	padding: 1em;
-	border: solid 1px black;
+	height: 16px;
+	line-height: 16px;
+	padding: 0;
+	text-align: center;
+	width: 72px;
+	margin-right: 8px;
 }
 
-#popup .followTiddlersList a {
+.confirmationPopup a.button,
+#sidebarOptions a {
+	border: none;
+	margin: 0 0.2em;
+	padding: 0.6em 0.25em;
 	display: inline;
+	color: #666;
+}
+
+.confirmationPopup a.button:hover,
+#sidebarOptions a:hover {
+	color: #000;
+}
+
+.confirmationPopup a.button:active,
+#sidebarOptions a:active {
+	border: solid 1px [[ColorPalette::PrimaryMid]];
+	background-color: #fff;
+	background: -webkit-gradient( linear, left bottom, left top, color-stop(0.1,rgb(200,200,200)), color-stop(1, rgb(100,100,100)));
+	background: -moz-linear-gradient(center bottom , rgb(200,200,200) 10%,rgb(100,100,100) 100%) repeat scroll 0 0 transparent;
+}
+/* *** Sidebar *** */
+
+#sidebar .wizard table {
+	margin: 0px;
+}
+
+.tabContents .listTitle:first-child {
+	margin-top: 0px;
+}
+
+/*******************/
+/* --- New CSS --- */
+/*******************/
+
+#menuBar {
+	background: [[ColorPalette::PrimaryLight]];
+	left: 0;
+	right: 0;
+	position: relative;
+	margin: 0;
+	padding: 0.5em 0 0.5em 0;
+	min-height: 1em;
+	overflow: hidden;
+	_width: 100%; /* for ie 6 */
+}
+
+#mainMenu a {
+	color: #fff;
+	padding: 8px;
+	font-size: 0.9em;
+	margin-right: 16px;
+}
+
+#sidebarOptions a.button {
+	color: #fff;
+}
+
+#sidebarOptions a.button:hover {
+	color: [[ColorPalette::PrimaryPale]];
+    background: [[ColorPalette::PrimaryMid]];
+}
+
+#tiddlerDisplay, #searchResults {
+	margin: 16px 448px 0 72px;
+}
+
+#sidebarTabs {
+	position: absolute;
+	right: 72px;
+	width: 352px;
+	top: 0;
+}
+
+#sidebarTabs .tabsetWrapper .tabset {
+	width: 87px;
+	border-top: 1px solid [[ColorPalette::PrimaryPale]];
+	border-left: 1px solid [[ColorPalette::PrimaryPale]];
+	border-bottom: 1px solid [[ColorPalette::PrimaryPale]];
+	height: auto;
+	float: left;
+	word-wrap: break-word;
+	top: 0;
 	padding: 0;
 }
 
-#popup li a {
+#sidebarTabs .tabsetWrapper .tabContents {
+	width: 242px;
+	_width: 238px;
+	background: [[ColorPalette::PrimaryPale]];
+	border: 3px solid [[ColorPalette::PrimaryMid]];
+	left: -3px;
+	_left: -5px;
+	position: relative;
+	min-height: 34em;
+	padding: 8px;
+	font-size: 0.8em;
+}
+
+/* ---- Side style --- */
+
+#sidebarTabs .tabsetWrapper .tabset .tab {
+	font-size: 0.9em;
+	padding: 0.7em 8px 0.5em;
+	color: #fff;
+	background: [[ColorPalette::PrimaryLight]];
+	border: none;
+	line-height: 16px;
+	position: relative;
+	display: block;
+	margin: 0;
+}
+
+#sidebarTabs .tabsetWrapper .tabset .tabSelected {
 	color: [[ColorPalette::PrimaryMid]];
+	background: [[ColorPalette::PrimaryPale]];
+	border-top: 3px solid [[ColorPalette::PrimaryMid]];
+	border-bottom: 3px solid [[ColorPalette::PrimaryMid]];
+	border-left: 3px solid [[ColorPalette::PrimaryMid]];
+	z-index: 10;
+	margin-top: -1px;
 	font-weight: bold;
 }
-#popup li a:hover {
-	color: [[ColorPalette::PrimaryMid]];
+
+#sidebarTabs .tabContents li {
+	border: none;
+	margin-left: 0;
+	word-wrap: break-word;
+}
+
+.tabContents .timeline {
+	background: [[ColorPalette::PrimaryPale]];
+	margin-bottom: 8px;
+}
+
+#sidebarTabs .timeline li.listTitle {
+	color: #132E43;
+	margin-left: 8px 0;
+	padding: 0.3em 0.11em;
+	font-size: 1em;
+	border-bottom: none;
+}
+
+#sidebarTabs .tabContents li a {
+	display: block;
+	text-align: left;
+	margin: 0 0 1px 0;
+	padding: 0.3em 1em;
+	background: [[ColorPalette::PrimaryPale]];
+}
+
+#sidebarTabs .tabsetWrapper .tabset a:hover,
+#sidebarTabs .tabContents li a:hover {
+	color: [[ColorPalette::PrimaryPale]];
+	background: [[ColorPalette::PrimaryMid]];
+}
+
+/* Activity Stream */
+#sidebarTabs .tabContents .activityStream .feedItem a {
+	display: inline-block;
+	padding: 0;
 	background: none;
 }
 
-#popup li.listTitle {
-	border-bottom: 1px solid black;
-	font-weight: bold;
-	margin-bottom: 10px;
+/* ---- Tagging box --- */
+.tagInfo { 
+	border: 1px solid #cccccc;
+	padding: 10px 15px;
+	-moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 2px 2px rgba(0,0,0,0.2);
+	color: [[ColorPalette::TertiaryMid]];
+	background: -moz-linear-gradient(100% 100% 90deg, #f4f4f4, #e5e5e5);
+	background: -webkit-gradient(linear, left top, right top, from(#e5e5e5), to(#f4f4f4));
+	margin-top: 1em;
+	font-size: 13px;
+	margin: 0 0 0 56px;
 }
 
-#popup.followList {
-	margin-left: 50px;
-	margin-top: -30px;
+.tagInfo ul {
+	list-style: none;
+	padding-left: 2.2em;
 }
 
-.followTiddlersList .label {
-	margin-left: 5px;
-	line-height: 48px;
+.tagInfo ul li {
+	display: inline;
 }
-[[StyleSheetHeader]]
-[[StyleSheetMenuBar]]
-[[StyleSheetSideBar]]
-[[StyleSheetTiddler]]
+
+.tagInfo ul li.listTitle,
+.tagInfo .tagging ul li.listTitle {
+	color: [[ColorPalette::PrimaryMid]];
+	font-size: 13px;
+}
+
+.tagInfo ul li a {
+	border: none;
+	}
+
+.tagInfo .tagging ul li {
+	float: none;
+	display: inline-block;
+}
+
+.tagInfo .tagging {
+	padding: 0;
+}
+
+.viewRevision .toolbar {
+	right: 48px;
+	top: 8px;
+}
+
+.viewRevision .modifierIcon img,
+.viewRevision .modifierIcon svg {
+	margin-right: 8px;
+}
+
+.viewRevision .toolbar svg {
+	width: 32px;
+	height: 32px;
+}
+
+/* --- IE hacks from lattice --- */
+
+/* ie hacks */
+* html #menuBar {
+	margin-bottom: 8px;
+}
+.toolbar .svgIconText {
+	*display: inline;
+}
+
+div.tiddler .toolbar a {
+	float: left\9;
+	display: inline\9;
+}
+
+* html .toolbar {
+	right: 8px;
+}
+* html .followButton a {
+	margin-top: 0px;
+	margin-right: 8px;
+}
+* html #tiddlerDisplay {
+	margin-top: 0px;
+}
 /*}}}*/
+[[StyleSheetTiddler]]

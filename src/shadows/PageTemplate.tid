@@ -4,7 +4,7 @@ modifier: osmosoft
 <!--{{{-->
 <div class='header'>
 	<div id='sidebarSearch'>
-		<span macro='search'></span>
+		<span macro='search search'></span>
 	</div>
 	<div class='headerForeground'>
 		<span class='siteTitle' refresh='content' tiddler='SiteTitle'></span>

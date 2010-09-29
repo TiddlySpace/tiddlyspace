@@ -9,81 +9,30 @@ modifier: osmosoft
 	background-color: white;
 }
 
-.concertinaOn .concertina {
-	display: auto;
-	padding: 10px;
-	height: auto;
-	border-bottom: 1px solid [[ColorPalette: :PrimaryDark]];
-	overflow: auto;
+.tiddler .originButton div {
+	display: inline-block;
 }
 
-.privateNotPublic .concertina,
-.private .concertina {
-	background: -webkit-gradient(linear, left bottom, left top, color-stop(0.29, rgb(222,133,179)), color-stop(1, rgb(245,208,229)), color-stop(0.71, rgb(255,224,241)));
-		background: -moz-linear-gradient(center bottom, rgb(222,133,179) 29%, rgb(245,208,229) 100%, rgb(255,224,241) 71%);
-	/* For Internet Explorer 5.5 - 7 */
-	filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffDE85B3)";
-	/* For Internet Explorer 8 */
-	-ms-filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffDE85B3)";
-}
-
-.public .concertina,
-.privateAndPublic .concertina {
-	background: -webkit-gradient(linear, left bottom, left top, color-stop(0.55, rgb(187,231,253)), color-stop(1, rgb(197,233,252)), color-stop(0.74, rgb(220,238,250)));
-	background: -moz-linear-gradient(center bottom, rgb(187,231,253) 55%, rgb(197,233,252) 100%, rgb(220,238,250) 74%);
-	/* For Internet Explorer 5.5 - 7 */
-	filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffBBE7FD)";
-	/* For Internet Explorer 8 */
-	-ms-filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ffBBE7FD)";
-}
-
-.external .concertina {
-	background-color: white;
-	background: -webkit-gradient(linear, left bottom, left top, color-stop(0.25, rgb(139,214,158)), color-stop(1, rgb(175,230,187)), color-stop(0.74, rgb(204,240,213)));
-	background: -moz-linear-gradient(center bottom, rgb(139,214,158) 25%, rgb(175,230,187) 100%, rgb(204,240,213) 74%);
-	/* For Internet Explorer 5.5 - 7 */
-	filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ff8BD69E)";
-	/* For Internet Explorer 8 */
-	-ms-filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff, endColorstr=#ff8BD69E)";
-}
-
-.concertina .publishButton {
-	border-radius: 1em;
-	-webkit-border-radius: 1em;
-	-moz-border-radius: 1em;
-	background-color: white;
-	border: 1px solid black;
+.tiddler .originButton {
 	display: block;
-	padding: 0.7em;
-	text-align: center;
-	width: 12em;
-}
-
-.content .calendar {
-	margin-left: 2em;
-	position: relative;
-	width: 46px;
-	float: right;
-	margin-top: 2em;
-	cursor: pointer;
-}
-
-.content .calendar:hover {
-	opacity: 0.2;
 }
 
 .selected .tagging,
 .selected .tagged,
 .selected .tagging:hover,
 .selected .tagged:hover {
-	background: none;
 	border: none;
+	background: none;
 }
 
 .tagged {
 	float: right;
 	position: relative;
 	right: -2.4em;
+}
+
+.tiddler .tagged ul {
+	margin: 0;
 }
 
 .tagging, .tagged {
@@ -93,25 +42,39 @@ modifier: osmosoft
 
 .tagging {
 	float: none;
+	margin-left: 8px;
+	margin-right: 72px;
+	position: relative;
 }
 
+.tagging li.listTitle {
+	position: absolute;
+	top: 8px;
+	margin-left: 0px;
+}
 .tagging li {
-	display: inline;
-	float: left;
+	display: block;
+	margin-right: 16px;
+	clear: both;
+	margin-left: 72px;
 }
 
 .tagging .tiddlyLink {
--webkit-border-radius: 5px 5px 5px 5px;
-	-moz-border-radius: 5px 5px 5px 5px;
-	background-color: white;
-	margin: 0 0.2em 0.2em;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	margin: 0;
 	display: block;
-	padding: 0.8em;
+	padding: 0;
+	line-height: 16px
 }
 
 .tagged .button {
 	-webkit-border-radius: 15px 0px 0px 15px;
 	-moz-border-radius: 15px 0px 0px 15px;
+	-o-border-radius: 15px 0px 0px 15px;
+	border-radius: 15px 0px 0px 15px;
 	background-color: white;
 	border-bottom: 2px solid #ccc;
 	border-left: 2px solid #ccc;
@@ -122,13 +85,14 @@ modifier: osmosoft
 	font-size: 0.9em;
 	width: 8em;
 	word-wrap: break-word;
-	color: [[ColorPalette: :Background]];
-	background: [[ColorPalette: :TertiaryMid]];
+	color: [[ColorPalette::Background]];
+	background: [[ColorPalette::TertiaryMid]];
 }
 
 /* for following */
 #popup .siteIcon {
 	float: left;
+	height: 25px;
 }
 
 .content {
@@ -136,6 +100,7 @@ modifier: osmosoft
 	top: 0;
 	left: 0;
 	width: 100%; /* IE */
+	font-size: 0.9em;
 }
 
 .content .info {
@@ -147,63 +112,57 @@ modifier: osmosoft
 	z-index: 2;
 }
 
-.heading {
-	left: 0;
-	margin-bottom: 3em;
-	position: relative;
-	top: 3em;
-	position: relative;
+.editorHeading {
+	height: 48px;
 }
 
-.followButton a:hover {
-	background: none;
-	color: black;
+.heading {
+	left: 0;
+	margin-bottom: 40px;
+	position: relative;
+	top: 32px;
+}
+
+.followButton a {
+	display: block;
+	margin-top: -20px;
 }
 
 .followPlaceHolder {
+	display: block;
 	position: absolute;
-	left: 5.8em;
-	top: 0.5em;
+	right: 80px;
+	top: 16px;
 }
 
-.followButton {
-	cursor: pointer;
-	-webkit-border-radius: 0.3em;
-	-moz-border-radius: 0.3em;
-	background: none repeat scroll 0 0 #CCCCCC;
-	color: red;
-	min-width: 2em;
-	height: 1em;
-	padding: 0.4em;
-	text-align: center;
+.tiddler .followButton {
+	position: relative;
+	width: 48px;
+	height: 24px;
+	margin: -16px 0 24px;
+	text-align: left;
+	color: #fff;
+	background: [[ColorPalette::PrimaryMid]];
+	padding: 10px 0px 0px 10px;
 }
 
+/* creates the larger triangle */
 .followButton:before {
 	content: "\00a0";
 	display: block; /* reduce the damage in FF3.0 */
-	position: absolute;
-	bottom: -0.2em;
-	left: 0.1em;
+	position: relative;
+	bottom: -20px;
+	right: 0;
 	width: 0;
 	height: 0;
-	border-width: 0.5em 0.2em 0 0.6em;
+	border-width: 0 0 20px 20px;
 	border-style: solid;
-	border-color: #ccc transparent;
-}
-
-.calendar .month {
-	padding: 2px;
-	color: white;
-	text-align: center;
-	border-left: solid 1px black;
-	border-right: solid 1px black;
-	border-top: solid 1px black;
-	background-color: #F09CA7;
+	border-color: transparent [[ColorPalette::PrimaryMid]];
 }
 
 .toolbar svg {
-	height: 20px;
-	width: 20px;
+	height: 16px;
+	width: 16px;
 }
 
 .toolbar svg .glyph{
@@ -211,63 +170,67 @@ modifier: osmosoft
 }
 
 .toolbar a:hover .glyph{
-	fill: #111;
+	fill: black;
 }
 
-.calendar .date {
-	background-color: white;
-	color: #515151;
-	font-weight: bold;
-	text-align: center;
-	font-size: 1.8em;
-	border: solid 1px black;
-}
-
-.calendar .time {
-	font-size: 0.7em;
-	background-color: white;
-	border-left: solid 1px black;
-	border-right: solid 1px black;
-	border-bottom: solid 1px black;
-	text-align: center;
+.toolbar a:active .glyph{
+	fill: [[ColorPalette::Background]];
+	stroke: black;
+	stroke-width: 2px;
 }
 
 .originButton,
-.modifierIcon .label {
-	color: [[ColorPalette: :TertiaryDark]];
-	font-size: 0.8em;
-	text-align: center;
-	display: block;
-}
-
-.public .originButton,
-.private .originButton {
+.followPlaceHolder,
+.tiddler .subtitle {
 	cursor: pointer;
 }
 
+.editSpaceSiteIcon .originButton {
+	cursor: auto;
+}
+
+.concertinaLink roundelLabel:hover,
+.concertinaLink a:hover,
+.tiddler .subtitle:hover {
+	font-weight: bold;
+	background: none;
+}
+
+a.originButton:hover {
+	color: [[ColorPalette::PrimaryMid]];
+}
+
+.originButton img,
+.originButton svg {
+	margin-left: 0px;
+}
+
 .modifierIcon {
-	margin-right: 2em;
-	position: relative;
-	float: right;
+	margin-right: 0px;
+	position: absolute;
+	width: 74px;
+	top: 0px;
+	right: 0px;
+	text-align: right;
+}
+
+.modifierIcon .siteIcon div {
+	height: 52px; // include border
+}
+
+.modifierIcon img,
+.modifierIcon svg {
+	margin-right: 8px;
 }
 
 .tiddler .viewer {
-	margin: 0 12em 0 2em;
-	padding-bottom: 4em;
+	margin: 0 72px 0 72px;
 	line-height: normal;
+	padding-bottom: 16px;
 }
 
 .viewer pre {
 	margin-left: 0;
-}
-
-.tiddler .title {
-	font-size: 1.7em;
-	display: block;
-	padding-bottom: 0.5em;
-	margin-bottom: 0.4em;
-	border-bottom: 0.05em solid [[ColorPalette: :PrimaryDark]];
-	word-wrap: break-word;
 }
 
 .spaceIcon img {
@@ -275,45 +238,78 @@ modifier: osmosoft
 }
 
 .siteIcon .label {
-	color: [[ColorPalette: :TertiaryDark]];
-}
-
-.siteIcon {
-	text-align: center;
+	color: [[ColorPalette::TertiaryDark]];
 }
 
 .tiddler .spaceSiteIcon {
-	width: 7em;
-	margin-top: -15px;
-	position: relative;
 	float: left;
-	margin-top: 0em;
+	margin-right: 0;
+	margin-top: 0;
+	position: relative;
+	display: block;
+	width: 74px;
+}
+
+.tiddler .spaceSiteIcon .roundelLabel {
+	margin-left: 8px;
+	overflow: hidden;
+	width: 48px;
+	text-align: center;
+	font-size: 0.6em;
+}
+
+.tiddler .modifierIcon .label {
+	float: right;
+	width: 48px;
+	text-align: center;
+	margin-right: 8px;
+	font-size: 0.6em;
+	display: block;
+	overflow: hidden;
+}
+
+.tiddler .titleBar {
+	display: block;
+	margin-left: 74px;
+	margin-right: 136px;
 }
 
 .followButton a {
-	color: red;
+	color: [[ColorPalette::Background]];
 }
 
 .tiddler {
 	position: relative;
-	-moz-box-shadow: 2px 2px 8px black;
-	-webkit-box-shadow: 2px 2px 8px black;
-	filter: progid: DXImageTransform.Microsoft.Shadow(color='#000000', Direction=135, Strength=3);
-	box-shadow: 2px 2px 8px black;
-	background-color: white;
-	margin-bottom: 2em;
+	border: solid 2px [[ColorPalette::PrimaryPale]];
+	margin-bottom: 8px;
 	padding: 0;
 }
 
 .tiddler .editor {
-	padding-left: 1em;
-	padding-right: 1em;
+	padding-left: 8px;
+	padding-right: 8px;
 }
 
 .tiddler .heading .title {
-	margin-left: 5em;
-	margin-right: 7em;
 	position: relative;
+	display: block;
+	word-wrap: break-word;
+	font-size: 48px;
+	line-height: 48px;
+}
+.tiddler .heading .editor.title {
+	font-size: 1.7em;
+line-height: normal;
+}
+
+.tiddler .title a {
+	color: [[ColorPalette::Foreground]];
+	text-decoration: none;
+}
+.tiddler .title a:hover {
+	background: none;
+	color: [[ColorPalette::Foreground]];
+	text-decoration: none;
 }
 
 .tiddler .headingClear {
@@ -322,43 +318,51 @@ modifier: osmosoft
 
 .tiddler .subtitle {
 	font-size: 0.8em;
-	margin-top: 0.2em;
-}
-
-.external .spaceSiteIcon a:hover {
-	background-color: #8BD69E;
-}
-
-.privateNotPublic .spaceSiteIcon a:hover,
-.private .spaceSiteIcon a:hover {
-	background-color: #DE85B3;
-}
-
-.privateAndPublic .spaceSiteIcon a:hover,
-.public .spaceSiteIcon a:hover {
-	background-color: #BBE7FD;
+	margin-top: 4px;
 }
 
 .toolbar {
 	position: absolute;
-	padding: 1em 1em 0 0;
-	top: 0px;
-	right: 0px;
+	padding: 0;
+	top: 8px;
+	right: -8px;
+}
+
+.toolbar .moreCommand.highlight {
+	background: none;
 }
 
 .tiddler .toolbar .button {
-	float: left;
 	border: none;
-	display: block;
+	display: inline;
+	padding: 0px;
+	margin-right: 16px;
 }
 
 .tiddler .toolbar a:hover {
-	background-color: #ccc;
-	border: solid 1px #000;
+	background: none;
 }
 
-.tiddler .button.command_closeTiddler {
+.tiddler .tags {
 	float: right;
+}
+
+.tiddler .tags .listTitle {
+	display: none;
+}
+
+.tiddler .tags li {
+	font-size: 0.9em;
+	list-style: none;
+	margin-bottom: 8px;
+	overflow: hidden;
+	margin-right: 8px;
+	text-align: right;
+	border-bottom: solid 2px [[ColorPalette::PrimaryPale]];
+}
+
+.tiddler .tags li .button {
+	padding: 0px;
 }
 
 .tiddler .tagged .listTitle {
@@ -373,21 +377,143 @@ modifier: osmosoft
 .tiddler .privacySettings {
 	text-align: center;
 }
-
 .tiddler .privacySettings .originButton{
 	display: inline;
 }
 
+.editSpaceSiteIcon, .privacyEdit {
+	float: left;
+}
+
+.editSpaceSiteIcon svg,
+.editSpaceSiteIcon img,
+.editSpaceSiteIcon .roundelLabel {
+	float: left;
+}
+
+.tagTitle {
+	position: absolute;
+	text-align: center;
+	width: 48px;
+	top: 0px;
+	left: -56px;
+}
+
+.editSpaceSiteIcon .originButton img,
+.editSpaceSiteIcon .originButton svg {
+	height: 16px;
+	margin-left: 24px;
+	margin-right: 32px;
+	width: 16px;
+}
+
+.tagAnnotation {
+	margin-top: 8px;
+	padding-bottom: 8px;
+}
 .annotationsBox {
-	margin-top: 4em;
+	margin-top: 8px;
 }
 
 .editorFooter {
-	padding: 0.3em 1em;
+	position: relative;
+	padding: 0;
+	margin-top: 16px;
+	margin-left: 64px;
+}
+
+.tiddler .editorFooter .editor {
+	padding-left: 0px;
 }
 
 .heading .editor input {
-	width: 90%;
+	width: 100%;
 	font-size: 1.5em;
+}
+
+/* ---- Tiddler Style --- */
+
+.tiddler {
+	margin-bottom: 3em;
+	border: none;
+	border-top: 3px solid [[ColorPalette::PrimaryMid]];
+	background: #fff;
+}
+
+
+.tiddler .modifierIcon .label {
+	display: none;
+}
+.tiddler .titleBar {
+	margin-left: 56px;
+}
+
+.tiddler .spaceSiteIcon {
+	width: 56px;
+}
+
+.tiddler .modifierIcon img, .tiddler .modifierIcon svg {
+	margin-right: 0px;
+}
+ 
+.tiddler .spaceSiteIcon .originButton img, 
+.originButton svg ﻿{
+	margin-left: 0px;
+}
+
+.spaceSiteIcon .externalImage .image a:hover,
+.modifierIcon .externalImage .image a:hover {
+	background: none;
+}
+
+.tiddler .heading .title {
+	font-size: 32px;
+	line-height: 32px;
+}
+
+.tiddler .subtitle {
+	font-style: italic;
+	font-size: 0.9em;
+	color: #a6a59e;
+	margin-top: 0;
+}
+
+.tiddler .followPlaceHolder {
+	right: 64px;
+}
+
+.tiddler .followButton {
+	width: 38px;
+	margin: -16px -8px 24px 0;
+}
+
+.tiddler .viewer {
+	margin: 0 0 0 56px;
+	line-height: 1.4em;
+}
+
+div.toolbar {
+	visibility:hidden;
+	right:-16px;
+}
+
+.selected div.toolbar {
+	visibility: visible;
+}
+
+.tiddler .followButton {
+	background: [[ColorPalette::PrimaryMid]];
+}
+
+.followButton a:hover {
+	background: [[ColorPalette::PrimaryMid]];
+	text-decoration: underline;
+}
+
+@media all and (max-device-width: 480px) {
+	div.toolbar { visibility:visible;}
+}
+@media only screen and (device-width: 768px){
+	div.toolbar { visibility:visible;}
 }
 /*}}}*/
