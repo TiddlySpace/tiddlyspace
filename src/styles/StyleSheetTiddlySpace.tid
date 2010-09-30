@@ -215,7 +215,7 @@ body {
 	line-height: 16px;
 	padding: 0;
 	text-align: center;
-	width: 72px;
+	width: 80px;
 	margin-right: 8px;
 }
 
@@ -464,6 +464,30 @@ div.tiddler .toolbar a {
 }
 * html #tiddlerDisplay {
 	margin-top: 0px;
+}
+/* for printing purposes */
+@media print {
+	#mainMenu, 
+	#sidebar,
+	#messageArea,
+	.toolbar,
+	.followPlaceHolder,
+	#backstageButton,
+	#backstageArea,
+	#sidebarTabs,
+	#sidebarSearch .txtOptionInput,
+	#sidebarOptions {
+		display: none !important;
+	}
+	#displayArea {
+		margin: 1em 1em 0em;
+	}
+	noscript {
+		display:none; /* Fixes a feature in Firefox 1.5.0.2 where print preview displays the noscript content */
+	}
+	#tiddlerDisplay {
+		margin: 16px 16px;
+	}
 }
 /*}}}*/
 [[StyleSheetTiddler]]
