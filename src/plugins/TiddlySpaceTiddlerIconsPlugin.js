@@ -75,14 +75,14 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 		} else {
 			var spaceURI = tiddlyspace.getHost(status.server_host, value);
 			link = $("<a />").attr("href", spaceURI).text(value);
-			originMacro.renderAvatar(imagePlace, status, value, options)
+			originMacro.renderAvatar(imagePlace, status, value, options);
 			if(!value) {
 				value = "tiddlyspace";
 			}
 		}
 		if(!noLabel) {
-			$('<div class="label" />').append(labelPrefix).append(link).append(labelSuffix).
-			appendTo(container);
+			$('<div class="label" />').append(labelPrefix).append(link).
+				append(labelSuffix).appendTo(container);
 		}
 	});
 	$(container).attr("title", value).attr("alt", value);
@@ -212,8 +212,8 @@ var originMacro = config.macros.tiddlerOrigin = {
 		var options = {
 			labelOptions: originMacro._getLabelOptions(parsedParams),
 			imageOptions: imageMacro.getArguments(paramString, []),
-			noclick: parsedParams[0].interactive && 
-				parsedParams[0].interactive[0] == "no" ? true : false,
+			noclick: parsedParams[0].interactive &&
+				parsedParams[0].interactive[0] == "no" ? true : false
 		};
 		if(!options.noclick) {
 			options.spaceLink = parsedParams[0].spaceLink ? true : false;
