@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
@@ -66,6 +66,7 @@ var macro = config.macros.groupBy = {
 		}
 	},
 	refresh: function(place) {
+		$(place).empty();
 		var totalGroups = 0;
 		var paramString = $(place).attr("paramString");
 		var args = paramString.parseParams("name", null, true, false, true)[0];
