@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.5|
+|''Version''|0.5.6|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -166,7 +166,7 @@ var followMacro = config.macros.followTiddlers = {
 			ajaxReq({
 				dataType: "json",
 				beforeSend: followMacro.beforeSend,
-				url: "/bags/%0_public/tiddlers/%1".format([bag, title]),
+				url: "/bags/%0_public/tiddlers/%1".format([bag, encodeURIComponent(title)]),
 				success: function(tiddler) {
 					followMacro.lookup[title].tiddlers.push(tiddler);
 					followMacro.constructInterface(container, followMacro.lookup[title].tiddlers, options);
@@ -368,10 +368,11 @@ var scanMacro = config.macros.tsScan = {
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var tag = args.tag ? args.tag[0] : false;
 		var titles = args.title || [params[0]];
-		var fat = args.fat;
+		var fat = args.fat ? true : false;
+		var template = args.template ? args.template[0] : false;
 		var container = $("<div />").addClass("scanResults").appendTo(place)[0];
 		followMacro.getHosts(function(host, tsHost) {
-			scanMacro.scan(container, titles, tag, { field: "bag", host: tsHost, fat: args.fat });
+			scanMacro.scan(container, titles, tag, { field: "bag", template: template, host: tsHost, fat: args.fat });
 		});
 	}
 };
