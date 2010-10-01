@@ -48,14 +48,14 @@ config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
 	var extraArgs = params.splice(2, params.length - 2);
 	var options = originMacro.getOptions(extraArgs, extraArgs.join(" "));
 	var imagePlace = $("<div />").appendTo(container)[0];
-	var pos;
+	if(value.indexOf("@") === 0) {
+		value = value.substr(1);
+	}
 	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
 	if(endsWith(value, "_public")) {
-		pos = value.indexOf("_public");
-		value = value.substr(0, pos);
+		value = value.substr(0, value.length - 7);
 	} else if(endsWith(value, "_private")) {
-		pos = value.indexOf("_private");
-		value = value.substr(0, pos);
+		value = value.substr(0, value.length - 8);
 	}
 	value = value.toLowerCase();
 	getStatus(function(status) {
