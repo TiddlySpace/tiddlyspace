@@ -59,7 +59,8 @@ tsList.Private = {
 		store.forEachTiddler(function(title, tiddler) {
 			if (("%0_private".format([ns.currentSpace.name]) ===
 					tiddler.fields["server.bag"]) &&
-					(!tiddler.fields["publish.name"])) {
+					(!tiddler.fields["publish.name"]) &&
+					(!tiddler.tags.contains("excludeLists"))) {
 				privateTiddlers.pushUnique(tiddler);
 			}
 		});
@@ -72,8 +73,9 @@ tsList.Public = {
 	handler: function(params, callback) {
 		var publicTiddlers = [];
 		store.forEachTiddler(function(title, tiddler) {
-			if ("%0_public".format([ns.currentSpace.name]) ===
-					tiddler.fields["server.bag"]) {
+			if (("%0_public".format([ns.currentSpace.name]) ===
+					tiddler.fields["server.bag"]) &&
+				(!tiddler.tags.contains("excludeLists"))) {
 				publicTiddlers.pushUnique(tiddler);
 			}
 		});
@@ -88,7 +90,8 @@ tsList.Draft = {
 		store.forEachTiddler(function(title, tiddler) {
 			if (("%0_private".format([ns.currentSpace.name]) ===
 					tiddler.fields["server.bag"]) &&
-					(tiddler.fields["publish.name"])) {
+					(tiddler.fields["publish.name"]) &&
+					(!tiddler.tags.contains("excludeLists"))) {
 				draftTiddlers.pushUnique(tiddler);
 			}
 		});

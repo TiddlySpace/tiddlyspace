@@ -92,7 +92,7 @@ def test_space_exist():
     response, content = http.request('http://0.0.0.0:8080/spaces/nancy',
             method='GET')
     assert response['status'] == '404'
-    assert 'nancy does not exist' in content
+    assert 'There is nothing at this address.' in content
 
 
 def test_space_members():

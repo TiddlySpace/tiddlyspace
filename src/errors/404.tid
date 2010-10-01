@@ -1,0 +1,30 @@
+modifier: jon
+type: text/html
+
+<html>
+<head>
+<title>$status</title>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/console/tiddlers/jquery.min.js"></script>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/console/tiddlers/jquery-json.min.js"></script>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/tiddlyspace/tiddlers/chrjs"></script>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/tiddlyspace/tiddlers/chrjs.space"></script>
+<link rel="stylesheet" href="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/common/tiddlers/tiddlyweb.css" type="text/css" />
+</head>
+<body>
+<div id="header">
+	<h1>404</h1>
+</div>
+<div id="content">
+	<img src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/_errors/tiddlers/error" />
+	<p>There is nothing at this address. <span class='claim-space'></span></p>
+	<div class='spaceSuggestions'></div>
+	<p>This error page was brought to you by <a href="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/">tiddlyspace</a>.</p>
+</div>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/_errors/tiddlers/errorHandling"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	errorhandler.init(404);
+});
+</script>
+</body>
+</html>

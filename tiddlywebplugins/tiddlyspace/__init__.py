@@ -19,9 +19,9 @@ from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
         ControlView, DropPrivs, AllowOrigin)
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
+from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 
-
-__version__ = '0.9.22'
+__version__ = '0.9.23'
 
 
 def init(config):
@@ -37,7 +37,7 @@ def init(config):
     import tiddlywebplugins.oom
     import tiddlywebplugins.cookiedomain
     import tiddlywebplugins.tiddlyspace.validator
-    #import tiddlywebplugins.prettyerror
+    import tiddlywebplugins.prettyerror
     import tiddlywebplugins.pathinfohack
     import tiddlywebplugins.hashmaker
     import tiddlywebplugins.form
@@ -91,7 +91,7 @@ def init(config):
     tiddlywebplugins.mselect.init(config)
     tiddlywebplugins.oom.init(config)
     tiddlywebplugins.cookiedomain.init(config)
-    #tiddlywebplugins.prettyerror.init(config)
+    tiddlywebplugins.prettyerror.init(config)
     tiddlywebplugins.pathinfohack.init(config)
     tiddlywebplugins.hashmaker.init(config)
     tiddlywebplugins.form.init(config)
@@ -118,7 +118,7 @@ def init(config):
         if AllowOrigin not in config['server_response_filters']:
             config['server_response_filters'].insert(
                     config['server_response_filters'].
-                    index(HTTPExceptor) + 1, AllowOrigin)
+                    index(PrettyHTTPExceptor) + 1, AllowOrigin)
 
         new_serializer = ['tiddlywebplugins.tiddlyspace.htmlserialization',
                 'text/html; charset=UTF-8']

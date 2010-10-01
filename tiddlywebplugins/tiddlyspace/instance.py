@@ -18,6 +18,7 @@ store_contents.update(get_tiddler_locations(
     prettyerror_store_contents, 'tiddlywebplugins.prettyerror'))
 store_structure['bags'].update(prettyerror_store_structure['bags'])
 store_structure['recipes'].update(prettyerror_store_structure['recipes'])
+store_contents['_errors'] = ['src/errors/index.recipe']
 
 instance_config['system_plugins'] = ['tiddlywebplugins.tiddlyspace']
 instance_config['twanager_plugins'] = ['tiddlywebplugins.tiddlyspace']
