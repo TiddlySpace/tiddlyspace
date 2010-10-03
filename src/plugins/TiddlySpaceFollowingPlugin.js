@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.5|
+|''Version''|0.5.7|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -26,6 +26,12 @@ If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default 
 	width: 48px;
 }
 
+#sidebarTabs .followers li a,
+.followers .siteIcon,
+.followers .siteIcon div {
+	display: inline;
+}
+
 .followTiddlersList li .externalImage, .followTiddlersList li .image {
 	display: inline;
 }
@@ -44,11 +50,10 @@ var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
 var imageMacro = config.macros.image;
 
-config.annotations.ScanTemplate = "This tiddler is used in the display of tiddlers from spaces you are following. Use the wildcard {{{$1}}} for the space name the tiddler came from and {{{$2}}} for the tiddler text.";
-tweb.getStatus(function(status) { // get true avatar
-	var avatar = tiddlyspace.getAvatar(status.server_host, "$1");
-	config.shadowTiddlers.ScanTemplate = "<<image %0 24 24>> [[$1]] [[visit space|@$1]]".format([avatar]);
-});
+config.annotations.ScanTemplate = "This tiddler is a template used in the display of tiddlers from spaces you are following. Use the wildcard {{{$1}}} to access the spaceField. To access attributes use the view macro e.g. {{{<<view title text>>}}}";
+config.shadowTiddlers.ScanTemplate = "<<view modifier SiteIcon width:24 height:24 spaceLink:yes>> <<view title link>>";
+config.shadowTiddlers.FollowersTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes>> @$1";
+config.shadowTiddlers.FollowingTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes>> @$1";
 
 var name = "StyleSheetFollowing";
 tiddler = {title: "TiddlySpaceFollowingPlugin"};
@@ -93,15 +98,20 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 	});
 };
 tiddlyspace.displayReplyButton = function(el, tiddler) {
-	var btn = $("<button />").addClass("reply").text("reply").appendTo(el);
+	var btn = $("<button />").addClass("reply").appendTo(el);
 	var publicBag = "%0_public".format([tiddlyspace.currentSpace.name]);
 	var serverTitle = tiddler.fields["server.title"];
+	var yourTiddler = store.getTiddler(serverTitle);
+	if(yourTiddler) {
+		btn.text("your version");
+	} else {
+		btn.text("reply");
+	}
 	btn.click(function(ev) {
-		story.displayTiddler(ev.target, serverTitle, DEFAULT_EDIT_TEMPLATE, false, null, null);
-		var tiddlerEl = story.getTiddler(serverTitle);
-		var yourTiddler = store.getTiddler(serverTitle);
-		var text = yourTiddler ? yourTiddler.text : "";
 		if(!yourTiddler) {
+			story.displayTiddler(ev.target, serverTitle, DEFAULT_EDIT_TEMPLATE, false, null, null);
+			var tiddlerEl = story.getTiddler(serverTitle);
+			var text = yourTiddler ? yourTiddler.text : "";
 			var newFields = {};
 			merge(newFields, config.defaultCustomFields);
 			merge(newFields, { "server.workspace": "bags/%0".format([publicBag]) });
@@ -109,10 +119,11 @@ tiddlyspace.displayReplyButton = function(el, tiddler) {
 			if(customFields) {
 				story.addCustomFields(tiddlerEl, customFields);
 			}
+			var replyTemplate = "in reply to @%0:\n<<<\n%1\n<<<\n\n%2".format([tiddler.modifier, tiddler.text, text]);
+			$("[edit=text]", tiddlerEl).val(replyTemplate);
+		} else {
+			story.displayTiddler(ev.target, serverTitle, DEFAULT_VIEW_TEMPLATE, false, null, null);
 		}
-		var replyTemplate = "in reply to @%0:\n<<<\n%1\n<<<\n\n%2".format([tiddler.modifier, tiddler.text, text]);
-		$("[edit=text]", tiddlerEl).val(replyTemplate);
-
 	});
 };
 
@@ -166,7 +177,7 @@ var followMacro = config.macros.followTiddlers = {
 			ajaxReq({
 				dataType: "json",
 				beforeSend: followMacro.beforeSend,
-				url: "/bags/%0_public/tiddlers/%1".format([bag, title]),
+				url: "/bags/%0_public/tiddlers/%1".format([bag, encodeURIComponent(title)]),
 				success: function(tiddler) {
 					followMacro.lookup[title].tiddlers.push(tiddler);
 					followMacro.constructInterface(container, followMacro.lookup[title].tiddlers, options);
@@ -309,23 +320,28 @@ var followMacro = config.macros.followTiddlers = {
 };
 
 var scanMacro = config.macros.tsScan = {
-	scan: function(place, inputs, tag, options) {
+	scan: function(place, options) {
+		var inputs = options.searchValues;
+		var tag = options.tag;
+		$(place).text(followersMacro.locale.pleaseWait);
 		options = options ? options: {};
 		options.template = options.template ? options.template : "ScanTemplate";
 		searchField = options.searchField || "title";
 		var host = options.host.format([tiddlyspace.currentSpace.name]);
 		var locale = followersMacro.locale;
-		var titleQuery = [];
+		var searchQuery = [];
 		for(var i = 0; i < inputs.length; i++) {
-			titleQuery.push('%0:"%1"'.format([searchField, inputs[i]]));
+			searchQuery.push('%0:"%1"'.format([searchField, inputs[i]]));
 		}
-		var query = titleQuery.join(" OR ");
-		query = tag ? "(%0) AND tag:%1".format([query, tag]) : query;
+		var query = searchQuery.join(" OR ");
+		query = tag ? "(%0);select=tag:%1;".format([query, tag]) : query;
+		query = options.query ? "%0;%1;".format([query, options.query]) : query;
 		query = options.fat ? "%0&fat=y".format([query]) : query;
+
 		var url = '%0/search?q=%1'.format([host, query]);
 		locale = locale ? locale : {};
-		var host = options.host || "/";
-		var field = options.field;
+		host = options.host || "/";
+		var spaceField = options.spaceField || "bag";
 		try {
 			ajaxReq({
 				url: url,
@@ -339,18 +355,20 @@ var scanMacro = config.macros.tsScan = {
 					});
 
 					for(var i = 0; i < tiddlers.length; i++) {
-						var tiddler = tiddlers[i];
-						var spaceName = tiddler[field];
-						if(field == "bag") {
+						var t = tiddlers[i];
+						var spaceName = t[spaceField];
+						if(spaceField == "bag") {
 							spaceName = spaceName.replace("_public", "");
 						}
 						spaceName = followMacro.getFollowerSpaceName(spaceName);
-						var spaceURI = host.format([spaceName]);
 						var item = $('<li class="spaceName" />').appendTo(list)[0];
-						var paramString = 'name:%0 with:"%1" with:"%2"'.
-							format([options.template, spaceName, tiddler.text]);
-						config.macros.tiddler.handler(item, null, null, null,
-							paramString);
+						var tiddler = new Tiddler(t.title);
+						t.created = Date.convertFromYYYYMMDDHHMM(t.created);
+						t.modified = Date.convertFromYYYYMMDDHHMM(t.modified);
+						tiddler.assign(t.title, t.text, t.modifier, t.modified, t.tags, t.created, t.fields);
+						tiddler.fields["server.bag"] = t.bag;
+						var templateText = store.getTiddlerText(options.template).replace(/\$1/mg, spaceName);
+						wikify(templateText, item, null, tiddler);
 					}
 					if(tiddlers.length === 0) {
 						$("<li />").text(locale.noone).appendTo(list);
@@ -364,14 +382,28 @@ var scanMacro = config.macros.tsScan = {
 			$('<span class="error"/>').text(locale.noSupport).appendTo(place);
 		}
 	},
-	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+	getOptions: function(paramString, tsHost) {
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var tag = args.tag ? args.tag[0] : false;
-		var titles = args.title || [params[0]];
-		var fat = args.fat;
+		var titles = args.title;
+		var spaceField = args.spaceField ? args.spaceField[0] : "bag";
+		var searchField = args.searchField ? args.searchField[0] : "title";
+		// if user has set searchField to modifier, then use the modifiers value if available otherwise use searchValues.
+		var searchValues = args[searchField] ? args[searchField] : args.searchValues;
+		// if neither of those were used use the first parameter
+		searchValues = searchValues ? searchValues : [args.name[0]];
+		var fat = args.fat ? true : false;
+		var template = args.template ? args.template[0] : false;
+		var query = args.query ? args.query[0] : false;
+		return { searchField: searchField, searchValues: searchValues, 
+			template: template,
+			host: tsHost, query: query, tag: tag, fat: fat, spaceField: spaceField };
+	},
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var container = $("<div />").addClass("scanResults").appendTo(place)[0];
 		followMacro.getHosts(function(host, tsHost) {
-			scanMacro.scan(container, titles, tag, { field: "bag", host: tsHost, fat: args.fat });
+			var options = scanMacro.getOptions(paramString, tsHost);
+			scanMacro.scan(container, options);
 		});
 	}
 };
@@ -395,9 +427,10 @@ var followersMacro = config.macros.followers = {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
 				followMacro.getHosts(function(host, tsHost) {
-					scanMacro.scan(container, [user.name, "@%0".format([user.name])], 
-						followMacro.followTag,
-						{ field: "bag", host: tsHost, fat: args.fat });
+					scanMacro.scan(container,
+						{ searchValues: [user.name, "@%0".format([user.name])], spaceField: "bag",
+							template: "FollowersTemplate",
+							tag: followMacro.followTag, host: tsHost, fat: args.fat });
 				});
 			}
 		};
@@ -420,7 +453,7 @@ var followingMacro = config.macros.following = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var locale = followingMacro.locale;
 		var args = paramString.parseParams("name", null, true, false, true)[0];
-		var fat = args.fat ? "&fat=y" : "";
+		var fat = args.fat ? true : false;
 		var username = params[0] || false;
 		var container = $('<div class="following" />').text(locale.pleaseWait).
 			appendTo(place)[0];
@@ -429,8 +462,9 @@ var followingMacro = config.macros.following = {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
 				followMacro.getHosts(function(host) {
-					scanMacro.scan(container, [user.name], followMacro.followTag,
-						{ field: "bag", searchField: "title", fat: fat, host: host});
+					scanMacro.scan(container,
+						{ spaceField: "bag", template:"FollowingTemplate", searchValues: [user.name], tag:followMacro.followTag, 
+							searchField: "title", fat: fat, host: host});
 				});
 			}
 		};
