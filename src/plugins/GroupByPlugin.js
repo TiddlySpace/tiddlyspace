@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
@@ -32,10 +32,14 @@ var macro = config.macros.groupBy = {
 		openTiddler: "open tiddler with title %0"
 	},
 	morpher: {
+		// TODO: note currently the following 2 morphers are TiddlySpace specific and probably should be in separate plugin
 		"server.workspace": function(value, options) {
 			return macro.morpher["server.bag"](value.replace("bags/", "").replace("recipes/", ""));
 		},
 		"server.bag": function(value, options) {
+			if(value.indexOf("_public") == -1 && value.indexOf("_private") == -1) {
+				value = "*%0".format([value]); // add star for non-space bags.
+			}
 			return value.replace("_public", "").replace("_private", "");
 		},
 		created: function(value, options) {
