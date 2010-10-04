@@ -2,6 +2,8 @@
 
 var NOP = function() {};
 
+httpReq = NOP; // XXX: deprecated
+
 readOnly = false;
 config = {
 	annotations: {},
