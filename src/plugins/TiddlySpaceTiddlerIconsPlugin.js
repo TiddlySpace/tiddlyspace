@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.7.4|
+|''Version''|0.8.0|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -26,7 +26,7 @@ label: if label parameter is set to yes, a label will accompany the icon.
 
 !!additional view parameters
 * labelPrefix / labelSuffix : prefix or suffix the label with additional text. eg. labelPrefix:'modified by '
-* spaceLink: if set to "yes" will make any avatars link to the corresponding space. <<originMacro spaceLink:yes>>
+* spaceLink: if set to "yes" will make any avatars link to the corresponding space. {{{<<originMacro spaceLink:yes>>}}}
 !Code
 ***/
 //{{{
@@ -38,54 +38,76 @@ if(!config.macros.image) {
 
 var imageMacro = config.macros.image;
 var tiddlyspace = config.extensions.tiddlyspace;
-var getStatus = config.extensions.tiddlyweb.getStatus;
+var tweb = config.extensions.tiddlyweb;
 var cmds = config.commands;
 var cmd = cmds.publishTiddler;
-
-config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
-		paramString, tiddler) {
-	var container = $('<div class="siteIcon" />').prependTo(place);
-	var extraArgs = params.splice(2, params.length - 2);
-	var options = originMacro.getOptions(extraArgs, extraArgs.join(" "));
-	var imagePlace = $("<div />").appendTo(container)[0];
-	if(value.indexOf("@") === 0) {
-		value = value.substr(1);
-	}
+tiddlyspace.renderAvatar = function(place, value, options) {
+	options = options ? options : {};
+	options.labelOptions = options.labelOptions ? options.labelOptions : { include: true };
+	options.imageOptions = options.imageOptions ? options.imageOptions : {};
 	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
-	if(endsWith(value, "_public")) {
-		value = value.substr(0, value.length - 7);
-	} else if(endsWith(value, "_private")) {
-		value = value.substr(0, value.length - 8);
+	var container = $('<div class="siteIcon" />').appendTo(place);
+	if(value) {
+		if(value.indexOf("@") === 0) {
+			value = value.substr(1);
+		}
+		if(endsWith(value, "_public")) {
+			value = value.substr(0, value.length - 7);
+		} else if(endsWith(value, "_private")) {
+			value = value.substr(0, value.length - 8);
+		}
+		value = value.toLowerCase();
 	}
-	value = value.toLowerCase();
-	getStatus(function(status) {
-		var args = paramString.parseParams("name", null, true, false, true)[0];
-		var labelPrefix = args.labelPrefix ? args.labelPrefix[0] : "";
-		var labelSuffix = args.labelSuffix ? args.labelSuffix[0] : "";
-		var link;
-		var noLabel;
-		if(!store.tiddlerExists(tiddler.title) || value == "None") { // some core tiddlers lack modifier
-			value = "unknown";
-			link = value;
+
+	tweb.getStatus(function(status) {
+		var link, noLabel;
+		if(!value) {
 			if(store.tiddlerExists("missingIcon")) {
-				imageMacro.renderImage(imagePlace, "missingIcon", options.imageOptions);
+				imageMacro.renderImage(container, "missingIcon", options.imageOptions);
 			} else {
 				noLabel = true;
 			}
 		} else {
-			var spaceURI = tiddlyspace.getHost(status.server_host, value);
+			var spaceURI = options.notSpace ? tiddlyspace.getHost(status.server_host) : 
+				tiddlyspace.getHost(status.server_host, value);
 			link = $("<a />").attr("href", spaceURI).text(value);
-			originMacro.renderAvatar(imagePlace, status, value, options);
+			var imageOptions = options.imageOptions;
+			if(options.spaceLink && !imageOptions.link) {
+				imageOptions.link = spaceURI;
+			}
+			var avatar = options.notSpace ? false : value;
+			var uri = tiddlyspace.getAvatar(status.server_host, avatar);
+			imageMacro.renderImage(container, uri, options.imageOptions);
 			if(!value) {
 				value = "tiddlyspace";
 			}
 		}
-		if(!noLabel) {
-			$('<div class="label" />').append(labelPrefix).append(link).
-				append(labelSuffix).appendTo(container);
+		if(!noLabel && options.labelOptions.include) {
+			var prefix = $("<span />").text(options.labelOptions.prefix || "")[0];
+			var suffix = $("<span />").text(options.labelOptions.suffix || "")[0];
+			$('<div class="label" />').append(prefix).append(link).
+				append(suffix).appendTo(container);
 		}
 	});
-	$(container).attr("title", value).attr("alt", value);
+	if(value) {
+		var prefix = options.labelOptions.prefix || "";
+		var suffix = options.labelOptions.suffix || "";
+		var label = "%0%1%2".format([prefix, value, suffix]);
+		$(container).attr("title", label);
+	}
+};
+
+config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
+		paramString, tiddler) {
+	var options = originMacro.getOptions(paramString);
+	if(!tiddler || value == "None") { // some core tiddlers lack modifier
+		value = false;
+	}
+	var field = params[0];
+	if(field == "server.bag") {
+		options.notSpace = !originMacro._isSpace(value);
+	}
+	tiddlyspace.renderAvatar(place, value, options);
 };
 
 var originMacro = config.macros.tiddlerOrigin = {
@@ -95,29 +117,14 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"private": "private",
 		"unknown": "unknown state",
 		"public": "public",
-		"privateAndPublic": "public and private tiddler",
-		"privateNotPublic": "private different to public",
-		"external": "from %0 space",
-		"missing_info": "This tiddler does not currently exist in the space.\nIt is possible you reached this via a broken link",
-		"external_info": "This tiddler was written by %0 in the %1 space. \nIt is visible to all at:\n%2",
-		"private_info": "This tiddler is currently private.\n It is visible to only members of this space at:\n%2\n\n",
-		"public_info": "This tiddler is currently public with no private revision.\nIt is visible to all at:\n%2",
-		"privateAndPublic_info": "This tiddler is currently public without any later private revisions.\nIt is visible to all at:\n%2",
-		"privateNotPublic_info": "This tiddler is currently public, with a different private revision. You are currently viewing the private version.\nIt is visible to all at:\n%2\nbut the content will differ depending on permissions.\n\n",
-		"shadow_info": "This tiddler is a special tiddler that is part of the TiddlySpace application. It has no uri.",
-		"unknownUser": "an unknown user",
-		"deletePrivate": "Delete the private version of this tiddler",
-		"deletePublic": "Delete the public version of this tiddler",
+		externalPrefix: "from ",
+		externalBagSuffix: " bag",
+		externalSuffix: " space",
 		publishPrivateDeletePrivate: "Are you sure you want to make this tiddler public?",
-		publishPrivateKeepPrivate: "Are you sure you want to publish this tiddler?\nNote that this will overwrite any existing public version.",
-		retainPrivateRevisions: "Also copy over the private revisions of this tiddler",
-		retainPublicRevisions: "Also copy over the public revisions of this tiddler",
 		moveToPrivate: "Are you sure you want to make this tiddler private? Only members will be able to see it.",
-		moveToPrivateKeep: "Are you sure you want to make this tiddler and all its revisions private? It will no longer be publically available to non-members of the space.",
-		"publicConfirmDelete": "Are you sure you want to delete all the public revisions of this tiddler?",
-		"privateConfirmDelete": "Are you sure you want to delete all the private revisions of this tiddler?",
 		pleaseWait: "please wait..",
 		keepPublic: "keep public",
+		cannotPublishDirtyTiddler: "The current tiddler is unsaved so cannot be published. Please save the tiddler first.",
 		keepPrivate: "keep private",
 		makePublic: "make public",
 		makePrivate: "make private"
@@ -128,87 +135,18 @@ var originMacro = config.macros.tiddlerOrigin = {
 		var type = "private";
 		if(tiddler && tiddler.fields["server.workspace"]) {
 			name = tiddler.fields["server.workspace"].replace("recipes/", "").
-			replace("bags/", "");
+				replace("bags/", "");
 		} else {
 			name = tiddler;
 		}
-		var options = originMacro.getOptions(params, paramString);
-		options.space = tiddlyspace.determineSpace(name, true);
+		var options = originMacro.getOptions(paramString);
 		var btn = $("<div />").addClass("originButton").appendTo(place)[0];
-		originMacro.determineTiddlerType(tiddler, options, function(type) {
-			originMacro.renderIcon(tiddler, type, btn, options);
-		});
+		type = tiddlyspace.getTiddlerStatusType(tiddler);
+		originMacro.renderIcon(tiddler, type, btn, options);
 	},
-
-	determineTiddlerType: function(tiddler, options, callback) {
-		var isShadow = store.isShadowTiddler(tiddler.title);
-		var exists = store.tiddlerExists(tiddler.title);
-		if(isShadow && !exists) {
-			callback("shadow");
-		} else if(!exists) {
-			callback("missing");
-		} else {
-			var space = options.space;
-			if(space && space.name == tiddlyspace.currentSpace.name) {
-				var parts = tiddler.fields["server.workspace"].split("_"); // TODO: use the split function in TiddlySpaceConfig
-				var spaceType = parts[parts.length - 1];
-				callback(spaceType);
-			} else {
-				callback("external");
-			}
-		}
-	},
-	distinguishPublicPrivateType: function(tiddler, options, type, callback) {
-		var space = options.space;
-		var adaptor = tiddler.getAdaptor();
-		var determineType = function(privateTiddler, publicTiddler) {
-			if(publicTiddler && !privateTiddler) {
-				return "public";
-			} else if(privateTiddler && !publicTiddler) {
-				return "private";
-			} else if(originMacro.areIdentical(privateTiddler, publicTiddler)) {
-				return "privateAndPublic";
-			} else {
-				return "privateNotPublic";
-			}
-		};
-		var context;
-		if(type == "private") { //check for a public version
-			// is there a public version in store?
-			var title = tiddler.title;
-			var publicVersion = store.getTiddler("%0 [public]".format([title]));
-			if(!publicVersion) {
-				context = {
-					workspace: "bags/%0_public".format([space.name])
-				};
-				adaptor.getTiddler(tiddler.title, context, null, function(context) {
-					if(context) {
-						var publicTiddler = context.status ? context.tiddler : false;
-						callback(determineType(tiddler, publicTiddler));
-					}
-				});
-			} else { // we have a public tiddler in the local store.
-				callback(determineType(tiddler, publicVersion));
-			}
-		} else {
-			var serverTitle = tiddler.fields["server.title"];
-			if(serverTitle && serverTitle != tiddler.title) { // viewing a spawned public tiddler
-				callback(determineType(store.getTiddler(serverTitle), tiddler));
-			} else {
-				context = {
-					workspace: "bags/%0_private".format([space.name])
-				};
-				adaptor.getTiddler(tiddler.title, context, null, function(context) {
-					if(context) {
-						var privateTiddler = context.status ? context.tiddler : false;
-						callback(determineType(privateTiddler, tiddler));
-					}
-				});
-			}
-		}
-	},
-	getOptions: function(params, paramString) {
+	getOptions: function(paramString) {
 		var parsedParams = paramString.parseParams("name");
+		var params = parsedParams[0].name;
 		var options = {
 			labelOptions: originMacro._getLabelOptions(parsedParams),
 			imageOptions: imageMacro.getArguments(paramString, []),
@@ -217,42 +155,41 @@ var originMacro = config.macros.tiddlerOrigin = {
 		};
 		if(!options.noclick) {
 			options.spaceLink = parsedParams[0].spaceLink ? true : false;
+		} else {
+			options.spaceLink = false;
 		}
 		return options;
 	},
 	_getLabelOptions: function(parsedParams) {
 		parsedParams = parsedParams[0];
 		var includeLabel = !parsedParams.label || ( parsedParams.label && parsedParams.label[0] == "yes" );
-		return { includeLabel: includeLabel };
+		var prefix = parsedParams.labelPrefix ? parsedParams.labelPrefix[0] : false;
+		var suffix = parsedParams.labelSuffix ? parsedParams.labelSuffix[0] : false;
+		return { include: includeLabel, suffix: suffix, prefix: prefix };
 	},
-	renderAvatar: function(container, status, space, options) {
-		var imageOptions = options.imageOptions;
-		var spaceURI = tiddlyspace.getHost(status.server_host, space);
-		if(options.spaceLink && !imageOptions.link) {
-			imageOptions.link = spaceURI;
+	_isSpace: function(value) {
+		value = value ? value : "";
+		var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
+		if(endsWith(value, "_private") || endsWith(value, "_public")) {
+			return true;
+		} else {
+			return false;
 		}
-		var uri = tiddlyspace.getAvatar(status.server_host, space);
-		imageMacro.renderImage(container, uri, options.imageOptions);
 	},
 	renderIcon: function(tiddler, type, button, options) {
 		var locale = originMacro.locale;
+		originMacro.annotateTiddler(button, type);
 		if(type != "external") {
 			originMacro.showPrivacyRoundel(tiddler, type, button,
 				options);
 		} else {
-			getStatus(function(status) {
-				var name = options.space.name;
-				var tooltip = name ? name : "tiddlyspace";
-				name = name ? '<a href="%0">%1</a>'.format([
-					tiddlyspace.getHost(status.server_host, name), name]) : "tiddlyspace";
-				var label = locale.external.format([name]);
-				tooltip = locale.external.format([tooltip]);
-				originMacro.renderAvatar(button, status, options.space.name, options);
-				var labelOptions = options.labelOptions;
-				labelOptions.label = label;
-				labelOptions.tooltip = tooltip;
-				originMacro.showLabel(button, type, labelOptions);
-			});
+			var prefix = options.labelOptions.prefix, suffix = options.labelOptions.suffix;
+			var space = tiddler.fields["server.bag"];
+			options.notSpace = !originMacro._isSpace(space);
+			options.labelOptions.prefix = prefix ? prefix : locale.externalPrefix;
+			options.labelOptions.suffix = suffix ? suffix : (options.notSpace ? locale.externalBagSuffix : locale.externalSuffix);
+
+			tiddlyspace.renderAvatar(button, space, options);
 		}
 	},
 	areIdentical: function(tiddler1, tiddler2) {
@@ -316,20 +253,20 @@ var originMacro = config.macros.tiddlerOrigin = {
 			}
 		}
 	},
-	showLabel: function(button, type, options) {
-		var locale = originMacro.locale;
-
-		var tidEl = $(story.findContainingTiddler(button));
-
-		var label = options.label ? options.label : locale[type];
-		var tooltip = options.tooltip ? options.tooltip : locale[type];
+	annotateTiddler: function(place, type) {
+		var tidEl = $(story.findContainingTiddler(place));
 		tidEl.
 			removeClass("private public external privateAndPublic privateNotPublic shadow").
 			addClass(type);
-		if(options && options.includeLabel) {
-			$('<div class="roundelLabel" />').html(label || locale.unknown).appendTo(button);
+	},
+	showLabel: function(button, type, options) {
+		var locale = originMacro.locale;
+		var label = options.label ? options.label : locale[type];
+		label = label ? label : locale.unknown;
+		if(options && options.include) {
+			$('<div class="roundelLabel" />').html(label).appendTo(button);
 		}
-		$(button).attr("title", tooltip);
+		$(button).attr("title", label);
 	},
 	confirm: function(ev, msg, onYes, options) {
 		options = options ? options : {};
@@ -346,20 +283,34 @@ var originMacro = config.macros.tiddlerOrigin = {
 		ev.stopPropagation();
 		return false;
 	},
+	alert: function(ev, msg) {
+		var popup = Popup.create(ev.target);
+		$(popup).addClass("confirmationPopup alert");
+		$("<div />").addClass("message").text(msg).appendTo(popup);
+		Popup.show();
+		ev.stopPropagation();
+	},
+	reportDirty: function(el) {
+		originMacro.alert(el, originMacro.locale.cannotPublishDirtyTiddler);
+	},
 	iconCommands: {
 		"public": function(ev, tiddler) {
 			if(!readOnly) {
 				var locale = originMacro.locale;
 				var msg = locale.moveToPrivate;
-				originMacro.confirm(ev, msg, function(ev) {
-					var target = $(ev.target);
-					var onComplete = function(info) {};
-					var privateBag = cmd.toggleBag(tiddler, "private");
-					cmd.moveTiddler(tiddler, {
-						title: tiddler.title,
-						fields: { "server.bag": privateBag }
-					}, false, onComplete);
-				}, { yesLabel: locale.makePrivate, noLabel: locale.keepPublic });
+				if(story.isDirty(tiddler.title)) {
+					originMacro.reportDirty(ev);
+				} else {
+					originMacro.confirm(ev, msg, function(ev) {
+						var target = $(ev.target);
+						var onComplete = function(info) {};
+						var privateBag = cmd.toggleBag(tiddler, "private");
+						cmd.moveTiddler(tiddler, {
+							title: tiddler.title,
+							fields: { "server.bag": privateBag }
+						}, false, onComplete);
+					}, { yesLabel: locale.makePrivate, noLabel: locale.keepPublic });
+				}
 			}
 		},
 		"private": function(ev, tiddler) {
@@ -376,13 +327,17 @@ var originMacro = config.macros.tiddlerOrigin = {
 				var newTitle = publishTo || tiddler.title;
 				tiddler.fields["server.page.revision"] = "false";
 				store.addTiddler(tiddler);
-				originMacro.confirm(ev, msg, function(ev) {
-					var onComplete = function(info) {};
-					cmd.moveTiddler(tiddler, {
-						title: newTitle,
-						fields: { "server.bag": publicBag }
-					}, false, onComplete);
-				}, { yesLabel: locale.makePublic, noLabel: locale.keepPrivate });
+				if(story.isDirty(tiddler.title)) {
+					originMacro.reportDirty(ev);
+				} else { 
+					originMacro.confirm(ev, msg, function(ev) {
+						var onComplete = function(info) {};
+						cmd.moveTiddler(tiddler, {
+							title: newTitle,
+							fields: { "server.bag": publicBag }
+						}, false, onComplete);
+					}, { yesLabel: locale.makePublic, noLabel: locale.keepPrivate });
+				}
 			}
 		}
 	}

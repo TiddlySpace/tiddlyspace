@@ -1,7 +1,10 @@
 (function(module, $) {
 
-var _areIdentical;
-var _Popup;
+var _areIdentical, _renderImage, _Popup, _binaryTiddlersPlugin, _getArguments;
+var mockRenderImage = function(place, src, options) {
+	$("<span />").addClass("imageStub").text(src).appendTo(place);
+};
+
 module("TiddlySpaceTiddlerIcons", {
 	setup: function() {
 		var popup = $("<div />").attr("id", "test_ttt_popup").appendTo(document.body);
@@ -20,8 +23,27 @@ module("TiddlySpaceTiddlerIcons", {
 			}
 		}
 		_Popup = Popup;
+		_binaryTiddlersPlugin = config.extensions.BinaryTiddlersPlugin;
+		config.extensions.BinaryTiddlersPlugin = {
+			endsWith: function(str, substr) {
+				if(str == "bar_public" && substr == "_public") {
+					return true
+				} else if(str == "dog_private" && substr == "_private") {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		};
+		_getArguments = config.macros.image.getArguments;
+		_renderImage = config.macros.image.renderImage;
+		config.macros.image.renderImage = mockRenderImage;
+		config.macros.image.getArguments = function() {
+			return {};
+		};
 	},
 	teardown: function() {
+		config.macros.image.getArguments = _getArguments;
 		store.removeTiddler("foo");
 		store.removeTiddler("foo2");
 		store.removeTiddler("boo [public]");
@@ -31,7 +53,41 @@ module("TiddlySpaceTiddlerIcons", {
 		}
 		config.macros.tiddlerOrigin.areIdentical = _areIdentical;
 		Popup = _Popup;
+		config.macros.image.renderImage = _renderImage;
+		config.extensions.BinaryTiddlersPlugin.endsWith = _binaryTiddlersPlugin;
 	}
+});
+
+test("render avatar", function() {
+	var place = $("<div />");
+	
+	config.extensions.tiddlyspace.renderAvatar(place, "jon", { labelOptions: { include: false, prefix: "hello " } });
+	config.extensions.tiddlyspace.renderAvatar(place, "@foo");
+	config.extensions.tiddlyspace.renderAvatar(place, "bar_public", { 
+		labelOptions: { include: true, prefix: "from space ", suffix: " !!"} 
+	});
+	config.extensions.tiddlyspace.renderAvatar(place, "dog_private");
+	config.extensions.tiddlyspace.renderAvatar(place, "CarRot");
+	config.extensions.tiddlyspace.renderAvatar(place, "system", { notSpace: true });
+	config.extensions.tiddlyspace.renderAvatar(place, false);
+	var res = $(".imageStub", place);
+	strictEqual(res.length, 6); // last one didnt render
+	strictEqual($(res[0]).text(), "http://jon.tiddlyspace.com/bags/jon_public/tiddlers/SiteIcon");
+	strictEqual($(res[1]).text(), "http://foo.tiddlyspace.com/bags/foo_public/tiddlers/SiteIcon");
+	strictEqual($(res[2]).text(), "http://bar.tiddlyspace.com/bags/bar_public/tiddlers/SiteIcon");
+	strictEqual($(res[3]).text(), "http://dog.tiddlyspace.com/bags/dog_public/tiddlers/SiteIcon");
+	strictEqual($(res[4]).text(), "http://carrot.tiddlyspace.com/bags/carrot_public/tiddlers/SiteIcon");
+	strictEqual($(res[5]).text(), "http://tiddlyspace.com/bags/tiddlyspace/tiddlers/SiteIcon");
+
+	var siteIcons = $(".siteIcon", place);
+	var jonIcon = $(siteIcons[0]);
+	strictEqual(jonIcon.attr("title"), "hello jon");
+	strictEqual($(".label", jonIcon).length, 0);
+	var fooLabel = $(".label", siteIcons[1]);
+	strictEqual(fooLabel.length, 1);
+	strictEqual(fooLabel.text(), "foo");
+	var barLabel = $(".label", siteIcons[2]);
+	strictEqual(barLabel.text(), "from space bar !!");
 });
 
 test("confirm", function() {
@@ -59,126 +115,37 @@ test("confirm", function() {
 	strictEqual(clicked, true);
 	
 });
-test("determineTiddlerType (shadow)", function() {
-	var tiddler = new Tiddler("ToolbarCommands");
-	var result = "";
-	var callback = function(type) {
-		result = type;
-	};
-	config.macros.tiddlerOrigin.determineTiddlerType(tiddler, {}, callback);
-	strictEqual(result, "shadow");
-});
 
-test("determineTiddlerType (missing)", function() {
-	var tiddler = new Tiddler("foo");
-	var result = "";
-	var callback = function(type) {
-		result = type;
-	};
-	config.macros.tiddlerOrigin.determineTiddlerType(tiddler, {}, callback);
-	strictEqual(result, "missing");
-});
-
-test("determineTiddlerType (external)", function() {
-	// setup
-	var space = { name: "bar" };
-	var originMacro = config.macros.tiddlerOrigin;
-	var tiddler = new Tiddler("foo");
-	tiddler.fields["server.workspace"] = "recipes/foo_private";
-	store.saveTiddler(tiddler);
-	var result;
-	var callback = function(type) {
-		result = type;
-	};
-
-	// run
-	originMacro.determineTiddlerType(tiddler, {space: space}, callback);
-	strictEqual(result, "external");
-});
-
-test("determineTiddlerType (private / public)", function() {
-	// setup
-	var space = { name: "foo" };
-	var originMacro = config.macros.tiddlerOrigin;
-	var adaptor = function() {
-		return {
-			getTiddler: function() {}
-		};
-	};
-	var tiddler = new Tiddler("foo");
-	tiddler.fields["server.workspace"] = "recipes/foo_private";
-	var tiddler2 = new Tiddler("foo2");
-	tiddler2.fields["server.workspace"] = "bags/foo_private";
-	tiddler.getAdaptor = adaptor;
-	tiddler2.getAdaptor = adaptor;
-	store.saveTiddler(tiddler);
-	store.saveTiddler(tiddler2);
-	var _distinguishPublicPrivateType = originMacro.distinguishPublicPrivateType;
-	originMacro.distinguishPublicPrivateType = function(tiddler, options, type, callback) {
-		callback("private");
-	};
-
-	var result;
-	var callback = function(type) {
-		result = type;
-	};
-	// run and test
-	originMacro.determineTiddlerType(tiddler, { space: space }, callback);
-	strictEqual(result, "private");
-
-	// setup
-	result = false;
-
-	// run and test
-	originMacro.determineTiddlerType(tiddler2, { space: space }, callback);
-	strictEqual(result, "private");
-
-	originMacro.distinguishPublicPrivateType = _distinguishPublicPrivateType;
-});
-
-test("distinguishPublicPrivateType", function() {
-	// setup
-	var originMacro = config.macros.tiddlerOrigin;
-	originMacro.areIdentical = function(tiddler1, tiddler2) {
-		return true;
-	};
-	var actual = [];
-	var expected = ["private", "privateAndPublic", "public", "privateNotPublic"];
-	var space = { name: "z" };
-	var callback = function(type) {
-		actual.push(type);
-	};
-	var getAdaptor = function() {
-		var adaptor = {
-			getTiddler: function(title, context) {
-				var workspace = context.workspace;
-				if(workspace == "bags/z_public" && title == "foo") { // test 1
-					callback("private");
-				} else if(workspace == "bags/z_private" && title == "goo") { // test 4
-					callback("privateNotPublic");
-				} else {
-					callback(false);
+test("getOptions", function() {
+	var macro = config.macros.tiddlerOrigin;
+	var a = {
+		parseParams: function(arg) {
+			return [
+				{
+					name: ["foo"],
+					interactive: ["no"],
+					spaceLink: ["yes"]
 				}
-			}
-		};
-		return adaptor;
+			];
+		}
 	};
-	store.saveTiddler(new Tiddler("boo [public]"));
-	var tiddler = new Tiddler("foo");
-	var tiddler2 = new Tiddler("boo");
-	var tiddler3 = new Tiddler("zoo [public]");
-	tiddler3.fields["server.title"] = "zoo";
-	var tiddler4 = new Tiddler("goo");
+	var b = {
+		parseParams: function(arg) {
+			return [
+				{
+					name: ["foo"],
+					spaceLink: ["yes"]
+				}
+			];
+		}
+	};
+	var options = macro.getOptions(a);
+	var options2 = macro.getOptions(b);
 
-	tiddler.getAdaptor = getAdaptor;
-	tiddler2.getAdaptor = getAdaptor;
-	tiddler3.getAdaptor = getAdaptor;
-	tiddler4.getAdaptor = getAdaptor;
-	originMacro.distinguishPublicPrivateType(tiddler, {space: space}, "private", callback);
-	originMacro.distinguishPublicPrivateType(tiddler2, {space: space}, "private", callback);
-	originMacro.distinguishPublicPrivateType(tiddler3, {space: space}, "public", callback);
-	originMacro.distinguishPublicPrivateType(tiddler4, {space: space}, "public", callback);
-	same(expected, actual);
+	strictEqual(options.noclick, true);
+	strictEqual(options.spaceLink, false);
+	strictEqual(options2.noclick, false);
+	strictEqual(options2.spaceLink, true);
 });
 
 test("areIdentical (text and title)", function() {
@@ -241,10 +208,14 @@ test("_getLabelOptions", function() {
 
 	var options = macro._getLabelOptions([{}]);
 	var options2 = macro._getLabelOptions([{ label: ["yes"] }]);
-	var options3 = macro._getLabelOptions([{ label: ["no"], width: ["20"], height: ["20"] }]);
-	strictEqual(options.includeLabel, true); // make sure its the default
-	strictEqual(options2.includeLabel, true);
-	strictEqual(options3.includeLabel, false);
+	var options3 = macro._getLabelOptions([{ label: ["no"], width: ["20"], height: ["20"], 
+		labelPrefix: ["foo"], labelSuffix: ["bar"] }]);
+	strictEqual(options.include, true); // make sure its the default
+	strictEqual(options2.include, true);
+	strictEqual(options3.include, false);
+	strictEqual(options3.include, false);
+	strictEqual(options3.prefix, "foo");
+	strictEqual(options3.suffix, "bar");
 });
 
 var _readOnly;
@@ -252,10 +223,21 @@ module("TiddlySpaceTiddlerIcons readOnly mode", {
 	setup: function() {
 		_readOnly = readOnly;
 		readOnly = true;
+		_renderImage = config.macros.image.renderImage;
+		config.macros.image.renderImage = mockRenderImage;
+		store.saveTiddler(new Tiddler("missingIcon"));
 	},
 	teardown: function() {
 		readOnly = _readOnly;
+		config.macros.image.renderImage = _renderImage;
+		store.removeTiddler("missingIcon");
 	}
+});
+
+test("render avatar (missing icon)", function() {
+	var place = $("<div />");
+	config.extensions.tiddlyspace.renderAvatar(place, false);
+	strictEqual($(".imageStub", place).text(), "missingIcon");
 });
 
 test("check concertina commands do not appear in readonly mode", function() {
@@ -277,4 +259,37 @@ test("check concertina commands do not appear in readonly mode", function() {
 	strictEqual($(selector, place2).length, 0);
 
 });
+
+var dirtyReported;
+var _reportDirty, _dirty;
+module("TiddlySpaceTiddlerIcons (dirty)", {
+	setup: function() {
+		_reportDirty = config.macros.tiddlerOrigin.reportDirty;
+		dirtyReported = false;
+		config.macros.tiddlerOrigin.reportDirty = function() {
+			dirtyReported = true;
+		}
+		_dirty = story.isDirty;
+		story.isDirty = function(title) {
+			if(title == "jack") {
+				return true;
+			} else {
+				return false;
+			}
+		};
+	},
+	teardown: function() {
+		config.macros.tiddlerOrigin.reportDirty = _reportDirty;
+		story.isDirty = _dirty;
+	}
+});
+
+test("check publishing is not possible from dirty tiddler", function() {
+	// to do.
+	var originMacro = config.macros.tiddlerOrigin;
+	var ev = { target: document.createElement("div") };
+	originMacro.iconCommands["public"](ev, new Tiddler("jack"));
+	strictEqual(dirtyReported, true);
+});
+
 })(QUnit.module, jQuery);

@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.7.4|
+|''Version''|0.7.6|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -13,16 +13,24 @@
 
 var tiddlyspace = config.extensions.tiddlyspace;
 tiddlyspace.getTiddlerStatusType = function(tiddler) {
-	var bag = tiddler.fields["server.bag"];
-	var currentSpace = tiddlyspace.currentSpace.name;
-	var privateBag = "%0_private".format([currentSpace]);
-	var publicBag = "%0_public".format([currentSpace]);
-	if(bag == privateBag) {
-		return "private";
-	} else if (bag == publicBag) {
-		return "public";
+	var isShadow = store.isShadowTiddler(tiddler.title);
+	var exists = store.tiddlerExists(tiddler.title);
+	if(isShadow && !exists) {
+		return "shadow";
+	} else if(!exists) {
+		return "missing";
 	} else {
-		return "external";
+		var bag = tiddler.fields["server.bag"];
+		var currentSpace = tiddlyspace.currentSpace.name;
+		var privateBag = "%0_private".format([currentSpace]);
+		var publicBag = "%0_public".format([currentSpace]);
+		if(bag == privateBag) {
+			return "private";
+		} else if (bag == publicBag) {
+			return "public";
+		} else {
+			return "external";
+		}
 	}
 };
 
