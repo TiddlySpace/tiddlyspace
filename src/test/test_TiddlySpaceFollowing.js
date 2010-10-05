@@ -1,6 +1,6 @@
 (function(module, $) {
 
-var _getTaggedTiddlers;
+var _getTaggedTiddlers, _getUserInfo;
 var taggedTiddlers = [];
 
 module("TiddlySpaceFollowing", {
@@ -10,10 +10,15 @@ module("TiddlySpaceFollowing", {
 		store.getTaggedTiddlers = function() {
 			return taggedTiddlers;
 		};
+		_getUserInfo = config.extensions.tiddlyweb.getUserInfo;
+		config.extensions.tiddlyweb.getUserInfo = function(callback) {
+			callback({ anon: true });
+		}
 	},
 	teardown: function() {
 		taggedTiddlers = [];
 		store.getTaggedTiddlers = _getTaggedTiddlers;
+		config.extensions.tiddlyweb.getUserInfo = _getUserInfo;
 	}
 });
 
@@ -47,6 +52,16 @@ test("getFollowers (local version)", function() {
 	taggedTiddlers.push(tiddler);
 	followMacro.getFollowers(callback, "foo"); // where foo is the current space
 	strictEqual(passedTest, true);
+});
+
+test("getFollowers (user not logged in)", function() {
+	var followMacro = config.macros.followTiddlers;
+	var actual;
+	var callback = function(list) {
+		actual = list;
+	};
+	followMacro.getFollowers(callback);
+	strictEqual(actual, false, "in cases where the user is anon false is returned");
 });
 
 })(QUnit.module, jQuery);

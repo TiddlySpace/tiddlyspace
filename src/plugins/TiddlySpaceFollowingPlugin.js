@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.5|
+|''Version''|0.5.6|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -141,18 +141,22 @@ var followMacro = config.macros.followTiddlers = {
 		var options = {};
 		var user = params[1] || false; // allows a user to use the macro on another username
 		this.getFollowers(function(followers) {
-			var bagQuery = followMacro._constructBagQuery(followers);
-			followMacro.getHosts(function(host, tsHost) {
-				options.host = tsHost;
-				options.ignore = tiddler.fields["server.bag"];
-				if(followers.length > 0) { // only run the search if we have a list of followers
-					for(var i = 0; i < followers.length; i++) {
-						followMacro.makeQuery(btn, title, followers[i], options);
+			if(!followers) {
+				$(btn).remove();
+			} else {
+				var bagQuery = followMacro._constructBagQuery(followers);
+				followMacro.getHosts(function(host, tsHost) {
+					options.host = tsHost;
+					options.ignore = tiddler.fields["server.bag"];
+					if(followers.length > 0) { // only run the search if we have a list of followers
+						for(var i = 0; i < followers.length; i++) {
+							followMacro.makeQuery(btn, title, followers[i], options);
+						}
+					} else {
+						followMacro.constructInterface(btn, [], options);
 					}
-				} else {
-					followMacro.constructInterface(btn, [], options);
-				}
-			});
+				});
+			}
 		}, user);
 	},
 	makeQuery: function(container, title, bag, options) {
@@ -298,6 +302,8 @@ var followMacro = config.macros.followTiddlers = {
 						adaptor.getTiddlerList(context, null, tiddlerListCallback);
 					});
 				}
+			} else {
+				callback(false);
 			}
 		};
 		if(!username) {
