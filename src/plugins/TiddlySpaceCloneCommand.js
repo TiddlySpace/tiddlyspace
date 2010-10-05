@@ -62,6 +62,7 @@ cmd.cloneTiddler = {
 			el.attr("tiddlyfields", fields);
 		}
 		cmd.editTiddler.handler.apply(this, arguments);
+		tiddler.fields["server.permissions"] += ", delete";
 		return false;
 	}
 };
