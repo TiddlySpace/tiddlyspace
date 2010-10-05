@@ -469,8 +469,8 @@ var followingMacro = config.macros.following = {
 			} else {
 				followMacro.getHosts(function(host) {
 					scanMacro.scan(container,
-						{ spaceField: "bag", template:"FollowingTemplate", searchValues: [user.name], tag:followMacro.followTag, 
-							searchField: "title", fat: fat, host: host});
+						{ spaceField: "title", template:"FollowingTemplate", searchValues: ["%0_public".format([user.name])], tag:followMacro.followTag, 
+							searchField: "bag", fat: fat, host: host});
 				});
 			}
 		};
