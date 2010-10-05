@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
@@ -32,10 +32,14 @@ var macro = config.macros.groupBy = {
 		openTiddler: "open tiddler with title %0"
 	},
 	morpher: {
+		// TODO: note currently the following 2 morphers are TiddlySpace specific and probably should be in separate plugin
 		"server.workspace": function(value, options) {
 			return macro.morpher["server.bag"](value.replace("bags/", "").replace("recipes/", ""));
 		},
 		"server.bag": function(value, options) {
+			if(value.indexOf("_public") == -1 && value.indexOf("_private") == -1) {
+				value = "*%0".format([value]); // add star for non-space bags.
+			}
 			return value.replace("_public", "").replace("_private", "");
 		},
 		created: function(value, options) {
@@ -67,13 +71,14 @@ var macro = config.macros.groupBy = {
 	},
 	refresh: function(place) {
 		var totalGroups = 0;
-		var paramString = $(place).attr("paramString");
+		var container = $(place).empty();
+		var paramString = container.attr("paramString");
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var excludeValues = args.exclude || [];
 		var values = {};
-		var options = { dateFormat: $(place).attr("dateFormat") };
+		var options = { dateFormat: container.attr("dateFormat") };
 		var tiddlers = args.filter ? store.filterTiddlers(args.filter[0]) : store.getTiddlers();
-		var field = $(place).attr("fieldName");
+		var field = container.attr("fieldName");
 		var morpher = macro.morpher[field] || function(value) {
 			return value;
 		};
@@ -95,7 +100,7 @@ var macro = config.macros.groupBy = {
 				}
 			}
 		}
-		var ul = createTiddlyElement(place,"ul");
+		var ul = createTiddlyElement(place, "ul");
 		if(totalGroups === 0) {
 			createTiddlyElement(ul, "li", null, "listTitle", this.locale.noTiddlers);
 		}

@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceCloneCommand|
-|''Version''|0.5.2|
+|''Version''|0.5.3|
 |''Description''|provides a toolbar command for cloning external tiddlers|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceCloneCommand.js|
@@ -12,7 +12,7 @@
 
 var cmd = config.commands;
 var ns = config.extensions.tiddlyspace;
-var fieldStash = {}; // XXX: should not be private!?
+var fieldsCache = {};
 
 cmd.cloneTiddler = {
 	text: cmd.editTiddler.text,
@@ -36,11 +36,13 @@ cmd.cloneTiddler = {
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
 		if(tiddler) {
-			fieldStash[title] = $.extend({}, tiddler.fields);
+			fieldsCache[title] = $.extend({}, tiddler.fields);
 			tiddler.fields["server.workspace"] = "bags/%0_private".
 				format([ns.currentSpace.name]);
 			tiddler.fields["server.permissions"] = "read, write, create"; // no delete
 			delete tiddler.fields["server.page.revision"];
+			delete tiddler.fields["server.title"];
+			delete tiddler.fields["server.etag"];
 			// special handling for pseudo-shadow tiddlers
 			if(tiddler.fields["server.bag"] == "tiddlyspace") {
 				tiddler.tags.remove("excludeLists");
@@ -60,6 +62,7 @@ cmd.cloneTiddler = {
 			el.attr("tiddlyfields", fields);
 		}
 		cmd.editTiddler.handler.apply(this, arguments);
+		tiddler.fields["server.permissions"] += ", delete";
 		return false;
 	}
 };
@@ -73,8 +76,8 @@ var _cancelHandler = cmd.cancelTiddler.handler;
 cmd.cancelTiddler.handler = function(ev, src, title) {
 	var tiddler = store.getTiddler(title);
 	if(tiddler) {
-		tiddler.fields = fieldStash[title] || tiddler.fields;
-		delete fieldStash[title];
+		tiddler.fields = fieldsCache[title] || tiddler.fields;
+		delete fieldsCache[title];
 	}
 	return _cancelHandler.apply(this, arguments);
 };
@@ -82,7 +85,7 @@ cmd.cancelTiddler.handler = function(ev, src, title) {
 // hijack saveTiddler to clear unused fields stash
 var _saveHandler = cmd.saveTiddler.handler;
 cmd.saveTiddler.handler =  function(ev, src, title) {
-	delete fieldStash[title];
+	delete fieldsCache[title];
 	return _saveHandler.apply(this, arguments);
 };
 
