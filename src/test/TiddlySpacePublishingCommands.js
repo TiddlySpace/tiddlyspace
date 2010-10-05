@@ -14,10 +14,19 @@ module("TiddlySpacePublishingCommands", {
 			}
 		}
 		readOnly = false;
+		var tid1 = new Tiddler("bfoo");
+		tid1.fields["server.bag"] = "foo_public";
+		var tid2 = new Tiddler("bfoo2");
+		tid2.fields["server.bag"] = "foo_private";
+		var tid3 = new Tiddler("bfoo3");
+		tid3.fields["server.bag"] = "bar_public";
+		store.saveTiddler(tid1);
+		store.saveTiddler(tid2);
+		store.saveTiddler(tid3);
 	},
 	teardown: function() {
 		var toDelete = ["pig", "foo", "foo [draft]", "foo [draft2]", "foo [draft3]", 
-			"foo [draft5]", "bar [draft]"];
+			"foo [draft5]", "bar [draft]", "bfoo", "bfoo2", "bfoo3"];
 		for(var i = 0; i < toDelete.length; i++) {
 			store.removeTiddler(toDelete[i]);
 		}
@@ -27,6 +36,21 @@ module("TiddlySpacePublishingCommands", {
 	}
 });
 
+test("tiddlyspace.getTiddlerStatusType", function() {
+	var tiddlyspace = config.extensions.tiddlyspace;
+
+	var type1 = tiddlyspace.getTiddlerStatusType(store.getTiddler("bfoo"));
+	var type2 = tiddlyspace.getTiddlerStatusType(store.getTiddler("bfoo2"));
+	var type3 = tiddlyspace.getTiddlerStatusType(store.getTiddler("bfoo3"));
+	var type4 = tiddlyspace.getTiddlerStatusType(new Tiddler("ToolbarCommands"));
+	var type5 = tiddlyspace.getTiddlerStatusType(new Tiddler("MainMenuNotExistanceTiddler"));
+
+	strictEqual(type1, "public");
+	strictEqual(type2, "private");
+	strictEqual(type3, "external");
+	strictEqual(type4, "shadow");
+	strictEqual(type5, "missing");
+});
 test("getDraftTitle", function() {
 	// setup
 	var cmd = config.commands.saveDraft;
@@ -469,6 +493,7 @@ test("publishTiddler command button", function() {
 test("enabled commands (private)", function() {
 	var tiddler = new Tiddler("foo");
 	tiddler.fields = {"server.bag": "foo_private"};
+	store.saveTiddler(tiddler);
 	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
 	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
 	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
@@ -487,6 +512,7 @@ test("enabled commands (private)", function() {
 test("enabled commands (public)", function() {
 	var tiddler = new Tiddler("foo");
 	tiddler.fields = {"server.bag": "foo_public"};
+	store.saveTiddler(tiddler);
 	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
 	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
 	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
@@ -505,6 +531,7 @@ test("enabled commands (public)", function() {
 test("enabled commands (included)", function() {
 	var tiddler = new Tiddler("foo");
 	tiddler.fields = {"server.bag": "xyz_public"};
+	store.saveTiddler(tiddler);
 	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
 	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
 	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);

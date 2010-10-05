@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.6.1|
+|''Version''|0.6.2dev|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
@@ -38,7 +38,7 @@ var macro = config.macros.setPrivacy = {
 			var defaultValue = args.defaultValue;
 			defaultValue = defaultValue ? "%0_%1".format([currentSpace, defaultValue[0]]) : false;
 			var options = config.macros.tiddlerOrigin ?
-				config.macros.tiddlerOrigin.getOptions(params, paramString) : false;
+				config.macros.tiddlerOrigin.getOptions(paramString) : {};
 			this.createRoundel(container, tiddler, currentSpace, defaultValue, options);
 		}
 	},
