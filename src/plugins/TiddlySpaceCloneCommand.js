@@ -41,6 +41,7 @@ cmd.cloneTiddler = {
 				format([ns.currentSpace.name]);
 			tiddler.fields["server.permissions"] = "read, write, create"; // no delete
 			delete tiddler.fields["server.page.revision"];
+			delete tiddler.fields["server.title"];
 			delete tiddler.fields["server.etag"];
 			// special handling for pseudo-shadow tiddlers
 			if(tiddler.fields["server.bag"] == "tiddlyspace") {
