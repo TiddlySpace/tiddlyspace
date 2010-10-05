@@ -21,7 +21,7 @@ from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 
-__version__ = '0.9.24'
+__version__ = '0.9.25'
 
 
 def init(config):
