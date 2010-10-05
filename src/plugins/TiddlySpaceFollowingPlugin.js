@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.7|
+|''Version''|0.5.8|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -404,7 +404,7 @@ var scanMacro = config.macros.tsScan = {
 		// if user has set searchField to modifier, then use the modifiers value if available otherwise use searchValues.
 		var searchValues = args[searchField] ? args[searchField] : args.searchValues;
 		// if neither of those were used use the first parameter
-		searchValues = searchValues ? searchValues : ( args.name ? args.name[0] : []);
+		searchValues = searchValues ? searchValues : ( args.name ? [args.name[0]] : []);
 		var fat = args.fat ? true : false;
 		var template = args.template ? args.template[0] : false;
 		var filter = args.filter ? args.filter[0] : false;

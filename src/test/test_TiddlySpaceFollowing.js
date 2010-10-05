@@ -64,4 +64,17 @@ test("getFollowers (user not logged in)", function() {
 	strictEqual(actual, false, "in cases where the user is anon false is returned");
 });
 
+test("tsScan.getOptions", function() {
+	var paramString = {
+		parseParams: function() {
+			return [
+				{
+					name: ["SiteInfo"]
+				}
+			];
+		}
+	};
+	var options = config.macros.tsScan.getOptions(paramString, "http://foo");
+	strictEqual(options.searchValues[0], "SiteInfo");
+});
 })(QUnit.module, jQuery);
