@@ -51,9 +51,9 @@ var tiddlyspace = config.extensions.tiddlyspace;
 var imageMacro = config.macros.image;
 
 config.annotations.ScanTemplate = "This tiddler is a template used in the display of tiddlers from spaces you are following. Use the wildcard {{{$1}}} to access the spaceField. To access attributes use the view macro e.g. {{{<<view title text>>}}}";
-config.shadowTiddlers.ScanTemplate = "<<view modifier SiteIcon width:24 height:24 spaceLink:yes>> <<view title link>>";
-config.shadowTiddlers.FollowersTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes>> @$1";
-config.shadowTiddlers.FollowingTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes>> @$1";
+config.shadowTiddlers.ScanTemplate = "<<view modifier SiteIcon width:24 height:24 spaceLink:yes label:no>> <<view title link>>";
+config.shadowTiddlers.FollowersTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> @$1";
+config.shadowTiddlers.FollowingTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> @$1";
 
 var name = "StyleSheetFollowing";
 tiddler = {title: "TiddlySpaceFollowingPlugin"};
