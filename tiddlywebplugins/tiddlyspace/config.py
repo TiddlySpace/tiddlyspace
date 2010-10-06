@@ -25,4 +25,5 @@ config = {
         'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
     'indexer': 'tiddlywebplugins.mysql',
     'tiddlywebwiki.binary_limit': 1048576, # 1MB
+    'lazy.titles': ['SiteIcon', 'ColorPalette'],
 }
