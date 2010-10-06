@@ -1,14 +1,7 @@
-tags: excludeSearch excludeLists
+tags: excludeLists excludeSearch
 modifier: osmosoft
 
 /*{{{*/
-.concertina {
-	overflow: hidden;
-	display: none;
-	padding: 0.7em;
-	background-color: white;
-}
-
 .tiddler .originButton div {
 	display: inline-block;
 }
@@ -35,39 +28,33 @@ modifier: osmosoft
 	margin: 0;
 }
 
+.tagging {
+	float: none;
+}
+
 .tagging, .tagged {
 	background: none;
 	border: none;
 }
 
-.tagging {
-	float: none;
-	margin-left: 8px;
-	margin-right: 72px;
-	position: relative;
-}
-
 .tagging li.listTitle {
-	position: absolute;
-	top: 8px;
 	margin-left: 0px;
 }
 .tagging li {
 	display: block;
-	margin-right: 16px;
+	margin-right: 8px;
 	clear: both;
-	margin-left: 72px;
+	margin-left: 8px;
 }
 
 .tagging .tiddlyLink {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	border-radius: 5px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
 	margin: 0;
-	display: block;
-	padding: 0;
-	line-height: 16px
+	padding: 1px 2px;
+	line-height: 1.2em;
 }
 
 .tagged .button {
@@ -189,8 +176,6 @@ modifier: osmosoft
 	cursor: auto;
 }
 
-.concertinaLink roundelLabel:hover,
-.concertinaLink a:hover,
 .tiddler .subtitle:hover {
 	font-weight: bold;
 	background: none;

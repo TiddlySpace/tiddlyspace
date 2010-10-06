@@ -13,10 +13,11 @@ body {
 	background-color: [[ColorPalette::TertiaryPale]];
 }
 
-.confirmationPopup, .followList {
-	font-size: 0.7em;
+#popup.confirmationPopup, .followList {
+	font-size: 0.8em;
 	padding: 1em;
-	border: solid 1px #000;
+	border: solid 1px [[ColorPalette::SecondaryMid]];
+	background-color: [[ColorPalette::SecondaryPale]];
 }
 
 .followList .listTitle {
@@ -34,8 +35,8 @@ body {
 }
 
 #popup li a:hover {
-	color: [[ColorPalette::PrimaryMid]];
-	background: none;
+	color: [[ColorPalette::PrimaryPale]];
+	background: [[ColorPalette::PrimaryMid]];
 }
 
 #popup li.listTitle {
@@ -208,15 +209,22 @@ body {
 .confirmationPopup .button,
 #sidebarOptions .button {
 	cursor: pointer;
-	display: block;
-	float: left;
-	font-size: 0.7em;
-	height: 16px;
-	line-height: 16px;
-	padding: 0;
+	line-height: 1.4em;
 	text-align: center;
-	width: 80px;
 	margin-right: 8px;
+	margin-left:-2px;
+}
+
+.confirmationPopup .button {
+	font-size: 0.9em;
+	padding: 2px;
+}
+
+#sidebarOptions .button {
+	font-size: 0.7em;
+	float: left;
+	width: 80px;
+	padding: 0px;
 }
 
 .confirmationPopup a.button,
