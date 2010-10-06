@@ -109,114 +109,59 @@ var cmd = config.commands.publishTiddler = {
 		};
 		publish(original, callback);
 	},
-	moveTiddler: function(tiddler, newTiddler, withRevisions, callback) {
-		if(withRevisions) {
-			this.moveTiddlerWithRevisions(tiddler, newTiddler, callback);
-		} else {
+	moveTiddler: function(tiddler, newTiddler, callback) {
 			var info = {
-				copyContext: {},
-				deleteContext: {}
-			};
-			var _dirty = store.isDirty();
-			var adaptor = tiddler.getAdaptor();
-			var newTitle = newTiddler.title;
-			var oldTitle = tiddler.title;
-			delete tiddler.fields["server.workspace"];
-			var oldBag = tiddler.fields["server.bag"];
-			var newBag = newTiddler.fields["server.bag"];
-			var newWorkspace = "bags/%0".format([newBag]);
-			cmd.copyTiddler(oldTitle, newTitle, newBag, function(ctx) {
-					info.copyContext = ctx;
-					var context = {
-						tiddler: tiddler,
-						workspace: newWorkspace
-					};
-					store.addTiddler(ctx.tiddler);
-					tiddler.title = oldTitle; // for cases where a rename occurs
-					if(ctx.status) { // only do if a success
-						if(oldBag != newBag) {
-							adaptor.deleteTiddler(tiddler, context, {}, function(ctx) {
-								info.deleteContext = ctx;
-								var el;
-								if(tiddler) {
-									tiddler.fields["server.workspace"] = newWorkspace;
-									tiddler.fields["server.bag"] = newBag;
-								}
-								el = el ? el : story.refreshTiddler(oldTitle, null, true);
-								if(oldTitle != newTitle) {
-									store.removeTiddler(oldTitle);
-								}
-								if(el) {
-									story.displayTiddler(el, newTitle);
-								}
-								if(oldTitle != newTitle) {
-									story.closeTiddler(oldTitle);
-								}
-								if(callback) {
-									callback(info);
-								}
-								store.setDirty(_dirty);
-								story.refreshTiddler(newTitle, null, true); // for drafts
-							});
-						} else {
+			copyContext: {},
+			deleteContext: {}
+		};
+		var _dirty = store.isDirty();
+		var adaptor = tiddler.getAdaptor();
+		var newTitle = newTiddler.title;
+		var oldTitle = tiddler.title;
+		delete tiddler.fields["server.workspace"];
+		var oldBag = tiddler.fields["server.bag"];
+		var newBag = newTiddler.fields["server.bag"];
+		var newWorkspace = "bags/%0".format([newBag]);
+		cmd.copyTiddler(oldTitle, newTitle, newBag, function(ctx) {
+				info.copyContext = ctx;
+				var context = {
+					tiddler: tiddler,
+					workspace: newWorkspace
+				};
+				store.addTiddler(ctx.tiddler);
+				tiddler.title = oldTitle; // for cases where a rename occurs
+				if(ctx.status) { // only do if a success
+					if(oldBag != newBag) {
+						adaptor.deleteTiddler(tiddler, context, {}, function(ctx) {
+							info.deleteContext = ctx;
+							var el;
+							if(tiddler) {
+								tiddler.fields["server.workspace"] = newWorkspace;
+								tiddler.fields["server.bag"] = newBag;
+							}
+							el = el ? el : story.refreshTiddler(oldTitle, null, true);
+							if(oldTitle != newTitle) {
+								store.removeTiddler(oldTitle);
+							}
+							if(el) {
+								story.displayTiddler(el, newTitle);
+							}
+							if(oldTitle != newTitle) {
+								story.closeTiddler(oldTitle);
+							}
 							if(callback) {
 								callback(info);
 							}
-							story.refreshTiddler(newTitle, null, true);
-						}
-					}
-			});
-		}
-	},
-	moveTiddlerWithRevisions: function(tiddler, newTiddler, callback) {
-		var adaptor = tiddler.getAdaptor();
-		var oldBag = tiddler.fields["server.bag"];
-		var oldTitle = tiddler.title;
-		var newTitle = newTiddler.title;
-		var newBag = newTiddler.fields["server.bag"];
-		delete tiddler.fields["server.workspace"];
-		delete newTiddler.fields["server.workspace"];
-		var oldWorkspace = "bags/%0".format([oldBag]);
-		var newWorkspace = "bags/%0".format([newBag]);
-		var info = {};
-		if(oldBag == newBag) { // we are in a dangerous error state
-			return callback ? callback(info) : false;
-		}
-		// we first must delete any existing public revisions
-		tiddler.title = newTitle;
-		tiddler.fields["server.bag"] = newBag;
-		tiddler.fields["server.workspace"] = newWorkspace;
-		tiddler.fields["server.page.revision"] = "false"; // force this action
-		adaptor.deleteTiddler(tiddler, {}, {},
-			function(ctx) {
-				info.deleteContext = ctx;
-				tiddler.fields["server.workspace"] = oldWorkspace;
-				tiddler.fields["server.bag"] = oldBag; // rectify above change to workspace
-				adaptor.moveTiddler(
-					{ title: oldTitle, workspace: oldWorkspace },
-					{ title: newTitle, workspace: newWorkspace },
-					{}, {},
-					function(context) {
-						info.moveContext = context;
-						if(context.status) {
-							var newTiddler = context.tiddler;
-							newTiddler.fields["server.workspace"] = newWorkspace;
-							// some some reason the old tiddler is not being removed from the store (hence next 3 lines)
-							var oldDirty = store.isDirty();
-							store.removeTiddler(oldTitle);
-							store.setDirty(oldDirty);
-							store.addTiddler(newTiddler); // note the tiddler may have changed name
-							var old = story.refreshTiddler(oldTitle, null, true);
-							if(old) {
-								story.displayTiddler(old, newTitle);
-							}
-							story.refreshTiddler(newTitle, null, true); // for case of drafts
-						}
+							store.setDirty(_dirty);
+							story.refreshTiddler(newTitle, null, true); // for drafts
+						});
+					} else {
 						if(callback) {
 							callback(info);
 						}
+						story.refreshTiddler(newTitle, null, true);
 					}
-				);
+				}
 		});
 	}
 };
@@ -236,7 +181,7 @@ config.commands.changeToPrivate = {
 		var tiddler = store.getTiddler(title);
 		var newBag = cmd.toggleBag(tiddler, "private");
 		var newTiddler = { title: title, fields: { "server.bag": newBag }};
-		cmd.moveTiddler(tiddler, newTiddler, false);
+		cmd.moveTiddler(tiddler, newTiddler);
 	}
 };
 config.commands.changeToPublic = config.commands.publishTiddler;
@@ -415,7 +360,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 				title: tiddler.title,
 				fields: { "server.bag": publicBag }
 			};
-			config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, false, callback);
+			config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, callback);
 		}
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {

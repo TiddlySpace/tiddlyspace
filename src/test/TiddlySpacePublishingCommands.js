@@ -260,7 +260,7 @@ test("moveTiddler from private to public with rename (without revisions)", funct
 		return adaptor;
 	};
 	var newTiddler = { title: "babe", fields: { "server.bag": "jon_public" } };
-	cmd.moveTiddler(tiddler, newTiddler, false);
+	cmd.moveTiddler(tiddler, newTiddler);
 	strictEqual(2, expected);
 });
 
@@ -283,7 +283,7 @@ test("moveTiddler put fails (without revisions)", function() {
 		return adaptor;
 	};
 	var newTiddler = { title: "babe", fields: { "server.bag": "jon_public" } };
-	cmd.moveTiddler(tiddler, newTiddler, false);
+	cmd.moveTiddler(tiddler, newTiddler);
 	strictEqual(true, happy);
 });
 
@@ -310,71 +310,11 @@ test("moveTiddler from private to private (without revisions)", function() {
 		return adaptor;
 	};
 	var newTiddler = { fields: { "server.bag": "jon_private" } };
-	cmd.moveTiddler(tiddler, newTiddler, false);
+	cmd.moveTiddler(tiddler, newTiddler);
 	strictEqual(true, happyPath);
 });
 
-test("moveTiddlerWithRevisions (attempt from bag back to same bag)", function() {
-	var cmd = config.commands.publishTiddler;
-	var tiddler = new Tiddler("pig");
-	var attemptedDelete = false;
 
-	tiddler.fields["server.bag"] = "jon_private";
-	// add to store.
-	tiddler.getAdaptor = function() {
-		var adaptor = {
-			deleteTiddler: function(tiddler, context, userParams, callback) {
-				attemptedDelete = true;
-			},
-			moveTiddler: function(from, to, context, userParams, callback) {
-				if(pathStep == 1) {
-					pathStep = 2;
-				}
-			}
-		};
-		return adaptor;
-	};
-	var newTiddler = { title: "pig", fields: { "server.bag" : "jon_private", "server.workspace": "bags/jon_private" } };
-	cmd.moveTiddlerWithRevisions(tiddler, newTiddler, false);
-	strictEqual(attemptedDelete, false);
-});
-
-test("moveTiddlerWithRevisions and rename", function() {
-	var cmd = config.commands.publishTiddler;
-	var tiddler = new Tiddler("pig");
-	var pathStep = 0;
-
-	config.commands.publishTiddler.copyTiddler = function(oldTitle, newTitle, newWorkspace, callback) {
-		callback({status: true});
-	};
-	tiddler.fields["server.bag"] = "jon_private";
-	tiddler.fields["server.workspace"] = "bags/jon_private";
-	// add to store.
-	tiddler.getAdaptor = function() {
-		var adaptor = {
-			deleteTiddler: function(tiddler, context, userParams, callback) {
-				happyPath = false;
-				var workspace = tiddler.fields["server.workspace"];
-				if(pathStep === 0) {
-					if(tiddler.title == "cow" && tiddler.fields["server.bag"] == "jon_public" &&
-						workspace == "bags/jon_public") { // delete existing tiddler in that bag
-						pathStep = 1;
-						callback({status: true}); // successful delete
-					}
-				}
-			},
-			moveTiddler: function(from, to, context, userParams, callback) {
-				if(pathStep == 1) {
-					pathStep = 2;
-				}
-			}
-		};
-		return adaptor;
-	};
-	var newTiddler = { title: "cow", fields: { "server.bag": "jon_public", "server.workspace": "bags/jon_public" } };
-	cmd.moveTiddlerWithRevisions(tiddler, newTiddler, false);
-	strictEqual(2, pathStep);
-});
 
 test("moveTiddler check the callback where no delete", function() {
 	var cmd = config.commands.publishTiddler;
@@ -399,7 +339,7 @@ test("moveTiddler check the callback where no delete", function() {
 		return adaptor;
 	};
 	var newTiddler = { title: "pig", fields: { "server.bag": "jon_private" } };
-	cmd.moveTiddler(tiddler, newTiddler, false, callback);
+	cmd.moveTiddler(tiddler, newTiddler, callback);
 	strictEqual(asExpected, true);
 });
 
@@ -426,35 +366,11 @@ test("moveTiddler  check the content of callbacks", function() {
 		return adaptor;
 	};
 	var newTiddler = { title: "pig", fields: { "server.bag": "jon_public" } };
-	cmd.moveTiddler(tiddler, newTiddler, false, callback);
+	cmd.moveTiddler(tiddler, newTiddler, callback);
 	strictEqual(asExpected, true);
 });
 
-test("moveTiddlerWithRevisions check the content of callbacks", function() {
-	var cmd = config.commands.publishTiddler;
-	var tiddler = new Tiddler("pig");
-	var actual;
-	var callback = function(info) {
-		actual = info;
-	};
-	tiddler.fields["server.bag"] = "jon_private";
-	// add to store.
-	tiddler.getAdaptor = function() {
-		var adaptor = {
-			deleteTiddler: function(tiddler, context, userParams, callback) {
-				callback({deleteSuccess: "hurray", tiddler: tiddler})
-			},
-			moveTiddler: function(from, to, context, userParams, callback) {
-				callback({moveSuccess: true, tiddler: tiddler});
-			}
-		};
-		return adaptor;
-	};
-	var newTiddler = { title: "pig", fields: { "server.bag": "jon_public" } };
-	cmd.moveTiddlerWithRevisions(tiddler, newTiddler, callback);
-	strictEqual(actual.moveContext.moveSuccess, true);
-	strictEqual(actual.deleteContext.deleteSuccess, "hurray");
-});
+
 
 test("publishTiddler command button", function() {
 	var cmd = config.commands.publishTiddler;
@@ -494,17 +410,11 @@ test("enabled commands (private)", function() {
 	var tiddler = new Tiddler("foo");
 	tiddler.fields = {"server.bag": "foo_private"};
 	store.saveTiddler(tiddler);
-	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
-	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
 	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
-	var publishEnabled = config.commands.publishTiddler.isEnabled(tiddler);
 	var changeToPrivateEnabled = config.commands.changeToPrivate.isEnabled(tiddler);
 	var changeToPublicEnabled = config.commands.changeToPublic.isEnabled(tiddler);
 
-	strictEqual(deletePublicEnabled, true);
-	strictEqual(deletePrivateEnabled, false);
 	strictEqual(draftEnabled, false);
-	strictEqual(publishEnabled, true);
 	strictEqual(changeToPrivateEnabled, false);
 	strictEqual(changeToPublicEnabled, true);
 });
@@ -513,17 +423,11 @@ test("enabled commands (public)", function() {
 	var tiddler = new Tiddler("foo");
 	tiddler.fields = {"server.bag": "foo_public"};
 	store.saveTiddler(tiddler);
-	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
-	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
 	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
-	var publishEnabled = config.commands.publishTiddler.isEnabled(tiddler);
 	var changeToPrivateEnabled = config.commands.changeToPrivate.isEnabled(tiddler);
 	var changeToPublicEnabled = config.commands.changeToPublic.isEnabled(tiddler);
 
-	strictEqual(deletePublicEnabled, false);
-	strictEqual(deletePrivateEnabled, true);
 	strictEqual(draftEnabled, true);
-	strictEqual(publishEnabled, false);
 	strictEqual(changeToPrivateEnabled, true);
 	strictEqual(changeToPublicEnabled, false);
 });
@@ -532,17 +436,11 @@ test("enabled commands (included)", function() {
 	var tiddler = new Tiddler("foo");
 	tiddler.fields = {"server.bag": "xyz_public"};
 	store.saveTiddler(tiddler);
-	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
-	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
 	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
-	var publishEnabled = config.commands.publishTiddler.isEnabled(tiddler);
 	var changeToPrivateEnabled = config.commands.changeToPrivate.isEnabled(tiddler);
 	var changeToPublicEnabled = config.commands.changeToPublic.isEnabled(tiddler);
 
-	strictEqual(deletePublicEnabled, false);
-	strictEqual(deletePrivateEnabled, false);
 	strictEqual(draftEnabled, false);
-	strictEqual(publishEnabled, false);
 	strictEqual(changeToPrivateEnabled, false);
 	strictEqual(changeToPublicEnabled, false);
 });
@@ -559,17 +457,11 @@ module("TiddlySpacePublishingCommands readOnly mode", {
 
 test("what is enabled in readOnly mode", function() {
 	var tiddler = new Tiddler("foo");
-	var deletePublicEnabled = config.commands.deletePublicTiddler.isEnabled(tiddler);
-	var deletePrivateEnabled = config.commands.deletePrivateTiddler.isEnabled(tiddler);
 	var draftEnabled = config.commands.saveDraft.isEnabled(tiddler);
-	var publishEnabled = config.commands.publishTiddler.isEnabled(tiddler);
 	var changeToPrivateEnabled = config.commands.changeToPrivate.isEnabled(tiddler);
 	var changeToPublicEnabled = config.commands.changeToPublic.isEnabled(tiddler);
 
-	strictEqual(deletePublicEnabled, false);
-	strictEqual(deletePrivateEnabled, false);
 	strictEqual(draftEnabled, false);
-	strictEqual(publishEnabled, false);
 	strictEqual(changeToPrivateEnabled, false);
 	strictEqual(changeToPublicEnabled, false);
 });
