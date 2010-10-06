@@ -370,11 +370,9 @@ var macro = config.macros.TiddlySpacePublisher = {
 		wizard.createWizard(place, locale.title);
 		wizard.addStep(macro.locale.description, '<input type="hidden" name="markList" />');
 		var markList = wizard.getElement("markList");
-		var listWrapper = document.createElement("div");
+		var listWrapper = $("<div />").attr("refresh", "macro").attr("macroName", macroName).
+			attr("params", paramString)[0];
 		markList.parentNode.insertBefore(listWrapper, markList);
-		listWrapper.setAttribute("refresh", "macro");
-		listWrapper.setAttribute("macroName", "SpaceManager");
-		listWrapper.setAttribute("params", paramString);
 
 		$(listWrapper).text(macro.locale.pleaseWait);
 		this.getPublicTiddlers(listWrapper, paramString, currentSpace, tiddler);
