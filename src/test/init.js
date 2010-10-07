@@ -150,7 +150,9 @@ test("update from v0.2", function() {
 
 	plugin.dispatch();
 	var flagTiddler = store.getTiddler("fooSetupFlag");
-	strictEqual(flagTiddler.tags.indexOf("excludePublisher") > -1, true);
+
+	strictEqual(flagTiddler.tags.contains("excludePublisher"), true);
+	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.3");
 });
 
 })(QUnit.module, jQuery);

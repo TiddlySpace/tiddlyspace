@@ -101,6 +101,16 @@ Array.prototype.contains = function(item)
 	return this.indexOf(item) != -1;
 };
 
+Array.prototype.pushUnique = function(item,unique)
+{
+	if(unique === false) {
+		this.push(item);
+	} else {
+		if(this.indexOf(item) == -1)
+			this.push(item);
+	}
+};
+
 String.prototype.format = function(substrings)
 {
 	var subRegExp = /(?:%(\d+))/mg;

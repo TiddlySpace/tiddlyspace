@@ -25,9 +25,9 @@ var plugin = config.extensions.TiddlySpaceInit = {
 	flagWarning: "Please do not modify this tiddler; it was created " +
 		"automatically upon space creation.",
 
-	dispatch: function() {
+	dispatch: function(ev) {
 		var title = plugin.flagTitle.format([currentSpace.name]);
-		config.annotations[title] = this.flagWarning;
+		config.annotations[title] = plugin.flagWarning;
 		if(currentSpace.type != "private") {
 			return;
 		}
@@ -37,12 +37,9 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			curVersion = parseFloat(tid.fields[versionField]);
 			reqVersion = parseFloat(plugin.version);
 			if(curVersion < reqVersion) {
-				plugin.update(curVersion);
+				plugin.update(curVersion, tid);
 				tid.fields[versionField] = plugin.version;
 				tid.incChangeCount();
-				if(tid.tags.indexOf("excludePublisher") === -1) {
-					tid.tags.push("excludePublisher");
-				}
 				tid = store.saveTiddler(tid);
 				tiddlers.push(tid);
 			}
@@ -57,9 +54,11 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		}
 		autoSaveChanges(null, tiddlers);
 	},
-	update: function(curVersion) {
+	update: function(curVersion, flagTiddler) {
 		if(curVersion < 0.2) {
 			this.createAvatar();
+		} else if(curVersion < 0.3) {
+			flagTiddler.tags.pushUnique("excludePublisher");
 		}
 	},
 	firstRun: function() {
