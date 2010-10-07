@@ -1,7 +1,6 @@
 tiddler: BinaryUploadPlugin.js
 tiddler: GroupByPlugin.js
 tiddler: TiddlySpaceFollowingPlugin.js
-tiddler: TiddlySpacePublisher.js
 tiddler: TiddlySpacePublishingCommands.js
 tiddler: TiddlySpaceRevertRevision.js
 tiddler: TiddlySpaceRevisionView.js
