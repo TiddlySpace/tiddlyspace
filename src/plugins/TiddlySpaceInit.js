@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.3|
+|''Version''|0.6.4|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -18,7 +18,7 @@ var versionField = "tiddlyspaceinit_version";
 var currentSpace = config.extensions.tiddlyspace.currentSpace;
 
 var plugin = config.extensions.TiddlySpaceInit = {
-	version: "0.2",
+	version: "0.3",
 	SiteTitle: "%0",
 	SiteSubtitle: "a TiddlySpace",
 	flagTitle: "%0SetupFlag",
@@ -40,12 +40,15 @@ var plugin = config.extensions.TiddlySpaceInit = {
 				plugin.update(curVersion);
 				tid.fields[versionField] = plugin.version;
 				tid.incChangeCount();
+				if(tid.tags.indexOf("excludePublisher") === -1) {
+					tid.tags.push("excludePublisher");
+				}
 				tid = store.saveTiddler(tid);
 				tiddlers.push(tid);
 			}
 		} else { // first run
 			tid = new Tiddler(title);
-			tid.tags = ["excludeLists", "excludeSearch"];
+			tid.tags = ["excludeLists", "excludeSearch", "excludePublisher"];
 			tid.fields = $.extend({}, config.defaultCustomFields);
 			tid.fields[versionField] = plugin.version;
 			tid.text = "@@%0@@".format([plugin.flagWarning]);
