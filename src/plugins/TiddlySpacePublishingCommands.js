@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.7.6dev|
+|''Version''|0.7.8|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
