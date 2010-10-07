@@ -1,11 +1,11 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.5.6|
+|''Version''|0.6.0|
 |''Description''|TiddlySpace configuration|
-|''Status''|@@beta@@|
+|''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
 |''CoreVersion''|2.6.1|
-|''Requires''|TiddlyWebConfig ServerSideSavingPlugin|
+|''Requires''|TiddlyWebConfig ServerSideSavingPlugin TiddlyFileImporter|
 !Code
 ***/
 //{{{
@@ -164,11 +164,13 @@ tweb.getStatus(function(status) {
 	tweb.status.server_host.url = url;
 });
 
-// set global read-only mode based on membership heuristics
-var indicator = store.getTiddler("SiteTitle") || tiddler;
 if(window.location.protocol != "file:") {
+	// set global read-only mode based on membership heuristics
+	var indicator = store.getTiddler("SiteTitle") || tiddler;
 	readOnly = !(recipe.split("_").pop() == "private" ||
 		tweb.hasPermission("write", indicator));
+	// replace TiddlyWiki's ImportTiddlers due to cross-domain restrictions
+	config.macros.importTiddlers = config.macros.fileImport;
 }
 
 // ensure backstage is always initialized
