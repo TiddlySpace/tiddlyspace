@@ -466,4 +466,111 @@ test("what is enabled in readOnly mode", function() {
 	strictEqual(changeToPublicEnabled, false);
 });
 
+var _moveTiddler;
+module("TiddlySpacePublishingCommands / TiddlySpacePublisher", {
+	setup: function() {
+		_moveTiddler = config.commands.publishTiddler.moveTiddler;
+		config.commands.publishTiddler.moveTiddler = function(tiddler, newTiddler, callback) {
+			callback(newTiddler);
+		};
+	},
+	teardown: function() {
+		config.commands.publishTiddler.moveTiddler = _moveTiddler;
+	}
+});
+
+test("getMode", function() {
+	var macro = config.macros.TiddlySpacePublisher;
+	var paramString1 = {
+		parseParams: function() {
+			return [{
+				"type": ["private"]
+			}]
+		}
+	};
+	var paramString2 = {
+		parseParams: function() {
+			return [{
+				"type": ["public"]
+			}]
+		}
+	};
+	var paramString3 = {
+		parseParams: function() {
+			return [{
+				"type": ["badvalue"]
+			}]
+		}
+	};
+
+	// run
+	var mode1 = macro.getMode(paramString1);
+	var mode2 = macro.getMode(paramString2);
+	var mode3 = macro.getMode(paramString3);
+	strictEqual(mode1[0], "private");
+	strictEqual(mode1[1], "public");
+	strictEqual(mode2[0], "public");
+	strictEqual(mode2[1], "private");
+	strictEqual(mode3[0], "private");
+	strictEqual(mode3[1], "public");
+});
+
+test("changeStatus to private", function() {
+	// setup
+	var tiddlers = [];
+	var tiddler = new Tiddler("foo");
+	tiddler.fields["server.bag"] = "jon_public";
+	tiddlers.push(tiddler);
+	tiddler = new Tiddler("bar");
+	tiddler.fields["server.bag"] = "jon_private";
+	tiddlers.push(tiddler);
+	tiddler = new Tiddler("dum");
+	tiddler.fields["server.bag"] = "jon_public";
+	tiddlers.push(tiddler);
+	var macro = config.macros.TiddlySpacePublisher;
+	var bad = false;
+	var callback = function(newTiddler) {
+		if(newTiddler.fields["server.bag"] != "jon_private") {
+			bad = true;
+		}
+	};
+
+	// run
+	macro.changeStatus(tiddlers, "private", callback);
+
+	// verify
+	strictEqual(bad, false, "all tiddlers should now be private, including those that were before.");
+});
+
+test("changeStatus to public", function() {
+	// setup
+	var tiddlers = [];
+	var tiddler = new Tiddler("foo");
+	tiddler.fields["server.bag"] = "jon_public";
+	tiddlers.push(tiddler);
+	tiddler = new Tiddler("bar");
+	tiddler.fields["server.bag"] = "foo_private";
+	tiddlers.push(tiddler);
+	tiddler = new Tiddler("dum");
+	tiddler.fields["server.bag"] = "jon_public";
+	tiddlers.push(tiddler);
+	var macro = config.macros.TiddlySpacePublisher;
+	var bad = false;
+	var callback = function(newTiddler) {
+		var expected = "jon_public";
+		if(newTiddler.title == "bar") {
+			expected = "foo_public";
+		}
+		if(newTiddler.fields["server.bag"] != expected) {
+			bad = true;
+		}
+	};
+
+	// run
+	macro.changeStatus(tiddlers, "public", callback);
+
+	// verify
+	strictEqual(bad, false, "all tiddlers should now be private, including those that were before.");
+});
+
 })(QUnit.module, jQuery);

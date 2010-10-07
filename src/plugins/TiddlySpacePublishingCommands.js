@@ -9,6 +9,10 @@
 !Usage
 Provides changeToPrivate, changeToPublic and saveDraft commands
 Provides TiddlySpacePublisher macro.
+{{{<<TiddlySpacePublisher type:private>>}}} make lots of private tiddlers public.
+{{{<<TiddlySpacePublisher type:public>>}}} make lots of public tiddlers public.
+!Todo
+* add public argument?
 !Code
 ***/
 //{{{
@@ -301,13 +305,11 @@ var saveDraftCmd = config.commands.saveDraft = {
 
 var macro = config.macros.TiddlySpacePublisher = {
 	locale: {
-		title: "Publisher",
-		updatedPrivateTiddler: "newer than published version (click {{viewPublicTiddler{%0}}} to view)",
-		makePublicLabel: "Make public",
+		title: "Batch Publisher",
+		changeStatusLabel: "Make %0",
 		noTiddlersText: "No tiddlers to publish",
-		makePublicPrompt: "Make all the selected tiddlers public.",
-		description: "Publish tiddlers to public version of this space",
-		pleaseWait: "please wait while we load the publisher... "
+		changeStatusPrompt: "Make all the selected tiddlers %0.",
+		description: "Change tiddlers from %0 to %1 in this space"
 	},
 
 	listViewTemplate: {
@@ -316,113 +318,76 @@ var macro = config.macros.TiddlySpacePublisher = {
 			{ name: "Tiddler", field: "tiddler", title: "Tiddler", type: "Tiddler" },
 			{ name: "Status", field: "status", title: "Status", type: "WikiText" }
 		],
-		rowClasses: [
-			{ className: "updated", field: "updated" },
-			{ className: "notPublished", field: "notPublished" }
-		]
+		rowClasses: []
 	},
 
-	publishedTiddlers: {}, // maps tiddler titles to a currently public tiddler where public tiddlers exist
-	getPublicTiddlers: function(listWrapper, paramString, spaceName, tiddler) { // fills in publishedTiddlers variable above
-		var adaptor = tiddler.getAdaptor();
-		var context = {
-			workspace: "recipes/%0_public".format([spaceName])
-		};
-		var callback = function(context, userParams) {
-			if(context.status) {
-				var tiddlers = context.tiddlers;
-				for(var i = 0; i < tiddlers.length; i++) {
-					var tid = tiddlers[i];
-					macro.publishedTiddlers[tid.title] = tid;
-				}
-				macro.refresh(listWrapper, paramString);
-			}
-		};
-		adaptor.getTiddlerList(context, null, callback);
-	},
-	makePublic: function(e, listWrapper, paramString) { // this is what is called when you click the publish button
-		var wizard = new Wizard(e.target);
-		var listView = wizard.getValue("listView");
-		var rowNames = ListView.getSelectedRows(listView);
-		var callback = function(status) {
-			macro.refresh(listWrapper, paramString);
-		};
+	changeStatus: function(tiddlers, status, callback) { // this is what is called when you click the publish button
 		var cmd = config.commands.publishTiddler;
 		var publicBag;
-		for(var i = 0; i < rowNames.length; i++) {
-			var title = rowNames[i];
-			var tiddler = store.getTiddler(title);
-			if(!publicBag) {
-				publicBag = cmd.toggleBag(tiddler, "public");
-			}
-			macro.publishedTiddlers[title] = tiddler;
+		for(var i = 0; i < tiddlers.length; i++) {
+			var tiddler = tiddlers[i];
 			var newTiddler = {
 				title: tiddler.title,
-				fields: { "server.bag": publicBag }
+				fields: { "server.bag": cmd.toggleBag(tiddler, status) }
 			};
 			config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, callback);
 		}
+	},
+	getMode: function(paramString) {
+		var params = paramString.parseParams("anon")[0];
+		var status = params.type ? 
+			(["public", "private"].contains(params.type[0]) ? params.type[0] : "private") :
+			"private";
+		var newStatus = status == "public" ? "private" : "public";
+		return [status, newStatus];
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		tiddler = tiddler ? tiddler : store.getTiddlers()[0];
 		var wizard = new Wizard();
 		var locale = macro.locale;
+		var status = macro.getMode(paramString);
 		wizard.createWizard(place, locale.title);
-		wizard.addStep(macro.locale.description, '<input type="hidden" name="markList" />');
+		wizard.addStep(macro.locale.description.format([status[0], status[1]]), '<input type="hidden" name="markList" />');
 		var markList = wizard.getElement("markList");
-		var listWrapper = $("<div />").attr("refresh", "macro").attr("macroName", macroName).
-			attr("params", paramString)[0];
+		var listWrapper = $("<div />").addClass("batchPublisher").
+			attr("refresh", "macro").attr("macroName", macroName).attr("params", paramString)[0];
 		markList.parentNode.insertBefore(listWrapper, markList);
-
-		$(listWrapper).text(macro.locale.pleaseWait);
-		this.getPublicTiddlers(listWrapper, paramString, currentSpace, tiddler);
+		$.data(listWrapper, "wizard", wizard);
+		macro.refresh(listWrapper)
 	},
-	refresh: function(listWrapper, paramString) {
-		var wizard = new Wizard(listWrapper);
-		var locale = macro.locale;
-		var selectedRows = [];
-		ListView.forEachSelector(listWrapper, function(e, rowName) {
-			if(e.checked) {
-				selectedRows.push(e.getAttribute("rowName"));
+	getCheckedTiddlers: function(listWrapper, titlesOnly) {
+		var tiddlers = [];
+		$(".chkOptionInput[rowName]:checked", listWrapper).each(function(i, el) {
+			var title = $(el).attr("rowName");
+			if(titlesOnly) {
+				tiddlers.push(title);
+			} else {
+				tiddlers.push(store.getTiddler(title));
 			}
 		});
-		removeChildren(listWrapper);
-		var params = paramString.parseParams("anon");
+		return tiddlers;
+	},
+	refresh: function(listWrapper) {
+		var checked = macro.getCheckedTiddlers(listWrapper, true);
+		var paramString = $(listWrapper).empty().attr("params");
+		var wizard = $.data(listWrapper, "wizard");
+		var locale = macro.locale;
+		var params = paramString.parseParams("anon")[0];
 		var publishCandidates = [];
-		var unpublishedTiddlers;
-		var filter = params[0].filter;
-		if(filter) {
-			unpublishedTiddlers = store.filterTiddlers(filter[0]);
-		} else {
-			unpublishedTiddlers = store.getTiddlers();
-		}
-		var publishedTiddlers = macro.publishedTiddlers;
-		var privateBag = currentSpace + "_private";
-		for(var t = 0; t < unpublishedTiddlers.length; t++) {
-			var include = false;
-			var tiddler = unpublishedTiddlers[t];
+		var tiddlers = params.filter ? store.filterTiddlers(params.filter[0]) : store.getTiddlers("title", "excludePublisher");
+		var status = macro.getMode(paramString);
+		var fromBag = "%0_%1".format([currentSpace, status[0]]);
+
+		// TODO: would be good if filterTiddlers could do the bag checking.
+		var enabled = [];
+		for(var i = 0; i < tiddlers.length; i++) {
+			var tiddler = tiddlers[i];
 			var bag = tiddler.fields["server.bag"];
-			if(!tiddler.tags.contains("excludePublisher")) {
-				if(bag == privateBag) {
-					var candidate = {
-						title: tiddler.title,
-						tiddler: tiddler
-					};
-					var publishedTiddler = publishedTiddlers[tiddler.title];
-					if(!publishedTiddler) {
-						candidate.status = "unpublished";
-						include = true;
-						candidate.notPublished = true;
-					} else if(!originMacro.areIdentical(tiddler, publishedTiddler)) {
-						candidate.status = locale.updatedPrivateTiddler.format([tiddler.title]);
-						candidate.publicTiddler = publishedTiddler;
-						candidate.updated = true;
-						include = true;
+			if(bag == fromBag) {
+					publishCandidates.push({ title: tiddler.title, tiddler: tiddler, status: status[0]});
+					if(checked.contains(tiddler.title)) {
+						enabled.push("[rowname=%0]".format(tiddler.title));
 					}
-					if(include) {
-						publishCandidates.push(candidate);
-					}
-				}
 			}
 		}
 
@@ -431,27 +396,22 @@ var macro = config.macros.TiddlySpacePublisher = {
 		} else {
 			var listView = ListView.create(listWrapper, publishCandidates, macro.listViewTemplate);
 			wizard.setValue("listView", listView);
-
 			var btnHandler = function(ev) {
-				macro.makePublic(ev, listWrapper, paramString);
+				var tiddlers = macro.getCheckedTiddlers(listWrapper)
+				var callback = function(status) {
+					$(".batchPublisher").each(function(i, el) {
+						macro.refresh(el);
+					});
+				};
+				
+				macro.changeStatus(tiddlers, status[1], callback);
 			};
 			wizard.setButtons([
-				{ caption: locale.makePublicLabel, tooltip: locale.makePublicPrompt, onClick: btnHandler }
+				{ caption: locale.changeStatusLabel.format([status[1]]), tooltip: locale.changeStatusPrompt.format([status[1]]), 
+					onClick: btnHandler }
 			]);
+			$(enabled.join(",")).attr("checked", true); // retain what was checked before.
 		}
-
-		var publicLinks = $(".viewPublicTiddler");
-		$.each(publicLinks, function(index, el) {
-			el = $(el);
-			var title = el.text();
-			el.empty();
-			var handler = function(ev) {
-				ev.preventDefault();
-				var tiddler = store.getTiddler(title);
-				config.extensions.tiddlyspace.spawnPublicTiddler(tiddler, el);
-			};
-			$('<a href="javascript:;" />').text(title).click(handler).appendTo(el);
-		});
 	}
 };
 
