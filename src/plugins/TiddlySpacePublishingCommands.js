@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.7.8|
+|''Version''|0.7.9|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -80,22 +80,6 @@ var cmd = config.commands.publishTiddler = {
 			newBag = bag.replace("_public", "_" + to);
 		}
 		return newBag;
-	},
-	toggleWorkspace: function(workspace, to) {
-		if(typeof workspace != typeof "") {
-			var tiddler = workspace;
-			var bag = tiddler.fields["server.bag"];
-			workspace = bag ? "bags/%0".format([bag]) : tiddler.fields["server.workspace"];
-		}
-		var newWorkspace;
-		if(workspace.indexOf("_private") > -1) { // should make use of endsWith
-			to = to ? to : "public";
-			newWorkspace = workspace.replace("_private", "_" + to);
-		} else {
-			to = to ? to : "private";
-			newWorkspace = workspace.replace("_public", "_" + to);
-		}
-		return newWorkspace;
 	},
 	copyTiddler: function(title, newTitle, newBag, callback) {
 		var original = store.getTiddler(title);
