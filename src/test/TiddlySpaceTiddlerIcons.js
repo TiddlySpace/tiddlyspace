@@ -1,6 +1,6 @@
 (function(module, $) {
 
-var _areIdentical, _renderImage, _Popup, _binaryTiddlersPlugin, _getArguments;
+var _renderImage, _Popup, _binaryTiddlersPlugin, _getArguments;
 var mockRenderImage = function(place, src, options) {
 	$("<span />").addClass("imageStub").text(src).appendTo(place);
 };
@@ -8,7 +8,6 @@ var mockRenderImage = function(place, src, options) {
 module("TiddlySpaceTiddlerIcons", {
 	setup: function() {
 		var popup = $("<div />").attr("id", "test_ttt_popup").appendTo(document.body);
-		_areIdentical = config.macros.tiddlerOrigin.areIdentical;
 		Popup = {
 			create: function(place) {
 				this.el = popup;
@@ -51,7 +50,6 @@ module("TiddlySpaceTiddlerIcons", {
 		if(popup) {
 			popup.parentNode.removeChild(popup);
 		}
-		config.macros.tiddlerOrigin.areIdentical = _areIdentical;
 		Popup = _Popup;
 		config.macros.image.renderImage = _renderImage;
 		config.extensions.BinaryTiddlersPlugin.endsWith = _binaryTiddlersPlugin;
@@ -146,61 +144,6 @@ test("getOptions", function() {
 	strictEqual(options.spaceLink, false);
 	strictEqual(options2.noclick, false);
 	strictEqual(options2.spaceLink, true);
-});
-
-test("areIdentical (text and title)", function() {
-	var originMacro = config.macros.tiddlerOrigin;
-	var text = "hello world";
-	var tiddler = new Tiddler("foo");
-	var tiddler2 = new Tiddler("foo");
-	tiddler.text = text;
-	tiddler2.text = text;
-	var actual = originMacro.areIdentical(tiddler, tiddler2);
-	strictEqual(true, actual);
-});
-
-test("areIdentical (text, tags and title)", function() {
-	var originMacro = config.macros.tiddlerOrigin;
-	var text = "hello world";
-	var tiddler = new Tiddler("foo");
-	var tiddler2 = new Tiddler("foo");
-	tiddler.text = text;
-	tiddler2.text = text;
-	tiddler.tags = ["foo"];
-	tiddler2.tags = ["bar"];
-	var actual = originMacro.areIdentical(tiddler, tiddler2);
-	strictEqual(false, actual, "Tags are different");
-});
-
-test("areIdentical (text, tags and title with different server. fields)", function() {
-	var originMacro = config.macros.tiddlerOrigin;
-	var text = "hello world";
-	var tiddler = new Tiddler("foo");
-	var tiddler2 = new Tiddler("foo");
-	tiddler.text = text;
-	tiddler2.text = text;
-	var tags = ["a", "b", "d", "z"];
-	tiddler.tags = tags;
-	tiddler2.tags = tags;
-	tiddler.fields["server.workspace"] = "bags/x";
-	tiddler2.fields["server.workspace"] = "bags/foo";
-	tiddler.fields["server.page.revision"] = "2";
-	tiddler2.fields["server.page.revision"] = "20";
-
-	// run
-	var actual = originMacro.areIdentical(tiddler, tiddler2);
-	strictEqual(true, actual);
-});
-
-test("areIdentical (text, tags and title with different server. fields)", function() {
-	var originMacro = config.macros.tiddlerOrigin;
-	var tiddler = new Tiddler("foo");
-	var tiddler2 = new Tiddler("foo");
-	tiddler2.fields.fill = "red";
-
-	// run
-	var actual = originMacro.areIdentical(tiddler, tiddler2);
-	strictEqual(false, actual);
 });
 
 test("_getLabelOptions", function() {
