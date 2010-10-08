@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.6.0|
+|''Version''|0.6.1|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -170,7 +170,9 @@ if(window.location.protocol != "file:") {
 	readOnly = !(recipe.split("_").pop() == "private" ||
 		tweb.hasPermission("write", indicator));
 	// replace TiddlyWiki's ImportTiddlers due to cross-domain restrictions
-	config.macros.importTiddlers = config.macros.fileImport;
+	if(config.macros.fileImport) {
+		config.macros.importTiddlers = config.macros.fileImport;
+	}
 }
 
 // ensure backstage is always initialized

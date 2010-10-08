@@ -69,6 +69,7 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 	var adaptor = store.getTiddlers()[0].getAdaptor();
 	tweb.getStatus(function(status) {
 		var context = {
+			host: tweb.host, // TODO: inherit from source tiddler?
 			workspace: workspace,
 			headers: { "X-ControlView": "false" }
 		};

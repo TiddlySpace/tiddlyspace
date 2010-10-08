@@ -1,17 +1,26 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.7.6|
+|''Version''|0.7.8|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpacePublishingCommands.js|
 |''Requires''|TiddlySpaceConfig|
+!Usage
+Provides changeToPrivate, changeToPublic and saveDraft commands
+Provides TiddlySpacePublisher macro.
+{{{<<TiddlySpacePublisher type:private>>}}} make lots of private tiddlers public.
+{{{<<TiddlySpacePublisher type:public>>}}} make lots of public tiddlers public.
+!Todo
+* add public argument?
 !Code
 ***/
 //{{{
 (function($) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
+var currentSpace = tiddlyspace.currentSpace.name;
+var originMacro = config.macros.tiddlerOrigin;
 tiddlyspace.getTiddlerStatusType = function(tiddler) {
 	var isShadow = store.isShadowTiddler(tiddler.title);
 	var exists = store.tiddlerExists(tiddler.title);
@@ -104,114 +113,59 @@ var cmd = config.commands.publishTiddler = {
 		};
 		publish(original, callback);
 	},
-	moveTiddler: function(tiddler, newTiddler, withRevisions, callback) {
-		if(withRevisions) {
-			this.moveTiddlerWithRevisions(tiddler, newTiddler, callback);
-		} else {
+	moveTiddler: function(tiddler, newTiddler, callback) {
 			var info = {
-				copyContext: {},
-				deleteContext: {}
-			};
-			var _dirty = store.isDirty();
-			var adaptor = tiddler.getAdaptor();
-			var newTitle = newTiddler.title;
-			var oldTitle = tiddler.title;
-			delete tiddler.fields["server.workspace"];
-			var oldBag = tiddler.fields["server.bag"];
-			var newBag = newTiddler.fields["server.bag"];
-			var newWorkspace = "bags/%0".format([newBag]);
-			cmd.copyTiddler(oldTitle, newTitle, newBag, function(ctx) {
-					info.copyContext = ctx;
-					var context = {
-						tiddler: tiddler,
-						workspace: newWorkspace
-					};
-					store.addTiddler(ctx.tiddler);
-					tiddler.title = oldTitle; // for cases where a rename occurs
-					if(ctx.status) { // only do if a success
-						if(oldBag != newBag) {
-							adaptor.deleteTiddler(tiddler, context, {}, function(ctx) {
-								info.deleteContext = ctx;
-								var el;
-								if(tiddler) {
-									tiddler.fields["server.workspace"] = newWorkspace;
-									tiddler.fields["server.bag"] = newBag;
-								}
-								el = el ? el : story.refreshTiddler(oldTitle, null, true);
-								if(oldTitle != newTitle) {
-									store.removeTiddler(oldTitle);
-								}
-								if(el) {
-									story.displayTiddler(el, newTitle);
-								}
-								if(oldTitle != newTitle) {
-									story.closeTiddler(oldTitle);
-								}
-								if(callback) {
-									callback(info);
-								}
-								store.setDirty(_dirty);
-								story.refreshTiddler(newTitle, null, true); // for drafts
-							});
-						} else {
+			copyContext: {},
+			deleteContext: {}
+		};
+		var _dirty = store.isDirty();
+		var adaptor = tiddler.getAdaptor();
+		var newTitle = newTiddler.title;
+		var oldTitle = tiddler.title;
+		delete tiddler.fields["server.workspace"];
+		var oldBag = tiddler.fields["server.bag"];
+		var newBag = newTiddler.fields["server.bag"];
+		var newWorkspace = "bags/%0".format([newBag]);
+		cmd.copyTiddler(oldTitle, newTitle, newBag, function(ctx) {
+				info.copyContext = ctx;
+				var context = {
+					tiddler: tiddler,
+					workspace: newWorkspace
+				};
+				store.addTiddler(ctx.tiddler);
+				tiddler.title = oldTitle; // for cases where a rename occurs
+				if(ctx.status) { // only do if a success
+					if(oldBag != newBag) {
+						adaptor.deleteTiddler(tiddler, context, {}, function(ctx) {
+							info.deleteContext = ctx;
+							var el;
+							if(tiddler) {
+								tiddler.fields["server.workspace"] = newWorkspace;
+								tiddler.fields["server.bag"] = newBag;
+							}
+							el = el ? el : story.refreshTiddler(oldTitle, null, true);
+							if(oldTitle != newTitle) {
+								store.removeTiddler(oldTitle);
+							}
+							if(el) {
+								story.displayTiddler(el, newTitle);
+							}
+							if(oldTitle != newTitle) {
+								story.closeTiddler(oldTitle);
+							}
 							if(callback) {
 								callback(info);
 							}
-							story.refreshTiddler(newTitle, null, true);
-						}
-					}
-			});
-		}
-	},
-	moveTiddlerWithRevisions: function(tiddler, newTiddler, callback) {
-		var adaptor = tiddler.getAdaptor();
-		var oldBag = tiddler.fields["server.bag"];
-		var oldTitle = tiddler.title;
-		var newTitle = newTiddler.title;
-		var newBag = newTiddler.fields["server.bag"];
-		delete tiddler.fields["server.workspace"];
-		delete newTiddler.fields["server.workspace"];
-		var oldWorkspace = "bags/%0".format([oldBag]);
-		var newWorkspace = "bags/%0".format([newBag]);
-		var info = {};
-		if(oldBag == newBag) { // we are in a dangerous error state
-			return callback ? callback(info) : false;
-		}
-		// we first must delete any existing public revisions
-		tiddler.title = newTitle;
-		tiddler.fields["server.bag"] = newBag;
-		tiddler.fields["server.workspace"] = newWorkspace;
-		tiddler.fields["server.page.revision"] = "false"; // force this action
-		adaptor.deleteTiddler(tiddler, {}, {},
-			function(ctx) {
-				info.deleteContext = ctx;
-				tiddler.fields["server.workspace"] = oldWorkspace;
-				tiddler.fields["server.bag"] = oldBag; // rectify above change to workspace
-				adaptor.moveTiddler(
-					{ title: oldTitle, workspace: oldWorkspace },
-					{ title: newTitle, workspace: newWorkspace },
-					{}, {},
-					function(context) {
-						info.moveContext = context;
-						if(context.status) {
-							var newTiddler = context.tiddler;
-							newTiddler.fields["server.workspace"] = newWorkspace;
-							// some some reason the old tiddler is not being removed from the store (hence next 3 lines)
-							var oldDirty = store.isDirty();
-							store.removeTiddler(oldTitle);
-							store.setDirty(oldDirty);
-							store.addTiddler(newTiddler); // note the tiddler may have changed name
-							var old = story.refreshTiddler(oldTitle, null, true);
-							if(old) {
-								story.displayTiddler(old, newTitle);
-							}
-							story.refreshTiddler(newTitle, null, true); // for case of drafts
-						}
+							store.setDirty(_dirty);
+							story.refreshTiddler(newTitle, null, true); // for drafts
+						});
+					} else {
 						if(callback) {
 							callback(info);
 						}
+						story.refreshTiddler(newTitle, null, true);
 					}
-				);
+				}
 		});
 	}
 };
@@ -231,7 +185,7 @@ config.commands.changeToPrivate = {
 		var tiddler = store.getTiddler(title);
 		var newBag = cmd.toggleBag(tiddler, "private");
 		var newTiddler = { title: title, fields: { "server.bag": newBag }};
-		cmd.moveTiddler(tiddler, newTiddler, false);
+		cmd.moveTiddler(tiddler, newTiddler);
 	}
 };
 config.commands.changeToPublic = config.commands.publishTiddler;
@@ -282,41 +236,6 @@ config.commands.deleteTiddler.deleteResource = function(tiddler, bag, userCallba
 	tiddler.getAdaptor().deleteTiddler(tiddler, context, {}, callback);
 };
 
-config.commands.deletePublicTiddler = {
-	text: "delete public",
-	tooltip: "Delete any public versions of this tiddler",
-	isEnabled: function(tiddler) {
-		var type = tiddlyspace.getTiddlerStatusType(tiddler);
-		if(!readOnly && type == "private") {
-			return true;
-		} else {
-			return false;
-		}
-	},
-	handler: function(event, src, title) {
-		var tiddler = store.getTiddler(title);
-		var bag = cmd.toggleBag(tiddler, "public");
-		config.commands.deleteTiddler.deleteResource(tiddler, bag);
-	}
-};
-
-config.commands.deletePrivateTiddler = {
-	text: "delete private",
-	tooltip: "delete any private versions of this tiddler",
-	isEnabled: function(tiddler) {
-		var type = tiddlyspace.getTiddlerStatusType(tiddler);
-		if(!readOnly && type == "public") {
-			return true;
-		} else {
-			return false;
-		}
-	},
-	handler: function(event, src, title) {
-		var tiddler = store.getTiddler(title);
-		var bag = cmd.toggleBag(tiddler, "private");
-		config.commands.deleteTiddler.deleteResource(tiddler, bag);
-	}
-};
 /* Save as draft command */
 var saveDraftCmd = config.commands.saveDraft = {
 	text: "save draft",
@@ -384,5 +303,121 @@ var saveDraftCmd = config.commands.saveDraft = {
 	}
 };
 
+var macro = config.macros.TiddlySpacePublisher = {
+	locale: {
+		title: "Batch Publisher",
+		changeStatusLabel: "Make %0",
+		noTiddlersText: "No tiddlers to publish",
+		changeStatusPrompt: "Make all the selected tiddlers %0.",
+		description: "Change tiddlers from %0 to %1 in this space"
+	},
+
+	listViewTemplate: {
+		columns: [
+			{ name: "Selected", field: "Selected", rowName: "title", type: "Selector" },
+			{ name: "Tiddler", field: "tiddler", title: "Tiddler", type: "Tiddler" },
+			{ name: "Status", field: "status", title: "Status", type: "WikiText" }
+		],
+		rowClasses: []
+	},
+
+	changeStatus: function(tiddlers, status, callback) { // this is what is called when you click the publish button
+		var cmd = config.commands.publishTiddler;
+		var publicBag;
+		for(var i = 0; i < tiddlers.length; i++) {
+			var tiddler = tiddlers[i];
+			var newTiddler = {
+				title: tiddler.title,
+				fields: { "server.bag": cmd.toggleBag(tiddler, status) }
+			};
+			config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, callback);
+		}
+	},
+	getMode: function(paramString) {
+		var params = paramString.parseParams("anon")[0];
+		var status = params.type ? 
+			(["public", "private"].contains(params.type[0]) ? params.type[0] : "private") :
+			"private";
+		var newStatus = status == "public" ? "private" : "public";
+		return [status, newStatus];
+	},
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		tiddler = tiddler ? tiddler : store.getTiddlers()[0];
+		var wizard = new Wizard();
+		var locale = macro.locale;
+		var status = macro.getMode(paramString);
+		wizard.createWizard(place, locale.title);
+		wizard.addStep(macro.locale.description.format([status[0], status[1]]), '<input type="hidden" name="markList" />');
+		var markList = wizard.getElement("markList");
+		var listWrapper = $("<div />").addClass("batchPublisher").
+			attr("refresh", "macro").attr("macroName", macroName).attr("params", paramString)[0];
+		markList.parentNode.insertBefore(listWrapper, markList);
+		$.data(listWrapper, "wizard", wizard);
+		macro.refresh(listWrapper)
+	},
+	getCheckedTiddlers: function(listWrapper, titlesOnly) {
+		var tiddlers = [];
+		$(".chkOptionInput[rowName]:checked", listWrapper).each(function(i, el) {
+			var title = $(el).attr("rowName");
+			if(titlesOnly) {
+				tiddlers.push(title);
+			} else {
+				tiddlers.push(store.getTiddler(title));
+			}
+		});
+		return tiddlers;
+	},
+	refresh: function(listWrapper) {
+		var checked = macro.getCheckedTiddlers(listWrapper, true);
+		var paramString = $(listWrapper).empty().attr("params");
+		var wizard = $.data(listWrapper, "wizard");
+		var locale = macro.locale;
+		var params = paramString.parseParams("anon")[0];
+		var publishCandidates = [];
+		var tiddlers = params.filter ? store.filterTiddlers(params.filter[0]) : store.getTiddlers("title", "excludePublisher");
+		var status = macro.getMode(paramString);
+		var fromBag = "%0_%1".format([currentSpace, status[0]]);
+
+		// TODO: would be good if filterTiddlers could do the bag checking.
+		var enabled = [];
+		for(var i = 0; i < tiddlers.length; i++) {
+			var tiddler = tiddlers[i];
+			var bag = tiddler.fields["server.bag"];
+			if(bag == fromBag) {
+					publishCandidates.push({ title: tiddler.title, tiddler: tiddler, status: status[0]});
+					if(checked.contains(tiddler.title)) {
+						enabled.push("[rowname=%0]".format(tiddler.title));
+					}
+			}
+		}
+
+		if(publishCandidates.length === 0) {
+			createTiddlyElement(listWrapper, "em", null, null, locale.noTiddlersText);
+		} else {
+			var listView = ListView.create(listWrapper, publishCandidates, macro.listViewTemplate);
+			wizard.setValue("listView", listView);
+			var btnHandler = function(ev) {
+				var tiddlers = macro.getCheckedTiddlers(listWrapper)
+				var callback = function(status) {
+					$(".batchPublisher").each(function(i, el) {
+						macro.refresh(el);
+					});
+				};
+				
+				macro.changeStatus(tiddlers, status[1], callback);
+			};
+			wizard.setButtons([
+				{ caption: locale.changeStatusLabel.format([status[1]]), tooltip: locale.changeStatusPrompt.format([status[1]]), 
+					onClick: btnHandler }
+			]);
+			$(enabled.join(",")).attr("checked", true); // retain what was checked before.
+		}
+	}
+};
+
+var unpublishedTabText = 'Unpublished "Manage unpublished tiddlers" TabUnpublished';
+config.shadowTiddlers.TabMore = config.shadowTiddlers.TabMore.replace(
+	"TabMoreShadowed", "TabMoreShadowed %0".format([unpublishedTabText]));
+config.shadowTiddlers.TabUnpublished = "<<TiddlySpacePublisher>>";
 })(jQuery);
 //}}}
