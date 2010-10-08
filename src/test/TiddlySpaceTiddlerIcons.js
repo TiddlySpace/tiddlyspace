@@ -26,9 +26,17 @@ module("TiddlySpaceTiddlerIcons", {
 		_binaryTiddlersPlugin = config.extensions.BinaryTiddlersPlugin;
 		config.extensions.BinaryTiddlersPlugin = {
 			endsWith: function(str, substr) {
-				if(str == "bar_public" && substr == "_public") {
+				var isPrivate = substr == "_private";
+				var isPublic = substr == "_public";
+				if(str == "bar_public" && isPublic) {
 					return true
-				} else if(str == "dog_private" && substr == "_private") {
+				} else if(str == "dog_private" && isPrivate) {
+					return true;
+				} else if(str == "jon_public" && isPublic) {
+					return true;
+				} else if(str == "jon_private" && isPrivate) {
+					return true;
+				} else if(str == "bob-is-the-man_private" && isPrivate) {
 					return true;
 				} else {
 					return false;

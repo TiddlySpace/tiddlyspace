@@ -41,7 +41,8 @@ var tiddlyspace = config.extensions.tiddlyspace;
 var tweb = config.extensions.tiddlyweb;
 var cmds = config.commands;
 var cmd = cmds.publishTiddler;
-tiddlyspace.resolveSpaceName = function(title) {
+tiddlyspace.resolveSpaceName = function(value) {
+	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
 	if(value) {
 		if(value.indexOf("@") === 0) {
 			value = value.substr(1);
@@ -60,7 +61,6 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 	options = options ? options : {};
 	options.labelOptions = options.labelOptions ? options.labelOptions : { include: true };
 	options.imageOptions = options.imageOptions ? options.imageOptions : {};
-	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
 	var container = $('<div class="siteIcon" />').appendTo(place);
 	value = tiddlyspace.resolveSpaceName(value);
 
