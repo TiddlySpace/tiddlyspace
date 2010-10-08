@@ -76,7 +76,7 @@ test("activation", function() { // NB: assertions should be identical to firstRu
 	strictEqual(log.avatar, true);
 	strictEqual(log.autoSave.length, 2); // ColorPalette and SiteIcon handled separately
 	var flagTiddler = store.getTiddler("fooSetupFlag");
-	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.2");
+	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.3");
 });
 
 test("firstRun", function() { // NB: assertions should be identical to activation test's
@@ -95,7 +95,8 @@ test("firstRun", function() { // NB: assertions should be identical to activatio
 	strictEqual(log.avatar, true);
 	strictEqual(log.autoSave.length, 2); // ColorPalette and SiteIcon handled separately
 	var flagTiddler = store.getTiddler("fooSetupFlag");
-	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.2");
+	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.3");
+	strictEqual(flagTiddler.tags.indexOf("excludePublisher") > -1, true);
 });
 
 test("update from v0.1", function() {
@@ -117,7 +118,7 @@ test("update from v0.1", function() {
 	strictEqual(log.palette, undefined);
 	strictEqual(log.avatar, true);
 	var flagTiddler = store.getTiddler("fooSetupFlag");
-	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.2");
+	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.3");
 });
 
 test("update from v0.2", function() {
@@ -135,9 +136,23 @@ test("update from v0.2", function() {
 	plugin.dispatch();
 
 	strictEqual(log.firstRun, undefined);
-	strictEqual(log.update, undefined);
+	strictEqual(log.update, true);
 	strictEqual(log.palette, undefined);
 	strictEqual(log.avatar, undefined);
+});
+
+test("update from v0.2", function() {
+	var tid = new Tiddler("fooSetupFlag");
+	tid.fields = {
+		tiddlyspaceinit_version: "0.2"
+	};
+	store.saveTiddler(tid);
+
+	plugin.dispatch();
+	var flagTiddler = store.getTiddler("fooSetupFlag");
+
+	strictEqual(flagTiddler.tags.contains("excludePublisher"), true);
+	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.3");
 });
 
 })(QUnit.module, jQuery);

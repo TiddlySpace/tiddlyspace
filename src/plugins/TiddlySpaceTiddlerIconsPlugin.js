@@ -308,7 +308,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 						cmd.moveTiddler(tiddler, {
 							title: tiddler.title,
 							fields: { "server.bag": privateBag }
-						}, false, onComplete);
+						}, onComplete);
 					}, { yesLabel: locale.makePrivate, noLabel: locale.keepPublic });
 				}
 			}
@@ -335,7 +335,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 						cmd.moveTiddler(tiddler, {
 							title: newTitle,
 							fields: { "server.bag": publicBag }
-						}, false, onComplete);
+						}, onComplete);
 					}, { yesLabel: locale.makePublic, noLabel: locale.keepPrivate });
 				}
 			}

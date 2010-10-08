@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.3|
+|''Version''|0.6.4|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -18,16 +18,16 @@ var versionField = "tiddlyspaceinit_version";
 var currentSpace = config.extensions.tiddlyspace.currentSpace;
 
 var plugin = config.extensions.TiddlySpaceInit = {
-	version: "0.2",
+	version: "0.3",
 	SiteTitle: "%0",
 	SiteSubtitle: "a TiddlySpace",
 	flagTitle: "%0SetupFlag",
 	flagWarning: "Please do not modify this tiddler; it was created " +
 		"automatically upon space creation.",
 
-	dispatch: function() {
+	dispatch: function(ev) {
 		var title = plugin.flagTitle.format([currentSpace.name]);
-		config.annotations[title] = this.flagWarning;
+		config.annotations[title] = plugin.flagWarning;
 		if(currentSpace.type != "private") {
 			return;
 		}
@@ -37,7 +37,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			curVersion = parseFloat(tid.fields[versionField]);
 			reqVersion = parseFloat(plugin.version);
 			if(curVersion < reqVersion) {
-				plugin.update(curVersion);
+				plugin.update(curVersion, tid);
 				tid.fields[versionField] = plugin.version;
 				tid.incChangeCount();
 				tid = store.saveTiddler(tid);
@@ -45,7 +45,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			}
 		} else { // first run
 			tid = new Tiddler(title);
-			tid.tags = ["excludeLists", "excludeSearch"];
+			tid.tags = ["excludeLists", "excludeSearch", "excludePublisher"];
 			tid.fields = $.extend({}, config.defaultCustomFields);
 			tid.fields[versionField] = plugin.version;
 			tid.text = "@@%0@@".format([plugin.flagWarning]);
@@ -54,9 +54,11 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		}
 		autoSaveChanges(null, tiddlers);
 	},
-	update: function(curVersion) {
+	update: function(curVersion, flagTiddler) {
 		if(curVersion < 0.2) {
 			this.createAvatar();
+		} else if(curVersion < 0.3) {
+			flagTiddler.tags.pushUnique("excludePublisher");
 		}
 	},
 	firstRun: function() {
