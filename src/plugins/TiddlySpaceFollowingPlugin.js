@@ -57,7 +57,7 @@ shadows.FollowersTemplate = "<<view server.bag SiteIcon width:24 height:24 space
 shadows.FollowingTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> @$1";
 shadows.FollowTiddlersHeading = "There are tiddlers in spaces you follow using the follow tag which use the title <<view title text>>";
 shadows.FollowTiddlersTemplate = ["* <<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> ",
-	"<<view server.bag spaceLink title external:no>> modified by <<view modifier text>> ",
+	"<<view server.bag spaceLink title external:no>> modified by <<view modifier spaceLink>> ",
 	"in the <<view server.bag spaceLink>> space.\n"].join("");
 var name = "StyleSheetFollowing";
 config.shadowTiddlers[name] = store.getTiddlerText(tiddler.title +
@@ -203,11 +203,7 @@ var followMacro = config.macros.followTiddlers = {
 		for(var i = 0; i < tiddlers.length; i++) {
 			var t = tiddlers[i];
 			if(t.bag != options.ignore) {
-				var tiddler = new Tiddler(t.title);
-				tiddler.created = Date.convertFromYYYYMMDDHHMM(t.created);
-				tiddler.modified = Date.convertFromYYYYMMDDHHMM(t.modified);
-				tiddler.assign(t.title, t.text, t.modifier, t.modified, t.tags, t.created, t.fields);
-				tiddler.fields["server.bag"] = t.bag;
+				var tiddler = config.adaptors.tiddlyweb.toTiddler(t, tweb.host);
 				tiddler.fields["server.space"] = tiddlyspace.resolveSpaceName(t.bag);
 				templateTiddlers.push(tiddler);
 			} else {
@@ -342,11 +338,7 @@ var scanMacro = config.macros.tsScan = {
 					for(var i = 0; i < jsontiddlers.length; i++) {
 						var t = jsontiddlers[i];
 						var spaceName = t[spaceField];
-						var tiddler = new Tiddler(t.title);
-						t.created = Date.convertFromYYYYMMDDHHMM(t.created);
-						t.modified = Date.convertFromYYYYMMDDHHMM(t.modified);
-						tiddler.assign(t.title, t.text, t.modifier, t.modified, t.tags, t.created, t.fields);
-						tiddler.fields["server.bag"] = t.bag;
+						var tiddler = config.adaptors.tiddlyweb.toTiddler(t, tweb.host);
 						tiddler.fields["server.space"] = tiddlyspace.resolveSpaceName(spaceName);
 						tiddlers.push(tiddler);
 					}
