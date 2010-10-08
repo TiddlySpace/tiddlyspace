@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.5.8|
+|''Version''|0.5.9|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -66,6 +66,7 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 	var adaptor = store.getTiddlers()[0].getAdaptor();
 	tweb.getStatus(function(status) {
 		var context = {
+			host: tweb.host, // TODO: inherit from source tiddler?
 			workspace: workspace,
 			headers: { "X-ControlView": "false" }
 		};
