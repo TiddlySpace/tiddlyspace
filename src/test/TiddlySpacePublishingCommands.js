@@ -44,12 +44,13 @@ test("tiddlyspace.getTiddlerStatusType", function() {
 	var type3 = tiddlyspace.getTiddlerStatusType(store.getTiddler("bfoo3"));
 	var type4 = tiddlyspace.getTiddlerStatusType(new Tiddler("ToolbarCommands"));
 	var type5 = tiddlyspace.getTiddlerStatusType(new Tiddler("MainMenuNotExistanceTiddler"));
-
+	var type6 = tiddlyspace.getTiddlerStatusType(false);
 	strictEqual(type1, "public");
 	strictEqual(type2, "private");
 	strictEqual(type3, "external");
 	strictEqual(type4, "shadow");
 	strictEqual(type5, "missing");
+	strictEqual(type6, "missing");
 });
 test("getDraftTitle", function() {
 	// setup
