@@ -26,9 +26,17 @@ module("TiddlySpaceTiddlerIcons", {
 		_binaryTiddlersPlugin = config.extensions.BinaryTiddlersPlugin;
 		config.extensions.BinaryTiddlersPlugin = {
 			endsWith: function(str, substr) {
-				if(str == "bar_public" && substr == "_public") {
+				var isPrivate = substr == "_private";
+				var isPublic = substr == "_public";
+				if(str == "bar_public" && isPublic) {
 					return true
-				} else if(str == "dog_private" && substr == "_private") {
+				} else if(str == "dog_private" && isPrivate) {
+					return true;
+				} else if(str == "jon_public" && isPublic) {
+					return true;
+				} else if(str == "jon_private" && isPrivate) {
+					return true;
+				} else if(str == "bob-is-the-man_private" && isPrivate) {
 					return true;
 				} else {
 					return false;
@@ -58,18 +66,35 @@ module("TiddlySpaceTiddlerIcons", {
 	}
 });
 
+test("resolveSpaceName", function() {
+	var tiddlyspace = config.extensions.tiddlyspace;
+	var name = tiddlyspace.resolveSpaceName("@jon");
+	var name2 = tiddlyspace.resolveSpaceName("jon_public");
+	var name3 = tiddlyspace.resolveSpaceName("jon_private");
+	var name4 = tiddlyspace.resolveSpaceName("bob-is-the-man_private");
+	var name5 = tiddlyspace.resolveSpaceName("bob");
+	var name6 = tiddlyspace.resolveSpaceName("BeNgIlLiEs");
+	strictEqual(name, "jon");
+	strictEqual(name2, "jon");
+	strictEqual(name3, "jon");
+	strictEqual(name4, "bob-is-the-man");
+	strictEqual(name5, "bob");
+	strictEqual(name6, "bengillies");
+});
+
 test("render avatar", function() {
+	var tiddlyspace = config.extensions.tiddlyspace;
 	var place = $("<div />");
 	
-	config.extensions.tiddlyspace.renderAvatar(place, "jon", { labelOptions: { include: false, prefix: "hello " } });
-	config.extensions.tiddlyspace.renderAvatar(place, "@foo");
-	config.extensions.tiddlyspace.renderAvatar(place, "bar_public", { 
+	tiddlyspace.renderAvatar(place, "jon", { labelOptions: { include: false, prefix: "hello " } });
+	tiddlyspace.renderAvatar(place, "@foo");
+	tiddlyspace.renderAvatar(place, "bar_public", { 
 		labelOptions: { include: true, prefix: "from space ", suffix: " !!"} 
 	});
-	config.extensions.tiddlyspace.renderAvatar(place, "dog_private");
-	config.extensions.tiddlyspace.renderAvatar(place, "CarRot");
-	config.extensions.tiddlyspace.renderAvatar(place, "system", { notSpace: true });
-	config.extensions.tiddlyspace.renderAvatar(place, false);
+	tiddlyspace.renderAvatar(place, "dog_private");
+	tiddlyspace.renderAvatar(place, "CarRot");
+	tiddlyspace.renderAvatar(place, "system", { notSpace: true });
+	tiddlyspace.renderAvatar(place, false);
 	var res = $(".imageStub", place);
 	strictEqual(res.length, 6); // last one didnt render
 	strictEqual($(res[0]).text(), "http://jon.tiddlyspace.com/bags/jon_public/tiddlers/SiteIcon");
