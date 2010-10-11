@@ -109,36 +109,6 @@ test("createDraftTiddler", function() {
 	strictEqual(typeof(tiddler.fields["server.workspace"]), "undefined", "checks old tiddler retained");
 });
 
-test("toggleWorkspace", function() {
-	var cmd = config.commands.publishTiddler;
-	var actual = [];
-	// run
-	actual.push(cmd.toggleWorkspace("bags/jon_public"));
-	actual.push(cmd.toggleWorkspace("recipes/xyz-boo_private"));
-	actual.push(cmd.toggleWorkspace("recipes/jon_public"));
-	actual.push(cmd.toggleWorkspace("recipes/jon_public", "private"));
-	actual.push(cmd.toggleWorkspace("bags/jon_public", "public"));
-	same(["bags/jon_private", "recipes/xyz-boo_public",
-		"recipes/jon_private", "recipes/jon_private", "bags/jon_public"], actual);
-});
-
-test("toggleWorkspace (with tiddler)", function() {
-	var cmd = config.commands.publishTiddler;
-	var actual = [];
-	var tiddler = new Tiddler("foo");
-	tiddler.fields["server.workspace"] = "recipes/hello_private";
-	actual.push(cmd.toggleWorkspace(tiddler));
-	tiddler.fields["server.workspace"] = "bags/jon_private";
-	actual.push(cmd.toggleWorkspace(tiddler));
-	tiddler.fields["server.bag"] = "hello_public";
-	actual.push(cmd.toggleWorkspace(tiddler));
-	actual.push(cmd.toggleWorkspace(tiddler, "private"));
-	tiddler.fields["server.bag"] = "hello_public";
-	actual.push(cmd.toggleWorkspace(tiddler, "public"));
-	same(["recipes/hello_public", "bags/jon_public", "bags/hello_private",
-		"bags/hello_private", "bags/hello_public"], actual);
-});
-
 test("toggleBag", function() {
 	var cmd = config.commands.publishTiddler;
 	var actual = [];
