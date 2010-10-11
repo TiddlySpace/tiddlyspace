@@ -232,7 +232,7 @@ a.originButton:hover {
 	margin-top: 0;
 	position: relative;
 	display: block;
-	width: 74px;
+/*	width: 74px; */
 }
 
 .tiddler .spaceSiteIcon .roundelLabel {
@@ -433,9 +433,9 @@ line-height: normal;
 	margin-left: 56px;
 }
 
-.tiddler .spaceSiteIcon {
+/* .tiddler .spaceSiteIcon {
 	width: 56px;
-}
+} */
 
 .tiddler .modifierIcon img, .tiddler .modifierIcon svg {
 	margin-right: 0px;
@@ -500,5 +500,25 @@ div.toolbar {
 }
 @media only screen and (device-width: 768px){
 	div.toolbar { visibility:visible;}
+}
+@media all and (max-width: 960px){
+	.tiddler .titleBar {
+		margin-left: 36px;
+		margin-right: 80px;
+	}
+	.tiddler .heading { margin-bottom: 48px; }
+	.tiddler .heading .title { font-size: 32px; line-height: 32px; }
+	
+	.tiddler .modifierIcon img, .tiddler .modifierIcon svg,
+	.tiddler .spaceSiteIcon .originButton img, .originButton svg {
+		width: 32px;
+		height: 32px;
+	}
+	.tiddler .followPlaceHolder { right: 48px; }
+	.tiddler .followButton { width: 24px; }
+	
+	.tiddler .viewer { margin: 0px 0px 0px 36px; padding-top: 0; }
+	
+	br { line-height: 0.5em; }
 }
 /*}}}*/
