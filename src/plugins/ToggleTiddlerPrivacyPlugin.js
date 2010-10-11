@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.6.2dev|
+|''Version''|0.6.3|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
@@ -9,7 +9,7 @@
 When used in conjunction with TiddlySpaceTiddlerIconsPlugin changing the privacy setting will also interact with any privacy icons.
 
 Currently use of
-<<setPrivacy defaultValue:public>> is in conflict with <<newTiddler fields:"server.workspace:x_private">>
+{{{<<setPrivacy defaultValue:public>>}}} is in conflict with {{{<<newTiddler fields:"server.workspace:x_private">>}}}
 !Params
 defaultValue:[private|public]
 Allows you to set the default privacy value (Default is private)
@@ -22,7 +22,7 @@ Allows you to set the default privacy value (Default is private)
 var tiddlyspace = config.extensions.tiddlyspace;
 
 var macro = config.macros.setPrivacy = {
-	DEFAULT_STATE: "private",
+	default_state: "private",
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		if(readOnly) {
@@ -34,7 +34,8 @@ var macro = config.macros.setPrivacy = {
 		var currentSpace = tiddlyspace.currentSpace.name;
 		var currentBag = tiddler ? tiddler.fields["server.bag"] : false;
 		var isNewTiddler = el.hasClass("missing") || !currentBag; // XXX: is this reliable?
-		if(isNewTiddler || this.isExternal(tiddler)) {
+		var status = tiddlyspace.getTiddlerStatusType(tiddler);
+		if(isNewTiddler || ["public", "private"].contains(status)) {
 			var defaultValue = args.defaultValue;
 			defaultValue = defaultValue ? "%0_%1".format([currentSpace, defaultValue[0]]) : false;
 			var options = config.macros.tiddlerOrigin ?
@@ -43,11 +44,6 @@ var macro = config.macros.setPrivacy = {
 		}
 	},
 
-	isExternal: function(tiddler) {
-		var bag = tiddler.fields["server.bag"] || "";
-		var prefix = "%0_".format([tiddlyspace.currentSpace.name]);
-		return bag.indexOf(prefix) != 0 || bag == "tiddlyspace";
-	},
 	setBag: function(tiddlerEl, newBag, options) {
 		var title = $(tiddlerEl).attr("tiddler");
 		var tiddler = store.getTiddler(title);
@@ -94,7 +90,7 @@ var macro = config.macros.setPrivacy = {
 		$("<label />").text("private").appendTo(container); // TODO: i18n
 		var rPublic = rbtn.clone().val("public").addClass("isPublic").appendTo(container);
 		$("<label />").text("public").appendTo(container); // TODO: i18n
-		var status = macro.DEFAULT_STATE;
+		var status = macro.default_state;
 		var el = story.findContainingTiddler(container);
 		$("[type=radio]", container).click(function(ev) {
 			var btn = $(ev.target);
@@ -108,7 +104,7 @@ var macro = config.macros.setPrivacy = {
 			}
 		});
 		if(!defaultValue) {
-			defaultValue = macro.DEFAULT_STATE == "public" ? publicBag : privateBag;
+			defaultValue = macro.default_state == "public" ? publicBag : privateBag;
 		}
 		// TODO: replace with a hijack of displayTiddler?
 		window.setTimeout(function() {
