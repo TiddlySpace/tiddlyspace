@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceToolbar|
 |''Description''|augments tiddler toolbar commands with SVG icons|
 |''Author''|Osmosoft|
-|''Version''|0.6.4|
+|''Version''|0.6.5|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceToolbar.js|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -85,7 +85,7 @@ macro.augmentCommandButtons = function(toolbar) {
 			}
 		}
 		if(store.tiddlerExists(icon)) {
-			$(el).empty();
+			$(el).css({display: "inline-block"}).empty();
 			imageMacro.renderImage(el, icon, { alt: text });
 		}
 	});
