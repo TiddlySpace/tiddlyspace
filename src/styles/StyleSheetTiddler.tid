@@ -232,7 +232,6 @@ a.originButton:hover {
 	margin-top: 0;
 	position: relative;
 	display: block;
-/*	width: 74px; */
 }
 
 .tiddler .spaceSiteIcon .roundelLabel {
@@ -284,7 +283,7 @@ a.originButton:hover {
 }
 .tiddler .heading .editor.title {
 	font-size: 1.7em;
-line-height: normal;
+	line-height: normal;
 }
 
 .tiddler .title a {
@@ -425,17 +424,12 @@ line-height: normal;
 	background: #fff;
 }
 
-
 .tiddler .modifierIcon .label {
 	display: none;
 }
 .tiddler .titleBar {
 	margin-left: 56px;
 }
-
-/* .tiddler .spaceSiteIcon {
-	width: 56px;
-} */
 
 .tiddler .modifierIcon img, .tiddler .modifierIcon svg {
 	margin-right: 0px;

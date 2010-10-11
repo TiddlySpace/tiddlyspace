@@ -424,7 +424,7 @@ body ul { margin: 0; }
 
 .tagInfo ul li a {
 	border: none;
-	}
+}
 
 .tagInfo .tagging ul li {
 	float: none;
@@ -524,9 +524,6 @@ div.tiddler .toolbar a {
 	}
 	
 	#sidebarTabs .tabContents li a { font-size: 0.9em; }
-
 }
-
-
 /*}}}*/
 [[StyleSheetTiddler]]
