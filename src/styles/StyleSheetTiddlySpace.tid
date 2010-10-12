@@ -394,7 +394,7 @@ body ul { margin: 0; }
 }
 
 /* ---- Tagging box --- */
-.tagInfo { 
+.tagInfo {
 	border: 1px solid #cccccc;
 	padding: 10px 15px;
 	-moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
@@ -477,7 +477,7 @@ div.tiddler .toolbar a {
 }
 /* for printing purposes */
 @media print {
-	#mainMenu, 
+	#mainMenu,
 	#sidebar,
 	#messageArea,
 	.toolbar,
@@ -502,42 +502,42 @@ div.tiddler .toolbar a {
 
 @media all and (max-width: 960px){
 	#tiddlerDisplay,
-	#searchResults { 
-		margin: 16px 366px 0 16px; 
+	#searchResults {
+		margin: 16px 366px 0 16px;
 	}
-	
-	#mainMenu { 
-		margin-left: 16px; 
+
+	#mainMenu {
+		margin-left: 16px;
 	}
-	
-	.headerForeground { 
-		margin-left: 16px; 
+
+	.headerForeground {
+		margin-left: 16px;
 	}
-	
-	#sidebarSearch { 
-		right: 16px; 
+
+	#sidebarSearch {
+		right: 16px;
 	}
-	
-	#sidebarOptions { 
-		margin-right: 16px; 
+
+	#sidebarOptions {
+		margin-right: 16px;
 	}
-	
-	#sidebarTabs { 
-		right: 16px; 
-		width: 326px; 
+
+	#sidebarTabs {
+		right: 16px;
+		width: 326px;
 	}
-	
+
 	#sidebarTabs .tabsetWrapper .tabset {
 		font-size: 0.9em;
 		width: 77px;
 	}
-	
+
 	#sidebarTabs .tabsetWrapper .tabContents {
 		width: 226px;
 		_width: 222px;
 	}
-	
-	#sidebarTabs .tabContents li a { 
+
+	#sidebarTabs .tabContents li a {
 		font-size: 0.9em;
 	}
 }

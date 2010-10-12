@@ -434,9 +434,9 @@ a.originButton:hover {
 .tiddler .modifierIcon img, .tiddler .modifierIcon svg {
 	margin-right: 0px;
 }
- 
-.tiddler .spaceSiteIcon .originButton img, 
-.originButton svg ﻿{
+
+.tiddler .spaceSiteIcon .originButton img,
+.originButton svg {
 	margin-left: 0px;
 }
 
@@ -490,12 +490,12 @@ div.toolbar {
 }
 
 @media all and (max-device-width: 480px) {
-	div.toolbar { 
+	div.toolbar {
 		visibility:visible;
 	}
 }
 @media only screen and (device-width: 768px){
-	div.toolbar { 
+	div.toolbar {
 		visibility:visible;
 	}
 }
@@ -504,39 +504,39 @@ div.toolbar {
 		margin-left: 36px;
 		margin-right: 80px;
 	}
-	
-	.tiddler .heading { 
-		margin-bottom: 48px; 
+
+	.tiddler .heading {
+		margin-bottom: 48px;
 	}
-	
-	.tiddler .heading .title { 
-		font-size: 32px; 
-		line-height: 32px; 
+
+	.tiddler .heading .title {
+		font-size: 32px;
+		line-height: 32px;
 	}
-	
-	.tiddler .modifierIcon img, 
+
+	.tiddler .modifierIcon img,
 	.tiddler .modifierIcon svg,
-	.tiddler .spaceSiteIcon .originButton img, 
+	.tiddler .spaceSiteIcon .originButton img,
 	.originButton svg {
 		width: 32px;
 		height: 32px;
 	}
-	
-	.tiddler .followPlaceHolder { 
-		right: 48px; 
+
+	.tiddler .followPlaceHolder {
+		right: 48px;
 	}
-	
-	.tiddler .followButton { 
-		width: 24px; 
+
+	.tiddler .followButton {
+		width: 24px;
 	}
-	
-	.tiddler .viewer { 
-		margin: 0px 0px 0px 36px; 
-		padding-top: 0; 
+
+	.tiddler .viewer {
+		margin: 0px 0px 0px 36px;
+		padding-top: 0;
 	}
-	
-	br { 
-		line-height: 0.5em; 
+
+	br {
+		line-height: 0.5em;
 	}
 }
 /*}}}*/
