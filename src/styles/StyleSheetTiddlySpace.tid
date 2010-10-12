@@ -501,17 +501,31 @@ div.tiddler .toolbar a {
 }
 
 @media all and (max-width: 960px){
-	#tiddlerDisplay, #searchResults { margin: 16px 366px 0 16px; }
+	#tiddlerDisplay,
+	#searchResults { 
+		margin: 16px 366px 0 16px; 
+	}
 	
-	#mainMenu { margin-left: 16px; }
+	#mainMenu { 
+		margin-left: 16px; 
+	}
 	
-	.headerForeground { margin-left: 16px; }
+	.headerForeground { 
+		margin-left: 16px; 
+	}
 	
-	#sidebarSearch { right: 16px; }
+	#sidebarSearch { 
+		right: 16px; 
+	}
 	
-	#sidebarOptions { margin-right: 16px; }
+	#sidebarOptions { 
+		margin-right: 16px; 
+	}
 	
-	#sidebarTabs { right: 16px; width: 326px; }
+	#sidebarTabs { 
+		right: 16px; 
+		width: 326px; 
+	}
 	
 	#sidebarTabs .tabsetWrapper .tabset {
 		font-size: 0.9em;
@@ -523,7 +537,9 @@ div.tiddler .toolbar a {
 		_width: 222px;
 	}
 	
-	#sidebarTabs .tabContents li a { font-size: 0.9em; }
+	#sidebarTabs .tabContents li a { 
+		font-size: 0.9em;
+	}
 }
 /*}}}*/
 [[StyleSheetTiddler]]
