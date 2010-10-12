@@ -35,7 +35,7 @@ var macro = config.macros.setPrivacy = {
 		var currentBag = tiddler ? tiddler.fields["server.bag"] : false;
 		var isNewTiddler = el.hasClass("missing") || !currentBag; // XXX: is this reliable?
 		var status = tiddlyspace.getTiddlerStatusType(tiddler);
-		if(isNewTiddler || ["public", "private"].contains(status)) {
+		if(isNewTiddler || !["public", "private"].contains(status)) {
 			var defaultValue = args.defaultValue;
 			defaultValue = defaultValue ? "%0_%1".format([currentSpace, defaultValue[0]]) : false;
 			var options = config.macros.tiddlerOrigin ?
