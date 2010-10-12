@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceRevisionView|
 |''Description''|Show tiddler revisions in a stack of cards view|
 |''Author''|BenGillies|
-|''Version''|0.1.3|
+|''Version''|0.2.0|
 |''Status''|beta|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -116,8 +116,18 @@ var me = config.macros.viewRevisions = {
 				var revElem = userParams.revElem;
 				$(revElem).attr("id", story.tiddlerId(tiddler.title));
 				$(revElem).attr("refresh", "tiddler");
-				var template = (store.getTiddler(me.revisionTemplate)) ?
-					me.revisionTemplate : "ViewTemplate";
+				var getTemplate = function() {
+					var themeName = config.options.txtTheme;
+					if (themeName) {
+						return store.getTiddlerSlice(themeName,
+							me.revisionTemplate) || me.revisionTemplate ||
+							"ViewTemplate";
+					} else {
+						return (store.getTiddler(me.revisionTemplate)) ?
+							me.revisionTemplate : "ViewTemplate";
+					}
+				};
+				var template = getTemplate();
 				story.refreshTiddler(tiddler.title, template, true);
 				callback(tiddler);
 			});
