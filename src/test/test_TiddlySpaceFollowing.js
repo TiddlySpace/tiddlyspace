@@ -2,7 +2,7 @@
 
 var _getTaggedTiddlers, _getUserInfo, _binaryTiddlersPlugin;
 var taggedTiddlers = [];
-
+scanMacro.init();
 module("TiddlySpaceFollowing", {
 	setup: function() {
 		taggedTiddlers = [];
@@ -30,14 +30,16 @@ module("TiddlySpaceFollowing", {
 });
 
 
-test("_constructBagQuery", function() {
+test("_getFollowerBags", function() {
 	var followMacro = config.macros.followTiddlers;
 	// where foo is the current space..
 	var actual = [];
-	actual.push(followMacro._constructBagQuery(["foo"]));
-	actual.push(followMacro._constructBagQuery(["foo", "bar", "dum"]));
-	actual.push(followMacro._constructBagQuery([]));
-	same(actual, [false, "(bag:bar_public%20OR%20bag:dum_public)", false]);
+	actual.push(followMacro._getFollowerBags(["foo"]));
+	actual.push(followMacro._getFollowerBags(["foo", "bar", "dum"]));
+	actual.push(followMacro._getFollowerBags([]));
+	same(actual[0].length, 0);
+	same(actual[1].length, 2);
+	same(actual[2].length, 0);
 });
 
 test("getFollowers (local version)", function() {

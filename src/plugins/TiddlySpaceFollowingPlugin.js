@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.0|
+|''Version''|0.6.5dev|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -40,8 +40,6 @@ If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default 
 .scanResults li {
 	list-style: none;
 }
-!To do
-mangle external links to work in their new environment.
 !Code
 ***/
 //{{{
@@ -60,8 +58,7 @@ shadows.FollowTiddlersTemplate = ["* <<view server.bag SiteIcon width:24 height:
 	"<<view server.bag spaceLink title external:no>> modified by <<view modifier spaceLink>> ",
 	"in the <<view server.bag spaceLink>> space.\n"].join("");
 var name = "StyleSheetFollowing";
-config.shadowTiddlers[name] = store.getTiddlerText(tiddler.title +
-     "##StyleSheet");
+config.shadowTiddlers[name] = store.getTiddlerText(tiddler.title + "##StyleSheet");
 store.addNotification(name, refreshStyles);
 
 // provide support for sucking in tiddlers from the server
@@ -144,7 +141,6 @@ var followMacro = config.macros.followTiddlers = {
 		xhr.setRequestHeader("X-ControlView", "false");
 	},
 	followTag: "follow",
-	follower_names_cache: {},
 	getHosts: function(callback) {
 		tweb.getStatus(function(status) {
 			callback(tweb.host, tiddlyspace.getHost(status.server_host, "%0"));
@@ -159,58 +155,17 @@ var followMacro = config.macros.followTiddlers = {
 			if(!followers) {
 				$(btn).remove();
 			} else {
-				var bagQuery = followMacro._constructBagQuery(followers);
-				followMacro.getHosts(function(host, tsHost) {
-					options.host = tsHost;
-					options.ignore = tiddler.fields["server.bag"];
-					if(followers.length > 0) { // only run the search if we have a list of followers
-						for(var i = 0; i < followers.length; i++) {
-							followMacro.makeQuery(btn, title, followers[i], options);
-						}
-					} else {
-						followMacro.constructInterface(btn, [], options);
+				scanMacro.scan(null, { searchFields: "title", searchValues: [title],
+					spaceField: "bag", template: null, sort: "-modified",
+					showBags: followMacro._getFollowerBags(followers), hideBags: [tiddler.fields["server.bag"]],
+					callback: function(tiddlers) {
+						followMacro.constructInterface(btn, tiddlers);
 					}
 				});
 			}
 		}, user);
 	},
-	makeQuery: function(container, title, bag, options) {
-		if(!followMacro.lookup[title]) {
-			followMacro.lookup[title] = { tested: [], tiddlers: [] };
-		}
-		if(followMacro.lookup[title].tested.contains(bag)) {
-			followMacro.constructInterface(container, followMacro.lookup[title].tiddlers, options);
-		} else {
-			followMacro.lookup[title].tested.pushUnique(bag);
-			ajaxReq({
-				dataType: "json",
-				beforeSend: followMacro.beforeSend,
-				url: "/bags/%0_public/tiddlers/%1".format([bag, encodeURIComponent(title)]),
-				success: function(tiddler) {
-					followMacro.lookup[title].tiddlers.push(tiddler);
-					followMacro.constructInterface(container, followMacro.lookup[title].tiddlers, options);
-				},
-				error: function() {
-					followMacro.constructInterface(container, followMacro.lookup[title].tiddlers, options);
-				}
-			});
-		}
-	},
-	constructInterface: function(container, tiddlers, options) {
-		var ignore = 0;
-		var host = options.host || "";
-		var templateTiddlers = [];
-		for(var i = 0; i < tiddlers.length; i++) {
-			var t = tiddlers[i];
-			if(t.bag != options.ignore) {
-				var tiddler = config.adaptors.tiddlyweb.toTiddler(t, tweb.host);
-				tiddler.fields["server.space"] = tiddlyspace.resolveSpaceName(t.bag);
-				templateTiddlers.push(tiddler);
-			} else {
-				ignore += 1;
-			}
-		}
-		tiddlers = templateTiddlers;
+	constructInterface: function(container, tiddlers) {
 		var txt = tiddlers.length;
 		var className = txt > 0 ? "hasReplies" : "noReplies";
 		var el = $(story.findContainingTiddler(container));
@@ -241,55 +196,30 @@ var followMacro = config.macros.followTiddlers = {
 		ev.stopPropagation();
 		return popup;
 	},
-	_constructBagQuery: function(followers) {
-		var querySegments = [];
-		var currentSpaceName = tiddlyspace.currentSpace.name;
+	_getFollowerBags: function(followers) {
+		var x = [];
 		for(var i = 0; i < followers.length; i++) {
-			var follower = followers[i];
-			if(follower != currentSpaceName) {
-				querySegments.push("bag:%0_public".format([encodeURI(follower)]));
+			var name = followers[i];
+			if(name != tiddlyspace.currentSpace.name) {
+				x.push("%0_public".format([name]));
 			}
 		}
-		var searchArg = "(%0)".format([querySegments.join("%20OR%20")]);
-		return querySegments.length > 0 ? searchArg : false;
+		return x;
 	},
 	getFollowers: function(callback, username) {
 		// returns a list of spaces being followed by the existing space
 		var followersCallback = function(user) {
-			var followers = [];
 			if(!user.anon) {
-				var username = user.name;
-				if(username == tiddlyspace.currentSpace.name) {
-					// just get the tiddlers in the local store
-					var followerTiddlers = store.getTaggedTiddlers(followMacro.followTag);
-					for(var i = 0; i < followerTiddlers.length; i++) {
-						followers.push(tiddlyspace.resolveSpaceName(followerTiddlers[i].title));
+				scanMacro.scan(null, { searchField: "bag", searchValues: ["%0_public".format([user.name])],
+					spaceField: "title", template: null, tag: "follow", cache: true,
+					callback: function(tiddlers) {
+						var followers = [];
+						for(var i = 0; i < tiddlers.length; i++) {
+							followers.push(tiddlyspace.resolveSpaceName(tiddlers[i].title));
+						}
+						callback(followers);
 					}
-					callback(followers);
-				} else {
-					var adaptor = store.getTiddlers()[0].getAdaptor();
-					if(followMacro.follower_names_cache[username]) {
-						// use cached list to save ajax requests
-						return callback(followMacro.follower_names_cache[username]);
-					}
-					followMacro.getHosts(function(host, tsHost) {
-						var context = {
-							host: tweb.host,
-							workspace: "bags/%0_public".format([user.name]),
-							filters: "select=tag:%0".format([followMacro.followTag]),
-							headers: { "X-ControlView": "false" }
-						};
-						var tiddlerListCallback = function(context){
-							var tiddlers = context.tiddlers || [];
-							for(var i = 0; i < tiddlers.length; i++) {
-								followers.push(tiddlyspace.resolveSpaceName(tiddlers[i].title));
-							}
-							followMacro.follower_names_cache[username] = followers;
-							callback(followers);
-						};
-						adaptor.getTiddlerList(context, null, tiddlerListCallback);
-					});
-				}
+				});
 			} else {
 				callback(false);
 			}
@@ -303,60 +233,87 @@ var followMacro = config.macros.followTiddlers = {
 };
 
 var scanMacro = config.macros.tsScan = {
-	scan: function(place, options) {
-		var inputs = options.searchValues;
-		var tag = options.tag;
-		$(place).text(followersMacro.locale.pleaseWait);
-		options = options ? options: {};
-		options.template = options.template ? options.template : "ScanTemplate";
-		options.filter = options.filter;
-		searchField = options.searchField || "title";
-		var host = options.host.format([tiddlyspace.currentSpace.name]);
+	init: function () {
+		this.scanned = {};
+	},
+	_scanCallback: function(place, jsontiddlers, options) {
 		var locale = followersMacro.locale;
-		var searchQuery = [];
-		for(var i = 0; i < inputs.length; i++) {
-			searchQuery.push('%0:"%1"'.format([searchField, inputs[i]]));
-		}
-		var query = searchQuery.join(" OR ");
-		query = tag ? "(%0);select=tag:%1;".format([query, tag]) : query;
-		query = options.query ? "%0;%1;".format([query, options.query]) : query;
-		query = options.fat ? "%0&fat=y".format([query]) : query;
-
-		var url = '%0/search?q=%1'.format([host, query]);
-		locale = locale ? locale : {};
-		host = options.host || "/";
 		var spaceField = options.spaceField || "bag";
-		try {
-			ajaxReq({
-				url: url,
-				dataType: "json",
-				beforeSend: followMacro.beforeSend,
-				success: function(jsontiddlers) {
-					$(place).empty();
-					var list = $("<ul />").appendTo(place)[0];
-					var tiddlers = [];
-					for(var i = 0; i < jsontiddlers.length; i++) {
-						var t = jsontiddlers[i];
-						var spaceName = t[spaceField];
-						var tiddler = config.adaptors.tiddlyweb.toTiddler(t, tweb.host);
-						tiddler.fields["server.space"] = tiddlyspace.resolveSpaceName(spaceName);
-						tiddlers.push(tiddler);
-					}
-					if(options.filter) {
-						tiddlers = store.filterTiddlers(options.filter, tiddlers); // note currently not supported in core.
-					}
-					scanMacro.template(list, tiddlers, options.template);
-					if(tiddlers.length === 0) {
-						$("<li />").text(locale.noone).appendTo(list);
-					}
-				},
-				error: function() {
-					$("<span />").text(locale.error).appendTo(place);
-				}
-			});
-		} catch(e) {
-			$('<span class="error"/>').text(locale.noSupport).appendTo(place);
+		var tiddlers = [];
+		for(var i = 0; i < jsontiddlers.length; i++) {
+			var t = jsontiddlers[i];
+			var use = false;
+			if(!options.showBags || (options.showBags && options.showBags.contains(t.bag))) {
+				use = true;
+			}
+			if(options.hideBags && options.hideBags.contains(t.bag)) {
+				use = false;
+			}
+			if(use) {
+				var spaceName = t[spaceField];
+				var tiddler = config.adaptors.tiddlyweb.toTiddler(t, tweb.host);
+				tiddler.fields["server.space"] = tiddlyspace.resolveSpaceName(spaceName);
+				tiddlers.push(tiddler);
+			}
 		}
+		if(options.sort) {
+			tiddlers = store.sortTiddlers(tiddlers, options.sort);
+		}
+		if(options.filter) {
+			tiddlers = store.filterTiddlers(options.filter, tiddlers); // note currently not supported in core.
+		}
+		if(place) {
+			$(place).empty();
+			var list = $("<ul />").appendTo(place)[0];
+			scanMacro.template(list, tiddlers, options.template);
+			if(tiddlers.length === 0) {
+				$("<li />").text(locale.noone).appendTo(list);
+			}
+		}
+		if(options.callback) {
+			options.callback(tiddlers);
+		}
+	},
+	scan: function(place, options) {
+		var locale = followersMacro.locale;
+		options.template = options.template ? options.template : "ScanTemplate";
+		followMacro.getHosts(function(host, tsHost) {
+			var inputs = options.searchValues;
+			var tag = options.tag;
+			$(place).text(followersMacro.locale.pleaseWait);
+			options = options ? options: {};
+			options.filter = options.filter;
+			searchField = options.searchField || "title";
+			var searchQuery = [];
+			for(var i = 0; i < inputs.length; i++) {
+				searchQuery.push('%0:"%1"'.format([searchField, inputs[i]]));
+			}
+			var query = searchQuery.join(" OR ");
+			query = tag ? "(%0);select=tag:%1;".format([query, tag]) : query;
+			query = options.query ? "%0;%1;".format([query, options.query]) : query;
+			query = options.fat ? "%0&fat=y".format([query]) : query;
+
+			var url = '%0/search?q=%1'.format([host, query]);
+			if(options.cache && scanMacro.scanned[url]) {
+				var tiddlers = scanMacro.scanned[url].tiddlers;
+				scanMacro._scanCallback(place, tiddlers, options);
+			} else {
+				ajaxReq({
+					url: url,
+					dataType: "json",
+					beforeSend: followMacro.beforeSend,
+					success: function(tiddlers) {
+						scanMacro.scanned[url] = {
+							tiddlers: tiddlers
+						};
+						scanMacro._scanCallback(place, tiddlers, options);
+					},
+					error: function() {
+						$("<span />").text(locale.error).appendTo(place);
+					}
+				});
+			}
+		});
 	},
 	template: function(place, tiddlers, template) {
 		for(var i = 0; i < tiddlers.length; i++) {
@@ -367,7 +324,7 @@ var scanMacro = config.macros.tsScan = {
 			wikify(templateText, item, null, tiddler);
 		}
 	},
-	getOptions: function(paramString, tsHost) {
+	getOptions: function(paramString) {
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var tag = args.tag ? args.tag[0] : false;
 		var titles = args.title;
@@ -381,16 +338,17 @@ var scanMacro = config.macros.tsScan = {
 		var template = args.template ? args.template[0] : false;
 		var filter = args.filter ? args.filter[0] : false;
 		var query = args.query ? args.query[0] : false;
-		return { searchField: searchField, searchValues: searchValues, 
-			template: template, filter: filter,
-			host: tsHost, query: query, tag: tag, fat: fat, spaceField: spaceField };
+		var sort = args.sort ? args.sort[0] : false;
+		var showBags = args.showBag ? args.show : false;
+		var hideBags = args.hideBag ? args.hide : false;
+		return { searchField: searchField, searchValues: searchValues,
+			template: template, filter: filter, sort: sort, hideBags: hideBags, showBags: showBags,
+			query: query, tag: tag, fat: fat, spaceField: spaceField };
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var container = $("<div />").addClass("scanResults").appendTo(place)[0];
-		followMacro.getHosts(function(host, tsHost) {
-			var options = scanMacro.getOptions(paramString, tsHost);
-			scanMacro.scan(container, options);
-		});
+		var options = scanMacro.getOptions(paramString);
+		scanMacro.scan(container, options);
 	}
 };
 
@@ -412,14 +370,12 @@ var followersMacro = config.macros.followers = {
 			if(user.anon) {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
-				followMacro.getHosts(function(host, tsHost) {
-					var options = scanMacro.getOptions(paramString, tsHost);
-					$.extend(options, { searchValues: [user.name, "@%0".format([user.name])],
-						spaceField: "bag", tag: followMacro.followTag,
-						template: options.template ? options.template : "FollowersTemplate"
-					});
-					scanMacro.scan(container, options);
+				var options = scanMacro.getOptions(paramString);
+				$.extend(options, { searchValues: [user.name, "@%0".format([user.name])],
+					spaceField: "bag", tag: followMacro.followTag,
+					template: options.template ? options.template : "FollowersTemplate"
 				});
+				scanMacro.scan(container, options);
 			}
 		};
 		if(!username) {
@@ -449,14 +405,12 @@ var followingMacro = config.macros.following = {
 			if(user.anon) {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
-				followMacro.getHosts(function(host, tsHost) {
-					var options = scanMacro.getOptions(paramString, tsHost);
-					$.extend(options, { searchValues: ["%0_public".format([user.name])],
-						tag: followMacro.followTag, searchField: "bag", spaceField: "title",
-						template: options.template ? options.template : "FollowingTemplate"
-					});
-					scanMacro.scan(container, options);
+				var options = scanMacro.getOptions(paramString);
+				$.extend(options, { searchValues: ["%0_public".format([user.name])],
+					tag: followMacro.followTag, searchField: "bag", spaceField: "title",
+					template: options.template ? options.template : "FollowingTemplate"
 				});
+				scanMacro.scan(container, options);
 			}
 		};
 		if(!username) {
