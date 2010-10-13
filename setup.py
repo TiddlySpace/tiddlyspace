@@ -43,6 +43,7 @@ setup(
         'tiddlywebplugins.atom>=1.2.1',
         'tiddlywebplugins.mysql>=0.9.3',
         'tiddlywebplugins.sqlalchemy>=0.9.9',
+        'tidldywebplugins.lazy',
     ],
     include_package_data = True,
     zip_safe = False
