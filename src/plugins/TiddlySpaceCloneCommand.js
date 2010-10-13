@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceCloneCommand|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Description''|provides a toolbar command for cloning external tiddlers|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceCloneCommand.js|
@@ -11,7 +11,8 @@
 (function($) {
 
 var cmd = config.commands;
-var ns = config.extensions.tiddlyspace;
+var tiddlyspace = config.extensions.tiddlyspace;
+
 var fieldsCache = {};
 
 cmd.cloneTiddler = {
@@ -26,11 +27,11 @@ cmd.cloneTiddler = {
 		var bag = tiddler.fields["server.bag"];
 		if(readOnly) {
 			return false;
-		} else if(ns.coreBags.contains(bag)) {
+		} else if(tiddlyspace.coreBags.contains(bag)) {
 			return true;
 		} else {
-			var space = ns.determineSpace(tiddler, false);
-			return space && space.name != ns.currentSpace.name;
+			var space = tiddlyspace.determineSpace(tiddler, false);
+			return space && space.name != tiddlyspace.currentSpace.name;
 		}
 	},
 	handler: function(ev, src, title) {
@@ -38,13 +39,13 @@ cmd.cloneTiddler = {
 		if(tiddler) {
 			fieldsCache[title] = $.extend({}, tiddler.fields);
 			tiddler.fields["server.workspace"] = "bags/%0_private".
-				format([ns.currentSpace.name]);
+				format([tiddlyspace.currentSpace.name]);
 			tiddler.fields["server.permissions"] = "read, write, create"; // no delete
 			delete tiddler.fields["server.page.revision"];
 			delete tiddler.fields["server.title"];
 			delete tiddler.fields["server.etag"];
 			// special handling for pseudo-shadow tiddlers
-			if(tiddler.fields["server.bag"] == "tiddlyspace") {
+			if(tiddlyspace.coreBags.contains(tiddler.fields["server.bag"])) {
 				tiddler.tags.remove("excludeLists");
 			}
 		} else { // ensure workspace is the current space

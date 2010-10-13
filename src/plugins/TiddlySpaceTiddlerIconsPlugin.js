@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.8.0|
+|''Version''|0.8.1|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -41,12 +41,8 @@ var tiddlyspace = config.extensions.tiddlyspace;
 var tweb = config.extensions.tiddlyweb;
 var cmds = config.commands;
 var cmd = cmds.publishTiddler;
-tiddlyspace.renderAvatar = function(place, value, options) {
-	options = options ? options : {};
-	options.labelOptions = options.labelOptions ? options.labelOptions : { include: true };
-	options.imageOptions = options.imageOptions ? options.imageOptions : {};
+tiddlyspace.resolveSpaceName = function(value) {
 	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
-	var container = $('<div class="siteIcon" />').appendTo(place);
 	if(value) {
 		if(value.indexOf("@") === 0) {
 			value = value.substr(1);
@@ -58,6 +54,15 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 		}
 		value = value.toLowerCase();
 	}
+	return value;
+};
+
+tiddlyspace.renderAvatar = function(place, value, options) {
+	options = options ? options : {};
+	options.labelOptions = options.labelOptions ? options.labelOptions : { include: true };
+	options.imageOptions = options.imageOptions ? options.imageOptions : {};
+	var container = $('<div class="siteIcon" />').appendTo(place);
+	value = tiddlyspace.resolveSpaceName(value);
 
 	tweb.getStatus(function(status) {
 		var link, noLabel;
@@ -191,42 +196,6 @@ var originMacro = config.macros.tiddlerOrigin = {
 
 			tiddlyspace.renderAvatar(button, space, options);
 		}
-	},
-	areIdentical: function(tiddler1, tiddler2) {
-		var sameText = tiddler1.text == tiddler2.text;
-		var sameTags = true;
-		var tags1 = tiddler1.tags;
-		var tags2 = tiddler2.tags;
-		if(tags1.length != tags2.length) {
-			sameTags = false;
-		} else {
-			for(var i = 0; i < tags2.length; i++) {
-				if(!tags1.contains(tags2[i])) {
-					sameTags = false;
-				}
-			}
-		}
-		var fields1 = tiddler1.fields;
-		var fields2 = tiddler2.fields;
-		var allFields = fields1;
-		var field;
-		for(field in fields2) {
-			if(typeof(allFields[field]) == "undefined") {
-				allFields[field] = false;
-			}
-		}
-		var sameFields = true;
-		var ignoreList = ["changecount", "doNotSave"];
-		for(field in allFields) {
-			if(field.indexOf("server.") !== 0 && !ignoreList.contains(field)) { // ignore server fields
-				if(!fields2[field]) {
-					sameFields = false;
-				} else if(fields2[field] != fields1[field]) {
-					sameFields = false;
-				}
-			}
-		}
-		return sameText && sameTags &&  sameFields;
 	},
 	showPrivacyRoundel: function(thisTiddler, privacyType, button, options) {
 		// there is a public tiddler as well as the current tiddler!

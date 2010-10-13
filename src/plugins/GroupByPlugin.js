@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.5.4|
+|''Version''|0.5.5|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
@@ -23,12 +23,13 @@ will group tiddlers tagged with film by modifier.
 ***/
 //{{{
 (function($) {
+var taglocale = config.views.wikified.tag;
 var macro = config.macros.groupBy = {
 	locale: {
 		tooltip: "all tiddlers in group %0",
 		noTiddlers: "no tiddlers",
-		openAllText: config.views.wikified.tag.openAllText,
-		openAllTooltip: config.views.wikified.tag.openAllTooltip,
+		openAllText: taglocale.openAllText,
+		openAllTooltip: taglocale.openAllTooltip,
 		openTiddler: "open tiddler with title %0"
 	},
 	morpher: {
@@ -69,15 +70,15 @@ var macro = config.macros.groupBy = {
 			return false;
 		}
 	},
-	refresh: function(place) {
-		var totalGroups = 0;
-		var container = $(place).empty();
+	refresh: function(container) {
+		var totalGroups = 0, locale = macro.locale;
+		var container = $(container).empty();
 		var paramString = container.attr("paramString");
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var excludeValues = args.exclude || [];
-		var values = {};
+		var values = {}, value_ids = [];
 		var options = { dateFormat: container.attr("dateFormat") };
-		var tiddlers = args.filter ? store.filterTiddlers(args.filter[0]) : store.getTiddlers();
+		var tiddlers = args.filter ? store.filterTiddlers(args.filter[0]) : store.getTiddlers("title");
 		var field = container.attr("fieldName");
 		var morpher = macro.morpher[field] || function(value) {
 			return value;
@@ -85,67 +86,60 @@ var macro = config.macros.groupBy = {
 		for(var i = 0; i < tiddlers.length; i++) {
 			var tiddler = tiddlers[i];
 			var value = tiddler[field] || tiddler.fields[field];
-			if(!macro.isTypeArray(value)) {
-				value = [ value ];
-			}
+			value = macro.isTypeArray(value) ? value : [ value ];
 			for(var j = 0; j < value.length; j++) {
-				var v = value[j];
-				v = v ? morpher(v, options) : v;
+				var v = morpher(value[j], options);
 				if(v && excludeValues.indexOf(v) == -1) {
 					totalGroups += 1;
 					if(!values[v]) {
 						values[v] = [];
 					}
 					values[v].push(tiddler);
+					value_ids.pushUnique(v);
 				}
 			}
 		}
-		var ul = createTiddlyElement(place, "ul");
+		var CTB = createTiddlyButton;
+		var CTL = createTiddlyLink;
+		var ul = $("<ul />").appendTo(container)[0];
 		if(totalGroups === 0) {
-			createTiddlyElement(ul, "li", null, "listTitle", this.locale.noTiddlers);
+			$("<li />").addClass("listTitle").text(locale.noTiddlers);
 		}
 		var onClickGroup = function(ev) {
 			var target = ev.target;
 			var tiddlers = $.data(target, "tiddlers");
-			var popup = Popup.create(this);
-			var lingo = macro.locale;
-			addClass(popup,"taggedTiddlerList");
-			if(tiddlers.length > 0) {
-				var value = $(target).attr("value");
-				var openAll = createTiddlyButton(createTiddlyElement(popup,"li"), lingo.openAllText.format([value]), lingo.openAllTooltip, function(ev) {
+			var popup = $(Popup.create(target)).addClass("taggedTiddlerList")[0];
+			var value = $(target).attr("value");
+			var openAll = CTB($("<li />").appendTo(popup)[0], 
+				locale.openAllText.format([value]), locale.openAllTooltip, 
+				function(ev) {
 					for(var i = 0; i < tiddlers.length; i++) {
 						story.displayTiddler(ev.target, tiddlers[i].title);
 					}
 				});
-				createTiddlyElement(createTiddlyElement(popup, "li", null, "listBreak"), "div");
-				for(i = 0; i < tiddlers.length; i++) {
-					var tiddler = tiddlers[i];
-					createTiddlyLink(createTiddlyElement(popup, "li"), tiddler.title, true);
-				}
-				createTiddlyElement(createTiddlyElement(popup, "li", null, "listBreak"), "div");
-				var h = createTiddlyLink(createTiddlyElement(popup, "li"), value, false);
-				createTiddlyText(h, lingo.openTiddler.format([value]));
-				Popup.show();
-				ev.stopPropagation();
-				return false;
+			var listBreak = $("<li />").addClass("listBreak").html("<div />").appendTo(popup);
+			for(var i = 0; i < tiddlers.length; i++) {
+				CTL($("<li />").appendTo(popup)[0], tiddlers[i].title, true);
 			}
+			listBreak.clone().appendTo(popup);
+			$(CTL($("<li />").appendTo(popup)[0], value, false)).
+				text(locale.openTiddler.format([value]));
+			Popup.show();
+			ev.stopPropagation();
+			return false;
 		};
-		for(var title in values) {
-			if(true) {
-				var info = getTiddlyLinkInfo(title);
-				var li = createTiddlyElement(ul, "li");
-				var btn = createTiddlyButton(li, "%0 (%1)".format([title, values[title].length]),this.locale.tooltip.format([title]), null, info.classes);
-				$(btn).click(onClickGroup);
-				$.data(btn, "tiddlers", values[title]);
-				$(btn).attr("value", title).attr("refresh", "link").attr("tiddlyLink", title);
-			}
+		value_ids = value_ids.sort();
+		for(var i = 0; i < value_ids.length; i++) {
+			var title = value_ids[i];
+			var info = getTiddlyLinkInfo(title);
+			var tiddlers = values[title];
+			var btn = CTB($("<li />").appendTo(ul)[0], 
+				"%0 (%1)".format([title, tiddlers.length]), locale.tooltip.format([title]), null, info.classes);
+			$(btn).click(onClickGroup).attr("value", title).attr("refresh", "link").attr("tiddlyLink", title);
+			$.data(btn, "tiddlers", tiddlers);
 		}
 	}
 };
-config.macros.allSpaces = {
-	handler: function(place) {
-		macro.handler(place, "groupBy", ["server.bag"]);
-	}
-};
+
 })(jQuery);
 //}}}

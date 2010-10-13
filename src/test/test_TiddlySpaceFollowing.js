@@ -1,6 +1,6 @@
 (function(module, $) {
 
-var _getTaggedTiddlers, _getUserInfo;
+var _getTaggedTiddlers, _getUserInfo, _binaryTiddlersPlugin;
 var taggedTiddlers = [];
 
 module("TiddlySpaceFollowing", {
@@ -13,12 +13,19 @@ module("TiddlySpaceFollowing", {
 		_getUserInfo = config.extensions.tiddlyweb.getUserInfo;
 		config.extensions.tiddlyweb.getUserInfo = function(callback) {
 			callback({ anon: true });
-		}
+		};
+		_binaryTiddlersPlugin = config.extensions.BinaryTiddlersPlugin;
+		config.extensions.BinaryTiddlersPlugin = {
+			endsWith: function(str, substr) {
+				
+			}
+		};
 	},
 	teardown: function() {
 		taggedTiddlers = [];
 		store.getTaggedTiddlers = _getTaggedTiddlers;
 		config.extensions.tiddlyweb.getUserInfo = _getUserInfo;
+		config.extensions.BinaryTiddlersPlugin = _binaryTiddlersPlugin;
 	}
 });
 

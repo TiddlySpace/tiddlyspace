@@ -21,6 +21,7 @@ config = {
 		tabs: {}
 	},
 	shadowTiddlers: {
+		TabMore: "",
 		ToolbarCommands: "|~ViewToolbar|closeTiddler closeOthers +editTiddler" +
 			" > fields syncing permalink references jump|\n" +
 			"|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|"

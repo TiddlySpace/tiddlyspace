@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.6.1|
+|''Version''|0.6.2|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -171,7 +171,7 @@ if(window.location.protocol != "file:") {
 		tweb.hasPermission("write", indicator));
 	// replace TiddlyWiki's ImportTiddlers due to cross-domain restrictions
 	if(config.macros.fileImport) {
-		config.macros.importTiddlers = config.macros.fileImport;
+		$.extend(config.macros.importTiddlers, config.macros.fileImport);
 	}
 }
 
