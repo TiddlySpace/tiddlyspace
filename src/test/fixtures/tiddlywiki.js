@@ -13,6 +13,11 @@ config = {
 			
 		}
 	},
+	views: {
+		wikified: {
+			tag: {}
+		}
+	},
 	macros: {
 		view: {
 			views: {}
@@ -130,5 +135,9 @@ String.prototype.format = function(substrings)
 		r.push(this.substring(currPos,this.length));
 	return r.join("");
 };
+
+createTiddlyButton = function() {};
+getTiddlyLinkInfo = function() {};
+createTiddlyLink = function() {};
 
 })();

@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.5.5|
+|''Version''|0.5.6|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
@@ -38,7 +38,9 @@ var macro = config.macros.groupBy = {
 			return macro.morpher["server.bag"](value.replace("bags/", "").replace("recipes/", ""));
 		},
 		"server.bag": function(value, options) {
-			if(value.indexOf("_public") == -1 && value.indexOf("_private") == -1) {
+			if(typeof(value) != "string") {
+				return false;
+			} else if(value.indexOf("_public") == -1 && value.indexOf("_private") == -1) {
 				value = "*%0".format([value]); // add star for non-space bags.
 			}
 			return value.replace("_public", "").replace("_private", "");
@@ -70,16 +72,11 @@ var macro = config.macros.groupBy = {
 			return false;
 		}
 	},
-	refresh: function(container) {
+	_refresh: function(container, tiddlers, options) {
 		var totalGroups = 0, locale = macro.locale;
-		var container = $(container).empty();
-		var paramString = container.attr("paramString");
-		var args = paramString.parseParams("name", null, true, false, true)[0];
-		var excludeValues = args.exclude || [];
+		var excludeValues = options.exclude;
 		var values = {}, value_ids = [];
-		var options = { dateFormat: container.attr("dateFormat") };
-		var tiddlers = args.filter ? store.filterTiddlers(args.filter[0]) : store.getTiddlers("title");
-		var field = container.attr("fieldName");
+		var field = options.field
 		var morpher = macro.morpher[field] || function(value) {
 			return value;
 		};
@@ -138,6 +135,14 @@ var macro = config.macros.groupBy = {
 			$(btn).click(onClickGroup).attr("value", title).attr("refresh", "link").attr("tiddlyLink", title);
 			$.data(btn, "tiddlers", tiddlers);
 		}
+	},
+	refresh: function(container) {
+		var container = $(container).empty();
+		var paramString = container.attr("paramString");
+		var args = paramString.parseParams("name", null, true, false, true)[0];
+		var options = { field: container.attr("fieldName"), dateFormat: container.attr("dateFormat"), exclude: args.exclude || [] };
+		var tiddlers = args.filter ? store.filterTiddlers(args.filter[0]) : store.getTiddlers("title");
+		macro._refresh(container, tiddlers, options);
 	}
 };
 
