@@ -22,6 +22,9 @@ config = {
 		view: {
 			views: {}
 		},
+		list: {
+			
+		},
 		search: {},
 		tabs: {}
 	},
