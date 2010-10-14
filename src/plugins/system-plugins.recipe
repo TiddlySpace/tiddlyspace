@@ -7,4 +7,4 @@ tiddler: TiddlySpaceRevisionView.js
 tiddler: TiddlySpaceTiddlerIconsPlugin.js
 tiddler: TiddlySpaceToolbar.js
 tiddler: ToggleTiddlerPrivacyPlugin.js
-tiddler: FilterFieldsListPlugin.js
+tiddler: TiddlySpaceListPlugin.js

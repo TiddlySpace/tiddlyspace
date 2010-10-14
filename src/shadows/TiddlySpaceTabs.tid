@@ -5,11 +5,10 @@ tags: excludeLists excludeSearch
 <<groupBy server.bag>>
 
 !Private
-Drafts:
-<<list filterfield server.bag $$_private publish.name>>
-All:
-<<list filterfield server.bag $$_private !publish.name>>
+<<tsList Private>>
 
 !Public
-All:
-<<list filterfield server.bag $$_public>>
+<<tsList Public>>
+
+!Drafts
+<<tsList Draft>>

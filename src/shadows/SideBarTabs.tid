@@ -7,6 +7,7 @@ modifier: osmosoft
 	"All" "All tiddlers" TabAll
 	"Public" "All public tiddlers" [[TiddlySpaceTabs##Public]]
 	"Private" "All private tiddlers" [[TiddlySpaceTabs##Private]]
+	"Drafts" "All draft tiddlers" [[TiddlySpaceTabs##Drafts]]
 	"Tags" "All tags" TabTags
 	"Spaces" "Tiddlers grouped by space" [[TiddlySpaceTabs##Spaces]]
 	"Missing" "Missing tiddlers" TabMoreMissing
