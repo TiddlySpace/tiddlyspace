@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.4|
+|''Version''|0.6.5|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -57,7 +57,8 @@ var plugin = config.extensions.TiddlySpaceInit = {
 	update: function(curVersion, flagTiddler) {
 		if(curVersion < 0.2) {
 			this.createAvatar();
-		} else if(curVersion < 0.3) {
+		}
+		if(curVersion < 0.3) {
 			flagTiddler.tags.pushUnique("excludePublisher");
 		}
 	},
