@@ -4,6 +4,7 @@ config.defaultCustomFields = {
 
 config.extensions.ServerSideSavingPlugin = {};
 
+config.adaptors = {};
 config.extensions.tiddlyweb = {
 	host: "",
 	status: {

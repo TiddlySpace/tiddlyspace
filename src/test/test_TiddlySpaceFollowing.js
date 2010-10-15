@@ -1,11 +1,21 @@
 (function(module, $) {
 
-var _getTaggedTiddlers, _getUserInfo, _binaryTiddlersPlugin;
+var _getTaggedTiddlers, _getUserInfo, _binaryTiddlersPlugin, _ajaxReq, _twebadaptor;
 var taggedTiddlers = [];
-scanMacro.init();
+config.macros.tsScan.init();
 module("TiddlySpaceFollowing", {
 	setup: function() {
 		taggedTiddlers = [];
+		_ajaxReq = ajaxReq;
+		ajaxReq = function(options) {
+			options.success([{title: "@bob"}, {title: "jon"}, {title: "@fnd"}]);
+		};
+		_twebadaptor = config.adaptors.tiddlyweb;
+		config.adaptors.tiddlyweb = {
+			toTiddler: function(json) {
+				return new Tiddler(json.title);
+			}
+		};
 		_getTaggedTiddlers = store.getTaggedTiddlers;
 		store.getTaggedTiddlers = function() {
 			return taggedTiddlers;
@@ -22,6 +32,8 @@ module("TiddlySpaceFollowing", {
 		};
 	},
 	teardown: function() {
+		ajaxReq = _ajaxReq;
+		config.adaptors.tiddlyweb = _twebadaptor;
 		taggedTiddlers = [];
 		store.getTaggedTiddlers = _getTaggedTiddlers;
 		config.extensions.tiddlyweb.getUserInfo = _getUserInfo;
@@ -42,23 +54,16 @@ test("_getFollowerBags", function() {
 	same(actual[2].length, 0);
 });
 
-test("getFollowers (local version)", function() {
+test("getFollowers", function() {
 	var followMacro = config.macros.followTiddlers;
 	var passedTest = false;
 	var callback = function(list) {
 		if(list.length == 3) {
-			passedTest = true;
+			if(list.contains("jon") && list.contains("bob")) {
+				passedTest = true;
+			}
 		}
 	};
-	var tiddler = new Tiddler("jon");
-	tiddler.tags = [followMacro.followTag];
-	taggedTiddlers.push(tiddler);
-	tiddler = new Tiddler("bob");
-	tiddler.tags = [followMacro.followTag];
-	taggedTiddlers.push(tiddler);
-	tiddler = new Tiddler("fnd");
-	tiddler.tags = [followMacro.followTag];
-	taggedTiddlers.push(tiddler);
 	followMacro.getFollowers(callback, "foo"); // where foo is the current space
 	strictEqual(passedTest, true);
 });

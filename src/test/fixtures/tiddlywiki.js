@@ -3,6 +3,7 @@
 var NOP = function() {};
 
 httpReq = NOP; // XXX: deprecated
+ajaxReq = NOP;
 
 readOnly = false;
 config = {
