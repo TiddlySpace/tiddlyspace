@@ -164,7 +164,8 @@ var macro = config.macros.binaryUpload ={
 	displayFile: function(place, title, workspace, tiddler) {
 		var adaptor = tiddler.getAdaptor();
 		var context = {
-			workspace: workspace
+			workspace: workspace,
+			host: config.defaultCustomFields['server.host']
 		};
 		adaptor.getTiddler(title, context, null, function(context) {
 			if(context.status) {

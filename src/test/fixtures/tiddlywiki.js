@@ -4,18 +4,21 @@ var NOP = function() {};
 
 httpReq = NOP; // XXX: deprecated
 backstage = {};
+ajaxReq = NOP;
+refreshStyles = NOP;
+autoSaveChanges = NOP;
+createTiddlyButton = NOP;
+getTiddlyLinkInfo = NOP;
+createTiddlyLink = NOP;
 readOnly = false;
+
 config = {
+	adaptors: {},
 	annotations: {},
 	extensions: {},
 	commands: {
 		deleteTiddler: {
 			
-		}
-	},
-	views: {
-		wikified: {
-			tag: {}
 		}
 	},
 	macros: {
@@ -35,11 +38,15 @@ config = {
 			" > fields syncing permalink references jump|\n" +
 			"|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|"
 	},
-	tasks: {}
+	tasks: {},
+	views: {
+		wikified: {
+			tag: {}
+		}
+	}
 };
 
 Story = function() {};
-
 Story.prototype = {
 	refreshTiddler: function() {
 		
@@ -79,16 +86,13 @@ TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 	tiddler.fields = fields;
 	this.addTiddler(tiddler);
 	return tiddler;
-}
+};
 TiddlyWiki.prototype.removeTiddler = function(title) {
 	delete this._tiddlers[title];
 };
 TiddlyWiki.prototype.addNotification = NOP;
 
 store = new TiddlyWiki();
-
-refreshStyles = NOP;
-autoSaveChanges = NOP;
 
 TiddlyWiki.prototype.isDirty = function() {
 	return this.dirty;
@@ -140,9 +144,5 @@ String.prototype.format = function(substrings)
 		r.push(this.substring(currPos,this.length));
 	return r.join("");
 };
-
-createTiddlyButton = function() {};
-getTiddlyLinkInfo = function() {};
-createTiddlyLink = function() {};
 
 })();
