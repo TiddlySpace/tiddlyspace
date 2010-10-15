@@ -166,12 +166,6 @@ a:hover .spaceName {
 	left: 0%;
 }
 
-#backstageToolbar .task_user span,
-#backstageToolbar .task_login span {
-	display: block;
-	float: left;
-}
-
 #backstageToolbar .task_user,
 #backstageToolbar .task_login {
 	display: block;
@@ -183,6 +177,11 @@ a:hover .spaceName {
 #backstageToolbar .task_login img {
 	position: relative;
 	display: inline;
+}
+
+#backstageToolbar .task_login img,
+#backstageToolbar .task_user img {
+	float: right;
 }
 
 #backstageToolbar .task_space .svgIcon {
@@ -201,7 +200,6 @@ a:hover .spaceName {
 
 a.backstageTask {
 	display: block;
-	height: 53px;
 }
 
 #backstageToolbar a span.txtUserName,
@@ -219,6 +217,10 @@ a.backstageTask {
 
 #backstage .deleteButton:hover {
 	background: none;
+}
+
+#backstageArea .siteIcon {
+	display: inline;
 }
 
 #backstagePanel .TiddlySpaceLogin {

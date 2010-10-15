@@ -3,7 +3,7 @@
 var NOP = function() {};
 
 httpReq = NOP; // XXX: deprecated
-
+backstage = {};
 readOnly = false;
 config = {
 	annotations: {},
@@ -25,12 +25,17 @@ config = {
 		search: {},
 		tabs: {}
 	},
+	messages: {
+		backstage: {}
+	},
+	options: {},
 	shadowTiddlers: {
 		TabMore: "",
 		ToolbarCommands: "|~ViewToolbar|closeTiddler closeOthers +editTiddler" +
 			" > fields syncing permalink references jump|\n" +
 			"|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|"
-	}
+	},
+	tasks: {}
 };
 
 Story = function() {};
