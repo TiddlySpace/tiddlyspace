@@ -3,6 +3,7 @@
 var _getTaggedTiddlers, _getUserInfo, _binaryTiddlersPlugin, _ajaxReq, _twebadaptor;
 var taggedTiddlers = [];
 config.macros.tsScan.init();
+
 module("TiddlySpaceFollowing", {
 	setup: function() {
 		taggedTiddlers = [];
@@ -40,7 +41,6 @@ module("TiddlySpaceFollowing", {
 		config.extensions.BinaryTiddlersPlugin = _binaryTiddlersPlugin;
 	}
 });
-
 
 test("_getFollowerBags", function() {
 	var followMacro = config.macros.followTiddlers;
@@ -91,4 +91,5 @@ test("tsScan.getOptions", function() {
 	var options = config.macros.tsScan.getOptions(paramString, "http://foo");
 	strictEqual(options.searchValues[0], "SiteInfo");
 });
+
 })(QUnit.module, jQuery);
