@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.6|
+|''Version''|0.5.7|
 |''Description''|Provides a TiddlySpace version of the backstage|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
@@ -61,6 +61,7 @@ if(readOnly) {
 
 var _init = backstage.init;
 var tasks = config.tasks;
+var commonUrl = "/bags/common/tiddlers/%0";
 
 backstage.tiddlyspace = {
 	userButton: function(backstageArea, user) {
@@ -81,14 +82,14 @@ backstage.tiddlyspace = {
 		var altText = $(showBtn).text();
 		$(showBtn).empty();
 		imageMacro.renderImage(showBtn, "backstage.svg",
-			{ alt: altText, width: 60, height: 60 });
+			{ altImage: commonUrl.format(["backstage.png"]), alt: altText, width: 60, height: 60 });
 	},
 	hideButton: function() {
 		var hideBtn = $("#backstageHide")[0];
 		altText = $(hideBtn).text();
 		$(hideBtn).empty();
 		imageMacro.renderImage(hideBtn, "close.svg",
-			{ alt: altText, width: 24, height: 24 });
+			{ altImage: commonUrl.format(["close.png"]), alt: altText, width: 24, height: 24 });
 	},
 	middleButton: function(backstageArea) {
 		var backstageToolbar = $("#backstageToolbar", backstageArea)[0];
@@ -116,7 +117,7 @@ backstage.tiddlyspace = {
 		if(user.anon) {
 			$("<span />").text(tasks.login.text).appendTo(loginBtn);
 			var container = $("<span />").appendTo(loginBtn)[0];
-			imageMacro.renderImage(container, "/bags/common/tiddlers/defaultUserIcon",
+			imageMacro.renderImage(container, commonUrl.format(["defaultUserIcon"]),
 				{ imageClass:"userSiteIcon", height: 24, width: 24 });
 		} else {
 			loginBtn.remove();
