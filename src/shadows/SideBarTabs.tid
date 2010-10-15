@@ -1,16 +1,4 @@
 tags: excludeSearch excludeLists excludeMissing
 modifier: osmosoft
 
-<<tabs 
-	txtMainTab 
-	"Recent" "Recently edited tiddlers" TabTimeline
-	"All" "All tiddlers" TabAll
-	"Public" "All public tiddlers" [[TiddlySpaceTabs##Public]]
-	"Private" "All private tiddlers" [[TiddlySpaceTabs##Private]]
-	"Drafts" "All draft tiddlers" [[TiddlySpaceTabs##Drafts]]
-	"Tags" "All tags" TabTags
-	"Spaces" "Tiddlers grouped by space" [[TiddlySpaceTabs##Spaces]]
-	"Missing" "Missing tiddlers" TabMoreMissing
-	"Orphans" "Orphaned tiddlers" TabMoreOrphans
-	"Shadows" "Shadowed tiddlers" TabMoreShadowed
->>
+<<tiddler Backstage##Tiddlers>>

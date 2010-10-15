@@ -17,6 +17,7 @@ tags: excludeLists excludeSearch excludeMissing
 	includes "include spaces" [[Backstage##SpaceInclusions]]
 	tiddlers "tiddlers control panel" [[Backstage##Tiddlers]]
 	plugins "Manage installed plugins" PluginManager
+	batch "Perform batch operations on public/private tiddlers" Backstage##BatchOps
 	options "TiddlyWiki options" [[Backstage##Options]]
 	tweaks "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions
 	"import" "Import tiddlers from a TiddlyWiki" [[Backstage##FileImport]]
@@ -54,7 +55,31 @@ The following people are members of the space ''<<message extensions.tiddlyspace
 <<TiddlySpaceMembers add>>
 
 !Tiddlers
-<<tabs txtMainTab "Timeline" "Timeline" TabTimeline "All" "All tiddlers" TabAll "Tags" "All tags" TabTags "More" "More lists" TabMore>>
+<<tabs 
+	txtMainTab 
+	"Recent" "Recently edited tiddlers" TabTimeline
+	"All" "All tiddlers" TabAll
+	"Public" "All public tiddlers" [[TiddlySpaceTabs##Public]]
+	"Private" "All private tiddlers" [[TiddlySpaceTabs##Private]]
+	"Tags" "All tags" TabTags
+	"Spaces" "Tiddlers grouped by space" [[TiddlySpaceTabs##Spaces]]
+	"Missing" "Missing tiddlers" TabMoreMissing
+	"Orphans" "Orphaned tiddlers" TabMoreOrphans
+	"Shadows" "Shadowed tiddlers" TabMoreShadowed
+>>
+
+!BatchOps
+<<tabs
+	txtPublisherTab
+	"Private" "Move tiddlers from private to public" Backstage##BatchPrivate
+	"Public" "Move tiddlers from public to private" Backstage##BatchPublic
+>>
+
+!BatchPrivate
+<<TiddlySpacePublisher type:private>>
+
+!BatchPublic
+<<TiddlySpacePublisher type:public>>
 
 !UserSpaces
 <<TiddlySpaceSpaces add>>
