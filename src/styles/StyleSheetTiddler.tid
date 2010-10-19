@@ -152,18 +152,16 @@ modifier: osmosoft
 	width: 16px;
 }
 
-.toolbar svg .glyph{
+.toolbar svg .glyph {
 	fill: #ccc;
 }
 
-.toolbar a:hover .glyph{
+.toolbar a:hover .glyph {
 	fill: black;
 }
 
-.toolbar a:active .glyph{
+.toolbar a:active .glyph {
 	fill: [[ColorPalette::Background]];
-	stroke: black;
-	stroke-width: 2px;
 }
 
 .originButton,
@@ -361,7 +359,7 @@ a.originButton:hover {
 .tiddler .privacySettings {
 	text-align: center;
 }
-.tiddler .privacySettings .originButton{
+.tiddler .privacySettings .originButton {
 	display: inline;
 }
 
@@ -494,12 +492,12 @@ div.toolbar {
 		visibility:visible;
 	}
 }
-@media only screen and (device-width: 768px){
+@media only screen and (device-width: 768px) {
 	div.toolbar {
 		visibility:visible;
 	}
 }
-@media all and (max-width: 960px){
+@media all and (max-width: 960px) {
 	.tiddler .titleBar {
 		margin-left: 36px;
 		margin-right: 80px;
