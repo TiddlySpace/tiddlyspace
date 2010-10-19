@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.6|
+|''Version''|0.3.7|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -98,7 +98,7 @@ var macro = config.macros.binaryUpload ={
 				$("input[name=title]", place).val(fileName);
 				var form = $(this);
 				// we need to go somewhere afterwards to ensure the onload event triggers
-				this.action = "%0?redirect=/tiddlers".format([baseURL, fileName]); // dont use jquery to work with ie
+				this.action = "%0?redirect=/%1/tiddlers.txt?select=title:%2".format([baseURL, uploadTo, fileName]); // dont use jquery to work with ie
 				/*$('<iframe name="%0" id="%0" />'.format([iframeName])).
 					css('display','none').appendTo(place);*/
 				$(place).append($('<iframe name="' + iframeName + '" id="' + iframeName + '"/>').css('display','none'));
@@ -175,6 +175,7 @@ var macro = config.macros.binaryUpload ={
 				if(image && image.refreshImage) {
 					image.refreshImage("/%0/tiddlers/%1".format([workspace, title]));
 					image.refreshImage(title);
+					image.refreshImage("/%0".format([title]));
 					image.refreshImage("%0/%1/tiddlers/%2".format([config.extensions.tiddlyweb.host, workspace, title]));
 				}
 			} else {
