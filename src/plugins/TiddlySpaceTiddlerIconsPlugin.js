@@ -61,6 +61,7 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 	options = options ? options : {};
 	options.labelOptions = options.labelOptions ? options.labelOptions : { include: true };
 	options.imageOptions = options.imageOptions ? options.imageOptions : {};
+	options.imageOptions.altImage = "/bags/common/tiddlers/defaultUserIcon";
 	var container = $('<div class="siteIcon" />').appendTo(place);
 	value = tiddlyspace.resolveSpaceName(value);
 

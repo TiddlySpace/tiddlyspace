@@ -3,13 +3,13 @@
 var NOP = function() {};
 
 httpReq = NOP; // XXX: deprecated
+backstage = {};
 ajaxReq = NOP;
 refreshStyles = NOP;
 autoSaveChanges = NOP;
 createTiddlyButton = NOP;
 getTiddlyLinkInfo = NOP;
 createTiddlyLink = NOP;
-
 readOnly = false;
 
 config = {
@@ -28,12 +28,17 @@ config = {
 		search: {},
 		tabs: {}
 	},
+	messages: {
+		backstage: {}
+	},
+	options: {},
 	shadowTiddlers: {
 		TabMore: "",
 		ToolbarCommands: "|~ViewToolbar|closeTiddler closeOthers +editTiddler" +
 			" > fields syncing permalink references jump|\n" +
 			"|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|"
 	},
+	tasks: {},
 	views: {
 		wikified: {
 			tag: {}
