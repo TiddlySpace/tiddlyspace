@@ -461,6 +461,7 @@ body ul { margin: 0; }
 }
 
 div.tiddler .toolbar a {
+	cursor: pointer;
 	float: left\9;
 	display: inline\9;
 }
