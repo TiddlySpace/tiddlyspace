@@ -37,6 +37,8 @@ module("TiddlySpaceTiddlerIcons", {
 					return true;
 				} else if(str == "bob-is-the-man_private" && isPrivate) {
 					return true;
+				} else if(str == "bob_public" && isPublic) {
+					return true;
 				} else {
 					return false;
 				}
@@ -72,12 +74,17 @@ test("resolveSpaceName", function() {
 	var name4 = tiddlyspace.resolveSpaceName("bob-is-the-man_private");
 	var name5 = tiddlyspace.resolveSpaceName("bob");
 	var name6 = tiddlyspace.resolveSpaceName("BeNgIlLiEs");
+	var name7 = tiddlyspace.resolveSpaceName("bags/bob_public");
+	var name8 = tiddlyspace.resolveSpaceName("recipes/bob_public");
+	
 	strictEqual(name, "jon");
 	strictEqual(name2, "jon");
 	strictEqual(name3, "jon");
 	strictEqual(name4, "bob-is-the-man");
 	strictEqual(name5, "bob");
 	strictEqual(name6, "bengillies");
+	strictEqual(name7, "bob");
+	strictEqual(name8, "bob");
 });
 
 test("render avatar", function() {
