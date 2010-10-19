@@ -76,7 +76,7 @@ test("activation", function() { // NB: assertions should be identical to firstRu
 	strictEqual(log.avatar, true);
 	strictEqual(log.autoSave.length, 2); // ColorPalette and SiteIcon handled separately
 	var flagTiddler = store.getTiddler("fooSetupFlag");
-	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.3");
+	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.4");
 });
 
 test("firstRun", function() { // NB: assertions should be identical to activation test's
@@ -95,7 +95,7 @@ test("firstRun", function() { // NB: assertions should be identical to activatio
 	strictEqual(log.avatar, true);
 	strictEqual(log.autoSave.length, 2); // ColorPalette and SiteIcon handled separately
 	var flagTiddler = store.getTiddler("fooSetupFlag");
-	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.3");
+	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.4");
 	strictEqual(flagTiddler.tags.indexOf("excludePublisher") > -1, true);
 });
 
@@ -118,7 +118,7 @@ test("update from v0.1", function() {
 	strictEqual(log.palette, undefined);
 	strictEqual(log.avatar, true);
 	var flagTiddler = store.getTiddler("fooSetupFlag");
-	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.3");
+	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.4");
 });
 
 test("update from v0.2", function() {
@@ -152,7 +152,13 @@ test("update from v0.2", function() {
 	var flagTiddler = store.getTiddler("fooSetupFlag");
 
 	strictEqual(flagTiddler.tags.contains("excludePublisher"), true);
-	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.3");
+	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.4");
+});
+
+test("setupMarkupPreHead", function() {
+	plugin.setupMarkupPreHead();
+	var prehead = store.getTiddler("MarkupPreHead");
+	strictEqual(prehead.fields["server.workspace"], "bags/foo_public");
 });
 
 })(QUnit.module, jQuery);
