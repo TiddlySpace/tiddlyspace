@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.7.9|
+|''Version''|0.8.0|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -399,9 +399,5 @@ var macro = config.macros.TiddlySpacePublisher = {
 	}
 };
 
-var unpublishedTabText = 'Unpublished "Manage unpublished tiddlers" TabUnpublished';
-config.shadowTiddlers.TabMore = config.shadowTiddlers.TabMore.replace(
-	"TabMoreShadowed", "TabMoreShadowed %0".format([unpublishedTabText]));
-config.shadowTiddlers.TabUnpublished = "<<TiddlySpacePublisher>>";
 })(jQuery);
 //}}}
