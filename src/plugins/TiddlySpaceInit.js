@@ -68,6 +68,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			prehead.fields["server.workspace"] = pubWorkspace;
 			prehead.text = markupPreHead.format([currentSpace.name]);
 			prehead.fields["server.page.revision"] = "false";
+			prehead.tags = ["excludeLists"];
 			prehead = store.saveTiddler(prehead);
 			autoSaveChanges(null, [prehead]);
 		}
