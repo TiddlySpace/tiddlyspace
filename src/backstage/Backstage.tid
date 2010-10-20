@@ -13,18 +13,23 @@ tags: excludeLists excludeSearch excludeMissing
 
 !Space
 <<tabs txtSpaceTab
-	members Members [[Backstage##SpaceMembers]]
-	includes "include spaces" [[Backstage##SpaceInclusions]]
-	tiddlers "tiddlers control panel" [[Backstage##Tiddlers]]
+	members Members Backstage##SpaceMembers
+	includes "include spaces" Backstage##SpaceInclusions
+	tiddlers "tiddlers control panel" Backstage##Tiddlers
 	plugins "Manage installed plugins" PluginManager
 	batch "Perform batch operations on public/private tiddlers" Backstage##BatchOps
-	options "TiddlyWiki options" [[Backstage##Options]]
+	options "TiddlyWiki options" Backstage##Options
 	tweaks "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions
-	"import" "Import tiddlers from a TiddlyWiki" [[Backstage##FileImport]]
+	import "Import tiddlers from a TiddlyWiki" Backstage##FileImport
+	export "Export this TiddlySpace for offline use" Backstage##Export
 >>
 
 !FileImport
 <<fileImport>>
+
+!Export
+You can download this TiddlySpace as an offline TiddlyWiki:
+{{chunkyButton{<<exportSpace>>}}}
 
 !Identities
 You can associate your account with multiple identities. If you have an open id for example you could log into TiddlySpace with that as well as a TiddlySpace user account.
