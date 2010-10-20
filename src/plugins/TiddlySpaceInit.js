@@ -11,7 +11,7 @@
 !MarkupPreHead
 <!--{{{-->
 <link rel="shortcut icon" href="/recipes/%0_public/tiddlers/favicon.ico" />
-<link href="/bags/%0_public/tiddlers.atom" rel="alternate" type="application/rss+xml" title="%0\'s public feed"/>
+<link href="/bags/%0_public/tiddlers.atom?select=tag:!excludeLists" rel="alternate" type="application/rss+xml" title="%0\'s public feed"/>
 <!--}}}-->
 !Code
 ***/
