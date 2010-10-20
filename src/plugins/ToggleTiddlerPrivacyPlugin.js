@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.6.3|
+|''Version''|0.6.4|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
@@ -20,7 +20,6 @@ Allows you to set the default privacy value (Default is private)
 (function($) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
-
 var macro = config.macros.setPrivacy = {
 	default_state: "private",
 
@@ -43,7 +42,22 @@ var macro = config.macros.setPrivacy = {
 			this.createRoundel(container, tiddler, currentSpace, defaultValue, options);
 		}
 	},
-
+	updateEditFields: function(tiddlerEl, bag) {
+		var saveBagField = $("[edit=server.bag]", tiddlerEl);
+		var saveWorkspaceField = $("[edit=server.workspace]", tiddlerEl);
+		var input = $("<input />").attr("type", "hidden");
+		if(saveBagField.length === 0) {
+			input.clone().attr("edit", "server.bag").val(bag).appendTo(tiddlerEl);
+		} else {
+			saveBagField.val(bag);
+		}
+		var workspace = "bags/%0".format([bag]);
+		if(saveWorkspaceField.length === 0) {
+			input.clone().attr("edit", "server.workspace").val(workspace).appendTo(tiddlerEl);
+		} else {
+			saveWorkspaceField.val(workspace);
+		}
+	},
 	setBag: function(tiddlerEl, newBag, options) {
 		var title = $(tiddlerEl).attr("tiddler");
 		var tiddler = store.getTiddler(title);
@@ -55,16 +69,7 @@ var macro = config.macros.setPrivacy = {
 				originMacro.showPrivacyRoundel(tiddler, type, originButton, options);
 			}
 		};
-
-		var saveBagField = $("[edit=server.bag]", tiddlerEl);
-		if(saveBagField.length === 0) {
-			story.addCustomFields(tiddlerEl, "server.bag: %0".format([newBag]));
-		} else {
-			saveBagField.val(newBag);
-		}
-		var saveWorkspaceField = $("[edit=server.workspace]", tiddlerEl);
-		var newWorkspace = "bags/%0".format([newBag]);
-		saveWorkspaceField.val(newWorkspace);
+		macro.updateEditFields(tiddlerEl, newBag);
 		if(tiddler) {
 			tiddler.fields["server.bag"] = newBag;
 			tiddler.fields["server.workspace"] = newWorkspace; // for external tiddlers
