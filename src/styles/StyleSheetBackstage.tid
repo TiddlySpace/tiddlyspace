@@ -10,30 +10,29 @@ modifier: osmosoft
 	color: #E2C1D6;
 }
 
-#backstageLogo {
-	margin: 1px auto auto -200px;
+#backstageArea #backstageToolbar a.task_tiddlyspace {
+	margin: 0px auto auto -75px;
 	font-weight: bold;
-	width: 200px;
+	width: 150px;
 	line-height:24px;
 	font-size: 1.2em;
 	padding: 0;
-	text-align: center;
 	top: 0;
 	position: absolute;
 	left: 50%;
 }
 
-#backstageLogo .image,
-#backstageLogo .svgIcon {
+.task_tiddlyspace .image,
+.task_tiddlyspace .svgIcon {
 	margin-top: -2px;
 	display: inline;
 }
 
-#backstageLogo .svgIconText {
+.task_tiddlyspace .svgIconText {
 	display: none;
 }
 
-#backstageLogo .logoText {
+.task_tiddlyspace .logoText {
 	position: absolute;
 	top: 0px;
 	margin-left: 5px;
@@ -310,5 +309,9 @@ a.backstageTask {
 	clear: both;
 	display: block;
 	margin-top: 3em;
+}
+
+.tiddlyspaceMenu {
+	text-align: center;
 }
 /*}}}*/

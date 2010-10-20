@@ -1,7 +1,7 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.7|
-|''Description''|Provides a TiddlySpace version of the backstage|
+|''Version''|0.5.8|
+|''Description''|Provides a TiddlySpace version of the backstage and a homeLink macro|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin|
@@ -37,7 +37,14 @@ config.tasks.space = {
 	content: "<<tiddler Backstage##Space>>",
 	className: "right"
 };
-config.backstageTasks = ["login", "user", "space"];
+
+config.tasks.tiddlyspace = {
+	text: "",
+	tooltip: "",
+	content: "<<tiddler Backstage##Menu>>"
+}
+
+config.backstageTasks = ["login", "tiddlyspace", "user", "space"];
 
 config.messages.backstage.prompt = "";
 // initialize state
@@ -65,6 +72,11 @@ var tasks = config.tasks;
 var commonUrl = "/bags/common/tiddlers/%0";
 
 backstage.tiddlyspace = {
+	locale: {
+		member: "You are a member of this space.",
+		nonmember: "You are a non-member of this space.",
+		loggedout: "You are currently logged out of TiddlySpace."
+	},
 	userButton: function(backstageArea, user) {
 		// override user button (logged in) to show username
 		var userBtn = $("[task=user]", backstageArea).empty();
@@ -93,11 +105,20 @@ backstage.tiddlyspace = {
 			{ altImage: commonUrl.format(["close.png"]), alt: altText, width: 24, height: 24 });
 	},
 	middleButton: function(backstageArea) {
+		var locale = backstage.tiddlyspace.locale;
 		var backstageToolbar = $("#backstageToolbar", backstageArea)[0];
-		var backstageLogo = $('<div id="backstageLogo" />').
-			prependTo(backstageToolbar)[0];
+		var backstageLogo = $("#[task=tiddlyspace]").empty()[0];
 		var iconName = readOnly ? "publicIcon" : "privateAndPublicIcon";
+		var space = tiddlyspace.currentSpace.name;
+		tweb.getUserInfo(function(user) {
+			if(!user.anon) {
+				config.messages.memberStatus = readOnly ? locale.nonmember : locale.member;
+			} else {
+				config.messages.memberStatus = locale.loggedout;
+			}
+		});
 		imageMacro.renderImage(backstageLogo, iconName, { width: 24, height: 24 });
+		$(".image", backstageLogo);
 		// construct the tiddlyspace logo
 		$('<span class="logoText"><span class="privateLightText">tiddly</span>' +
 				'<span class="publicLightText">space</span></span>').
@@ -147,5 +168,19 @@ backstage.init = function() {
 		tiddlyspace_b.addClasses(backstageArea); ///for IE styling purposes
 	});
 };
+
+var home = config.macros.homeLink = {
+	locale: {
+		linkText: "your home"
+	},
+	handler: function(place) {
+		var container = $("<span />").appendTo(place)[0];
+		tweb.getUserInfo(function(user) {
+			if(!user.anon && user.name != tiddlyspace.currentSpace.name) {
+				createSpaceLink(container, user.name, null, home.locale.linkText);
+			}
+		});
+	}
+}
 })(jQuery);
 //}}}
