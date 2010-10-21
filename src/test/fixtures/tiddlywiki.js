@@ -126,8 +126,9 @@ Array.prototype.pushUnique = function(item,unique)
 	}
 };
 
-String.prototype.format = function(substrings)
+String.prototype.format = function(s)
 {
+	var substrings = s && s.constructor == Array ? s : arguments;
 	var subRegExp = /(?:%(\d+))/mg;
 	var currPos = 0;
 	var r = [];
