@@ -37,6 +37,7 @@ If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default 
 .followTiddlersList li .externalImage, .followTiddlersList li .image {
 	display: inline;
 }
+
 .scanResults li {
 	list-style: none;
 }
@@ -57,8 +58,10 @@ shadows.FollowTiddlersHeading = "There are tiddlers in spaces you follow using t
 shadows.FollowTiddlersTemplate = ["* <<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> ",
 	"<<view server.bag spaceLink title external:no>> modified by <<view modifier spaceLink>> ",
 	"in the <<view server.bag spaceLink>> space.\n"].join("");
+
 var name = "StyleSheetFollowing";
-config.shadowTiddlers[name] = store.getTiddlerText(tiddler.title + "##StyleSheet");
+shadows[name] = "/*{{{*/\n%0\n/*}}}*/".
+	format(store.getTiddlerText(tiddler.title + "##StyleSheet"));
 store.addNotification(name, refreshStyles);
 
 // provide support for sucking in tiddlers from the server
