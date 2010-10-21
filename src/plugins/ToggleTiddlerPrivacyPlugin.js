@@ -70,6 +70,7 @@ var macro = config.macros.setPrivacy = {
 			}
 		};
 		macro.updateEditFields(tiddlerEl, newBag);
+		var newWorkspace = "bags/%0".format([newBag]);
 		if(tiddler) {
 			tiddler.fields["server.bag"] = newBag;
 			tiddler.fields["server.workspace"] = newWorkspace; // for external tiddlers

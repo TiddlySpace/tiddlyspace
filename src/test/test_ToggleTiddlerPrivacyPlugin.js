@@ -63,8 +63,8 @@ test("updateEditFields (custom fields already exist)", function() {
 	$("<input />").attr("edit", "server.workspace").appendTo(el);
 	macro.updateEditFields(el[0], "bar");
 
-	var ws = $("[edit=server.workspace]");
-	var b = $("[edit=server.bag]");
+	var ws = $("[edit=server.workspace]", el);
+	var b = $("[edit=server.bag]", el);
 	strictEqual(b.length, 1);
 	strictEqual(ws.length, 1);
 	strictEqual(b.val(), "bar");
@@ -76,8 +76,8 @@ test("updateEditFields", function() {
 	var el = $("<div />");
 	macro.updateEditFields(el[0], "bar");
 
-	var ws = $("[edit=server.workspace]");
-	var b = $("[edit=server.bag]");
+	var ws = $("[edit=server.workspace]", el);
+	var b = $("[edit=server.bag]", el);
 	strictEqual(b.length, 1);
 	strictEqual(ws.length, 1);
 	strictEqual(b.val(), "bar");
