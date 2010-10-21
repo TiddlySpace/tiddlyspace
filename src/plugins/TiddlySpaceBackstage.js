@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.7|
+|''Version''|0.5.8|
 |''Description''|Provides a TiddlySpace version of the backstage|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
@@ -146,6 +146,15 @@ backstage.init = function() {
 		tiddlyspace_b.loginButton(backstageArea, user);
 		tiddlyspace_b.addClasses(backstageArea); ///for IE styling purposes
 	});
+};
+
+config.macros.exportSpace = {
+	handler: function(place, macroName, params) {
+		var filename = params[0] || 
+			"/?download=%0.html".format([tiddlyspace.currentSpace.name]);
+		$("<a />").addClass("button").text("download").
+			attr("href", filename).appendTo(place);
+	}
 };
 })(jQuery);
 //}}}
