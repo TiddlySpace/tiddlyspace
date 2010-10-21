@@ -352,6 +352,7 @@ class DropPrivs(object):
             space_recipe = store.get(Recipe(recipe_name))
             template = control.recipe_template(environ)
             recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
+            recipe_bags.append('%s_archive' % space_name)
             if environ['REQUEST_METHOD'] == 'GET':
                 if container_name in recipe_bags:
                     return
@@ -359,9 +360,11 @@ class DropPrivs(object):
                     return
             else:
                 base_bags = ['%s_public' % space_name,
-                        '%s_private' % space_name]
+                        '%s_private' % space_name,
+                        '%s_archive' % space_name]
                 acceptable_bags = [bag for bag in recipe_bags if not (
-                    bag.endswith('_public') or bag.endswith('_private'))]
+                    bag.endswith('_public') or bag.endswith('_private')
+                    or bag.endswith('_archive'))]
                 acceptable_bags.extend(base_bags)
                 acceptable_bags.extend(ADMIN_BAGS)  # XXX this leaves a big hole
                 if container_name in acceptable_bags:
@@ -438,7 +441,7 @@ class ControlView(object):
                 raise HTTP404('No recipe for space: %s', exc)
 
             template = control.recipe_template(environ)
-            bags = []
+            bags = ['%s_archive' % space_name]
             subscriptions = []
             for bag, _ in recipe.get_recipe(template):
                 bags.append(bag)
