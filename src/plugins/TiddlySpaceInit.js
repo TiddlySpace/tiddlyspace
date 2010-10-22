@@ -11,7 +11,8 @@
 !MarkupPreHead
 <!--{{{-->
 <link rel="shortcut icon" href="/recipes/%0_public/tiddlers/favicon.ico" />
-<link href="/bags/%0_public/tiddlers.atom?select=tag:!excludeLists" rel="alternate" type="application/rss+xml" title="%0\'s public feed"/>
+<link href="/bags/%0_public/tiddlers.atom?select=tag:!excludeLists"
+	rel="alternate" type="application/atom+xml" title="%0's public feed" />
 <!--}}}-->
 !Code
 ***/
@@ -19,7 +20,7 @@
 (function($) {
 
 var versionField = "tiddlyspaceinit_version";
-var markupPreHead = store.getTiddlerText(tiddler.title + "##MarkupPreHead") || "";
+var markupPreHead = store.getTiddlerText(tiddler.title + "##MarkupPreHead", "");
 var currentSpace = config.extensions.tiddlyspace.currentSpace;
 
 var plugin = config.extensions.TiddlySpaceInit = {
@@ -60,15 +61,15 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		autoSaveChanges(null, tiddlers);
 	},
 	setupMarkupPreHead: function() {
-		var pubWorkspace = plugin.getPublicWorkspace();
+		var pubWorkspace = this.getPublicWorkspace();
 		var existing = store.getTiddler("MarkupPreHead");
 		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
 			var prehead = new Tiddler("MarkupPreHead");
+			prehead.text = markupPreHead.format(currentSpace.name);
+			prehead.tags = ["excludeLists"];
 			prehead.fields = $.extend({}, config.defaultCustomFields);
 			prehead.fields["server.workspace"] = pubWorkspace;
-			prehead.text = markupPreHead.format([currentSpace.name]);
 			prehead.fields["server.page.revision"] = "false";
-			prehead.tags = ["excludeLists"];
 			prehead = store.saveTiddler(prehead);
 			autoSaveChanges(null, [prehead]);
 		}
@@ -86,7 +87,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 	},
 	firstRun: function() {
 		var tiddlers = [];
-		var pubWorkspace = plugin.getPublicWorkspace();
+		var pubWorkspace = this.getPublicWorkspace();
 		// generate Site*itle
 		$.each(["SiteTitle", "SiteSubtitle"], function(i, item) {
 			var tid = new Tiddler(item);
@@ -110,11 +111,10 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		return tiddlers;
 	},
 	getPublicWorkspace: function() {
-		return "bags/%0".format([plugin.getPublicBag()]);
+		return "bags/%0".format(this.getPublicBag());
 	},
 	getPublicBag: function() {
-		var pubBag = currentSpace.name + "_public";
-		return pubBag;
+		return currentSpace.name + "_public";
 	},
 	createAvatar: function() {
 		var avatar = "SiteIcon";
@@ -126,7 +126,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			// TODO: resolve!?
 		};
 
-		var pubBag = plugin.getPublicBag();
+		var pubBag = this.getPublicBag();
 		var tid = new tiddlyweb.Tiddler(avatar);
 		tid.bag = new tiddlyweb.Bag(pubBag, host);
 
