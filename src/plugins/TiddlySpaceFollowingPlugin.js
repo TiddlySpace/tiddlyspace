@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.6|
+|''Version''|0.6.7|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -54,6 +54,7 @@ config.annotations.ScanTemplate = "This tiddler is a template used in the displa
 shadows.ScanTemplate = "<<view modifier SiteIcon width:24 height:24 spaceLink:yes label:no>> <<view title link>>";
 shadows.FollowersTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> @$1";
 shadows.FollowingTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> @$1";
+shadows.FollowTiddlersBlackList = "";
 shadows.FollowTiddlersHeading = "There are tiddlers in spaces you follow using the follow tag which use the title <<view title text>>";
 shadows.FollowTiddlersTemplate = ["* <<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> ",
 	"<<view server.bag spaceLink title external:no>> modified by <<view modifier spaceLink>> ",
@@ -151,22 +152,28 @@ var followMacro = config.macros.followTiddlers = {
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
+		var blacklisted = store.getTiddlerText("FollowTiddlersBlackList").split("\n");
 		var btn = $('<div class="followButton" />').appendTo(place)[0];
-		var options = {};
-		var user = params[1] || false; // allows a user to use the macro on another username
-		this.getFollowers(function(followers) {
-			if(!followers) {
-				$(btn).remove();
-			} else {
-				scanMacro.scan(null, { searchFields: "title", searchValues: [title],
-					spaceField: "bag", template: null, sort: "-modified",
-					showBags: followMacro._getFollowerBags(followers), hideBags: [tiddler.fields["server.bag"]],
-					callback: function(tiddlers) {
-						followMacro.constructInterface(btn, tiddlers);
-					}
-				});
-			}
-		}, user);
+		if(blacklisted.contains(title)) {
+			$(btn).remove();
+			return;
+		} else {
+			var options = {};
+			var user = params[1] || false; // allows a user to use the macro on another username
+			this.getFollowers(function(followers) {
+				if(!followers) {
+					$(btn).remove();
+				} else {
+					scanMacro.scan(null, { searchFields: "title", searchValues: [title],
+						spaceField: "bag", template: null, sort: "-modified",
+						showBags: followMacro._getFollowerBags(followers), hideBags: [tiddler.fields["server.bag"]],
+						callback: function(tiddlers) {
+							followMacro.constructInterface(btn, tiddlers);
+						}
+					});
+				}
+			}, user);
+		}
 	},
 	constructInterface: function(container, tiddlers) {
 		var txt = tiddlers.length;
