@@ -23,8 +23,6 @@ from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
 
-import tiddlywebplugins.status
-
 
 CORE_BAGS = ['system', 'common', 'tiddlyspace',
         'system-info_public', 'system-plugins_public', 'system-theme_public',
@@ -290,25 +288,6 @@ def _send_safe_mode(environ, start_response):
 <p><a href='/'>Return to my Space.</a></p>
 </div></div>
 """]
-
-
-original_gather_data = tiddlywebplugins.status._gather_data
-
-
-def _status_gather_data(environ):
-    data = original_gather_data(environ)
-    data['server_host'] = environ['tiddlyweb.config']['server_host']
-    # ensure user is known
-    usersign = environ['tiddlyweb.usersign']['name']
-    store = environ['tiddlyweb.store']
-    try:
-        store.get(User(usersign))
-    except NoUserError:
-        data['username'] = 'GUEST'
-    return data
-
-
-tiddlywebplugins.status._gather_data = _status_gather_data
 
 
 class DropPrivs(object):

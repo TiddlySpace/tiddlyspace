@@ -10,6 +10,8 @@ from tiddlyweb.web.extractor import UserExtract
 from tiddlyweb.web.http import HTTPExceptor
 from tiddlyweb.manage import make_command
 from tiddlyweb.util import merge_config
+from tiddlyweb.model.user import User
+from tiddlyweb.store import NoUserError
 
 from tiddlywebplugins.utils import replace_handler, get_store
 
@@ -23,6 +25,9 @@ from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
+
+import tiddlywebplugins.status
+
 
 __version__ = '0.9.33'
 
@@ -139,3 +144,23 @@ def init(config):
                 'text/html; charset=UTF-8']
         config['serializers']['text/html'] = new_serializer
         config['serializers']['default'] = new_serializer
+
+
+original_gather_data = tiddlywebplugins.status._gather_data
+
+
+def _status_gather_data(environ):
+    data = original_gather_data(environ)
+    data['server_host'] = environ['tiddlyweb.config']['server_host']
+    data['tiddlyspace.version'] = __version__
+    # ensure user is known
+    usersign = environ['tiddlyweb.usersign']['name']
+    store = environ['tiddlyweb.store']
+    try:
+        store.get(User(usersign))
+    except NoUserError:
+        data['username'] = 'GUEST'
+    return data
+
+
+tiddlywebplugins.status._gather_data = _status_gather_data
