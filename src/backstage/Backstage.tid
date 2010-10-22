@@ -13,12 +13,12 @@ tags: excludeLists excludeSearch excludeMissing
 
 !Menu
 {{tiddlyspaceMenu{
-<<homeLink>>
 <<message messages.memberStatus>>
-[[help|@@docs]] [[blog|@@blog]] [[featured|@@featured]]
+
+<<homeLink>> [[help|@@docs]] [[blog|@@blog]] [[featured|@@featured]]
 
 ----
-TiddlySpace@glossary
+running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddlyspace_version>>
 }}}
 
 !Space
