@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.5|
+|''Version''|0.6.6|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -37,6 +37,7 @@ If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default 
 .followTiddlersList li .externalImage, .followTiddlersList li .image {
 	display: inline;
 }
+
 .scanResults li {
 	list-style: none;
 }
@@ -57,38 +58,40 @@ shadows.FollowTiddlersHeading = "There are tiddlers in spaces you follow using t
 shadows.FollowTiddlersTemplate = ["* <<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> ",
 	"<<view server.bag spaceLink title external:no>> modified by <<view modifier spaceLink>> ",
 	"in the <<view server.bag spaceLink>> space.\n"].join("");
+
 var name = "StyleSheetFollowing";
-config.shadowTiddlers[name] = store.getTiddlerText(tiddler.title + "##StyleSheet");
+shadows[name] = "/*{{{*/\n%0\n/*}}}*/".
+	format(store.getTiddlerText(tiddler.title + "##StyleSheet"));
 store.addNotification(name, refreshStyles);
 
 // provide support for sucking in tiddlers from the server
 tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
+	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
 	var adaptor = store.getTiddlers()[0].getAdaptor();
+	var isPublic = endsWith(workspace, "_public");
+	var space = tiddlyspace.resolveSpaceName(workspace);
+	if(tiddlyspace.currentSpace.name == space) {
+		space = isPublic ? "public" : "private";
+	} else {
+		space = "@%0".format([space]);
+	}
+	var localTitle = "%0 [%1]".format([title, space]);
+	var tiddler = new Tiddler(localTitle);
+	tiddler.text = "Please wait while this tiddler is retrieved...";
+	tiddler.fields.doNotSave = "true";
+	store.addTiddler(tiddler);
+	story.displayTiddler(src || null, tiddler.title);
 	tweb.getStatus(function(status) {
 		var context = {
 			host: tweb.host, // TODO: inherit from source tiddler?
 			workspace: workspace,
 			headers: { "X-ControlView": "false" }
 		};
-		var isPublic = workspace.indexOf("_public") > -1;
-		var space = workspace.substr(workspace.indexOf("/") + 1).
-			replace("_public", "").replace("_private", "");
-		if(tiddlyspace.currentSpace.name == space) {
-			space = isPublic ? "public" : "private";
-		} else {
-			space = "@%0".format([space]);
-		}
 		var getCallback = function(context, userParams) {
 			var tiddler = context.tiddler;
-			tiddler.fields.doNotSave = "true";
-			tiddler.title = "%0 [%1]".format([title, space]);
-			store.addTiddler(tiddler); // overriding existing allows updating
-
-			var el = story.displayTiddler(src || null, tiddler.title);
-			var refresh = story.getTiddler(tiddler.title);
-			if(refresh) {
-				story.refreshTiddler(tiddler.title, null, true);
-			}
+			tiddler.title = localTitle;
+			store.addTiddler(tiddler);
+			story.refreshTiddler(localTitle, null, true); // overriding existing allows updating
 			if(callback) {
 				tiddlyspace.displayReplyButton(el, tiddler);
 				callback(el, tiddler);

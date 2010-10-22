@@ -314,4 +314,36 @@ a.backstageTask {
 .tiddlyspaceMenu {
 	text-align: center;
 }
+
+span.chunkyButton {
+	display: block;
+	padding: 0;
+	margin: 0;
+	border: solid 2px #000;
+}
+
+span.chunkyButton a.button, span.chunkyButton a:active.button {
+	white-space: nowrap;
+	font-weight: bold;
+	font-size: 1.8em;
+	color: #fff;
+	background-color: #04b;
+	text-align: center;
+	padding: 1em 3em;
+	margin: 0;
+	border-style: none;
+	border-top: solid 1px #fff;
+	display: block;
+}
+
+.chunkyButton {
+	width: 18em;
+}
+
+span.chunkyButton a.button:hover {
+	background-color: #014;
+	border-style: none;
+	color: #fff;
+	border-top: solid 1px #8cf;
+}
 /*}}}*/

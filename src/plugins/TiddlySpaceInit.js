@@ -8,17 +8,23 @@
 |''Requires''|TiddlySpaceConfig RandomColorPalettePlugin chrjs ImageMacroPlugin|
 !TODO
 * robust error notification and recovery
+!MarkupPreHead
+<!--{{{-->
+<link rel="shortcut icon" href="/recipes/%0_public/tiddlers/favicon.ico" />
+<link href="/bags/%0_public/tiddlers.atom?select=tag:!excludeLists"
+	rel="alternate" type="application/atom+xml" title="%0's public feed" />
+<!--}}}-->
 !Code
 ***/
 //{{{
 (function($) {
 
 var versionField = "tiddlyspaceinit_version";
-
+var markupPreHead = store.getTiddlerText(tiddler.title + "##MarkupPreHead", "");
 var currentSpace = config.extensions.tiddlyspace.currentSpace;
 
 var plugin = config.extensions.TiddlySpaceInit = {
-	version: "0.3",
+	version: "0.4",
 	SiteTitle: "%0",
 	SiteSubtitle: "a TiddlySpace",
 	flagTitle: "%0SetupFlag",
@@ -54,6 +60,20 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		}
 		autoSaveChanges(null, tiddlers);
 	},
+	setupMarkupPreHead: function() {
+		var pubWorkspace = this.getPublicWorkspace();
+		var existing = store.getTiddler("MarkupPreHead");
+		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
+			var prehead = new Tiddler("MarkupPreHead");
+			prehead.text = markupPreHead.format(currentSpace.name);
+			prehead.tags = ["excludeLists"];
+			prehead.fields = $.extend({}, config.defaultCustomFields);
+			prehead.fields["server.workspace"] = pubWorkspace;
+			prehead.fields["server.page.revision"] = "false";
+			prehead = store.saveTiddler(prehead);
+			autoSaveChanges(null, [prehead]);
+		}
+	},
 	update: function(curVersion, flagTiddler) {
 		if(curVersion < 0.2) {
 			this.createAvatar();
@@ -61,10 +81,13 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		if(curVersion < 0.3) {
 			flagTiddler.tags.pushUnique("excludePublisher");
 		}
+		if(curVersion < 0.4) {
+			this.setupMarkupPreHead();
+		}
 	},
 	firstRun: function() {
 		var tiddlers = [];
-		var pubWorkspace = "bags/%0_public".format([currentSpace.name]);
+		var pubWorkspace = this.getPublicWorkspace();
 		// generate Site*itle
 		$.each(["SiteTitle", "SiteSubtitle"], function(i, item) {
 			var tid = new Tiddler(item);
@@ -84,7 +107,14 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		config.defaultCustomFields[wfield] = workspace;
 		// generate avatar
 		this.createAvatar();
+		this.setupMarkupPreHead();
 		return tiddlers;
+	},
+	getPublicWorkspace: function() {
+		return "bags/%0".format(this.getPublicBag());
+	},
+	getPublicBag: function() {
+		return currentSpace.name + "_public";
 	},
 	createAvatar: function() {
 		var avatar = "SiteIcon";
@@ -96,7 +126,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			// TODO: resolve!?
 		};
 
-		var pubBag = currentSpace.name + "_public";
+		var pubBag = this.getPublicBag();
 		var tid = new tiddlyweb.Tiddler(avatar);
 		tid.bag = new tiddlyweb.Bag(pubBag, host);
 

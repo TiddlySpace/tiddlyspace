@@ -70,9 +70,9 @@ TiddlyWiki.prototype.getTiddler = function(title) {
 TiddlyWiki.prototype.addTiddler = function(tiddler) {
 	this._tiddlers[tiddler.title] = tiddler;
 };
-TiddlyWiki.prototype.getTiddlerText = function(title) {
+TiddlyWiki.prototype.getTiddlerText = function(title, defaultText) {
 	var tiddler = this._tiddlers[title];
-	return tiddler ? tiddler.text : null;
+	return tiddler ? tiddler.text : defaultText;
 };
 TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 		modified, tags, fields, clearChangeCount, created, creator) {
@@ -126,8 +126,9 @@ Array.prototype.pushUnique = function(item,unique)
 	}
 };
 
-String.prototype.format = function(substrings)
+String.prototype.format = function(s)
 {
+	var substrings = s && s.constructor == Array ? s : arguments;
 	var subRegExp = /(?:%(\d+))/mg;
 	var currPos = 0;
 	var r = [];

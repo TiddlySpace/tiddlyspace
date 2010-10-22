@@ -56,6 +56,34 @@ test("setBag", function() {
 	strictEqual(radioPublic.attr("checked"), false);
 });
 
+test("updateEditFields (custom fields already exist)", function() {
+	var macro = config.macros.setPrivacy;
+	var el = $("<div />");
+	$("<input />").attr("edit", "server.bag").appendTo(el);
+	$("<input />").attr("edit", "server.workspace").appendTo(el);
+	macro.updateEditFields(el[0], "bar");
+
+	var ws = $("[edit=server.workspace]", el);
+	var b = $("[edit=server.bag]", el);
+	strictEqual(b.length, 1);
+	strictEqual(ws.length, 1);
+	strictEqual(b.val(), "bar");
+	strictEqual(ws.val(), "bags/bar");
+});
+
+test("updateEditFields", function() {
+	var macro = config.macros.setPrivacy;
+	var el = $("<div />");
+	macro.updateEditFields(el[0], "bar");
+
+	var ws = $("[edit=server.workspace]", el);
+	var b = $("[edit=server.bag]", el);
+	strictEqual(b.length, 1);
+	strictEqual(ws.length, 1);
+	strictEqual(b.val(), "bar");
+	strictEqual(ws.val(), "bags/bar");
+});
+
 var _readOnly;
 module("ToggleTiddlerPrivacy plugin", {
 	setup: function() {

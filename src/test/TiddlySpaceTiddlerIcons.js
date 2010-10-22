@@ -2,7 +2,11 @@
 
 var _renderImage, _Popup, _binaryTiddlersPlugin, _getArguments;
 var mockRenderImage = function(place, src, options) {
-	$("<span />").addClass("imageStub").text(src).appendTo(place);
+	options = options ? options : {};
+	var link = options.link || "";
+	var tiddlyLink = options.tiddlyLink || "";
+	$("<span />").addClass("imageStub").text(src).attr("link", link).
+		attr("tiddlyLink", tiddlyLink).appendTo(place);
 };
 
 module("TiddlySpaceTiddlerIcons", {
@@ -36,6 +40,8 @@ module("TiddlySpaceTiddlerIcons", {
 				} else if(str == "jon_private" && isPrivate) {
 					return true;
 				} else if(str == "bob-is-the-man_private" && isPrivate) {
+					return true;
+				} else if(str == "bob_public" && isPublic) {
 					return true;
 				} else {
 					return false;
@@ -72,20 +78,25 @@ test("resolveSpaceName", function() {
 	var name4 = tiddlyspace.resolveSpaceName("bob-is-the-man_private");
 	var name5 = tiddlyspace.resolveSpaceName("bob");
 	var name6 = tiddlyspace.resolveSpaceName("BeNgIlLiEs");
+	var name7 = tiddlyspace.resolveSpaceName("bags/bob_public");
+	var name8 = tiddlyspace.resolveSpaceName("recipes/bob_public");
+	
 	strictEqual(name, "jon");
 	strictEqual(name2, "jon");
 	strictEqual(name3, "jon");
 	strictEqual(name4, "bob-is-the-man");
 	strictEqual(name5, "bob");
 	strictEqual(name6, "bengillies");
+	strictEqual(name7, "bob");
+	strictEqual(name8, "bob");
 });
 
 test("render avatar", function() {
 	var tiddlyspace = config.extensions.tiddlyspace;
 	var place = $("<div />");
 	
-	tiddlyspace.renderAvatar(place, "jon", { labelOptions: { include: false, prefix: "hello " } });
-	tiddlyspace.renderAvatar(place, "@foo");
+	tiddlyspace.renderAvatar(place, "jon", { spaceLink: true, labelOptions: { include: false, prefix: "hello " } });
+	tiddlyspace.renderAvatar(place, "@foo", { spaceLink: true });
 	tiddlyspace.renderAvatar(place, "bar_public", { 
 		labelOptions: { include: true, prefix: "from space ", suffix: " !!"} 
 	});
@@ -96,7 +107,9 @@ test("render avatar", function() {
 	var res = $(".imageStub", place);
 	strictEqual(res.length, 6); // last one didnt render
 	strictEqual($(res[0]).text(), "http://jon.tiddlyspace.com/bags/jon_public/tiddlers/SiteIcon");
+	strictEqual($(res[0]).attr("link"), "http://jon.tiddlyspace.com");
 	strictEqual($(res[1]).text(), "http://foo.tiddlyspace.com/bags/foo_public/tiddlers/SiteIcon");
+	strictEqual($(res[1]).attr("link"), "");
 	strictEqual($(res[2]).text(), "http://bar.tiddlyspace.com/bags/bar_public/tiddlers/SiteIcon");
 	strictEqual($(res[3]).text(), "http://dog.tiddlyspace.com/bags/dog_public/tiddlers/SiteIcon");
 	strictEqual($(res[4]).text(), "http://carrot.tiddlyspace.com/bags/carrot_public/tiddlers/SiteIcon");

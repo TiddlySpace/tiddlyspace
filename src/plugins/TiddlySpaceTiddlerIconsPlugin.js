@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.8.1|
+|''Version''|0.8.3|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -44,6 +44,8 @@ var cmd = cmds.publishTiddler;
 tiddlyspace.resolveSpaceName = function(value) {
 	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
 	if(value) {
+		value = value.indexOf("bags/") === 0 ? value.substr(5) : value;
+		value = value.indexOf("recipes/") === 0 ? value.substr(8) : value;
 		if(value.indexOf("@") === 0) {
 			value = value.substr(1);
 		}
@@ -74,9 +76,14 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 				noLabel = true;
 			}
 		} else {
-			var spaceURI = options.notSpace ? tiddlyspace.getHost(status.server_host) : 
-				tiddlyspace.getHost(status.server_host, value);
-			link = $("<a />").attr("href", spaceURI).text(value);
+			var spaceURI;
+			if(value != tiddlyspace.currentSpace.name) {
+				spaceURI = options.notSpace ? tiddlyspace.getHost(status.server_host) : 
+					tiddlyspace.getHost(status.server_host, value);
+			}
+			link = spaceURI ? $("<a />").attr("href", spaceURI) : $("<span />");
+			link.text(value);
+
 			var imageOptions = options.imageOptions;
 			if(options.spaceLink && !imageOptions.link) {
 				imageOptions.link = spaceURI;

@@ -86,7 +86,7 @@ backstage.tiddlyspace = {
 			$("<span />").text(tasks.user.text).appendTo(userBtn);
 			$("<span />").addClass("txtUserName").text(user.name).appendTo(userBtn);
 			var container = $("<span />").appendTo(userBtn)[0];
-			tiddlyspace.renderAvatar(container, user.name, { imageOptions: { imageClass:"userSiteIcon", height: 24, width: 24 }, 
+			tiddlyspace.renderAvatar(container, user.name, { imageOptions: { imageClass:"userSiteIcon", height: 24, width: 24 },
 				labelOptions: { include: false } });
 		}
 	},
@@ -129,7 +129,7 @@ backstage.tiddlyspace = {
 		var spaceName = tiddlyspace.currentSpace.name;
 		var btn = $("[task=space]", backstageArea);
 		btn.empty();
-		tiddlyspace.renderAvatar(btn[0], spaceName, { imageOptions: { imageClass:"spaceSiteIcon", height: 24, width: 24 }, 
+		tiddlyspace.renderAvatar(btn[0], spaceName, { imageOptions: { imageClass:"spaceSiteIcon", height: 24, width: 24 },
 			labelOptions: { include: false } });
 		$("<span />").text(tasks.space.text).appendTo(btn);
 		$("<span />").addClass("spaceName").text(spaceName).appendTo(btn);
@@ -165,7 +165,7 @@ backstage.init = function() {
 		tiddlyspace_b.middleButton(backstageArea);
 		tiddlyspace_b.spaceButton(backstageArea);
 		tiddlyspace_b.loginButton(backstageArea, user);
-		tiddlyspace_b.addClasses(backstageArea); ///for IE styling purposes
+		tiddlyspace_b.addClasses(backstageArea); // for IE styling purposes
 	});
 };
 
@@ -182,5 +182,15 @@ var home = config.macros.homeLink = {
 		});
 	}
 }
+
+config.macros.exportSpace = {
+	handler: function(place, macroName, params) {
+		var filename = params[0] ||
+			"/?download=%0.html".format([tiddlyspace.currentSpace.name]);
+		$('<a class="button">download</a>'). // XXX: i18n
+			attr("href", filename).appendTo(place);
+	}
+};
+
 })(jQuery);
 //}}}
