@@ -152,7 +152,7 @@ original_gather_data = tiddlywebplugins.status._gather_data
 def _status_gather_data(environ):
     data = original_gather_data(environ)
     data['server_host'] = environ['tiddlyweb.config']['server_host']
-    data['tiddlyspace.version'] = __version__
+    data['tiddlyspace_version'] = __version__
     # ensure user is known
     usersign = environ['tiddlyweb.usersign']['name']
     store = environ['tiddlyweb.store']
