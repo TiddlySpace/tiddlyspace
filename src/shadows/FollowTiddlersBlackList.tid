@@ -1,0 +1,18 @@
+tags: excludeLists excludeSearch excludeMissing
+modifier: osmosoft
+
+ColorPalette
+StyleSheet
+SiteSubtitle
+GettingStarted
+SiteTitle
+MainMenu
+SiteIcon
+DefaultTiddlers
+ViewTemplate
+PageTemplate
+SideBarOptions
+EditTemplate
+SiteInfo
+SideBarTabs
+ToolbarCommands

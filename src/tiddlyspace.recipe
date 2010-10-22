@@ -13,3 +13,4 @@ tiddler: icons/privateNotPublicIcon.tid
 tiddler: styles/StyleSheetBackstage.tid
 tiddler: shadows/MarkupPreHead.tid
 tiddler: shadows/ToolbarCommands.tid
+tiddler: shadows/FollowTiddlersBlackList.tid
