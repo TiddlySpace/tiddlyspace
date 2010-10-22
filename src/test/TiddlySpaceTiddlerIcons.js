@@ -2,7 +2,11 @@
 
 var _renderImage, _Popup, _binaryTiddlersPlugin, _getArguments;
 var mockRenderImage = function(place, src, options) {
-	$("<span />").addClass("imageStub").text(src).appendTo(place);
+	options = options ? options : {};
+	var link = options.link || "";
+	var tiddlyLink = options.tiddlyLink || "";
+	$("<span />").addClass("imageStub").text(src).attr("link", link).
+		attr("tiddlyLink", tiddlyLink).appendTo(place);
 };
 
 module("TiddlySpaceTiddlerIcons", {
@@ -91,8 +95,8 @@ test("render avatar", function() {
 	var tiddlyspace = config.extensions.tiddlyspace;
 	var place = $("<div />");
 	
-	tiddlyspace.renderAvatar(place, "jon", { labelOptions: { include: false, prefix: "hello " } });
-	tiddlyspace.renderAvatar(place, "@foo");
+	tiddlyspace.renderAvatar(place, "jon", { spaceLink: true, labelOptions: { include: false, prefix: "hello " } });
+	tiddlyspace.renderAvatar(place, "@foo", { spaceLink: true });
 	tiddlyspace.renderAvatar(place, "bar_public", { 
 		labelOptions: { include: true, prefix: "from space ", suffix: " !!"} 
 	});
@@ -103,7 +107,9 @@ test("render avatar", function() {
 	var res = $(".imageStub", place);
 	strictEqual(res.length, 6); // last one didnt render
 	strictEqual($(res[0]).text(), "http://jon.tiddlyspace.com/bags/jon_public/tiddlers/SiteIcon");
+	strictEqual($(res[0]).attr("link"), "http://jon.tiddlyspace.com");
 	strictEqual($(res[1]).text(), "http://foo.tiddlyspace.com/bags/foo_public/tiddlers/SiteIcon");
+	strictEqual($(res[1]).attr("link"), "");
 	strictEqual($(res[2]).text(), "http://bar.tiddlyspace.com/bags/bar_public/tiddlers/SiteIcon");
 	strictEqual($(res[3]).text(), "http://dog.tiddlyspace.com/bags/dog_public/tiddlers/SiteIcon");
 	strictEqual($(res[4]).text(), "http://carrot.tiddlyspace.com/bags/carrot_public/tiddlers/SiteIcon");
