@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.8|
+|''Version''|0.5.9|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink macro|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
@@ -70,6 +70,9 @@ if(readOnly) {
 var _init = backstage.init;
 var tasks = config.tasks;
 var commonUrl = "/bags/common/tiddlers/%0";
+
+// mock out renderAvatar if unavailable -- XXX: temporary hotfix, not a permanent solution!
+tiddlyspace.renderAvatar = tiddlyspace.renderAvatar || function() {};
 
 backstage.tiddlyspace = {
 	locale: {
