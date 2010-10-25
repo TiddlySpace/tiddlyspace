@@ -346,4 +346,16 @@ span.chunkyButton a.button:hover {
 	color: #fff;
 	border-top: solid 1px #8cf;
 }
-/*}}}*/
+
+a.baskstageTask.task_login,
+a.baskstageTask.task_user {
+	width: 200px;
+	text-align: right;
+}
+
+#backstageArea #backstageToolbar .task_login img,
+#backstageArea #backstageToolbar .task_user img {
+	_display: inline;
+	_float: none;
+}
+/*}}}*/	
