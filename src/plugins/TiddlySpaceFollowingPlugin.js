@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.7|
+|''Version''|0.6.8|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -94,8 +94,8 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 			store.addTiddler(tiddler);
 			story.refreshTiddler(localTitle, null, true); // overriding existing allows updating
 			if(callback) {
-				tiddlyspace.displayReplyButton(el, tiddler);
-				callback(el, tiddler);
+				tiddlyspace.displayReplyButton(src, tiddler);
+				callback(src, tiddler);
 			}
 		};
 		adaptor.getTiddler(title, context, null, getCallback);
