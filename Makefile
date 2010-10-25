@@ -7,7 +7,6 @@ wrap_jslib = curl -s $(2) | \
 	} > $(1)
 
 test:
-	src/test/run.sh
 	py.test -x test
 
 remotes: jslib
@@ -30,16 +29,6 @@ qunit:
 		http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js
 	curl -o src/test/lib/jquery-json.js \
 		http://jquery-json.googlecode.com/files/jquery.json-2.2.js
-
-kopfloss: qunit
-	git clone git://github.com/FND/kopfloss.git src/test/kopfloss || true
-	{ \
-		cd src/test/kopfloss; \
-		pwd || true; \
-		git pull origin master; \
-		ln -s ../../qunit/qunit.js lib/qunit.js; \
-		cd -; \
-	}
 
 dist: clean remotes test
 	python setup.py sdist
