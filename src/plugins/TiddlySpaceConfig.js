@@ -162,6 +162,7 @@ tweb.serverPrefix = tweb.host.split("/")[3] || ""; // XXX: assumes root handler
 tweb.getStatus(function(status) {
 	var url = plugin.getHost(status.server_host);
 	tweb.status.server_host.url = url;
+	config.messages.tsVersion = status.version;
 });
 
 if(window.location.protocol != "file:") {

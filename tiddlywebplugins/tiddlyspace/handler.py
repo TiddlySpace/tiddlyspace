@@ -23,8 +23,6 @@ from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
 
-import tiddlywebplugins.status
-
 
 CORE_BAGS = ['system', 'common', 'tiddlyspace',
         'system-info_public', 'system-plugins_public', 'system-theme_public',
@@ -292,25 +290,6 @@ def _send_safe_mode(environ, start_response):
 """]
 
 
-original_gather_data = tiddlywebplugins.status._gather_data
-
-
-def _status_gather_data(environ):
-    data = original_gather_data(environ)
-    data['server_host'] = environ['tiddlyweb.config']['server_host']
-    # ensure user is known
-    usersign = environ['tiddlyweb.usersign']['name']
-    store = environ['tiddlyweb.store']
-    try:
-        store.get(User(usersign))
-    except NoUserError:
-        data['username'] = 'GUEST'
-    return data
-
-
-tiddlywebplugins.status._gather_data = _status_gather_data
-
-
 class DropPrivs(object):
     """
     If the incoming request is addressed to some entity not in the
@@ -352,6 +331,7 @@ class DropPrivs(object):
             space_recipe = store.get(Recipe(recipe_name))
             template = control.recipe_template(environ)
             recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
+            recipe_bags.append('%s_archive' % space_name)
             if environ['REQUEST_METHOD'] == 'GET':
                 if container_name in recipe_bags:
                     return
@@ -359,9 +339,11 @@ class DropPrivs(object):
                     return
             else:
                 base_bags = ['%s_public' % space_name,
-                        '%s_private' % space_name]
+                        '%s_private' % space_name,
+                        '%s_archive' % space_name]
                 acceptable_bags = [bag for bag in recipe_bags if not (
-                    bag.endswith('_public') or bag.endswith('_private'))]
+                    bag.endswith('_public') or bag.endswith('_private')
+                    or bag.endswith('_archive'))]
                 acceptable_bags.extend(base_bags)
                 acceptable_bags.extend(ADMIN_BAGS)  # XXX this leaves a big hole
                 if container_name in acceptable_bags:
@@ -438,7 +420,7 @@ class ControlView(object):
                 raise HTTP404('No recipe for space: %s', exc)
 
             template = control.recipe_template(environ)
-            bags = []
+            bags = ['%s_archive' % space_name]
             subscriptions = []
             for bag, _ in recipe.get_recipe(template):
                 bags.append(bag)

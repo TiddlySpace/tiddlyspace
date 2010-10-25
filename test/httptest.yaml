@@ -4,6 +4,7 @@
   expected:
   - server_host
   - scheme
+  - tiddlyspace_version
 
 # Create a user
 - name: Create one user

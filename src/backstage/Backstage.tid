@@ -11,6 +11,16 @@ tags: excludeLists excludeSearch excludeMissing
 >>
 }}}
 
+!Menu
+{{tiddlyspaceMenu{
+<<message messages.memberStatus>>
+
+<<homeLink>> [[help|@@docs]] [[blog|@@blog]] [[featured|@@featured]]
+
+----
+running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddlyspace_version>>
+}}}
+
 !Space
 <<tabs txtSpaceTab
 	members Members Backstage##SpaceMembers

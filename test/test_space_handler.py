@@ -164,6 +164,15 @@ def test_create_space():
     assert bag.policy.create == ['cdent']
     assert bag.policy.delete == ['cdent']
 
+    bag = store.get(Bag('extra_archive'))
+    assert bag.policy.owner == 'cdent'
+    assert bag.policy.read == ['cdent']
+    assert bag.policy.accept == ['NONE']
+    assert bag.policy.manage == ['cdent']
+    assert bag.policy.write == ['cdent']
+    assert bag.policy.create == ['cdent']
+    assert bag.policy.delete == ['cdent']
+
     recipe = store.get(Recipe('extra_public'))
     assert recipe.policy.owner == 'cdent'
     assert recipe.policy.read == []
@@ -277,6 +286,15 @@ def test_add_a_member():
     assert bag.policy.create == ['cdent', 'fnd']
     assert bag.policy.delete == ['cdent', 'fnd']
 
+    bag = store.get(Bag('extra_archive'))
+    assert bag.policy.owner == 'cdent'
+    assert bag.policy.read == ['cdent', 'fnd']
+    assert bag.policy.accept == ['NONE']
+    assert bag.policy.manage == ['cdent', 'fnd']
+    assert bag.policy.write == ['cdent', 'fnd']
+    assert bag.policy.create == ['cdent', 'fnd']
+    assert bag.policy.delete == ['cdent', 'fnd']
+
     bag = store.get(Bag('extra_public'))
     assert bag.policy.owner == 'cdent'
     assert bag.policy.read == []
@@ -339,6 +357,14 @@ def test_delete_member():
     assert bag.policy.create == ['cdent']
     assert bag.policy.delete == ['cdent']
 
+    bag = store.get(Bag('extra_archive'))
+    assert bag.policy.owner == 'cdent'
+    assert bag.policy.read == ['cdent']
+    assert bag.policy.accept == ['NONE']
+    assert bag.policy.manage == ['cdent']
+    assert bag.policy.write == ['cdent']
+    assert bag.policy.create == ['cdent']
+    assert bag.policy.delete == ['cdent']
 
 def test_subscription():
     cookie = get_auth('cdent', 'cow')

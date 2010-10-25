@@ -74,8 +74,10 @@ def change_space_member(store, space_name, add=None, remove=None,
     """
     public_name = '%s_public' % space_name
     private_name = '%s_private' % space_name
+    archive_name = '%s_archive' % space_name
     public_bag = store.get(Bag(public_name))
     private_bag = store.get(Bag(private_name))
+    archive_bag = store.get(Bag(archive_name))
     public_recipe = store.get(Recipe(public_name))
     private_recipe = store.get(Recipe(private_name))
 
@@ -88,7 +90,8 @@ def change_space_member(store, space_name, add=None, remove=None,
     if add:
         store.get(User(add))
 
-    for entity in [public_bag, private_bag, public_recipe, private_recipe]:
+    for entity in [public_bag, private_bag, archive_bag, public_recipe,
+            private_recipe]:
         new_policy = _update_policy(entity.policy, add=add, subtract=remove)
         entity.policy = new_policy
         store.put(entity)
@@ -355,11 +358,14 @@ def _make_space(environ, space_name):
     # can make this much more declarative
 
     private_bag = Bag('%s_private' % space_name)
+    archive_bag = Bag('%s_archive' % space_name)
     public_bag = Bag('%s_public' % space_name)
     private_bag.policy = _make_policy(member)
+    archive_bag.policy = _make_policy(member)
     public_bag.policy = _make_policy(member)
     public_bag.policy.read = []
     store.put(private_bag)
+    store.put(archive_bag)
     store.put(public_bag)
 
     public_recipe = Recipe('%s_public' % space_name)
