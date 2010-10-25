@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.7|
+|''Version''|0.3.8|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -31,7 +31,8 @@ var macro = config.macros.binaryUpload ={
 		tagsPrefix: "tags: ",
 		loadSuccess: 'Tiddler %0 successfully uploaded',
 		loadError: "An error occurred when uploading the tiddler %0",
-		uploadInProgress: "Please wait while the file is uploaded..."
+		uploadInProgress: "Please wait while the file is uploaded...",
+		membersOnly: "Only members can upload."
 	},
 	createUploadForm: function(place, tiddler, options) {
 		var bag = options.bag;
@@ -39,6 +40,10 @@ var macro = config.macros.binaryUpload ={
 		var defaults = config.defaultCustomFields;
 		var locale = macro.locale;
 		place = $('<div class="container" />').appendTo(place)[0];
+		if(readOnly) {
+			$(place).text(locale.membersOnly).addClass("annotation");
+			return;
+		}
 		var uploadTo = bag ? "bags/%0".format([bag]) : defaults["server.workspace"];
 		var includeFields = {
 			tags:  editableFields && editableFields.contains("tags") ? true : false,
