@@ -347,14 +347,15 @@ span.chunkyButton a.button:hover {
 	border-top: solid 1px #8cf;
 }
 
-a.baskstageTask.task_login, 
+a.baskstageTask.task_login,
 a.baskstageTask.task_user {
-	width: 200px;
+	_width: 200px;
+	_text-align: right;
 }
 
-#backstageArea #backstageToolbar .task_login img, 
+#backstageArea #backstageToolbar .task_login img,
 #backstageArea #backstageToolbar .task_user img {
 	_display: inline;
-	_float:none;
+	_float: none;
 }
 /*}}}*/
