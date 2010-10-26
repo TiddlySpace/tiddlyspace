@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.5|
+|''Version''|0.6.6|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -63,9 +63,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 	setupMarkupPreHead: function() {
 		var pubWorkspace = this.getPublicWorkspace();
 		var existing = store.getTiddler("MarkupPreHead");
-		var faultyFeedURI = 'tiddlers.atom?select=tag:!excludeLists"';
-		if(!existing || existing.fields["server.workspace"] != pubWorkspace ||
-				existing.text.indexOf(faultyFeedURI) != -1) { // special-casing fault in v0.4
+		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
 			var prehead = new Tiddler("MarkupPreHead");
 			prehead.text = markupPreHead.format(currentSpace.name);
 			prehead.tags = ["excludeLists"];
