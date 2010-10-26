@@ -11,8 +11,8 @@
 !MarkupPreHead
 <!--{{{-->
 <link rel="shortcut icon" href="/recipes/%0_public/tiddlers/favicon.ico" />
-<link href="/bags/%0_public/tiddlers.atom?select=tag:!excludeLists"
-	rel="alternate" type="application/atom+xml" title="%0's public feed" />
+<link href="/bags/%0_public/tiddlers.atom" rel="alternate"
+	type="application/atom+xml" title="%0's public feed" />
 <!--}}}-->
 !Code
 ***/
@@ -24,7 +24,7 @@ var markupPreHead = store.getTiddlerText(tiddler.title + "##MarkupPreHead", "");
 var currentSpace = config.extensions.tiddlyspace.currentSpace;
 
 var plugin = config.extensions.TiddlySpaceInit = {
-	version: "0.4",
+	version: "0.5",
 	SiteTitle: "%0",
 	SiteSubtitle: "a TiddlySpace",
 	flagTitle: "%0SetupFlag",
@@ -63,7 +63,9 @@ var plugin = config.extensions.TiddlySpaceInit = {
 	setupMarkupPreHead: function() {
 		var pubWorkspace = this.getPublicWorkspace();
 		var existing = store.getTiddler("MarkupPreHead");
-		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
+		var faultyFeedURI = 'tiddlers.atom?select=tag:!excludeLists"';
+		if(!existing || existing.fields["server.workspace"] != pubWorkspace ||
+				existing.text.indexOf(faultyFeedURI) != -1) { // special-casing fault in v0.4
 			var prehead = new Tiddler("MarkupPreHead");
 			prehead.text = markupPreHead.format(currentSpace.name);
 			prehead.tags = ["excludeLists"];
@@ -81,7 +83,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		if(curVersion < 0.3) {
 			flagTiddler.tags.pushUnique("excludePublisher");
 		}
-		if(curVersion < 0.4) {
+		if(curVersion < 0.5) { // v0.4 was faulty
 			this.setupMarkupPreHead();
 		}
 	},
@@ -105,7 +107,6 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		config.defaultCustomFields[wfield] = pubWorkspace; // XXX: hacky
 		config.macros.RandomColorPalette.generatePalette({}, true);
 		config.defaultCustomFields[wfield] = workspace;
-		// generate avatar
 		this.createAvatar();
 		this.setupMarkupPreHead();
 		return tiddlers;
