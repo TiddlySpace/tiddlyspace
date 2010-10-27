@@ -6,6 +6,10 @@ modifier: osmosoft
 	display: inline-block;
 }
 
+.tiddler .spaceSiteIcon .siteIcon {
+	_display: inline; /* IE doesn't like inline-block */
+}
+
 .tiddler .originButton {
 	display: block;
 }
@@ -115,11 +119,12 @@ modifier: osmosoft
 	margin-top: -20px;
 }
 
-.followPlaceHolder {
+.tiddler .followPlaceHolder {
 	display: block;
 	position: absolute;
-	right: 80px;
 	top: 16px;
+	right: 64px;
+	_right: 138px; // add width of modifierIcon
 }
 
 .tiddler .followButton {
@@ -194,11 +199,12 @@ a.originButton:hover {
 	width: 74px;
 	top: 0px;
 	right: 0px;
+	_right: 74px; /* in IE6 positioning works incorrectly so use -width instead */
 	text-align: right;
 }
 
 .modifierIcon .siteIcon div {
-	height: 52px; // include border
+	height: 52px; /* include border */
 }
 
 .modifierIcon img,
@@ -230,24 +236,6 @@ a.originButton:hover {
 	margin-top: 0;
 	position: relative;
 	display: block;
-}
-
-.tiddler .spaceSiteIcon .roundelLabel {
-	margin-left: 8px;
-	overflow: hidden;
-	width: 48px;
-	text-align: center;
-	font-size: 0.6em;
-}
-
-.tiddler .modifierIcon .label {
-	float: right;
-	width: 48px;
-	text-align: center;
-	margin-right: 8px;
-	font-size: 0.6em;
-	display: block;
-	overflow: hidden;
 }
 
 .tiddler .titleBar {
@@ -422,9 +410,6 @@ a.originButton:hover {
 	background: #fff;
 }
 
-.tiddler .modifierIcon .label {
-	display: none;
-}
 .tiddler .titleBar {
 	margin-left: 56px;
 }
@@ -453,10 +438,6 @@ a.originButton:hover {
 	font-size: 0.9em;
 	color: #a6a59e;
 	margin-top: 0;
-}
-
-.tiddler .followPlaceHolder {
-	right: 64px;
 }
 
 .tiddler .followButton {
