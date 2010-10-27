@@ -129,13 +129,13 @@ modifier: osmosoft
 
 .tiddler .followButton {
 	position: relative;
-	width: 48px;
 	height: 24px;
-	margin: -16px 0 24px;
 	text-align: left;
 	color: #fff;
 	background: [[ColorPalette::PrimaryMid]];
 	padding: 10px 0px 0px 10px;
+	width: 38px;
+	margin: -16px -8px 24px 0;
 }
 
 /* creates the larger triangle */
@@ -213,9 +213,9 @@ a.originButton:hover {
 }
 
 .tiddler .viewer {
-	margin: 0 72px 0 72px;
-	line-height: normal;
 	padding-bottom: 16px;
+	margin: 0 0 0 56px;
+	line-height: 1.4em;
 }
 
 .viewer pre {
@@ -240,8 +240,8 @@ a.originButton:hover {
 
 .tiddler .titleBar {
 	display: block;
-	margin-left: 74px;
 	margin-right: 136px;
+	margin-left: 56px;
 }
 
 .followButton a {
@@ -250,9 +250,10 @@ a.originButton:hover {
 
 .tiddler {
 	position: relative;
-	border: solid 2px [[ColorPalette::PrimaryPale]];
-	margin-bottom: 8px;
 	padding: 0;
+	margin-bottom: 3em;
+	border-top: 3px solid [[ColorPalette::PrimaryMid]];
+	background: #fff;
 }
 
 .tiddler .editor {
@@ -264,8 +265,8 @@ a.originButton:hover {
 	position: relative;
 	display: block;
 	word-wrap: break-word;
-	font-size: 48px;
-	line-height: 48px;
+	font-size: 32px;
+	line-height: 32px;
 }
 .tiddler .heading .editor.title {
 	font-size: 1.7em;
@@ -287,8 +288,10 @@ a.originButton:hover {
 }
 
 .tiddler .subtitle {
-	font-size: 0.8em;
-	margin-top: 4px;
+	font-style: italic;
+	font-size: 0.9em;
+	color: #a6a59e;
+	margin-top: 0;
 }
 
 .toolbar {
@@ -401,53 +404,9 @@ a.originButton:hover {
 	font-size: 1.5em;
 }
 
-/* ---- Tiddler Style --- */
-
-.tiddler {
-	margin-bottom: 3em;
-	border: none;
-	border-top: 3px solid [[ColorPalette::PrimaryMid]];
-	background: #fff;
-}
-
-.tiddler .titleBar {
-	margin-left: 56px;
-}
-
-.tiddler .modifierIcon img, .tiddler .modifierIcon svg {
-	margin-right: 0px;
-}
-
-.tiddler .spaceSiteIcon .originButton img,
-.originButton svg {
-	margin-left: 0px;
-}
-
 .spaceSiteIcon .externalImage .image a:hover,
 .modifierIcon .externalImage .image a:hover {
 	background: none;
-}
-
-.tiddler .heading .title {
-	font-size: 32px;
-	line-height: 32px;
-}
-
-.tiddler .subtitle {
-	font-style: italic;
-	font-size: 0.9em;
-	color: #a6a59e;
-	margin-top: 0;
-}
-
-.tiddler .followButton {
-	width: 38px;
-	margin: -16px -8px 24px 0;
-}
-
-.tiddler .viewer {
-	margin: 0 0 0 56px;
-	line-height: 1.4em;
 }
 
 div.toolbar {
@@ -457,10 +416,6 @@ div.toolbar {
 
 .selected div.toolbar {
 	visibility: visible;
-}
-
-.tiddler .followButton {
-	background: [[ColorPalette::PrimaryMid]];
 }
 
 .followButton a:hover {
@@ -499,6 +454,8 @@ div.toolbar {
 	.originButton svg {
 		width: 32px;
 		height: 32px;
+		margin-left: 0px;
+		margin-right: 0px;
 	}
 
 	.tiddler .followPlaceHolder {
