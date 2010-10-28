@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.8|
+|''Version''|0.6.81|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -81,7 +81,7 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 	tiddler.text = "Please wait while this tiddler is retrieved...";
 	tiddler.fields.doNotSave = "true";
 	store.addTiddler(tiddler);
-	story.displayTiddler(src || null, tiddler.title);
+	src = story.displayTiddler(src || null, tiddler.title);
 	tweb.getStatus(function(status) {
 		var context = {
 			host: tweb.host, // TODO: inherit from source tiddler?
@@ -299,7 +299,7 @@ var scanMacro = config.macros.tsScan = {
 				searchQuery.push('%0:"%1"'.format([searchField, inputs[i]]));
 			}
 			var query = searchQuery.join(" OR ");
-			query = tag ? "(%0);select=tag:%1;".format([query, tag]) : query;
+			query = tag ? "(%0) AND tag:%1;".format([query, tag]) : query;
 			query = options.query ? "%0;%1;".format([query, options.query]) : query;
 			query = options.fat ? "%0&fat=y".format([query]) : query;
 
