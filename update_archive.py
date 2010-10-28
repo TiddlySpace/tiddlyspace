@@ -25,6 +25,24 @@ def add_archive(args):
                 archive.policy = bag.policy
                 store.put(archive)
 
+@make_command()
+def update_archive(args):
+    """update archive bags to have the right perms"""
+    store = get_store(config)
+    bags = store.list_bags()
+
+    for bag in bags:
+        if bag.name.endswith('_archive'):
+            space_name = bag.name.rsplit('_', 1)[0]
+            private = Bag('%s_private' % space_name)
+            private = store.get(private)
+            try:
+                archive = store.get(bag)
+                archive.policy = private.policy
+                store.put(archive)
+            except NoBagError:
+                pass
+
 def init(config_in):
     global config
     config = config_in
