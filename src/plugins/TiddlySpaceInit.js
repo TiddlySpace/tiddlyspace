@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.6|
+|''Version''|0.6.7|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -99,12 +99,15 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			tid = store.saveTiddler(tid);
 			tiddlers.push(tid);
 		});
-		// generate ColorPalette (ensuring it's public)
-		var wfield = "server.workspace";
-		var workspace = config.defaultCustomFields[wfield];
-		config.defaultCustomFields[wfield] = pubWorkspace; // XXX: hacky
-		config.macros.RandomColorPalette.generatePalette({}, true);
-		config.defaultCustomFields[wfield] = workspace;
+		// generate public ColorPalette
+		var tid = new Tiddler("ColorPalette");
+		tid.text = config.macros.RandomColorPalette.generatePalette({}, true);
+		tid.tags = ["excludeLists", "excludeSearch"];
+		tid.fields = $.extend({}, config.defaultCustomFields, {
+			"server.workspace": pubWorkspace
+		});
+		tid = store.saveTiddler(tid);
+		tiddlers.push(tid);
 		this.createAvatar();
 		this.setupMarkupPreHead();
 		return tiddlers;
