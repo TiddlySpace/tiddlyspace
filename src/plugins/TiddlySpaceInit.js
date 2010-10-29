@@ -64,14 +64,14 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		var pubWorkspace = this.getPublicWorkspace();
 		var existing = store.getTiddler("MarkupPreHead");
 		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
-			var prehead = new Tiddler("MarkupPreHead");
-			prehead.text = markupPreHead.format(currentSpace.name);
-			prehead.tags = ["excludeLists"];
-			prehead.fields = $.extend({}, config.defaultCustomFields);
-			prehead.fields["server.workspace"] = pubWorkspace;
-			prehead.fields["server.page.revision"] = "false";
-			prehead = store.saveTiddler(prehead);
-			autoSaveChanges(null, [prehead]);
+			var tid = new Tiddler("MarkupPreHead");
+			tid.text = markupPreHead.format(currentSpace.name);
+			tid.tags = ["excludeLists"];
+			tid.fields = $.extend({}, config.defaultCustomFields);
+			tid.fields["server.workspace"] = pubWorkspace;
+			tid.fields["server.page.revision"] = "false";
+			tid = store.saveTiddler(tid);
+			autoSaveChanges(null, [tid]);
 		}
 	},
 	update: function(curVersion, flagTiddler) {
@@ -87,25 +87,24 @@ var plugin = config.extensions.TiddlySpaceInit = {
 	},
 	firstRun: function() {
 		var tiddlers = [];
-		var pubWorkspace = this.getPublicWorkspace();
+		var pubTid = {
+			tags: ["excludeLists", "excludeSearch"],
+			fields: $.extend({}, config.defaultCustomFields, {
+				"server.workspace": this.getPublicWorkspace()
+			})
+		};
 		// generate Site*itle
 		$.each(["SiteTitle", "SiteSubtitle"], function(i, item) {
 			var tid = new Tiddler(item);
-			tid.tags = ["excludeLists", "excludeSearch"];
-			tid.fields = $.extend({}, config.defaultCustomFields, {
-				"server.workspace": pubWorkspace
-			});
+			$.extend(tid, pubTid);
 			tid.text = plugin[item].format([currentSpace.name]);
 			tid = store.saveTiddler(tid);
 			tiddlers.push(tid);
 		});
 		// generate public ColorPalette
 		var tid = new Tiddler("ColorPalette");
+		$.extend(tid, pubTid);
 		tid.text = config.macros.RandomColorPalette.generatePalette({}, true);
-		tid.tags = ["excludeLists", "excludeSearch"];
-		tid.fields = $.extend({}, config.defaultCustomFields, {
-			"server.workspace": pubWorkspace
-		});
 		tid = store.saveTiddler(tid);
 		tiddlers.push(tid);
 		this.createAvatar();
