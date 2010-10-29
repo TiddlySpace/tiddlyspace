@@ -27,4 +27,14 @@ test("renderInputFields", function() {
 	strictEqual($("input[name=tags]", container).length, 0);
 });
 
+test("getTiddlerName", function() {
+	var macro = config.macros.binaryUpload;
+	var title = macro.getTiddlerName("http://foo.com/static/images/foo.jpg");
+	var title2 = macro.getTiddlerName("hello");
+	var title3 = macro.getTiddlerName("file:///windows\\hello");
+	strictEqual(title, "foo.jpg");
+	strictEqual(title2, "hello");
+	strictEqual(title3, "hello");
+});
+
 })(QUnit.module, jQuery);

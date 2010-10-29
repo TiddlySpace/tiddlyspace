@@ -67,90 +67,93 @@ var macro = config.macros.binaryUpload = {
 			}
 		}
 	},
-	createUploadForm: function(place, tiddler, options) {
-		var bag = options.bag;
-		var defaults = config.defaultCustomFields;
+	getTiddlerName: function(fileName) {
+		var fStart = fileName.lastIndexOf("\\");
+		var fStart2 = fileName.lastIndexOf("/");
+		fStart = fStart < fStart2 ? fStart2 : fStart;
+		fileName = fileName.substr(fStart+1);
+		return fileName;
+	},
+	uploadFile: function(place, baseURL, workspace, options) {
+		var pleaseWait = $(".uploadProgress", place);
+		var iframeName = $("iframe", place).attr("name");
+		var form = $("form", place);
+		var existingVal = $("input[name=title]", form).val();
+		var fileName = existingVal || $('input:file', form).val();
+		if(!fileName) {
+			return false; // the user hasn't selected a file yet
+		}
+		fileName = macro.getTiddlerName(fileName);
+		$("input[name=title]", place).val(fileName);
+		// we need to go somewhere afterwards to ensure the onload event triggers
+		var action = "%0?redirect=/%1/tiddlers.txt?select=title:%2".
+			format([baseURL, workspace, fileName]);
+		form[0].action = action; // dont use jquery to work with ie
+		form[0].target = iframeName;
+		// do not refactor following line... won't work in IE6 otherwise
+		$(place).append($('<iframe name="' + iframeName + '" id="' + iframeName + '"/>').css('display','none'));
+		macro.iFrameLoader(iframeName, function() {
+			options.callback(place, fileName, workspace, baseURL);
+			form.show(1000);
+			pleaseWait.hide(1000);
+		});
+		form.hide(1000);
+		pleaseWait.show(1000);
+		return true;
+	},
+	createUploadForm: function(place, options) {
 		var locale = macro.locale;
-		place = $("<div />").addClass("container").appendTo(place)[0];
 		if(readOnly) {
 			$(place).text(locale.membersOnly).addClass("annotation");
 			return;
 		}
-		var uploadTo = bag ? "bags/%0".format([bag]) : defaults["server.workspace"];
+		var bag = options.bag;
+		options.callback = options.callback ? options.callback : 
+			function(place, fileName, workspace, baseurl) {
+				macro.displayFile(place, fileName, workspace);
+				displayMessage(locale.loadSuccess.format([fileName]));
+				$("input[type=text]", place).val("");
+			};
+		var defaults = config.defaultCustomFields;
+		place = $("<div />").addClass("container").appendTo(place)[0];
+		var workspace = bag ? "bags/%0".format([bag]) : defaults["server.workspace"];
 		var baseURL = defaults["server.host"];
 		baseURL += (baseURL[baseURL.length - 1] !== "/") ? "/" : "";
-		baseURL = "%0%1/tiddlers".format([baseURL, uploadTo]);
+		baseURL = "%0%1/tiddlers".format([baseURL, workspace]);
 		//create the upload form, complete with invisible iframe
 		var iframeName = "binaryUploadiframe%0".format([Math.random()]);
-		var pleaseWait = $('<div />').text(locale.uploadInProgress).hide().appendTo(place);
-		var form = $("<form />").addClass("binaryUploadForm").attr("action", baseURL).
-			attr("method", "POST").attr("enctype", "multipart/form-data")[0];
+		// do not refactor following line of code to work in IE6.
+		var form = $('<form action="%0" method="POST" enctype="multipart/form-data" />'.
+					format([baseURL])).addClass("binaryUploadForm").
+			attr("method", "POST").attr("enctype", "multipart/form-data").appendTo(place)[0];
 		macro.renderInputFields(form, options);
 		$(form).
 			append('<div class="binaryUploadFile"><input type="file" name="file" /></div>').
 			append('<div class="binaryUploadSubmit"><input type="submit" value="Upload" /></div>').
 			submit(function(ev) {
 				this.target = iframeName;
-				var existingVal = $("input[name=title]", place).val();
-				var fileName = existingVal || $('input:file', place).val();
-				if(!fileName) {
-					return false; // the user hasn't selected a file yet
-				}
-				var fStart = fileName.lastIndexOf("\\");
-				var fStart2 = fileName.lastIndexOf("/");
-				fStart = fStart < fStart2 ? fStart2 : fStart;
-				fileName = fileName.substr(fStart+1);
-				$("input[name=title]", place).val(fileName);
-				var form = $(this);
-				// we need to go somewhere afterwards to ensure the onload event triggers
-				this.action = "%0?redirect=/%1/tiddlers.txt?select=title:%2".format([baseURL, uploadTo, fileName]); // dont use jquery to work with ie
-				/*$('<iframe name="%0" id="%0" />'.format([iframeName])).
-					css('display','none').appendTo(place);*/
-				$(place).append($('<iframe name="' + iframeName + '" id="' + iframeName + '"/>').css('display','none'));
-				macro.iFrameLoader(iframeName, fileName, place, uploadTo, tiddler, baseURL, function() {
-					form.show(1000);
-					pleaseWait.hide(1000);
-				});
-				form.hide(1000);
-				pleaseWait.show(1000);
-				return true;
-			}).appendTo(place);
-
-		$(".notEdited", place).mousedown(function(ev) { // clear default text on click
-			var target = $(ev.target);
-			if(target.hasClass("notEdited")) {
-				target.removeClass("notEdited");
-				target.val("");
-			}
-		});
-
+				macro.uploadFile(place, baseURL, workspace, options);
+			});
+		$('<div />').addClass("uploadProgress").text(locale.uploadInProgress).hide().appendTo(place);
 		$("input[name=file]", place).change(function(ev) {
 			var target = $(ev.target);
 			var fileName = target.val();
-			var titleInput = $("input[name=title]", place);
-			if((includeFields[fieldName] && titleInput.hasClass("notEdited")) || !titleInput.val()) {
-				titleInput.val(fileName);
+			var title = $("input[type=text][name=title]", place);
+			if(!title.val()) {
+				title.val(fileName);
 			}
-			titleInput.removeClass("notEdited"); // allow editing on this element.
 		});
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		params = paramString.parseParams(null, null, true);
-		macro.createUploadForm(place, tiddler, params[0]);
+		macro.createUploadForm(place, params[0]);
 	},
-	iFrameLoader: function(iframeName, fileName, place, workspace, tiddler, baseurl, callback) {
+	iFrameLoader: function(iframeName, callback) {
 		var iframe = document.getElementById(iframeName); //jQuery doesn't seem to want to do this!?
 		var locale = macro.locale;
 		$(".userInput").addClass("notEdited"); // reset editing
 		var finishedLoading = function() {
-			displayMessage(locale.loadSuccess.format([fileName]));
-			var url = "%0/%1".format([baseurl, fileName]);
-			$.getJSON(url, function(file) {
-				macro.displayFile(place, fileName, workspace, tiddler);
-				$(iframe).remove();
-				refreshDisplay();
-				callback(url);
-			});
+			callback();
 		};
 		var iFrameLoadHandler = function() {
 			finishedLoading.apply();
@@ -166,8 +169,8 @@ var macro = config.macros.binaryUpload = {
 			}
 		};
 	},
-	displayFile: function(place, title, workspace, tiddler) {
-		var adaptor = tiddler.getAdaptor();
+	displayFile: function(place, title, workspace) {
+		var adaptor = store.getTiddlers()[0].getAdaptor();
 		var context = {
 			workspace: workspace,
 			host: config.defaultCustomFields['server.host']
@@ -190,15 +193,17 @@ var macro = config.macros.binaryUpload = {
 	}
 };
 
-config.macros.binaryUploadPublic = {
-	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		params = paramString.parseParams(null, null, true);
-		var options = params[0];
-		options.bag = "%0_public".
-			format([config.extensions.tiddlyspace.currentSpace.name]);
-		macro.createUploadForm(place, tiddler, options);
-	}
-};
+if(config.extensions.tiddlyspace) {
+	config.macros.binaryUploadPublic = {
+		handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+			var options = paramString.parseParams(null, null, true)[0];
+			var bag = "%0_public".
+				format([config.extensions.tiddlyspace.currentSpace.name]);
+			options.bag = bag;
+			macro.createUploadForm(place, options);
+		}
+	};
+}
 
 })(jQuery);
 //}}}
