@@ -7,6 +7,8 @@ from tiddlyweb.wikitext import render_wikitext
 from tiddlyweb.serializations.html import Serialization as HTMLSerialization
 from tiddlyweb.web.util import encode_name
 
+from tiddlywebplugins.tiddlyspace.spaces import space_uri
+
 
 class Serialization(HTMLSerialization):
 
@@ -35,9 +37,24 @@ class Serialization(HTMLSerialization):
         """
         Create a link back to this tiddler in its space.
         """
-        link = "/#%%5B%%5B%s%%5D%%5D" % encode_name(tiddler.title)
+
+        if tiddler.recipe:
+            link = self._encode_space_link(tiddler)
+        elif self._space_bag(tiddler.bag):
+            space_name = tiddler.bag.split('_', 1)[0]
+            space_link_uri = space_uri(self.environ, space_name).rstrip('/')
+            link = self._encode_space_link(tiddler)
+            link = '%s%s' % (space_link_uri, link)
+        else:
+            return ''
+
         space_link = """
 <div class="tiddlerslink"><a href="%s%s" title="space link">%s in space</a></div>
 """ % (self._server_prefix(), link, tiddler.title)
         return space_link
 
+    def _space_bag(self, bag_name):
+        return bag_name.endswith('_public') or bag_name.endswith('_private')
+
+    def _encode_space_link(self, tiddler):
+        return '/#%%5B%%5B%s%%5D%%5D' % encode_name(tiddler.title)
