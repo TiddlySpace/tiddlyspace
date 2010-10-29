@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.8|
+|''Version''|0.3.9|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -23,7 +23,7 @@ tiddlywebplugins.form
 //{{{
 (function($) {
 
-var macro = config.macros.binaryUpload ={
+var macro = config.macros.binaryUpload = {
 	locale: {
 		titleDefaultValue: "Please enter a title...",
 		tagsDefaultValue: "Please enter some tags...",
@@ -34,66 +34,66 @@ var macro = config.macros.binaryUpload ={
 		uploadInProgress: "Please wait while the file is uploaded...",
 		membersOnly: "Only members can upload."
 	},
+	renderInputFields: function(container, options) {
+		var locale = macro.locale;
+		var editableFields = options.edit;
+		var includeFields = {
+			tags:  editableFields && editableFields.contains("tags") ? true : false,
+			title: editableFields && editableFields.contains("title") ? true : false
+		};
+		var fields = ["title", "tags"];
+		for(var i = 0; i < fields.length; i++) {
+			var fieldName = fields[i];
+			var userDefault = options[fieldName];
+			var defaultValue = userDefault ? userDefault[0] : false;
+			if(includeFields[fieldName] || defaultValue) {
+				var localeDefault = locale["%0DefaultValue".format([fieldName])];
+				var className = defaultValue ? "userInput" : "userInput notEdited";
+				var inputEl;
+				var val = defaultValue || localeDefault || "";
+				var iContainer = $("<div />").addClass("binaryUpload%0".format([fieldName])).
+					appendTo(container);
+				if(defaultValue && !includeFields[fieldName]) {
+					var label = locale["%0Prefix".format([fieldName])];
+					$("<span />").text(label).appendTo(iContainer);
+					$("<span />").addClass("disabledInput").text(val).appendTo(iContainer);
+					inputEl = $("<input />").attr("type", "hidden");
+				} else {
+					inputEl = $("<input />").attr("type", "text");
+				}
+				inputEl.attr("name", fieldName).
+					addClass("%0Edit".format([fieldName])).
+					val(val).addClass(className).appendTo(iContainer);
+			}
+		}
+	},
 	createUploadForm: function(place, tiddler, options) {
 		var bag = options.bag;
-		var editableFields = options.edit;
 		var defaults = config.defaultCustomFields;
 		var locale = macro.locale;
-		place = $('<div class="container" />').appendTo(place)[0];
+		place = $("<div />").addClass("container").appendTo(place)[0];
 		if(readOnly) {
 			$(place).text(locale.membersOnly).addClass("annotation");
 			return;
 		}
 		var uploadTo = bag ? "bags/%0".format([bag]) : defaults["server.workspace"];
-		var includeFields = {
-			tags:  editableFields && editableFields.contains("tags") ? true : false,
-			title: editableFields && editableFields.contains("title") ? true : false
-		};
-
 		var baseURL = defaults["server.host"];
 		baseURL += (baseURL[baseURL.length - 1] !== "/") ? "/" : "";
 		baseURL = "%0%1/tiddlers".format([baseURL, uploadTo]);
 		//create the upload form, complete with invisible iframe
 		var iframeName = "binaryUploadiframe%0".format([Math.random()]);
-		var editables = [];
-		var fields = ["title", "tags"];
-		for(var i = 0; i < fields.length; i++) {
-			var fieldName = fields[i];
-			var userDefault = options[fieldName];
-			var defaultValue = userDefault ? userDefault : false;
-			if(includeFields[fieldName] || defaultValue) {
-				var localeDefault = locale["%0DefaultValue".format([fieldName])];
-				var className = defaultValue ? "userInput" : "userInput notEdited";
-				var inputEl;
-				var val = defaultValue || localeDefault;
-				if(defaultValue && !includeFields[fieldName]) {
-					inputEl = $('<input type="hidden" /><input type="text" disabled />');
-				} else {
-					inputEl = $('<input type="text" />');
-				}
-				inputEl.attr("name", fieldName).
-					addClass("%0Edit".format([fieldName])).
-					val(val).addClass(className);
-
-				var editEl = $("<span />").text(locale["%0Prefix".format([fieldName])]).
-					appendTo('<div class="binaryUpload%0"></div>'.format([fieldName])).
-					append(inputEl)[0];
-				editables.push(editEl);
-			}
-		}
-
 		var pleaseWait = $('<div />').text(locale.uploadInProgress).hide().appendTo(place);
-		var frameHtml = '<form class="binaryUploadForm" action="%0" method="POST" enctype="multipart/form-data" />'.
-			format([baseURL]);
-		$(frameHtml).
-			append(editables).
+		var form = $("<form />").addClass("binaryUploadForm").attr("action", baseURL).
+			attr("method", "POST").attr("enctype", "multipart/form-data")[0];
+		macro.renderInputFields(form, options);
+		$(form).
 			append('<div class="binaryUploadFile"><input type="file" name="file" /></div>').
 			append('<div class="binaryUploadSubmit"><input type="submit" value="Upload" /></div>').
 			submit(function(ev) {
 				this.target = iframeName;
 				var existingVal = $("input[name=title]", place).val();
 				var fileName = existingVal || $('input:file', place).val();
-				if (!fileName) {
+				if(!fileName) {
 					return false; // the user hasn't selected a file yet
 				}
 				var fStart = fileName.lastIndexOf("\\");
