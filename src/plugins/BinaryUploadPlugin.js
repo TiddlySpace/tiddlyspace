@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.9|
+|''Version''|0.3.10|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -104,7 +104,8 @@ var macro = config.macros.binaryUpload = {
 	createUploadForm: function(place, options) {
 		var locale = macro.locale;
 		if(readOnly) {
-			$(place).text(locale.membersOnly).addClass("annotation");
+			$('<div class="annotation" />').text(locale.membersOnly).
+				appendTo(place);
 			return;
 		}
 		var bag = options.bag;
