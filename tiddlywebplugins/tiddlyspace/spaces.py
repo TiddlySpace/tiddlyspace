@@ -169,7 +169,7 @@ def list_spaces(environ, start_response):
     start_response('200 OK', [
         ('Cache-Control', 'no-cache'),
         ('Content-Type', 'application/json; charset=UTF-8')])
-    return simplejson.dumps([{'name': space, 'uri': _space_uri(environ, space)}
+    return simplejson.dumps([{'name': space, 'uri': space_uri(environ, space)}
         for space in sorted(spaces)])
 
 
@@ -192,6 +192,33 @@ def list_space_members(environ, start_response):
         ('Cache-Control', 'no-cache'),
         ('Content-Type', 'application/json; charset=UTF-8')])
     return simplejson.dumps(members)
+
+
+def space_uri(environ, space_name):
+    """
+    Determine the uri of a space based on its name.
+    """
+    host = environ['tiddlyweb.config']['server_host']['host']
+    port = environ['tiddlyweb.config']['server_host']['port']
+    scheme = environ['tiddlyweb.config']['server_host']['scheme']
+    if not _alien_domain(environ, space_name):
+        if port is not '443' and port is not '80':
+            uri = '%s://%s.%s:%s/' % (scheme,
+                    urllib.quote(space_name.encode('utf-8')),
+                    host, port)
+        else:
+            uri = '%s://%s.%s/' % (scheme,
+                    urllib.quote(space_name.encode('utf-8')),
+                    host)
+    else:
+        if space_name == 'frontpage':
+            if port is not '443' and port is not '80':
+                uri = '%s://%s:%s/' % (scheme, host, port)
+            else:
+                uri = '%s://%s/' % (scheme, host)
+        else:
+            uri = '%s://%s/' % (scheme, space_name)  # XXX This is a stub
+    return uri
 
 
 def subscribe_space(environ, start_response):
@@ -271,7 +298,7 @@ def _create_space(environ, start_response, space_name):
     """
     _make_space(environ, space_name)
     start_response('201 Created', [
-        ('Location', _space_uri(environ, space_name)),
+        ('Location', space_uri(environ, space_name)),
         ])
     return ['']
 
@@ -301,33 +328,6 @@ def _make_policy(member):
         setattr(policy, constraint, [member])
     policy.accept = ['NONE']
     return policy
-
-
-def _space_uri(environ, space_name):
-    """
-    Determine the uri of a space based on its name.
-    """
-    host = environ['tiddlyweb.config']['server_host']['host']
-    port = environ['tiddlyweb.config']['server_host']['port']
-    scheme = environ['tiddlyweb.config']['server_host']['scheme']
-    if not _alien_domain(environ, space_name):
-        if port is not '443' and port is not '80':
-            uri = '%s://%s.%s:%s/' % (scheme,
-                    urllib.quote(space_name.encode('utf-8')),
-                    host, port)
-        else:
-            uri = '%s://%s.%s/' % (scheme,
-                    urllib.quote(space_name.encode('utf-8')),
-                    host)
-    else:
-        if space_name == 'frontpage':
-            if port is not '443' and port is not '80':
-                uri = '%s://%s:%s/' % (scheme, host, port)
-            else:
-                uri = '%s://%s/' % (scheme, host)
-        else:
-            uri = '%s://%s/' % (scheme, space_name)  # XXX This is a stub
-    return uri
 
 
 def _update_policy(policy, add=None, subtract=None):
