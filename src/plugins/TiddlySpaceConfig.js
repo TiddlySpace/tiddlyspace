@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.6.3|
+|''Version''|0.6.4|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -72,7 +72,7 @@ sssp.removeTiddlerCallback = function(context, userParams) {
 		var callback = function(context, userParams) {
 			if(context.status) {
 				var dirty = store.isDirty();
-				store.saveTiddler(context.tiddler);
+				store.saveTiddler(context.tiddler).clearChangeCount();
 				store.setDirty(dirty);
 			} else {
 				store.notify(title, true);
