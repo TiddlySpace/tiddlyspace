@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.8.0|
+|''Version''|0.8.1|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -92,6 +92,7 @@ var cmd = config.commands.publishTiddler = {
 				"server.workspace": "bags/%0".format([newBag]),
 				"server.page.revision": "false"
 			});
+			delete tiddler.fields["server.title"];
 			tiddler.title = newTitle;
 			adaptor.putTiddler(tiddler, null, null, callback);
 		};
