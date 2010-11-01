@@ -5,7 +5,7 @@ var _ajax, _macro;
 module("TiddlySpaceSpaces plugin", {
 	setup: function() {
 		_macro = config.macros.TiddlySpaceSpaces;
-		config.macros.TiddlySpaceSpaces.formTemplate = "<form />";
+		config.macros.TiddlySpaceSpaces.formTemplate = '<form><input type="checkbox" name="subscribe" /></form>';
 		_ajax = $.ajax;
 		$.ajax = function(options) {
 			options.success([
@@ -19,18 +19,39 @@ module("TiddlySpaceSpaces plugin", {
 		config.macros.TiddlySpaceSpaces = _macro;
 	}
 });
+var getParamString = function(anon, subscribe) {
+	return {
+		parseParams: function() {
+			return [{ anon: anon, subscribe: subscribe }];
+		}
+	};
+};
 
 test("add space form", function() {
 	var place = $("<div />");
-	config.macros.TiddlySpaceSpaces.handler(place, null, ["add"]);
-	strictEqual(place.find("form").length, 1);
+	config.macros.TiddlySpaceSpaces.handler(place, null, ["add"], null, getParamString(["add"]));
+	var form = place.find("form");
+	var checkbox = $("input[name=subscribe]", form);
+	strictEqual(form.length, 1);
 	strictEqual(place.find("ul").length, 0);
+	strictEqual(checkbox.length, 1);
+	strictEqual(checkbox.attr("checked"), false);
+});
+
+test("add space form - subscribe checked", function() {
+	var place = $("<div />");
+	config.macros.TiddlySpaceSpaces.handler(place, null, ["add"], null,
+		getParamString(["add"], ["yes"]));
+	var form = place.find("form");
+	var checkbox = $("input[name=subscribe]", form);
+	strictEqual(form.length, 1);
+	strictEqual(checkbox.attr("checked"), true);
 });
 
 test("list spaces", function() {
 	var place = $("<div />");
 
-	config.macros.TiddlySpaceSpaces.handler(place, null, []);
+	config.macros.TiddlySpaceSpaces.handler(place, null, [], null, getParamString([]));
 	strictEqual(place.find("form").length, 0);
 	strictEqual(place.find("ul").length, 1);
 
