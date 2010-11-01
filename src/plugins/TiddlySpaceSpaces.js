@@ -49,11 +49,10 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var container = $("<div />").appendTo(place);
 		var args = paramString.parseParams("anon")[0];
 		var mode = args.anon ? args.anon[0] : "list";
-		var options = {
-			subscribe: args.subscribe ? true : false
-		};
-
 		if(mode == "add") {
+			var options = {
+				subscribe: args.subscribe ? true : false
+			};
 			this.generateForm(container, options);
 		} else {
 			this.refresh(container);
@@ -100,7 +99,6 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		find("legend").text(this.locale.addLabel).end().
 		find(".annotation").hide().end().
 		find("[type=submit]").val(this.locale.addLabel).end().appendTo(container);
-
 		if(options.subscribe) {
 			$("[name=subscribe]", container).attr("checked", true);
 		}

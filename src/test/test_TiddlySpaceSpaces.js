@@ -19,6 +19,8 @@ module("TiddlySpaceSpaces plugin", {
 		config.macros.TiddlySpaceSpaces = _macro;
 	}
 });
+
+// mocks a string with parseParams method -- XXX: unnecessarily complex
 var getParamString = function(anon, subscribe) {
 	return {
 		parseParams: function() {
