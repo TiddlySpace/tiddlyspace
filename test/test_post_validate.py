@@ -1,0 +1,113 @@
+"""
+Tests to ensure that POST requests all come from the same domain.
+
+i.e. tests that ensure we are not vulnerable to CSRF
+"""
+
+from fixtures import make_test_env, make_fake_space
+
+from wsgi_intercept import httplib2_intercept
+import wsgi_intercept
+import httplib2
+import simplejson
+
+
+from tiddlywebplugins.utils import get_store
+from tiddlyweb.config import config
+from tiddlyweb.model.tiddler import Tiddler
+from tiddlywebplugins.tiddlyspace.validator import check_csrf, InvalidNonceError
+
+
+def setup_module(module):
+    make_test_env(module)
+    # we have to have a function that returns the callable,
+    # Selector just _is_ the callable
+    httplib2_intercept.install()
+    wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
+    module.http = httplib2.Http()
+
+
+def teardown_module(module):
+    import os
+    os.chdir('..')
+
+
+def test_validator_no_nonce():
+    """
+    test the validator directly
+    ensure that it fails when the nonce is not present
+    """
+    store = get_store(config)
+    try:
+        result = check_csrf(store, 'foo', None)
+        raise AssertionError('check_csrf succeeded when no nonce supplied')
+    except InvalidNonceError, exc:
+        assert exc.message == 'No nonce supplied'
+
+def test_validator_no_nonce_in_bag():
+    """
+    test the validator directly
+    ensure that it fails when the nonce tiddler does not exist inside the
+    private bag
+    """
+    store = get_store(config)
+    try:
+        result = check_csrf(store, 'foo', 'None')
+        raise AssertionError('check_csrf succeeded when no nonce in bag')
+    except InvalidNonceError, exc:
+        assert exc.message == 'No nonce found in foo space'
+
+def test_validator_nonce_success():
+    """
+    test the validator directly
+    ensure that it succeeds when the nonce passed in matches the nonce tiddler
+    """
+    store = get_store(config)
+    nonce = 'dwaoiju277218ywdhdnakas72'
+    space = 'foo'
+    make_fake_space(store, space)
+    tiddler = Tiddler('nonce')
+    tiddler.fields['nonce'] = nonce
+    tiddler.bag = '%s_private' % space
+    store.put(tiddler)
+
+    result = check_csrf(store, space, nonce)
+
+    assert result == True
+
+def test_validator_nonce_fail():
+    """
+    test the validator directly
+    ensure that it fails when the nonce doesn't match
+    """
+    store = get_store(config)
+    nonce = 'dwaoiju277218ywdhdnakas72'
+    space = 'foo'
+    make_fake_space(store, space)
+    tiddler = Tiddler('nonce')
+    tiddler.fields['nonce'] = 'not the real nonce'
+    tiddler.bag = '%s_private' % space
+    store.put(tiddler)
+
+    try:
+        result = check_csrf(store, space, nonce)
+        raise AssertionError('check_csrf succeeded when nonce didn\'t match')
+    except InvalidNonceError, exc:
+        assert exc.message == 'Nonce doesn\'t match'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -8,10 +8,40 @@ import Cookie
 
 from tiddlyweb.util import sha
 from tiddlyweb.web.validator import TIDDLER_VALIDATORS, InvalidTiddlerError
+from tiddlyweb.store import NoTiddlerError
+from tiddlyweb.model.tiddler import Tiddler
 
 # XXX: importing private members, so they should probably not be private
 from tiddlywebplugins.tiddlyspace.handler import (_determine_host,
         _determine_space, _determine_space_recipe)
+
+class InvalidNonceError(Exception):
+    pass
+
+def check_csrf(store, space, nonce):
+    """
+    Check to ensure that the incoming request isn't a csrf attack.
+    Do this by expecting a nonce value that corresponds to a random hash
+    in a tiddler in the private bag of a space.
+
+    Returns True
+    """
+    if not nonce:
+        raise InvalidNonceError('No nonce supplied')
+
+    tiddler = Tiddler('nonce')
+    tiddler.bag = '%s_private' % space
+    try:
+        tiddler = store.get(tiddler)
+    except NoTiddlerError:
+        raise InvalidNonceError('No nonce found in %s space' % space)
+
+    try:
+        assert tiddler.fields['nonce'] == nonce
+    except AssertionError:
+        raise InvalidNonceError('Nonce doesn\'t match')
+
+    return True
 
 
 def validate_mapuser(tiddler, environ):
