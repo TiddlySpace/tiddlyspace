@@ -169,12 +169,6 @@ Content-Disposition: form-data; name="text"
 Hello World
 ---------------------------168072824752491622650073--'''
 
-    nonce_data = '''
-Content-Disposition: form-data; name="nonce"
-
-%s
----------------------------168072824752491622650073''' % nonce
-
     #test success
     uri = 'http://0.0.0.0:8080/bags/foo_public/tiddlers?nonce=%s' % nonce
     response, _ = http.request(uri,
