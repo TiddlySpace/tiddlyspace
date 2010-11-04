@@ -11,7 +11,7 @@ Provides changeToPrivate, changeToPublic and saveDraft commands
 Provides TiddlySpacePublisher macro.
 {{{<<TiddlySpacePublisher type:private>>}}} make lots of private tiddlers public.
 {{{<<TiddlySpacePublisher type:public>>}}} make lots of public tiddlers public.
-!Todo
+!TODO
 * add public argument?
 !Code
 ***/

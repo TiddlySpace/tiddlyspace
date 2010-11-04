@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceSpaces|
-|''Version''|0.5.7|
+|''Version''|0.5.8|
 |''Description''|TiddlySpace spaces management|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
@@ -38,7 +38,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		addLabel: "Create space",
 		addSuccess: "created space %0",
 		conflictError: "space <em>%0</em> already exists",
-		charError: "error: invalid space name - must only contain lowercase " +
+		charError: "error: invalid space name - must start with a letter, be " +
+			"at least two characters in length and only contain lowercase " +
 			"letters, digits or hyphens",
 		noSpaces: "you have no spaces",
 		addSpace: "creating your new space...",
