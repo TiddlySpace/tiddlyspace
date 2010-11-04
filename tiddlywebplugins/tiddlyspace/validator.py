@@ -5,11 +5,11 @@ Input validation routines for TiddlySpace.
 
 import Cookie
 
-
 from tiddlyweb.util import sha
 from tiddlyweb.web.validator import TIDDLER_VALIDATORS, InvalidTiddlerError
 from tiddlyweb.store import NoTiddlerError
 from tiddlyweb.model.tiddler import Tiddler
+from tiddlyweb.web.http import HTTP400
 
 # XXX: importing private members, so they should probably not be private
 from tiddlywebplugins.tiddlyspace.handler import (_determine_host,
@@ -18,30 +18,61 @@ from tiddlywebplugins.tiddlyspace.handler import (_determine_host,
 class InvalidNonceError(Exception):
     pass
 
-def check_csrf(store, space, nonce):
+class CsrfProtector(object):
     """
-    Check to ensure that the incoming request isn't a csrf attack.
-    Do this by expecting a nonce value that corresponds to a random hash
-    in a tiddler in the private bag of a space.
-
-    Returns True
+    check for a nonce value if we are POSTing form data
+    reject if it doesn't match
     """
-    if not nonce:
-        raise InvalidNonceError('No nonce supplied')
+    def __init__(self, application):
+        self.application = application
 
-    tiddler = Tiddler('nonce')
-    tiddler.bag = '%s_private' % space
-    try:
-        tiddler = store.get(tiddler)
-    except NoTiddlerError:
-        raise InvalidNonceError('No nonce found in %s space' % space)
+    def __call__(self, environ, start_response):
+        def app():
+            output = self.application(environ, start_response)
+            return output
+        if environ['REQUEST_METHOD'] != 'POST':
+            return app()
+        if environ['tiddlyweb.usersign']['name'] == 'GUEST':
+            return app()
+        if environ['tiddlyweb.type'] not in [
+                'application/x-www-form-urlencoded',
+                'multipart/form-data']:
+            return app()
+        store = environ['tiddlyweb.store']
+        space = environ['tiddlyweb.usersign']['name']
+        form = environ['tiddlyweb.query']
+        nonce = form.pop('nonce', [''])[0]
+        try:
+            self.check_csrf(store, space, nonce)
+        except InvalidNonceError, exc:
+            raise HTTP400(exc)
 
-    try:
-        assert tiddler.fields['nonce'] == nonce
-    except AssertionError:
-        raise InvalidNonceError('Nonce doesn\'t match')
+        return app()
 
-    return True
+    def check_csrf(self, store, space, nonce):
+        """
+        Check to ensure that the incoming request isn't a csrf attack.
+        Do this by expecting a nonce value that corresponds to a random hash
+        in a tiddler in the private bag of a space.
+
+        Returns True
+        """
+        if not nonce:
+            raise InvalidNonceError('No nonce supplied')
+
+        tiddler = Tiddler('nonce') #TODO: change this name to something else
+        tiddler.bag = '%s_private' % space
+        try:
+            tiddler = store.get(tiddler)
+        except NoTiddlerError:
+            raise InvalidNonceError('No nonce found in %s space' % space)
+
+        try:
+            assert tiddler.fields['nonce'] == nonce
+        except AssertionError:
+            raise InvalidNonceError('Nonce doesn\'t match')
+
+        return True
 
 
 def validate_mapuser(tiddler, environ):
