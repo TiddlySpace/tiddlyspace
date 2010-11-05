@@ -117,6 +117,8 @@ body ul { margin: 0; }
 	padding: 0;
 	position: relative;
 	top: 0;
+	_width: 70%; /*ie6: needed for the background to actually be transparent*/
+	_background-color: transparent; /*ie6: needed to show the search box*/
 }
 
 .clearFloat {
