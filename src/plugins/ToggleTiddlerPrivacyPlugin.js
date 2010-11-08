@@ -114,7 +114,11 @@ var macro = config.macros.setPrivacy = {
 		if(!defaultValue) {
 			defaultValue = macro.default_state == "public" ? publicBag : privateBag;
 		}
-		macro.setBag(el, defaultValue, options);
+		window.setTimeout(function() {
+			macro.setBag(el, defaultValue, options);
+		}, 100); 
+		// annoyingly this is needed as customFields are added to end of EditTemplate so are not present yet 
+		// and don't seem to respect any existing customFields.
 	}
 };
 
