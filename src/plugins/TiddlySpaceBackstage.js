@@ -1,10 +1,10 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.9|
-|''Description''|Provides a TiddlySpace version of the backstage and a homeLink macro|
+|''Version''|0.5.10|
+|''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
-|''Requires''|TiddlySpaceConfig ImageMacroPlugin|
+|''Requires''|TiddlySpaceConfig ImageMacroPlugin TiddlySpaceViewTypes|
 !Code
 ***/
 //{{{
@@ -184,7 +184,33 @@ var home = config.macros.homeLink = {
 			}
 		});
 	}
-}
+};
+
+var followLink = config.macros.followSpace = {
+	locale: {
+		label: "follow %0"
+	},
+	paramifiedLink: function(container, space, title, label, paramifier) {
+		tweb.getStatus(function(status) {
+			var host = config.extensions.tiddlyspace.getHost(status.server_host, space);
+			var url = "%0/#%1:[[%2]]".format([host, paramifier, title]);
+			label = label ? label : title;
+			$("<a />").attr("href", url).text(label).appendTo(container);
+		});
+	},
+	make: function(container, username, space) {
+		followLink.paramifiedLink(container, username, "@" + space,
+			followLink.locale.label.format([space]), "follow");
+	},
+	handler: function(place) {
+		var container = $("<span />").appendTo(place)[0];
+		tweb.getUserInfo(function(user) {
+			if(!user.anon) {
+				followLink.make(place, user.name, tiddlyspace.currentSpace.name);
+			}
+		});
+	}
+};
 
 config.macros.exportSpace = {
 	handler: function(place, macroName, params) {
