@@ -26,21 +26,20 @@ config.macros.view.views.replyLink = function(value, place, params, wikifier,
 		paramString, tiddler) {
 	var space;
 	if(tiddler) {
-		var fields = tiddler.fields;
-		var bag = fields["server.bag"];
+		var bag = tiddler.fields["server.bag"];
 		space = tiddlyspace.resolveSpaceName(bag);
 	}
-	var view = config.macros.view.replyLink;
-	var locale = view.locale;
-	var container = $("<span />").addClass("replyLink").appendTo(place)[0];
+	var container = $('<span class="replyLink" />').appendTo(place)[0];
 	tweb.getUserInfo(function(user) {
 		if(!user.anon) {
-			var username = user.name;
-			if(space && username != space && username != tiddlyspace.currentSpace.name) {
-				createSpaceLink(container, user.name, value, locale.label);
+			if(space && user.name != space &&
+					user.name != tiddlyspace.currentSpace.name) {
+				createSpaceLink(container, user.name, value,
+					config.macros.view.replyLink.locale.label);
 			}
 		}
 	});
 };
+
 })(jQuery);
 //}}}
