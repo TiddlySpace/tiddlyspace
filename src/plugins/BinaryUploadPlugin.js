@@ -109,7 +109,7 @@ var macro = config.macros.binaryUpload = {
 			return;
 		}
 		var bag = options.bag;
-		options.callback = options.callback ? options.callback : 
+		options.callback = options.callback ? options.callback :
 			function(place, fileName, workspace, baseurl) {
 				macro.displayFile(place, fileName, workspace);
 				displayMessage(locale.loadSuccess.format([fileName]));
