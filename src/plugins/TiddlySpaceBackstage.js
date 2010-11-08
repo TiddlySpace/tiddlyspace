@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.5.10|
+|''Version''|0.6.0|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
@@ -205,8 +205,10 @@ var followLink = config.macros.followSpace = {
 	handler: function(place) {
 		var container = $("<span />").appendTo(place)[0];
 		tweb.getUserInfo(function(user) {
-			if(!user.anon) {
-				followLink.make(place, user.name, tiddlyspace.currentSpace.name);
+			var space = tiddlyspace.currentSpace.name;
+			var username = user.name;
+			if(!user.anon && space != username) {
+				followLink.make(place, username, space);
 			}
 		});
 	}
