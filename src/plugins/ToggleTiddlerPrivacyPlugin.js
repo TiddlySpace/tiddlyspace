@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.6.4|
+|''Version''|0.6.5|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
 |''Requires''|TiddlySpaceConfig|
@@ -34,9 +34,11 @@ var macro = config.macros.setPrivacy = {
 		var currentBag = tiddler ? tiddler.fields["server.bag"] : false;
 		var isNewTiddler = el.hasClass("missing") || !currentBag; // XXX: is this reliable?
 		var status = tiddlyspace.getTiddlerStatusType(tiddler);
+		var customFields = $(el).attr("tiddlyfields");
+		customFields = customFields ? customFields.decodeHashMap() : {};
 		if(isNewTiddler || !["public", "private"].contains(status)) {
 			var defaultValue = args.defaultValue;
-			defaultValue = defaultValue ? "%0_%1".format([currentSpace, defaultValue[0]]) : false;
+			defaultValue = defaultValue ? "%0_%1".format([currentSpace, defaultValue[0]]) : customFields["server.bag"];
 			var options = config.macros.tiddlerOrigin ?
 				config.macros.tiddlerOrigin.getOptions(paramString) : {};
 			this.createRoundel(container, tiddler, currentSpace, defaultValue, options);
@@ -112,10 +114,7 @@ var macro = config.macros.setPrivacy = {
 		if(!defaultValue) {
 			defaultValue = macro.default_state == "public" ? publicBag : privateBag;
 		}
-		// TODO: replace with a hijack of displayTiddler?
-		window.setTimeout(function() {
-			macro.setBag(el, defaultValue, options);
-		}, 200); // not ideal - but need to wait till finished displayTiddler for brand new tiddlers
+		macro.setBag(el, defaultValue, options);
 	}
 };
 
