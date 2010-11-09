@@ -22,14 +22,9 @@ from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
 
+from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.web import (determine_host,
         determine_space, determine_space_recipe)
-
-
-CORE_BAGS = ['system', 'common', 'tiddlyspace',
-        'system-info_public', 'system-plugins_public', 'system-theme_public',
-        'system-images_public']
-ADMIN_BAGS = ['common', 'MAPUSER', 'MAPSPACE']
 
 
 def friendly_uri(environ, start_response):
@@ -127,7 +122,7 @@ def safe_mode(environ, start_response):
     # Get the list of core plugins
     try:
         core_plugin_tiddler_titles = []
-        for bag in CORE_BAGS:
+        for bag in [recipe_bag for recipe_bag, filter in Space.CORE_RECIPE]:
             bag = store.get(Bag(bag))
             for tiddler in store.list_bag_tiddlers(bag):
                 if not tiddler.store:
@@ -159,7 +154,7 @@ def safe_mode(environ, start_response):
                 'space recipe not found while trying safe mode: %s' % exc)
 
     # Process the recipe. For those tiddlers which do not have a bag
-    # in CORE_BAGS, remove the systemConfig tag.
+    # in CORE_RECIPE, remove the systemConfig tag.
     try:
         candidate_tiddlers = control.get_tiddlers_from_recipe(recipe, environ)
     except NoBagError, exc:
@@ -169,7 +164,8 @@ def safe_mode(environ, start_response):
     for tiddler in candidate_tiddlers:
         if not tiddler.store:
             tiddler = store.get(tiddler)
-        if tiddler.bag not in CORE_BAGS:
+        if tiddler.bag not in [recipe_bag for
+                recipe_bag, filter in Space.CORE_RECIPE]:
             if 'systemConfig' in tiddler.tags:
                 tiddler.tags.append('systemConfigDisable')
         tiddler.recipe = recipe.name
@@ -228,95 +224,3 @@ def _send_safe_mode(environ, start_response):
 """]
 
 
-class DropPrivs(object):
-    """
-    If the incoming request is addressed to some entity not in the
-    current space, then drop privileges to GUEST.
-    """
-
-    def __init__(self, application):
-        self.application = application
-        self.stored_user = None
-
-    def __call__(self, environ, start_response):
-        self.stored_user = None
-        req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
-        if (req_uri.startswith('/bags/')
-                or req_uri.startswith('/recipes/')):
-            self._handle_dropping_privs(environ, req_uri)
-
-        output = self.application(environ, start_response)
-        if self.stored_user:
-            environ['tiddlyweb.usersign'] = self.stored_user
-        self.stored_user = None
-        return output
-
-    def _handle_dropping_privs(self, environ, req_uri):
-        if environ['tiddlyweb.usersign']['name'] == 'GUEST':
-            return
-
-        http_host, _ = determine_host(environ)
-        space_name = determine_space(environ, http_host)
-
-        if space_name == None:
-            return
-
-        store = environ['tiddlyweb.store']
-        container_name = req_uri.split('/')[2]
-
-        if req_uri.startswith('/bags/'):
-            recipe_name = determine_space_recipe(environ, space_name)
-            space_recipe = store.get(Recipe(recipe_name))
-            template = control.recipe_template(environ)
-            recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
-            recipe_bags.append('%s_archive' % space_name)
-            if environ['REQUEST_METHOD'] == 'GET':
-                if container_name in recipe_bags:
-                    return
-                if container_name in ADMIN_BAGS:
-                    return
-            else:
-                base_bags = ['%s_public' % space_name,
-                        '%s_private' % space_name,
-                        '%s_archive' % space_name]
-                acceptable_bags = [bag for bag in recipe_bags if not (
-                    bag.endswith('_public') or bag.endswith('_private')
-                    or bag.endswith('_archive'))]
-                acceptable_bags.extend(base_bags)
-                acceptable_bags.extend(ADMIN_BAGS)
-                if container_name in acceptable_bags:
-                    return
-
-        if req_uri.startswith('/recipes/'):
-            space_public_name = '%s_public' % space_name
-            space_private_name = '%s_private' % space_name
-            if container_name in [space_public_name, space_private_name]:
-                return
-
-        self.stored_user = environ['tiddlyweb.usersign']
-        environ['tiddlyweb.usersign'] = {'name': 'GUEST', 'roles': []}
-        return
-
-
-class AllowOrigin(object):
-    """
-    On every GET request add an Access-Control-Allow-Origin header
-    to enable CORS (even though we don't fully use CORS).
-
-
-    XXX: Note there is a subtle bug in this. The headers is not
-    added when an HTTP304 is raised elsewhere in the stack.
-    Attempts to fix that directly did not appear to work, more
-    effort required.
-    """
-    def __init__(self, application):
-        self.application = application
-
-    def __call__(self, environ, start_response):
-
-        def replacement_start_response(status, headers, exc_info=None):
-            if environ['REQUEST_METHOD'] == 'GET':
-                headers.append(('Access-Control-Allow-Origin', '*'))
-            return start_response(status, headers, exc_info)
-
-        return self.application(environ, replacement_start_response)
