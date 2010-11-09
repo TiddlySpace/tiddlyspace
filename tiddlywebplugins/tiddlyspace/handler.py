@@ -345,7 +345,7 @@ class DropPrivs(object):
                     bag.endswith('_public') or bag.endswith('_private')
                     or bag.endswith('_archive'))]
                 acceptable_bags.extend(base_bags)
-                acceptable_bags.extend(ADMIN_BAGS)  # XXX this leaves a big hole
+                acceptable_bags.extend(ADMIN_BAGS)
                 if container_name in acceptable_bags:
                     return
 
@@ -366,10 +366,12 @@ class AllowOrigin(object):
         self.application = application
 
     def __call__(self, environ, start_response):
+
         def replacement_start_response(status, headers, exc_info=None):
             if environ['REQUEST_METHOD'] == 'GET':
                 headers.append(('Access-Control-Allow-Origin', '*'))
             return start_response(status, headers, exc_info)
+
         return self.application(environ, replacement_start_response)
 
 

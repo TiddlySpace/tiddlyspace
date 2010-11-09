@@ -31,7 +31,8 @@ class Serialization(HTMLSerialization):
         space_link = self._space_link(tiddler)
         html = render_wikitext(tiddler, self.environ)
         self.environ['tiddlyweb.title'] = tiddler.title
-        return list_html + space_link + self._tiddler_div(tiddler) + html + '</div>'
+        tiddler_info = self._tiddler_div(tiddler)
+        return list_html + space_link + tiddler_info + html + '</div>'
 
     def _space_link(self, tiddler):
         """
@@ -49,7 +50,9 @@ class Serialization(HTMLSerialization):
             return ''
 
         space_link = """
-<div class="tiddlerslink"><a href="%s%s" title="space link">%s in space</a></div>
+<div class="tiddlerslink">
+<a href="%s%s" title="space link">%s in space</a>
+</div>
 """ % (self._server_prefix(), link, tiddler.title)
         return space_link
 

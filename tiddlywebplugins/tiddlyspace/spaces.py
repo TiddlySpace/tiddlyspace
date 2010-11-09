@@ -415,8 +415,9 @@ def _validate_space_name(environ, name):
         raise HTTP409('Invalid space name, ascii required: %s' %
             name.encode('UTF-8'))
     if not SPACE_NAME_PATTERN.match(name):
-        raise HTTP409('Invalid space name, must be valid host name (RFC 1035)' +
-            ': %s' % name)
+        raise HTTP409(
+                'Invalid space name, must be valid host name (RFC 1035)' +
+                ': %s' % name)
     # This reserved list should/could be built up from multiple
     # sources.
     reserved_space_names = environ['tiddlyweb.config'].get(

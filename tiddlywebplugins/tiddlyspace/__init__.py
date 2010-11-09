@@ -84,7 +84,7 @@ def init(config):
                 store.delete(tiddler)
             except NoTiddlerError:
                 std_error_message(
-                        'error deleting deleting tiddler %s from bag %s: %s' % (
+                        'error deleting tiddler %s from bag %s: %s' % (
                             title, bag, 'no such tiddler'))
             return True
         else:
@@ -112,7 +112,7 @@ def init(config):
     # because each plugin does its own get_tiddler_locations.
     # This only fixes 'twanager update', instance creation
     # still does not have the right information, thus requiring a
-    # twanager update after instance creation. Presumably the 
+    # twanager update after instance creation. Presumably the
     # instance script needs to do something similar.
     config['instance_tiddlers'] = get_tiddler_locations(store_contents,
             'tiddlywebplugins.tiddlyspace')
