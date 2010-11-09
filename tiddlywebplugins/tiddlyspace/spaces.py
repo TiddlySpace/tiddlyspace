@@ -16,8 +16,8 @@ from tiddlyweb.web.http import HTTP403, HTTP404, HTTP409
 
 from tiddlywebplugins.utils import require_any_user
 
+from tiddlywebplugins.tiddlyspace.space import Space
 
-SPACE_NAME_PATTERN = re.compile(r"^[a-z][0-9a-z\-]*[0-9a-z]$")
 
 try:
     JSONDecodeError = simplejson.decoder.JSONDecodeError
@@ -72,14 +72,8 @@ def change_space_member(store, space_name, add=None, remove=None,
     """
     The guts of adding a member to space.
     """
-    public_name = '%s_public' % space_name
-    private_name = '%s_private' % space_name
-    archive_name = '%s_archive' % space_name
-    public_bag = store.get(Bag(public_name))
-    private_bag = store.get(Bag(private_name))
-    archive_bag = store.get(Bag(archive_name))
-    public_recipe = store.get(Recipe(public_name))
-    private_recipe = store.get(Recipe(private_name))
+    space = Space(space_name)
+    private_bag = store.get(Bag(space.private_bag()))
 
     if current_user:
         private_bag.policy.allows(current_user, 'manage')
@@ -90,8 +84,9 @@ def change_space_member(store, space_name, add=None, remove=None,
     if add:
         store.get(User(add))
 
-    for entity in [public_bag, private_bag, archive_bag, public_recipe,
-            private_recipe]:
+    bags = [store.get(Bag(bag)) for bag in space.list_bags()]
+    recipes = [store.get(Recipe(bag)) for bag in space.list_recipes()]
+    for entity in bags + recipes:
         new_policy = _update_policy(entity.policy, add=add, subtract=remove)
         entity.policy = new_policy
         store.put(entity)
@@ -105,8 +100,9 @@ def confirm_space(environ, start_response):
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     try:
-        store.get(Recipe('%s_public' % space_name))
-        store.get(Recipe('%s_private' % space_name))
+        space = Space(space_name)
+        store.get(Recipe(space.public_recipe()))
+        store.get(Recipe(space.private_recipe()))
     except NoRecipeError:
         raise HTTP404('%s does not exist' % space_name)
     start_response('204 No Content', [])
@@ -161,9 +157,9 @@ def list_spaces(environ, start_response):
         except AttributeError:
             recipe_names = store.storage.user_spaces(current_user)
         for recipe in recipe_names:
-            spaces.append(_recipe_space_name(recipe))
+            spaces.append(Space.name_from_recipe(recipe))
     else:
-        spaces = [_recipe_space_name(recipe.name) for
+        spaces = [Space.name_from_recipe(recipe.name) for
                 recipe in store.list_recipes() if
                 recipe.name.endswith('_public')]
     start_response('200 OK', [
@@ -181,8 +177,9 @@ def list_space_members(environ, start_response):
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     current_user = environ['tiddlyweb.usersign']
+    space = Space(space_name)
     try:
-        private_space_bag = store.get(Bag('%s_private' % space_name))
+        private_space_bag = store.get(Bag(space.private_bag()))
         private_space_bag.policy.allows(current_user, 'manage')
         members = [member for member in private_space_bag.policy.manage if
                 not member.startswith('R:')]
@@ -232,13 +229,12 @@ def subscribe_space(environ, start_response):
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     current_user = environ['tiddlyweb.usersign']
+    current_space = Space(space_name)
     try:
-        public_name = '%s_public' % space_name
-        private_name = '%s_private' % space_name
-        store.get(Bag(public_name))  # checked for existence, but not used
-        private_bag = store.get(Bag(private_name))
-        public_recipe = store.get(Recipe(public_name))
-        private_recipe = store.get(Recipe(private_name))
+        store.get(Bag(current_space.public_bag()))  # checked for existence, but not used
+        private_bag = store.get(Bag(current_space.private_bag()))
+        public_recipe = store.get(Recipe(current_space.public_recipe()))
+        private_recipe = store.get(Recipe(current_space.private_recipe()))
     except (NoBagError, NoRecipeError):
         raise HTTP404('space %s does not exist' % space_name)
 
@@ -251,7 +247,8 @@ def subscribe_space(environ, start_response):
     for space in subscriptions:
         _validate_subscription(environ, space, private_recipe_list)
         try:
-            subscribed_recipe = store.get(Recipe('%s_public' % space))
+            subscribed_space = Space(space)
+            subscribed_recipe = store.get(Recipe(subscribed_space.public_recipe()))
             for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
                 if [bag, filter_string] not in public_recipe_list:
                     public_recipe_list.insert(-1, (bag, filter_string))
@@ -263,7 +260,8 @@ def subscribe_space(environ, start_response):
     for space in unsubscriptions:
         if space == space_name:
             raise HTTP409('Attempt to unsubscribe self')
-        bag = '%s_public' % space
+        unsubscribed_space = Space(space)
+        bag = unsubscribed_space.public_bag()
         try:
             public_recipe_list.remove([bag, ""])
             private_recipe_list.remove([bag, ""])
@@ -357,50 +355,24 @@ def _make_space(environ, space_name):
     # XXX stub out the clumsy way for now
     # can make this much more declarative
 
-    private_bag = Bag('%s_private' % space_name)
-    archive_bag = Bag('%s_archive' % space_name)
-    public_bag = Bag('%s_public' % space_name)
-    private_bag.policy = _make_policy(member)
-    archive_bag.policy = _make_policy(member)
-    public_bag.policy = _make_policy(member)
-    public_bag.policy.read = []
-    store.put(private_bag)
-    store.put(archive_bag)
-    store.put(public_bag)
+    space = Space(space_name)
 
-    public_recipe = Recipe('%s_public' % space_name)
-    public_recipe.set_recipe([
-        ('system', ''),
-        ('tiddlyspace', ''),
-        ('system-plugins_public', ''),
-        ('system-info_public', ''),
-        ('system-images_public', ''),
-        ('system-theme_public', ''),
-        (public_recipe.name, ''),
-        ])
-    private_recipe = Recipe('%s_private' % space_name)
-    private_recipe.set_recipe([
-        ('system', ''),
-        ('tiddlyspace', ''),
-        ('system-plugins_public', ''),
-        ('system-info_public', ''),
-        ('system-images_public', ''),
-        ('system-theme_public', ''),
-        (public_recipe.name, ''),
-        (private_recipe.name, ''),
-        ])
+    for bag_name in space.list_bags():
+        bag = Bag(bag_name)
+        bag.policy = _make_policy(member)
+        if bag_name.endswith('_public'):
+            bag.policy.read = []
+        store.put(bag)
+
+    public_recipe = Recipe(space.public_recipe())
+    public_recipe.set_recipe(space.public_recipe_list())
+    private_recipe = Recipe(space.private_recipe())
+    private_recipe.set_recipe(space.private_recipe_list())
     private_recipe.policy = _make_policy(member)
     public_recipe.policy = _make_policy(member)
     public_recipe.policy.read = []
     store.put(public_recipe)
     store.put(private_recipe)
-
-
-def _recipe_space_name(recipe_name):
-    ender = '_private'
-    if recipe_name.endswith('_public'):
-        ender = '_public'
-    return recipe_name.rsplit(ender, 1)[0]
 
 
 def _validate_space_name(environ, name):
@@ -410,14 +382,9 @@ def _validate_space_name(environ, name):
     """
     store = environ['tiddlyweb.store']
     try:
-        name = str(name)
-    except UnicodeEncodeError:
-        raise HTTP409('Invalid space name, ascii required: %s' %
-            name.encode('UTF-8'))
-    if not SPACE_NAME_PATTERN.match(name):
-        raise HTTP409(
-                'Invalid space name, must be valid host name (RFC 1035)' +
-                ': %s' % name)
+        space = Space(name)
+    except ValueError, exc:
+        raise HTTP409(exc)
     # This reserved list should/could be built up from multiple
     # sources.
     reserved_space_names = environ['tiddlyweb.config'].get(
@@ -425,7 +392,7 @@ def _validate_space_name(environ, name):
     if name in reserved_space_names:
         raise HTTP409('Invalid space name: %s' % name)
     try:
-        store.get(Recipe('%s_private' % name))
+        store.get(Recipe(space.private_recipe()))
         raise HTTP409('%s already exists as space' % name)
     except NoRecipeError:
         pass
@@ -454,7 +421,8 @@ def _validate_subscription(environ, name, recipe):
     We know that the space exists, what we want to determine here is if
     it has been blacklisted or already been subscribed.
     """
+    space = Space(name)
     if name in environ['tiddlyweb.config'].get('blacklisted_spaces', []):
         raise HTTP409('Subscription not allowed to space: %s' % name)
-    elif ['%s_public' % name, ''] in recipe:
+    elif [space.public_bag(), ''] in recipe:
         raise HTTP409('Space already subscribed: %s' % name)
