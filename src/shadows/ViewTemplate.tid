@@ -15,7 +15,7 @@ modifier: osmosoft
 			last modified on
 			<span macro="view modified date"></span>
 		</div>
-		<div macro="view title replyLink"></span>
+		<div macro="view title replyLink"></div>
 	</span>
 	<span class='followPlaceHolder' macro='followTiddlers'></span>
 	<span class='modifierIcon'
