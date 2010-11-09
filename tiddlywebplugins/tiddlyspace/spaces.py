@@ -3,7 +3,6 @@ Routine related to web handling of space
 listing, creation, subscription, etc.
 """
 
-import re
 import urllib
 import simplejson
 

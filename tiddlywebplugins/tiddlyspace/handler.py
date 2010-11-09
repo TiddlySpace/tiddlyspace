@@ -122,7 +122,7 @@ def safe_mode(environ, start_response):
     # Get the list of core plugins
     try:
         core_plugin_tiddler_titles = []
-        for bag in [recipe_bag for recipe_bag, filter in Space.CORE_RECIPE]:
+        for bag in [recipe_bag for recipe_bag, _ in Space.CORE_RECIPE]:
             bag = store.get(Bag(bag))
             for tiddler in store.list_bag_tiddlers(bag):
                 if not tiddler.store:
@@ -165,7 +165,7 @@ def safe_mode(environ, start_response):
         if not tiddler.store:
             tiddler = store.get(tiddler)
         if tiddler.bag not in [recipe_bag for
-                recipe_bag, filter in Space.CORE_RECIPE]:
+                recipe_bag, _ in Space.CORE_RECIPE]:
             if 'systemConfig' in tiddler.tags:
                 tiddler.tags.append('systemConfigDisable')
         tiddler.recipe = recipe.name
