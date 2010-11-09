@@ -22,75 +22,14 @@ from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
 
+from tiddlywebplugins.tiddlyspace.web import (determine_host,
+        determine_space, determine_space_recipe)
+
 
 CORE_BAGS = ['system', 'common', 'tiddlyspace',
         'system-info_public', 'system-plugins_public', 'system-theme_public',
         'system-images_public']
 ADMIN_BAGS = ['common', 'MAPUSER', 'MAPSPACE']
-
-
-def determine_host(environ):
-    """
-    Extract the current HTTP host from the environment.
-    Return that plus the server_host from config. This is
-    used to help calculate what space we are in when HTTP
-    requests are made.
-    """
-    server_host = environ['tiddlyweb.config']['server_host']
-    port = int(server_host['port'])
-    if port == 80 or port == 443:
-        host_url = server_host['host']
-    else:
-        host_url = '%s:%s' % (server_host['host'], port)
-
-    http_host = environ.get('HTTP_HOST', host_url)
-    if ':' in http_host:
-        for port in [':80', ':443']:
-            if http_host.endswith(port):
-                http_host = http_host.replace(port, '')
-                break
-    return http_host, host_url
-
-
-def determine_space(environ, http_host):
-    """
-    Calculate the space associated with a subdomain.
-    """
-    # XXX: This is broken for spaces which are not a subdomain
-    # of the main tiddlyspace domain.
-    server_host = environ['tiddlyweb.config']['server_host']['host']
-    if '.%s' % server_host in http_host:
-        return http_host.rsplit('.', server_host.count('.') + 1)[0]
-    else:
-        if ':' in http_host:
-            http_host = http_host.split(':', 1)[0]
-        store = environ['tiddlyweb.store']
-        tiddler = Tiddler(http_host, 'MAPSPACE')
-        try:
-            tiddler = store.get(tiddler)
-            return tiddler.fields['mapped_space']
-        except (KeyError, NoBagError, NoTiddlerError):
-            pass
-    return None
-
-
-def determine_space_recipe(environ, space_name):
-    """
-    Given a space name, check if the current user is a member of that
-    named space. If so, use the private recipe.
-    """
-    store = environ['tiddlyweb.store']
-    user = environ['tiddlyweb.usersign']['name']
-    recipe = Recipe('%s_public' % space_name)
-    try:
-        recipe = store.get(recipe)
-    except NoRecipeError:
-        raise HTTP404('Space for %s does not exist' % space_name)
-    members = recipe.policy.manage  # XXX: authoritative?
-
-    space_type = 'private' if user in members else 'public'
-    recipe_name = '%s_%s' % (space_name, space_type)
-    return recipe_name
 
 
 def friendly_uri(environ, start_response):
@@ -316,7 +255,7 @@ class DropPrivs(object):
         if environ['tiddlyweb.usersign']['name'] == 'GUEST':
             return
 
-        http_host, host_url = determine_host(environ)
+        http_host, _ = determine_host(environ)
         space_name = determine_space(environ, http_host)
 
         if space_name == None:
@@ -360,7 +299,16 @@ class DropPrivs(object):
 
 
 class AllowOrigin(object):
+    """
+    On every GET request add an Access-Control-Allow-Origin header
+    to enable CORS (even though we don't fully use CORS).
 
+
+    XXX: Note there is a subtle bug in this. The headers is not
+    added when an HTTP304 is raised elsewhere in the stack.
+    Attempts to fix that directly did not appear to work, more
+    effort required.
+    """
     def __init__(self, application):
         self.application = application
 
@@ -372,5 +320,3 @@ class AllowOrigin(object):
             return start_response(status, headers, exc_info)
 
         return self.application(environ, replacement_start_response)
-
-
