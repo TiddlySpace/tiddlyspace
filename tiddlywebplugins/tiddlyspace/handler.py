@@ -13,7 +13,6 @@ from tiddlyweb.model.user import User
 from tiddlyweb.model.collections import Tiddlers
 from tiddlyweb.store import (NoBagError, NoRecipeError, NoUserError,
         NoTiddlerError)
-from tiddlyweb.filters import parse_for_filters
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
@@ -30,29 +29,68 @@ CORE_BAGS = ['system', 'common', 'tiddlyspace',
 ADMIN_BAGS = ['common', 'MAPUSER', 'MAPSPACE']
 
 
-def home(environ, start_response):
+def determine_host(environ):
     """
-    handles requests at /, serving either the front page or a space (public or
-    private) based on whether a subdomain is used and whether a user is auth'd
+    Extract the current HTTP host from the environment.
+    Return that plus the server_host from config. This is
+    used to help calculate what space we are in when HTTP
+    requests are made.
+    """
+    server_host = environ['tiddlyweb.config']['server_host']
+    port = int(server_host['port'])
+    if port == 80 or port == 443:
+        host_url = server_host['host']
+    else:
+        host_url = '%s:%s' % (server_host['host'], port)
 
-    relies on tiddlywebplugins.virtualhosting
+    http_host = environ.get('HTTP_HOST', host_url)
+    if ':' in http_host:
+        for port in [':80', ':443']:
+            if http_host.endswith(port):
+                http_host = http_host.replace(port, '')
+                break
+    return http_host, host_url
+
+
+def determine_space(environ, http_host):
     """
-    http_host, host_url = _determine_host(environ)
-    if http_host == host_url:
-        usersign = environ['tiddlyweb.usersign']['name']
+    Calculate the space associated with a subdomain.
+    """
+    # XXX: This is broken for spaces which are not a subdomain
+    # of the main tiddlyspace domain.
+    server_host = environ['tiddlyweb.config']['server_host']['host']
+    if '.%s' % server_host in http_host:
+        return http_host.rsplit('.', server_host.count('.') + 1)[0]
+    else:
+        if ':' in http_host:
+            http_host = http_host.split(':', 1)[0]
+        store = environ['tiddlyweb.store']
+        tiddler = Tiddler(http_host, 'MAPSPACE')
         try:
-            store = environ['tiddlyweb.store']
-            store.get(User(usersign))
-        except NoUserError:
-            usersign = 'GUEST'
-        if usersign == 'GUEST':
-            return serve_frontpage(environ, start_response)
-        else:  # authenticated user
-            scheme = environ['tiddlyweb.config']['server_host']['scheme']
-            uri = '%s://%s.%s' % (scheme, usersign, host_url)
-            raise HTTP302(uri)
-    else:  # subdomain
-        return serve_space(environ, start_response, http_host)
+            tiddler = store.get(tiddler)
+            return tiddler.fields['mapped_space']
+        except (KeyError, NoBagError, NoTiddlerError):
+            pass
+    return None
+
+
+def determine_space_recipe(environ, space_name):
+    """
+    Given a space name, check if the current user is a member of that
+    named space. If so, use the private recipe.
+    """
+    store = environ['tiddlyweb.store']
+    user = environ['tiddlyweb.usersign']['name']
+    recipe = Recipe('%s_public' % space_name)
+    try:
+        recipe = store.get(recipe)
+    except NoRecipeError:
+        raise HTTP404('Space for %s does not exist' % space_name)
+    members = recipe.policy.manage  # XXX: authoritative?
+
+    space_type = 'private' if user in members else 'public'
+    recipe_name = '%s_%s' % (space_name, space_type)
+    return recipe_name
 
 
 def friendly_uri(environ, start_response):
@@ -61,12 +99,12 @@ def friendly_uri(environ, start_response):
     into a request for a tiddler in the public or private recipe
     of the current space.
     """
-    http_host, host_url = _determine_host(environ)
+    http_host, host_url = determine_host(environ)
     if http_host == host_url:
         raise HTTP404('No resource found')
     else:
-        space_name = _determine_space(environ, http_host)
-        recipe_name = _determine_space_recipe(environ, space_name)
+        space_name = determine_space(environ, http_host)
+        recipe_name = determine_space_recipe(environ, space_name)
         # tiddler_name already in uri
         environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
             'UTF-8')
@@ -103,6 +141,31 @@ def get_identities(environ, start_response):
     return [simplejson.dumps(identities)]
 
 
+def home(environ, start_response):
+    """
+    handles requests at /, serving either the front page or a space (public or
+    private) based on whether a subdomain is used and whether a user is auth'd
+
+    relies on tiddlywebplugins.virtualhosting
+    """
+    http_host, host_url = determine_host(environ)
+    if http_host == host_url:
+        usersign = environ['tiddlyweb.usersign']['name']
+        try:
+            store = environ['tiddlyweb.store']
+            store.get(User(usersign))
+        except NoUserError:
+            usersign = 'GUEST'
+        if usersign == 'GUEST':
+            return serve_frontpage(environ, start_response)
+        else:  # authenticated user
+            scheme = environ['tiddlyweb.config']['server_host']['scheme']
+            uri = '%s://%s.%s' % (scheme, usersign, host_url)
+            raise HTTP302(uri)
+    else:  # subdomain
+        return serve_space(environ, start_response, http_host)
+
+
 def safe_mode(environ, start_response):
     """
     Serve up a space in safe mode. Safe mode means that
@@ -111,9 +174,9 @@ def safe_mode(environ, start_response):
     are deleted from the store of the space in question.
     """
 
-    http_host, _ = _determine_host(environ)
-    space_name = _determine_space(environ, http_host)
-    recipe_name = _determine_space_recipe(environ, space_name)
+    http_host, _ = determine_host(environ)
+    space_name = determine_space(environ, http_host)
+    recipe_name = determine_space_recipe(environ, space_name)
     if recipe_name != '%s_private' % space_name:
         raise HTTP403('membership required for safe mode')
 
@@ -193,78 +256,14 @@ def serve_space(environ, start_response, http_host):
     Serve a space determined from the current virtual host and user.
     The user determines whether the recipe uses is public or private.
     """
-    space_name = _determine_space(environ, http_host)
-    recipe_name = _determine_space_recipe(environ, space_name)
+    space_name = determine_space(environ, http_host)
+    recipe_name = determine_space_recipe(environ, space_name)
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
             'UTF-8')
     _, mime_type = get_serialize_type(environ)
     if 'text/html' in mime_type:
         environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return get_tiddlers(environ, start_response)
-
-
-def _determine_host(environ):
-    """
-    Extract the current HTTP host from the environment.
-    Return that plus the server_host from config. This is
-    used to help calculate what space we are in when HTTP
-    requests are made.
-    """
-    server_host = environ['tiddlyweb.config']['server_host']
-    port = int(server_host['port'])
-    if port == 80 or port == 443:
-        host_url = server_host['host']
-    else:
-        host_url = '%s:%s' % (server_host['host'], port)
-
-    http_host = environ.get('HTTP_HOST', host_url)
-    if ':' in http_host:
-        for port in [':80', ':443']:
-            if http_host.endswith(port):
-                http_host = http_host.replace(port, '')
-                break
-    return http_host, host_url
-
-
-def _determine_space_recipe(environ, space_name):
-    """
-    Given a space name, check if the current user is a member of that
-    named space. If so, use the private recipe.
-    """
-    store = environ['tiddlyweb.store']
-    user = environ['tiddlyweb.usersign']['name']
-    recipe = Recipe('%s_public' % space_name)
-    try:
-        recipe = store.get(recipe)
-    except NoRecipeError:
-        raise HTTP404('Space for %s does not exist' % space_name)
-    members = recipe.policy.manage  # XXX: authoritative?
-
-    space_type = 'private' if user in members else 'public'
-    recipe_name = '%s_%s' % (space_name, space_type)
-    return recipe_name
-
-
-def _determine_space(environ, http_host):
-    """
-    Calculate the space associated with a subdomain.
-    """
-    # XXX: This is broken for spaces which are not a subdomain
-    # of the main tiddlyspace domain.
-    server_host = environ['tiddlyweb.config']['server_host']['host']
-    if '.%s' % server_host in http_host:
-        return http_host.rsplit('.', server_host.count('.') + 1)[0]
-    else:
-        if ':' in http_host:
-            http_host = http_host.split(':', 1)[0]
-        store = environ['tiddlyweb.store']
-        tiddler = Tiddler(http_host, 'MAPSPACE')
-        try:
-            tiddler = store.get(tiddler)
-            return tiddler.fields['mapped_space']
-        except (KeyError, NoBagError, NoTiddlerError):
-            pass
-    return None
 
 
 def _send_safe_mode(environ, start_response):
@@ -317,8 +316,8 @@ class DropPrivs(object):
         if environ['tiddlyweb.usersign']['name'] == 'GUEST':
             return
 
-        http_host, host_url = _determine_host(environ)
-        space_name = _determine_space(environ, http_host)
+        http_host, host_url = determine_host(environ)
+        space_name = determine_space(environ, http_host)
 
         if space_name == None:
             return
@@ -327,7 +326,7 @@ class DropPrivs(object):
         container_name = req_uri.split('/')[2]
 
         if req_uri.startswith('/bags/'):
-            recipe_name = _determine_space_recipe(environ, space_name)
+            recipe_name = determine_space_recipe(environ, space_name)
             space_recipe = store.get(Recipe(recipe_name))
             template = control.recipe_template(environ)
             recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
@@ -375,99 +374,3 @@ class AllowOrigin(object):
         return self.application(environ, replacement_start_response)
 
 
-class ControlView(object):
-    """
-    WSGI Middleware which adapts an incoming request to restrict what
-    entities from the store are visible to the requestor. The effective
-    result is that only those bags and recipes contained in the current
-    space are visible in the HTTP routes.
-    """
-
-    def __init__(self, application):
-        self.application = application
-
-    def __call__(self, environ, start_response):
-        req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
-
-        if (req_uri.startswith('/bags')
-                or req_uri.startswith('/search')
-                or req_uri.startswith('/recipes')):
-            self._handle_core_request(environ, req_uri)
-
-        return self.application(environ, start_response)
-
-    # XXX too long!
-    def _handle_core_request(self, environ, req_uri):
-        """
-        Override a core request, adding filters or sending 404s where
-        necessary to limit the view of entities.
-
-        filtering can be disabled with a custom HTTP header X-ControlView set
-        to false
-        """
-        http_host, host_url = _determine_host(environ)
-
-        request_method = environ['REQUEST_METHOD']
-
-        disable_ControlView = environ.get('HTTP_X_CONTROLVIEW') == 'false'
-        if http_host != host_url and not disable_ControlView:
-            space_name = _determine_space(environ, http_host)
-            if space_name == None:
-                return
-            recipe_name = _determine_space_recipe(environ, space_name)
-            store = environ['tiddlyweb.store']
-            try:
-                recipe = store.get(Recipe(recipe_name))
-            except NoRecipeError, exc:
-                raise HTTP404('No recipe for space: %s', exc)
-
-            template = control.recipe_template(environ)
-            bags = ['%s_archive' % space_name]
-            subscriptions = []
-            for bag, _ in recipe.get_recipe(template):
-                bags.append(bag)
-                if (bag.endswith('_public') and
-                        not bag.startswith('%s_p' % space_name)):
-                    subscriptions.append(bag[:-7])
-            bags.extend(ADMIN_BAGS)
-
-            filter_string = None
-            if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
-                filter_string = 'oom=name:'
-                if recipe_name.endswith('_private'):
-                    filter_parts = ['%s_%s' % (space_name, status)
-                            for status in ('private', 'public')]
-                else:
-                    filter_parts = ['%s_public' % space_name]
-                for subscription in subscriptions:
-                    filter_parts.append('%s_public' % subscription)
-                filter_string += ','.join(filter_parts)
-            elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
-                filter_string = 'oom=name:'
-                filter_parts = []
-                for bag in bags:
-                    filter_parts.append('%s' % bag)
-                filter_string += ','.join(filter_parts)
-            elif req_uri.startswith('/search') and req_uri.count('/') == 1:
-                filter_string = 'oom=bag:'
-                filter_parts = []
-                for bag in bags:
-                    filter_parts.append('%s' % bag)
-                filter_string += ','.join(filter_parts)
-            else:
-                entity_name = req_uri.split('/')[2]
-                if '/recipes/' in req_uri:
-                    valid_recipes = ['%s_%s' % (space_name, status)
-                            for status in ('private', 'public')]
-                    valid_recipes += ['%s_public' % _space_name
-                            for _space_name in subscriptions]
-                    if entity_name not in valid_recipes:
-                        raise HTTP404('recipe %s not found' % entity_name)
-                else:
-                    if entity_name not in bags:
-                        raise HTTP404('bag %s not found' % entity_name)
-
-            if filter_string:
-                filters, _ = parse_for_filters(filter_string)
-                for single_filter in filters:
-                    environ['tiddlyweb.filters'].insert(0, single_filter)
