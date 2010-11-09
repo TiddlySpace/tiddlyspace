@@ -75,4 +75,20 @@ test("spaceButton", function() {
 	strictEqual($("[site-icon=foo]", el).length, 1);
 });
 
+test("followSpace paramifiedLink", function() {
+	var container = $("<span />")[0];
+	config.macros.followSpace.paramifiedLink(container, "foo", "bar", "abc", "newTiddler");
+	var link = $("a", container);
+	strictEqual(link.attr("href"), "http://foo.tiddlyspace.com/#newTiddler:[[bar]]");
+	strictEqual(link.text(), "abc");
+});
+
+test("followSpace make", function() {
+	var container = $("<span />")[0];
+	config.macros.followSpace.make(container, "jerm", "bob");
+	var link = $("a", container);
+	strictEqual(link.attr("href"), "http://jerm.tiddlyspace.com/#follow:[[@bob]]");
+	strictEqual(link.text(), "follow bob");
+})
+
 })(QUnit.module, jQuery);
