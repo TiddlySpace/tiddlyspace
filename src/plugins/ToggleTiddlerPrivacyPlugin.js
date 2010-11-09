@@ -116,8 +116,8 @@ var macro = config.macros.setPrivacy = {
 		}
 		window.setTimeout(function() {
 			macro.setBag(el, defaultValue, options);
-		}, 100); 
-		// annoyingly this is needed as customFields are added to end of EditTemplate so are not present yet 
+		}, 100);
+		// annoyingly this is needed as customFields are added to end of EditTemplate so are not present yet
 		// and don't seem to respect any existing customFields.
 	}
 };
