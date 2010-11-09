@@ -10,12 +10,14 @@ from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
 import httplib2
 import simplejson
+from datetime import datetime
 
 
 from tiddlywebplugins.utils import get_store
 from tiddlyweb.config import config
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
+from tiddlyweb.util import sha
 from tiddlywebplugins.tiddlyspace.validator import CsrfProtector, InvalidNonceError
 
 
@@ -25,6 +27,7 @@ def setup_module(module):
     # Selector just _is_ the callable
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
+    wsgi_intercept.add_wsgi_intercept('foo.0.0.0.0', 8080, app_fn)
     module.http = httplib2.Http()
 
 
@@ -41,41 +44,39 @@ def test_validator_no_nonce():
     store = get_store(config)
     try:
         csrf = CsrfProtector({})
-        result = csrf.check_csrf(store, 'foo', None)
-        raise AssertionError('check_csrf succeeded when no nonce supplied')
+        result = csrf.check_csrf({}, None)
+        raise AssertionError('check_csrf succeeded when no csrf_token supplied')
     except InvalidNonceError, exc:
-        assert exc.message == 'No nonce supplied'
-
-def test_validator_no_nonce_in_bag():
-    """
-    test the validator directly
-    ensure that it fails when the nonce tiddler does not exist inside the
-    private bag
-    """
-    store = get_store(config)
-    try:
-        csrf = CsrfProtector({})
-        result = csrf.check_csrf(store, 'foo', 'None')
-        raise AssertionError('check_csrf succeeded when no nonce in bag')
-    except InvalidNonceError, exc:
-        assert exc.message == 'No nonce found in foo space'
+        assert exc.message == 'No csrf_token supplied'
 
 def test_validator_nonce_success():
     """
     test the validator directly
-    ensure that it succeeds when the nonce passed in matches the nonce tiddler
+    ensure that it succeeds when the nonce passed in is correct
     """
     store = get_store(config)
-    nonce = 'dwaoiju277218ywdhdnakas72'
-    space = 'foo'
-    make_fake_space(store, space)
-    tiddler = Tiddler('nonce')
-    tiddler.fields['nonce'] = nonce
-    tiddler.bag = '%s_private' % space
-    store.put(tiddler)
+    username = 'foo'
+    spacename = 'foo'
+    secret = '12345'
+    timestamp = datetime.now().strftime('%Y%m%d%H')
+    nonce = '%s:%s' % (timestamp,
+        sha('%s:%s:%s:%s' % (username, timestamp, spacename, secret)).
+        hexdigest())
+    environ = {
+       'tiddlyweb.usersign': {'name': username},
+       'tiddlyweb.config': {
+           'secret': secret,
+           'server_host': {
+               'host': '0.0.0.0',
+               'port': '8080'
+           }
+        },
+        'HTTP_HOST': 'foo.0.0.0.0:8080'
+    }
+    make_fake_space(store, spacename)
 
     csrf = CsrfProtector({})
-    result = csrf.check_csrf(store, space, nonce)
+    result = csrf.check_csrf(environ, nonce)
 
     assert result == True
 
@@ -86,16 +87,57 @@ def test_validator_nonce_fail():
     """
     store = get_store(config)
     nonce = 'dwaoiju277218ywdhdnakas72'
-    space = 'foo'
-    make_fake_space(store, space)
-    tiddler = Tiddler('nonce')
-    tiddler.fields['nonce'] = 'not the real nonce'
-    tiddler.bag = '%s_private' % space
-    store.put(tiddler)
+    username = 'foo'
+    spacename = 'foo'
+    secret = '12345'
+    timestamp = datetime.now().strftime('%Y%m%d%H')
+    environ = {
+       'tiddlyweb.usersign': {'name': username},
+       'tiddlyweb.config': {
+           'secret': secret,
+           'server_host': {
+               'host': '0.0.0.0',
+               'port': '8080'
+           }
+        },
+        'HTTP_HOST': 'foo.0.0.0.0:8080'
+    }
+    make_fake_space(store, spacename)
 
     try:
         csrf = CsrfProtector({})
-        result = csrf.check_csrf(store, space, nonce)
+        result = csrf.check_csrf(environ, nonce)
+        raise AssertionError('check_csrf succeeded when nonce didn\'t match')
+    except InvalidNonceError, exc:
+        assert exc.message == 'Nonce doesn\'t match'
+
+def test_validator_nonce_hash_fail():
+    """
+    test the validator directly
+    ensure that it fails when the hash section of the nonce is incorrect
+    """
+    store = get_store(config)
+    username = 'foo'
+    spacename = 'foo'
+    secret = '12345'
+    timestamp = datetime.now().strftime('%Y%m%d%H')
+    nonce = '%s:dwaoiju277218ywdhdnakas72' % timestamp
+    environ = {
+       'tiddlyweb.usersign': {'name': username},
+       'tiddlyweb.config': {
+           'secret': secret,
+           'server_host': {
+               'host': '0.0.0.0',
+               'port': '8080'
+           }
+        },
+        'HTTP_HOST': 'foo.0.0.0.0:8080'
+    }
+    make_fake_space(store, spacename)
+
+    try:
+        csrf = CsrfProtector({})
+        result = csrf.check_csrf(environ, nonce)
         raise AssertionError('check_csrf succeeded when nonce didn\'t match')
     except InvalidNonceError, exc:
         assert exc.message == 'Nonce doesn\'t match'
@@ -106,28 +148,29 @@ def test_post_data_form_urlencoded():
     test using application/x-www-form-urlencoded
     """
     store = get_store(config)
-    nonce = 'osfsiufn9hf9w3r3njsn ief'
     space = 'foo'
     make_fake_space(store, space)
-    tiddler = Tiddler('nonce')
-    tiddler.fields['nonce'] = nonce
-    tiddler.bag = '%s_private' % space
-    store.put(tiddler)
     user = User('foo')
     user.set_password('foobar')
     store.put(user)
+    timestamp = datetime.now().strftime('%Y%m%d%H')
+    secret = config['secret']
+    nonce = '%s:%s' % (timestamp,
+        sha('%s:%s:%s:%s' % (user.usersign, timestamp, space, secret)).
+        hexdigest())
 
     user_cookie = get_auth('foo', 'foobar')
+    csrf_token = 'csrf_token="%s"' % nonce
     data = 'title=foobar&text=hello%20world'
 
     #test success
-    response, _ = http.request('http://0.0.0.0:8080/bags/foo_public/tiddlers',
+    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_public/tiddlers',
         method='POST',
         headers={
             'Content-type': 'application/x-www-form-urlencoded',
-            'Cookie': 'tiddlyweb_user="%s"' % user_cookie
+            'Cookie': 'tiddlyweb_user="%s"; %s' % (user_cookie, csrf_token)
         },
-        body='%s&nonce=%s' % (data, nonce))
+        body='%s&csrf_token=%s' % (data, nonce))
     assert response['status'] == '204'
 
     #test failure
@@ -147,18 +190,19 @@ def test_post_data_multipart_form():
     test using multipart/form-data
     """
     store = get_store(config)
-    nonce = 'osfsiufn9hf9w3r3njsnief'
     space = 'foo'
     make_fake_space(store, space)
-    tiddler = Tiddler('nonce')
-    tiddler.fields['nonce'] = nonce
-    tiddler.bag = '%s_private' % space
-    store.put(tiddler)
     user = User('foo')
     user.set_password('foobar')
     store.put(user)
+    timestamp = datetime.now().strftime('%Y%m%d%H')
+    secret = config['secret']
+    nonce = '%s:%s' % (timestamp,
+        sha('%s:%s:%s:%s' % (user.usersign, timestamp, space, secret)).
+        hexdigest())
 
     user_cookie = get_auth('foo', 'foobar')
+    csrf_token = 'csrf_token=%s' % nonce
     data = '''---------------------------168072824752491622650073
 Content-Disposition: form-data; name="title"
 
@@ -170,7 +214,7 @@ Hello World
 ---------------------------168072824752491622650073--'''
 
     #test success
-    uri = 'http://0.0.0.0:8080/bags/foo_public/tiddlers?nonce=%s' % nonce
+    uri = 'http://foo.0.0.0.0:8080/bags/foo_public/tiddlers?%s' % csrf_token
     response, _ = http.request(uri,
         method='POST',
         headers={
@@ -183,7 +227,7 @@ Hello World
     assert response['status'] == '204'
 
     #test failure
-    response, _ = http.request('http://0.0.0.0:8080/bags/foo_public/tiddlers',
+    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_public/tiddlers',
         method='POST',
         headers={
             'Content-Type': 'multipart/form-data; ' \
@@ -200,28 +244,29 @@ def test_nonce_not_left_over():
     i.e. check that it is removed before the request continues
     """
     store = get_store(config)
-    nonce = 'osfsiufn9hf9w3r3njsn ief'
     space = 'foo'
     make_fake_space(store, space)
-    tiddler = Tiddler('nonce')
-    tiddler.fields['nonce'] = nonce
-    tiddler.bag = '%s_private' % space
-    store.put(tiddler)
     user = User('foo')
     user.set_password('foobar')
     store.put(user)
+    timestamp = datetime.now().strftime('%Y%m%d%H')
+    secret = config['secret']
+    nonce = '%s:%s' % (timestamp,
+        sha('%s:%s:%s:%s' % (user.usersign, timestamp, space, secret)).
+        hexdigest())
 
     user_cookie = get_auth('foo', 'foobar')
+    csrf_token = 'csrf_token=%s' % nonce
     data = 'title=foobar&text=hello%20world&extra_field=baz'
 
     #test success
-    response, _ = http.request('http://0.0.0.0:8080/bags/foo_public/tiddlers',
+    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_public/tiddlers',
         method='POST',
         headers={
             'Content-type': 'application/x-www-form-urlencoded',
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie
         },
-        body='%s&nonce=%s' % (data, nonce))
+        body='%s&csrf_token=%s' % (data, nonce))
     assert response['status'] == '204'
 
     new_tiddler = Tiddler('foobar')

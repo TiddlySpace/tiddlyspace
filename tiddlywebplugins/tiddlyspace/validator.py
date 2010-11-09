@@ -4,11 +4,10 @@ Input validation routines for TiddlySpace.
 
 
 import Cookie
+from datetime import datetime, timedelta
 
 from tiddlyweb.util import sha
 from tiddlyweb.web.validator import TIDDLER_VALIDATORS, InvalidTiddlerError
-from tiddlyweb.store import NoTiddlerError
-from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.web.http import HTTP400
 
 # XXX: importing private members, so they should probably not be private
@@ -38,42 +37,57 @@ class CsrfProtector(object):
                 'application/x-www-form-urlencoded',
                 'multipart/form-data']:
             return app()
-        store = environ['tiddlyweb.store']
-        space = environ['tiddlyweb.usersign']['name']
         form = environ['tiddlyweb.query']
-        nonce = form.pop('nonce', [''])[0]
+        nonce = form.pop('csrf_token', [''])[0]
         try:
-            self.check_csrf(store, space, nonce)
+            self.check_csrf(environ, nonce)
         except InvalidNonceError, exc:
             raise HTTP400(exc)
 
         return app()
 
-    def check_csrf(self, store, space, nonce):
+    def check_csrf(self, environ, nonce):
         """
         Check to ensure that the incoming request isn't a csrf attack.
-        Do this by expecting a nonce value that corresponds to a random hash
-        in a tiddler in the private bag of a space.
+        Do this by expecting a nonce that is made up of timestamp:hash
+        where hash is the hash of username:timestamp:spacename:secret
 
         Returns True
         """
         if not nonce:
-            raise InvalidNonceError('No nonce supplied')
+            raise InvalidNonceError('No csrf_token supplied')
 
-        tiddler = Tiddler('nonce') #TODO: change this name to something else
-        tiddler.bag = '%s_private' % space
-        try:
-            tiddler = store.get(tiddler)
-        except NoTiddlerError:
-            raise InvalidNonceError('No nonce found in %s space' % space)
+        username = environ['tiddlyweb.usersign']['name']
+        http_host = _determine_host(environ)[0]
+        spacename = _determine_space(environ, http_host) or ''
+        timestamp = nonce.rsplit(':', 1)[0]
+        secret = environ['tiddlyweb.config']['secret']
+        new_nonce = gen_nonce(username, spacename, timestamp, secret)
 
         try:
-            assert tiddler.fields['nonce'] == nonce
+            assert new_nonce == nonce
         except AssertionError:
-            raise InvalidNonceError('Nonce doesn\'t match')
+            try:
+                date = datetime.strptime(timestamp, '%Y%m%d%H')
+                date -= timedelta(hours=1)
+                timestamp = datetime.strftime(date, '%Y%m%d%H')
+                new_nonce = gen_nonce(username, spacename, timestamp, secret)
+                assert new_nonce == nonce
+            except (AssertionError, ValueError):
+                raise InvalidNonceError('Nonce doesn\'t match')
 
         return True
 
+
+def gen_nonce(username, spacename, timestamp, secret):
+    """
+    generate a hash suitable for using as a nonce.
+
+    the hash is: timestamp:hash(user:time:space:secret)
+    """
+    return '%s:%s' % (timestamp,
+        sha('%s:%s:%s:%s' % (username, timestamp, spacename, secret)).
+        hexdigest())
 
 def validate_mapuser(tiddler, environ):
     """
