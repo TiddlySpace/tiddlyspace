@@ -121,7 +121,8 @@ for space_name, description in spaces.items():
 
     store_structure['recipes'][private_recipe_name] = deepcopy(
         store_structure['recipes'][public_recipe_name])
-    store_structure['recipes'][private_recipe_name]['policy']['read'] = ['R:ADMIN']
+    store_structure['recipes'][private_recipe_name][
+            'policy']['read'] = ['R:ADMIN']
     store_structure['recipes'][private_recipe_name]['recipe'].append(
         (private_bag_name, ''))
 

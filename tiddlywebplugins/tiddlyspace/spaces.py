@@ -230,7 +230,8 @@ def subscribe_space(environ, start_response):
     current_user = environ['tiddlyweb.usersign']
     current_space = Space(space_name)
     try:
-        store.get(Bag(current_space.public_bag()))  # checked for existence, but not used
+        # checked for existence, but not used
+        store.get(Bag(current_space.public_bag()))
         private_bag = store.get(Bag(current_space.private_bag()))
         public_recipe = store.get(Recipe(current_space.public_recipe()))
         private_recipe = store.get(Recipe(current_space.private_recipe()))
@@ -247,7 +248,8 @@ def subscribe_space(environ, start_response):
         _validate_subscription(environ, space, private_recipe_list)
         try:
             subscribed_space = Space(space)
-            subscribed_recipe = store.get(Recipe(subscribed_space.public_recipe()))
+            subscribed_recipe = store.get(
+                    Recipe(subscribed_space.public_recipe()))
             for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
                 if [bag, filter_string] not in public_recipe_list:
                     public_recipe_list.insert(-1, (bag, filter_string))

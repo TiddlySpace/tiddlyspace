@@ -222,5 +222,3 @@ def _send_safe_mode(environ, start_response):
 <p><a href='/'>Return to my Space.</a></p>
 </div></div>
 """]
-
-

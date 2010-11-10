@@ -39,7 +39,7 @@ def init(config):
     """
     import tiddlywebwiki
     import tiddlywebplugins.logout
-    import tiddlywebplugins.virtualhosting # calling init not required
+    import tiddlywebplugins.virtualhosting  # calling init not required
     import tiddlywebplugins.magicuser
     import tiddlywebplugins.socialusers
     import tiddlywebplugins.mselect
@@ -118,7 +118,7 @@ def init(config):
     config['instance_tiddlers'] = get_tiddler_locations(store_contents,
             'tiddlywebplugins.tiddlyspace')
 
-    if 'selector' in config: # system plugin
+    if 'selector' in config:  # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
         config['selector'].add('/_safe', GET=safe_mode, POST=safe_mode)
         add_spaces_routes(config['selector'])

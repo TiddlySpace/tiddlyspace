@@ -9,6 +9,7 @@ from tiddlyweb.web.http import HTTP404
 
 from tiddlywebplugins.tiddlyspace.space import Space
 
+
 def determine_host(environ):
     """
     Extract the current HTTP host from the environment.
