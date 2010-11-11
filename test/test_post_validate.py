@@ -10,7 +10,7 @@ from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
 import httplib2
 import simplejson
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 from tiddlywebplugins.utils import get_store
@@ -215,7 +215,7 @@ Hello World
 
     #test success
     uri = 'http://foo.0.0.0.0:8080/bags/foo_public/tiddlers?%s' % csrf_token
-    response, _ = http.request(uri,
+    response, content = http.request(uri,
         method='POST',
         headers={
             'Content-Type': 'multipart/form-data; ' \
@@ -224,6 +224,7 @@ Hello World
             'Content-Length': '390'
         },
         body=data)
+    print content
     assert response['status'] == '204'
 
     #test failure
@@ -278,3 +279,101 @@ def test_nonce_not_left_over():
     assert new_tiddler.fields.get('extra_field') == 'baz'
     assert new_tiddler.fields.get('nonce') == None
 
+
+def test_cookie_set():
+    """
+    test that we get a cookie relating to the space we are in
+    """
+    store = get_store(config)
+    space = 'foo'
+    make_fake_space(store, space)
+    user = User('foo')
+    user.set_password('foobar')
+    store.put(user)
+
+    user_cookie = get_auth('foo', 'foobar')
+
+    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie
+        })
+
+    assert response['status'] == '200'
+
+    time = datetime.now().strftime('%Y%m%d%H')
+    cookie = 'csrf_token=%s:%s' % (time, sha('%s:%s:%s:%s' % (user.usersign,
+        time, space, config['secret'])).hexdigest())
+    assert response['set-cookie'] == cookie
+
+def test_guest_no_cookie_set():
+    """
+    Test that we don't get a cookie if we are a guest
+    """
+    response, _ = http.request('http://0.0.0.0:8080/status',
+        method='GET')
+
+    assert response['status'] == '200'
+    cookie = response.get('set-cookie')
+    if cookie:
+        assert 'csrf_token' not in cookie
+
+def test_no_cookie_sent():
+    """
+    Test no cookie is sent if one is already present
+    """
+    store = get_store(config)
+    space = 'foo'
+    make_fake_space(store, space)
+    user = User('foo')
+    user.set_password('foobar')
+    store.put(user)
+
+    user_cookie = get_auth('foo', 'foobar')
+    time = datetime.now().strftime('%Y%m%d%H')
+    cookie = 'csrf_token=%s:%s' % (time, sha('%s:%s:%s:%s' % (user.usersign,
+        time, space, config['secret'])).hexdigest())
+
+    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"; %s' % (user_cookie, cookie)
+        })
+
+    cookie = response.get('set-cookie')
+    if cookie:
+        assert 'csrf_token' not in cookie
+
+def test_invalid_cookie():
+    """
+    Test that an invalid/old cookie causes a new cookie to be sent
+    """
+    store = get_store(config)
+    space = 'foo'
+    make_fake_space(store, space)
+    user = User('foo')
+    user.set_password('foobar')
+    store.put(user)
+
+    user_cookie = get_auth('foo', 'foobar')
+    time = datetime.now() - timedelta(hours=3)
+    time = time.strftime('%Y%m%d%H')
+    cookie = 'csrf_token=%s:%s' % (time, sha('%s:%s:%s:%s' % (user.usersign,
+        time, space, config['secret'])).hexdigest())
+
+    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"; %s' % (user_cookie, cookie)
+        })
+
+    assert 'csrf_token' in response['set-cookie']
+
+    cookie = 'csrf_token=adiudh9389wefnf98'
+    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"; %s' % (user_cookie, cookie)
+        })
+
+    assert 'csrf_token' in response['set-cookie']

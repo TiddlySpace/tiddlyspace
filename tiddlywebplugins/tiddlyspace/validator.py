@@ -26,8 +26,28 @@ class CsrfProtector(object):
         self.application = application
 
     def __call__(self, environ, start_response):
+        def fake_start_response(status, headers, exc_info=None):
+            """
+            add a csrf_token header (if we need to)
+            """
+            if environ['tiddlyweb.usersign']['name'] == 'GUEST':
+                start_response(status, headers, exc_info)
+            user_cookie = Cookie.SimpleCookie()
+            user_cookie.load(environ['HTTP_COOKIE'])
+            csrf_cookie = user_cookie.get('csrf_token')
+            timestamp = ''
+            if csrf_cookie:
+                timestamp = csrf_cookie.value.rsplit(':', 1)[0]
+            now = datetime.now().strftime('%Y%m%d%H')
+            if now != timestamp:
+                user, space, secret = self.get_nonce_components(environ)
+                nonce = gen_nonce(user, space, now, secret)
+                set_cookie = 'csrf_token=%s' % nonce
+                headers.append(('Set-Cookie', set_cookie))
+            print 'here'
+            start_response(status, headers, exc_info)
         def app():
-            output = self.application(environ, start_response)
+            output = self.application(environ, fake_start_response)
             return output
         if environ['REQUEST_METHOD'] != 'POST':
             return app()
@@ -57,27 +77,31 @@ class CsrfProtector(object):
         if not nonce:
             raise InvalidNonceError('No csrf_token supplied')
 
-        username = environ['tiddlyweb.usersign']['name']
-        http_host = _determine_host(environ)[0]
-        spacename = _determine_space(environ, http_host) or ''
-        timestamp = nonce.rsplit(':', 1)[0]
-        secret = environ['tiddlyweb.config']['secret']
-        new_nonce = gen_nonce(username, spacename, timestamp, secret)
+        user, space, secret = self.get_nonce_components(environ)
+        time = datetime.now().strftime('%Y%m%d%H')
+        nonce_time = nonce.rsplit(':', 1)[0]
+        if time != nonce_time:
+            date = datetime.strptime(time, '%Y%m%d%H')
+            date -= timedelta(hours=1)
+            time = date.strftime('%Y%m%d%H')
+        new_nonce = gen_nonce(user, space, time, secret)
 
         try:
             assert new_nonce == nonce
         except AssertionError:
-            try:
-                date = datetime.strptime(timestamp, '%Y%m%d%H')
-                date -= timedelta(hours=1)
-                timestamp = datetime.strftime(date, '%Y%m%d%H')
-                new_nonce = gen_nonce(username, spacename, timestamp, secret)
-                assert new_nonce == nonce
-            except (AssertionError, ValueError):
-                raise InvalidNonceError('Nonce doesn\'t match')
+            raise InvalidNonceError('Nonce doesn\'t match')
 
         return True
 
+    def get_nonce_components(self, environ):
+        """
+        return username, spacename, timestamp (from cookie) and secret
+        """
+        username = environ['tiddlyweb.usersign']['name']
+        http_host = _determine_host(environ)[0]
+        spacename = _determine_space(environ, http_host) or ''
+        secret = environ['tiddlyweb.config']['secret']
+        return (username, spacename, secret)
 
 def gen_nonce(username, spacename, timestamp, secret):
     """
