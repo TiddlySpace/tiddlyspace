@@ -71,8 +71,8 @@ The following people are members of the space ''<<message extensions.tiddlyspace
 <<TiddlySpaceMembers add>>
 
 !Tiddlers
-<<tabs 
-	txtMainTab 
+<<tabs
+	txtMainTab
 	"Recent" "Recently edited tiddlers" TabTimeline
 	"All" "All tiddlers" TabAll
 	"Public" "All public tiddlers" [[TiddlySpaceTabs##Public]]

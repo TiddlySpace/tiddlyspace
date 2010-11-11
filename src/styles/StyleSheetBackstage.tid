@@ -286,7 +286,7 @@ a.backstageTask {
 	padding: 0;
 }
 
-#backstage .wizard, 
+#backstage .wizard,
 #backstage .wizardFooter {
 	background: none;
 }
