@@ -5,10 +5,10 @@ tags: excludeLists excludeSearch
 <<groupBy server.bag>>
 
 !Private
-<<tsList Private>>
+<<list filter [is[private]]>>
 
 !Public
-<<tsList Public>>
+<<list filter [is[public]]>>
 
 !Drafts
-<<tsList Draft>>
+<<list filter [is[draft]]>>

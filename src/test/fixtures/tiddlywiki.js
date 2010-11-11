@@ -21,6 +21,7 @@ config = {
 			
 		}
 	},
+	filters: {},
 	macros: {
 		view: {
 			views: {}
