@@ -7,7 +7,7 @@ config.extensions.ServerSideSavingPlugin = {};
 config.extensions.tiddlyweb = {
 	host: "",
 	status: {
-		 "server_host": { scheme: "http", "host": "tiddlyspace.com" } 
+		 "server_host": { scheme: "http", "host": "tiddlyspace.com" }
 	},
 
 	getStatus: function(callback) {

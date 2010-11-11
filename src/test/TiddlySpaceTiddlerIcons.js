@@ -80,7 +80,7 @@ test("resolveSpaceName", function() {
 	var name6 = tiddlyspace.resolveSpaceName("BeNgIlLiEs");
 	var name7 = tiddlyspace.resolveSpaceName("bags/bob_public");
 	var name8 = tiddlyspace.resolveSpaceName("recipes/bob_public");
-	
+
 	strictEqual(name, "jon");
 	strictEqual(name2, "jon");
 	strictEqual(name3, "jon");
@@ -94,11 +94,11 @@ test("resolveSpaceName", function() {
 test("render avatar", function() {
 	var tiddlyspace = config.extensions.tiddlyspace;
 	var place = $("<div />");
-	
+
 	tiddlyspace.renderAvatar(place, "jon", { spaceLink: true, labelOptions: { include: false, prefix: "hello " } });
 	tiddlyspace.renderAvatar(place, "@foo", { spaceLink: true });
-	tiddlyspace.renderAvatar(place, "bar_public", { 
-		labelOptions: { include: true, prefix: "from space ", suffix: " !!"} 
+	tiddlyspace.renderAvatar(place, "bar_public", {
+		labelOptions: { include: true, prefix: "from space ", suffix: " !!"}
 	});
 	tiddlyspace.renderAvatar(place, "dog_private");
 	tiddlyspace.renderAvatar(place, "CarRot");
@@ -130,7 +130,7 @@ test("confirm", function() {
 	var macro = config.macros.tiddlerOrigin;
 	var place = $("<div />");
 	var ev = {
-		target: place, 
+		target: place,
 		stopPropagation: function(){}
 	};
 	// run
@@ -149,7 +149,7 @@ test("confirm", function() {
 	strictEqual(clicked, false);
 	yes.click();
 	strictEqual(clicked, true);
-	
+
 });
 
 test("getOptions", function() {
@@ -189,7 +189,7 @@ test("_getLabelOptions", function() {
 
 	var options = macro._getLabelOptions([{}]);
 	var options2 = macro._getLabelOptions([{ label: ["yes"] }]);
-	var options3 = macro._getLabelOptions([{ label: ["no"], width: ["20"], height: ["20"], 
+	var options3 = macro._getLabelOptions([{ label: ["no"], width: ["20"], height: ["20"],
 		labelPrefix: ["foo"], labelSuffix: ["bar"] }]);
 	strictEqual(options.include, true); // make sure its the default
 	strictEqual(options2.include, true);
