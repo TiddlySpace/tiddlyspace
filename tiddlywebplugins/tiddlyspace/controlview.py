@@ -30,9 +30,13 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.store import NoRecipeError
 from tiddlyweb.web.http import HTTP404
 
-from tiddlywebplugins.tiddlyspace.handler import (determine_host,
-        determine_space, determine_space_recipe,
-        ADMIN_BAGS)
+from tiddlywebplugins.tiddlyspace.space import Space
+from tiddlywebplugins.tiddlyspace.web import (determine_host,
+        determine_space, determine_space_recipe)
+
+
+ADMIN_BAGS = ['common', 'MAPUSER', 'MAPSPACE']
+
 
 class ControlView(object):
     """
@@ -80,14 +84,12 @@ class ControlView(object):
             except NoRecipeError, exc:
                 raise HTTP404('No recipe for space: %s', exc)
 
+            space = Space(space_name)
+
             template = recipe_template(environ)
-            bags = ['%s_archive' % space_name]
-            subscriptions = []
+            bags = space.extra_bags()
             for bag, _ in recipe.get_recipe(template):
                 bags.append(bag)
-                if (bag.endswith('_public') and
-                        not bag.startswith('%s_p' % space_name)):
-                    subscriptions.append(bag[:-7])
             bags.extend(ADMIN_BAGS)
 
             filter_string = None
@@ -98,8 +100,6 @@ class ControlView(object):
                             for status in ('private', 'public')]
                 else:
                     filter_parts = ['%s_public' % space_name]
-                for subscription in subscriptions:
-                    filter_parts.append('%s_public' % subscription)
                 filter_string += ','.join(filter_parts)
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
                 filter_string = 'oom=name:'
@@ -118,8 +118,6 @@ class ControlView(object):
                 if '/recipes/' in req_uri:
                     valid_recipes = ['%s_%s' % (space_name, status)
                             for status in ('private', 'public')]
-                    valid_recipes += ['%s_public' % _space_name
-                            for _space_name in subscriptions]
                     if entity_name not in valid_recipes:
                         raise HTTP404('recipe %s not found' % entity_name)
                 else:
@@ -130,3 +128,99 @@ class ControlView(object):
                 filters, _ = parse_for_filters(filter_string)
                 for single_filter in filters:
                     environ['tiddlyweb.filters'].insert(0, single_filter)
+
+
+class DropPrivs(object):
+    """
+    If the incoming request is addressed to some entity not in the
+    current space, then drop privileges to GUEST.
+    """
+
+    def __init__(self, application):
+        self.application = application
+        self.stored_user = None
+
+    def __call__(self, environ, start_response):
+        self.stored_user = None
+        req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
+        if (req_uri.startswith('/bags/')
+                or req_uri.startswith('/recipes/')):
+            self._handle_dropping_privs(environ, req_uri)
+
+        output = self.application(environ, start_response)
+        if self.stored_user:
+            environ['tiddlyweb.usersign'] = self.stored_user
+        self.stored_user = None
+        return output
+
+    def _handle_dropping_privs(self, environ, req_uri):
+        if environ['tiddlyweb.usersign']['name'] == 'GUEST':
+            return
+
+        http_host, _ = determine_host(environ)
+        space_name = determine_space(environ, http_host)
+
+        if space_name == None:
+            return
+
+        space = Space(space_name)
+
+        store = environ['tiddlyweb.store']
+        container_name = req_uri.split('/')[2]
+
+        if req_uri.startswith('/bags/'):
+            recipe_name = determine_space_recipe(environ, space_name)
+            space_recipe = store.get(Recipe(recipe_name))
+            template = recipe_template(environ)
+            recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
+            recipe_bags.extend(space.extra_bags())
+            if environ['REQUEST_METHOD'] == 'GET':
+                if container_name in recipe_bags:
+                    return
+                if container_name in ADMIN_BAGS:
+                    return
+            else:
+                base_bags = space.list_bags()
+                # add bags in the recipe which may have been added
+                # by the recipe mgt. That is: bags which are not
+                # included and not core.
+                # XXX not DRY, c.f Space class
+                acceptable_bags = [bag for bag in recipe_bags if not (
+                    bag.endswith('_public') or bag.endswith('_private')
+                    or bag.endswith('_archive'))]
+                acceptable_bags.extend(base_bags)
+                acceptable_bags.extend(ADMIN_BAGS)
+                if container_name in acceptable_bags:
+                    return
+
+        if (req_uri.startswith('/recipes/')
+                and container_name in space.list_recipes()):
+                return
+
+        self.stored_user = environ['tiddlyweb.usersign']
+        environ['tiddlyweb.usersign'] = {'name': 'GUEST', 'roles': []}
+        return
+
+
+class AllowOrigin(object):
+    """
+    On every GET request add an Access-Control-Allow-Origin header
+    to enable CORS (even though we don't fully use CORS).
+
+
+    XXX: Note there is a subtle bug in this. The headers is not
+    added when an HTTP304 is raised elsewhere in the stack.
+    Attempts to fix that directly did not appear to work, more
+    effort required.
+    """
+    def __init__(self, application):
+        self.application = application
+
+    def __call__(self, environ, start_response):
+
+        def replacement_start_response(status, headers, exc_info=None):
+            if environ['REQUEST_METHOD'] == 'GET':
+                headers.append(('Access-Control-Allow-Origin', '*'))
+            return start_response(status, headers, exc_info)
+
+        return self.application(environ, replacement_start_response)

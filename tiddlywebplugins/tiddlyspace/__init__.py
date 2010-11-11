@@ -19,10 +19,10 @@ from tiddlywebplugins.instancer.util import get_tiddler_locations
 from tiddlywebplugins.tiddlyspace.instance import store_contents
 
 from tiddlywebplugins.tiddlyspace.config import config as space_config
-from tiddlywebplugins.tiddlyspace.controlview import ControlView
-from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
-        friendly_uri, get_identities,
+from tiddlywebplugins.tiddlyspace.controlview import (ControlView,
         DropPrivs, AllowOrigin)
+from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
+        friendly_uri, get_identities)
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
@@ -39,7 +39,7 @@ def init(config):
     """
     import tiddlywebwiki
     import tiddlywebplugins.logout
-    import tiddlywebplugins.virtualhosting # calling init not required
+    import tiddlywebplugins.virtualhosting  # calling init not required
     import tiddlywebplugins.magicuser
     import tiddlywebplugins.socialusers
     import tiddlywebplugins.mselect
@@ -118,7 +118,7 @@ def init(config):
     config['instance_tiddlers'] = get_tiddler_locations(store_contents,
             'tiddlywebplugins.tiddlyspace')
 
-    if 'selector' in config: # system plugin
+    if 'selector' in config:  # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
         config['selector'].add('/_safe', GET=safe_mode, POST=safe_mode)
         add_spaces_routes(config['selector'])

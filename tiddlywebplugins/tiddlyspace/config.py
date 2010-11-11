@@ -20,10 +20,10 @@ config = {
     'css_uri': '/bags/common/tiddlers/tiddlyweb.css',
     'socialusers.reserved_names': ['www', 'about', 'help', 'announcements',
         'dev', 'info', 'api', 'status', 'login', 'frontpage'],
-    'cookie_age': '2592000', # 1 month
+    'cookie_age': '2592000',  # 1 month
     'server_store': ['tiddlywebplugins.tiddlyspace.store', {
         'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
     'indexer': 'tiddlywebplugins.mysql',
-    'tiddlywebwiki.binary_limit': 1048576, # 1MB
+    'tiddlywebwiki.binary_limit': 1048576,  # 1MB
     'lazy.titles': ['SiteIcon', 'ColorPalette'],
 }
