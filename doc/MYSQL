@@ -1,4 +1,3 @@
-
 TiddlySpace uses MySQL as its storage. Therefore it requires:
 
 * tiddlywebplugins.mysql

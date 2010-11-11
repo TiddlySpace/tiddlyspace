@@ -20,14 +20,6 @@ Development Instance
 
 * install dependencies
 ** components listed in setup.py's install_requires
-** tiddlyspace has a dependency on tiddlyweb 1.1, which has not yet been
-   released. The easiest way to handle this is to create symlinks to a
-   tiddlyweb repository. Note that two symlinks are required, one in the
-   tiddlyspace directory and one in the dev_instance directory (see below).
-   From the tiddlyspace directory clone the tiddlyweb repository and create
-   a symlink to it:
-     $ git clone git://github.com/tiddlyweb/tiddlyweb.git tiddlyweb-core
-     $ ln -s tiddlyweb-core/tiddlyweb
 ** httplib2, yaml (required for testing)
 
 * Set up mysql on your machine. See MYSQL.
