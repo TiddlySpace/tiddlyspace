@@ -30,6 +30,7 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.store import NoRecipeError
 from tiddlyweb.web.http import HTTP404
 
+from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.web import (determine_host,
         determine_space, determine_space_recipe)
 
@@ -168,6 +169,8 @@ class DropPrivs(object):
         if space_name == None:
             return
 
+        space = Space(space_name)
+
         store = environ['tiddlyweb.store']
         container_name = req_uri.split('/')[2]
 
@@ -176,16 +179,18 @@ class DropPrivs(object):
             space_recipe = store.get(Recipe(recipe_name))
             template = recipe_template(environ)
             recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
-            recipe_bags.append('%s_archive' % space_name)
+            recipe_bags.extend(space.extra_bags())
             if environ['REQUEST_METHOD'] == 'GET':
                 if container_name in recipe_bags:
                     return
                 if container_name in ADMIN_BAGS:
                     return
             else:
-                base_bags = ['%s_public' % space_name,
-                        '%s_private' % space_name,
-                        '%s_archive' % space_name]
+                base_bags = space.list_bags()
+                # add bags in the recipe which may have been added
+                # by the recipe mgt. That is: bags which are not
+                # included and not core.
+                # XXX not DRY, c.f Space class
                 acceptable_bags = [bag for bag in recipe_bags if not (
                     bag.endswith('_public') or bag.endswith('_private')
                     or bag.endswith('_archive'))]
@@ -194,10 +199,8 @@ class DropPrivs(object):
                 if container_name in acceptable_bags:
                     return
 
-        if req_uri.startswith('/recipes/'):
-            space_public_name = '%s_public' % space_name
-            space_private_name = '%s_private' % space_name
-            if container_name in [space_public_name, space_private_name]:
+        if (req_uri.startswith('/recipes/')
+                and container_name in space.list_recipes()):
                 return
 
         self.stored_user = environ['tiddlyweb.usersign']
