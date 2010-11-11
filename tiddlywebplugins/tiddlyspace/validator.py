@@ -98,8 +98,8 @@ class CsrfProtector(object):
         return username, spacename, timestamp (from cookie) and secret
         """
         username = environ['tiddlyweb.usersign']['name']
-        http_host = _determine_host(environ)[0]
-        spacename = _determine_space(environ, http_host) or ''
+        http_host = determine_host(environ)[0]
+        spacename = determine_space(environ, http_host) or ''
         secret = environ['tiddlyweb.config']['secret']
         return (username, spacename, secret)
 
