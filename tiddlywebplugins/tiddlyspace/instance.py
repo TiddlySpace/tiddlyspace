@@ -13,6 +13,8 @@ from tiddlywebplugins.prettyerror.instance import (
          store_contents as prettyerror_store_contents,
          store_structure as prettyerror_store_structure)
 
+from tiddlywebplugins.tiddlyspace.space import Space
+
 
 store_contents.update(get_tiddler_locations(
     prettyerror_store_contents, 'tiddlywebplugins.prettyerror'))
@@ -62,15 +64,7 @@ store_structure['bags']['frontpage_private'] = deepcopy(
 store_structure['bags']['frontpage_private']['policy']['read'] = ['R:ADMIN']
 store_structure['recipes']['frontpage_public'] = {
     'desc': 'TiddlySpace front page',
-    'recipe': [
-        ('system', ''),
-        ('tiddlyspace', ''),
-        ('system-plugins_public', ''),
-        ('system-info_public', ''),
-        ('system-images_public', ''),
-        ('system-theme_public', ''),
-        ('frontpage_public', ''),
-    ],
+    'recipe': Space.CORE_RECIPE + [('frontpage_public', '')],
     'policy': {
         'read': [],
         'write': ['R:ADMIN'],
@@ -94,24 +88,27 @@ spaces = {
 }
 
 #  setup system space public bags and recipes
-for space, description in spaces.items():
-    public_name = '%s_public' % space
-    private_name = '%s_private' % space
+for space_name, description in spaces.items():
+    space = Space(space_name)
+    public_bag_name = space.public_bag()
+    private_bag_name = space.private_bag()
+    public_recipe_name = space.public_recipe()
+    private_recipe_name = space.private_recipe()
 
-    store_structure['bags'][public_name] = {
+    store_structure['bags'][public_bag_name] = {
         'desc': description,
         'policy': frontpage_policy,
     }
-    store_structure['bags'][private_name] = deepcopy(
-        store_structure['bags'][public_name])
-    store_structure['bags'][private_name]['policy']['read'] = ['R:ADMIN']
+    store_structure['bags'][private_bag_name] = deepcopy(
+        store_structure['bags'][public_bag_name])
+    store_structure['bags'][private_bag_name]['policy']['read'] = ['R:ADMIN']
 
-    store_structure['recipes'][public_name] = {
+    store_structure['recipes'][public_recipe_name] = {
         'desc': description,
         'recipe': [
             ('system', ''),
             ('tiddlyspace', ''),
-            (public_name, ''),
+            (public_bag_name, ''),
         ],
         'policy': {
             'read': [],
@@ -122,11 +119,12 @@ for space, description in spaces.items():
         },
     }
 
-    store_structure['recipes'][private_name] = deepcopy(
-        store_structure['recipes'][public_name])
-    store_structure['recipes'][private_name]['policy']['read'] = ['R:ADMIN']
-    store_structure['recipes'][private_name]['recipe'].append(
-        (private_name, ''))
+    store_structure['recipes'][private_recipe_name] = deepcopy(
+        store_structure['recipes'][public_recipe_name])
+    store_structure['recipes'][private_recipe_name][
+            'policy']['read'] = ['R:ADMIN']
+    store_structure['recipes'][private_recipe_name]['recipe'].append(
+        (private_bag_name, ''))
 
 store_structure['bags']['MAPUSER'] = {
     'desc': 'maps extracted user credentials to canonical username',

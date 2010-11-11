@@ -14,8 +14,8 @@ Provides replyLink view type.
 //{{{
 (function($) {
 
-var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
+
 config.macros.view.replyLink = {
 	locale: {
 		label: "Reply to this tiddler"
@@ -30,7 +30,7 @@ config.macros.view.views.replyLink = function(value, place, params, wikifier,
 		space = tiddlyspace.resolveSpaceName(bag);
 	}
 	var container = $('<span class="replyLink" />').appendTo(place)[0];
-	tweb.getUserInfo(function(user) {
+	config.extensions.tiddlyweb.getUserInfo(function(user) {
 		if(!user.anon) {
 			if(space && user.name != space &&
 					user.name != tiddlyspace.currentSpace.name) {

@@ -22,6 +22,7 @@ running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddl
 }}}
 
 !Space
+<<followSpace>>
 <<tabs txtSpaceTab
 	members Members Backstage##SpaceMembers
 	includes "include spaces" Backstage##SpaceInclusions
@@ -70,8 +71,8 @@ The following people are members of the space ''<<message extensions.tiddlyspace
 <<TiddlySpaceMembers add>>
 
 !Tiddlers
-<<tabs 
-	txtMainTab 
+<<tabs
+	txtMainTab
 	"Recent" "Recently edited tiddlers" TabTimeline
 	"All" "All tiddlers" TabAll
 	"Public" "All public tiddlers" [[TiddlySpaceTabs##Public]]

@@ -47,7 +47,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 		var host = config.extensions.tiddlyweb.host;
 		this.space = new tiddlyweb.Space(space, host); // XXX: singleton
 		var mode = params[0];
-		var args = paramString.parseParams("anon",null,true,false,false);
+		var args = paramString.parseParams("anon", null, true, false, false);
 		var hideErrors = args.hideErrors ? true : false;
 		var container;
 		if(!readOnly) {

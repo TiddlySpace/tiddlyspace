@@ -3,7 +3,7 @@ Note: This tests doesn't do much any more as
 _determine space has become too complex and needs
 more environment information to get fully tested.
 """
-from tiddlywebplugins.tiddlyspace.handler import _determine_space
+from tiddlywebplugins.tiddlyspace.handler import determine_space
 
 
 config = {
@@ -17,8 +17,8 @@ environ = {'tiddlyweb.config': config}
 
 
 def test_simple_space():
-    space = _determine_space(environ, 'foo.0.0.0.0:8080')
+    space = determine_space(environ, 'foo.0.0.0.0:8080')
     assert space == 'foo'
 
-    space = _determine_space(environ, 'foo.bar.0.0.0.0:8080')
+    space = determine_space(environ, 'foo.bar.0.0.0.0:8080')
     assert space == 'foo.bar'

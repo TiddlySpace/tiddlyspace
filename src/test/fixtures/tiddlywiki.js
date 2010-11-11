@@ -33,6 +33,7 @@ config = {
 		backstage: {}
 	},
 	options: {},
+	paramifiers: {},
 	shadowTiddlers: {
 		TabMore: "",
 		ToolbarCommands: "|~ViewToolbar|closeTiddler closeOthers +editTiddler" +

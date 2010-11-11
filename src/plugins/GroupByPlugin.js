@@ -107,8 +107,8 @@ var macro = config.macros.groupBy = {
 			var tiddlers = $.data(target, "tiddlers");
 			var popup = $(Popup.create(target)).addClass("taggedTiddlerList")[0];
 			var value = $(target).attr("value");
-			var openAll = CTB($("<li />").appendTo(popup)[0], 
-				locale.openAllText.format([value]), locale.openAllTooltip, 
+			var openAll = CTB($("<li />").appendTo(popup)[0],
+				locale.openAllText.format([value]), locale.openAllTooltip,
 				function(ev) {
 					for(var i = 0; i < tiddlers.length; i++) {
 						story.displayTiddler(ev.target, tiddlers[i].title);
@@ -130,7 +130,7 @@ var macro = config.macros.groupBy = {
 			var title = value_ids[i];
 			var info = getTiddlyLinkInfo(title);
 			var tiddlers = values[title];
-			var btn = CTB($("<li />").appendTo(ul)[0], 
+			var btn = CTB($("<li />").appendTo(ul)[0],
 				"%0 (%1)".format([title, tiddlers.length]), locale.tooltip.format([title]), null, info.classes);
 			$(btn).click(onClickGroup).attr("value", title).attr("refresh", "link").attr("tiddlyLink", title);
 			$.data(btn, "tiddlers", tiddlers);

@@ -14,17 +14,17 @@ remotes: jslib
 
 jslib: qunit
 	$(call wrap_jslib, src/lib/chrjs.js, \
-		http://github.com/tiddlyweb/chrjs/raw/master/main.js)
+		https://github.com/tiddlyweb/chrjs/raw/master/main.js)
 	$(call wrap_jslib, src/lib/chrjs.users.js, \
-		http://github.com/tiddlyweb/chrjs/raw/master/users.js)
+		https://github.com/tiddlyweb/chrjs/raw/master/users.js)
 
 qunit:
 	mkdir -p src/test/qunit
 	mkdir -p src/test/lib
 	curl -o src/test/qunit/qunit.js \
-		http://github.com/jquery/qunit/raw/master/qunit/qunit.js
+		https://github.com/jquery/qunit/raw/master/qunit/qunit.js
 	curl -o src/test/qunit/qunit.css \
-		http://github.com/jquery/qunit/raw/master/qunit/qunit.css
+		https://github.com/jquery/qunit/raw/master/qunit/qunit.css
 	curl -o src/test/lib/jquery.js \
 		http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js
 	curl -o src/test/lib/jquery-json.js \

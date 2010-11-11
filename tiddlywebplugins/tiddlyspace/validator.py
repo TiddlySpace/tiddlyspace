@@ -10,8 +10,8 @@ from tiddlyweb.util import sha
 from tiddlyweb.web.validator import TIDDLER_VALIDATORS, InvalidTiddlerError
 
 # XXX: importing private members, so they should probably not be private
-from tiddlywebplugins.tiddlyspace.handler import (_determine_host,
-        _determine_space, _determine_space_recipe)
+from tiddlywebplugins.tiddlyspace.web import (determine_host,
+        determine_space, determine_space_recipe)
 
 
 def validate_mapuser(tiddler, environ):
@@ -61,8 +61,8 @@ def validate_mapspace(tiddler, environ):
     a alien domain to space.
     """
     if tiddler.bag == 'MAPSPACE':
-        current_space = _determine_space(environ, _determine_host(environ)[0])
-        recipe_name = _determine_space_recipe(environ, current_space)
+        current_space = determine_space(environ, determine_host(environ)[0])
+        recipe_name = determine_space_recipe(environ, current_space)
         if recipe_name != '%s_private' % current_space:
             raise InvalidTiddlerError('non member may not map space')
 

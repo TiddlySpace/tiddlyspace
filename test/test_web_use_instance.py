@@ -134,7 +134,7 @@ def test_space_has_limited_view():
     assert len(info) == 2
 
 
-def test_space_exposes_subscription_recipes():
+def test_space_not_expose_subscription_recipes():
     make_fake_space(store, 'foo')
     make_fake_space(store, 'bar')
     make_fake_space(store, 'baz')
@@ -159,7 +159,7 @@ def test_space_exposes_subscription_recipes():
     assert response['status'] == '200'
     assert 'foo_public' in content, content
     assert 'foo_private' not in content, content # not auth'd
-    assert 'bar_public' in content, content
+    assert 'bar_public' not in content, content
     assert 'bar_private' not in content, content
     assert 'baz_' not in content, content
 
@@ -173,7 +173,7 @@ def test_space_exposes_subscription_recipes():
 
     response, content = http.request('http://foo.0.0.0.0:8080/recipes/bar_public',
             method='GET')
-    assert response['status'] == '200'
+    assert response['status'] == '404'
 
     response, content = http.request('http://foo.0.0.0.0:8080/recipes/bar_private',
             method='GET')
