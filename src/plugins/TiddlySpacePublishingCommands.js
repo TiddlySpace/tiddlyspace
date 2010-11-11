@@ -11,7 +11,7 @@ Provides changeToPrivate, changeToPublic and saveDraft commands
 Provides TiddlySpacePublisher macro.
 {{{<<TiddlySpacePublisher type:private>>}}} make lots of private tiddlers public.
 {{{<<TiddlySpacePublisher type:public>>}}} make lots of public tiddlers public.
-!Todo
+!TODO
 * add public argument?
 !Code
 ***/
@@ -320,7 +320,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 	},
 	getMode: function(paramString) {
 		var params = paramString.parseParams("anon")[0];
-		var status = params.type ? 
+		var status = params.type ?
 			(["public", "private"].contains(params.type[0]) ? params.type[0] : "private") :
 			"private";
 		var newStatus = status == "public" ? "private" : "public";
@@ -392,7 +392,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 				macro.changeStatus(tiddlers, status[1], callback);
 			};
 			wizard.setButtons([
-				{ caption: locale.changeStatusLabel.format([status[1]]), tooltip: locale.changeStatusPrompt.format([status[1]]), 
+				{ caption: locale.changeStatusLabel.format([status[1]]), tooltip: locale.changeStatusPrompt.format([status[1]]),
 					onClick: btnHandler }
 			]);
 			$(enabled.join(",")).attr("checked", true); // retain what was checked before.

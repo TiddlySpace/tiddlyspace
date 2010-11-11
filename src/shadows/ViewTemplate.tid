@@ -2,11 +2,11 @@ tags: excludeSearch excludeLists
 modifier: osmosoft
 
 <!--{{{-->
-<div class='toolbar' 
+<div class='toolbar'
 	macro='toolbar [[ToolbarCommands::ViewToolbar]] icons:yes height:16 width:16 more:popup'>
 </div>
 <div class='heading'>
-	<span class='spaceSiteIcon' 
+	<span class='spaceSiteIcon'
 		macro='tiddlerOrigin label:no spaceLink:yes height:48 width:48 preserveAspectRatio:yes'>
 	</span>
 	<span class="titleBar">
@@ -15,6 +15,7 @@ modifier: osmosoft
 			last modified on
 			<span macro="view modified date"></span>
 		</div>
+		<div macro="view title replyLink"></div>
 	</span>
 	<span class='followPlaceHolder' macro='followTiddlers'></span>
 	<span class='modifierIcon'

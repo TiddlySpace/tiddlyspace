@@ -25,7 +25,7 @@ module("TiddlySpacePublishingCommands", {
 		store.saveTiddler(tid3);
 	},
 	teardown: function() {
-		var toDelete = ["pig", "foo", "foo [draft]", "foo [draft2]", "foo [draft3]", 
+		var toDelete = ["pig", "foo", "foo [draft]", "foo [draft2]", "foo [draft3]",
 			"foo [draft5]", "bar [draft]", "bfoo", "bfoo2", "bfoo3"];
 		for(var i = 0; i < toDelete.length; i++) {
 			store.removeTiddler(toDelete[i]);
@@ -134,7 +134,7 @@ test("deleteResource (where bag is different from tiddler)", function() {
 		var adaptor = {
 			deleteTiddler: function(tiddler, context, userParams, callback) {
 				if(tiddler.fields["server.workspace"] == "bags/jon_public" &&
-					tiddler.fields["server.bag"] == "jon_public" && 
+					tiddler.fields["server.bag"] == "jon_public" &&
 					!tiddler.fields["server.etag"]) {
 						expectedPath = true;
 					}

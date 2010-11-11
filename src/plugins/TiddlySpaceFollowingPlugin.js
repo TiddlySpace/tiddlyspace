@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.9|
+|''Version''|0.6.10|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -58,7 +58,7 @@ shadows.FollowTiddlersBlackList = "";
 shadows.FollowTiddlersHeading = "There are tiddlers in spaces you follow using the follow tag which use the title <<view title text>>";
 shadows.FollowTiddlersTemplate = ["* <<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> ",
 	"<<view server.bag spaceLink title external:no>> modified by <<view modifier spaceLink>> ",
-	"in the <<view server.bag spaceLink>> space.\n"].join("");
+	"in the <<view server.bag spaceLink>> space (<<view modified date>> @ <<view modified date 0hh:0mm>>).\n"].join("");
 
 var name = "StyleSheetFollowing";
 shadows[name] = "/*{{{*/\n%0\n/*}}}*/".

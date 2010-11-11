@@ -78,7 +78,7 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 		} else {
 			var spaceURI;
 			if(value != tiddlyspace.currentSpace.name) {
-				spaceURI = options.notSpace ? tiddlyspace.getHost(status.server_host) : 
+				spaceURI = options.notSpace ? tiddlyspace.getHost(status.server_host) :
 					tiddlyspace.getHost(status.server_host, value);
 			}
 			link = spaceURI ? $("<a />").attr("href", spaceURI) : $("<span />");
@@ -306,7 +306,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				store.addTiddler(tiddler);
 				if(story.isDirty(tiddler.title)) {
 					originMacro.reportDirty(ev);
-				} else { 
+				} else {
 					originMacro.confirm(ev, msg, function(ev) {
 						var onComplete = function(info) {};
 						cmd.moveTiddler(tiddler, {

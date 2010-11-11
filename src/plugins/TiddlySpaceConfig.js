@@ -227,5 +227,17 @@ httpReq = function(type, url, callback, params, headers, data, contentType,
 // register style sheet for backstage separately (important)
 store.addNotification("StyleSheetBackstage", refreshStyles);
 
+config.paramifiers.follow = {
+	onstart: function(v) {
+		if(!readOnly) {
+			var bag = "%0_public".format([config.extensions.tiddlyspace.currentSpace.name]);
+			story.displayTiddler(null, v, DEFAULT_EDIT_TEMPLATE, null, null,
+				"server.bag:%0 server.workspace:bags/%0".format([bag]));
+			story.setTiddlerTag(v, "follow", 1);
+			story.focusTiddler(v, "text");
+		}
+	}
+};
+
 })(jQuery);
 //}}}

@@ -39,7 +39,7 @@ var errorhandler = {
 	},
 	createSpaceLink: function (container, name) {
 		$(container).empty(errorhandler.locale.creatingLink);
-		$.ajax({url: "/status", dataType: "json", 
+		$.ajax({url: "/status", dataType: "json",
 			success: function(status) {
 				if(status.username && status.username != "GUEST") {
 					var sh = status["server_host"];
@@ -76,7 +76,7 @@ var errorhandler = {
 	suggestTiddlers: function(container, space, title) {
 		$(container).empty(errorhandler.locale.alternativeTiddlers);
 		var uri = "/bags/" + space + "_public/tiddlers";
-		$.ajax({url: uri, dataType: "text", 
+		$.ajax({url: uri, dataType: "text",
 			success: function(txt) {
 				var tiddlers = txt.split("\n");
 				var suggestions = [];

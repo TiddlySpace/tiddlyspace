@@ -32,6 +32,7 @@ config = {
 		backstage: {}
 	},
 	options: {},
+	paramifiers: {},
 	shadowTiddlers: {
 		TabMore: "",
 		ToolbarCommands: "|~ViewToolbar|closeTiddler closeOthers +editTiddler" +
@@ -63,12 +64,12 @@ Tiddler.prototype.incChangeCount = NOP;
 
 TiddlyWiki = function() {
 	this._tiddlers = {};
+	this.addTiddler = function(tiddler) {
+		this._tiddlers[tiddler.title] = tiddler;
+	};
 };
 TiddlyWiki.prototype.getTiddler = function(title) {
 	return this._tiddlers[title];
-};
-TiddlyWiki.prototype.addTiddler = function(tiddler) {
-	this._tiddlers[tiddler.title] = tiddler;
 };
 TiddlyWiki.prototype.getTiddlerText = function(title, defaultText) {
 	var tiddler = this._tiddlers[title];
@@ -101,7 +102,6 @@ TiddlyWiki.prototype.isDirty = function() {
 TiddlyWiki.prototype.setDirty = function(dirty) {
 	this.dirty = dirty ? true : false;
 };
-
 
 TiddlyWiki.prototype.tiddlerExists = function(title) {
 	return this._tiddlers[title] ? true : false;
