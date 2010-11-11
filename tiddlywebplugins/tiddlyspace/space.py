@@ -10,6 +10,9 @@ import re
 
 SPACE_NAME_PATTERN = re.compile(r"^[a-z][0-9a-z\-]*[0-9a-z]$")
 
+PUBLIC = '_public'
+PRIVATE = '_private'
+
 
 class Space(object):
     """
@@ -94,10 +97,10 @@ class Space(object):
                 (self.private_recipe(), '')]
 
     def _private_name(self):
-        return '%s_private' % self.name
+        return '%s%s' % (self.name, PRIVATE)
 
     def _public_name(self):
-        return '%s_public' % self.name
+        return '%s%s' % (self.name, PUBLIC)
 
     @classmethod
     def name_from_recipe(cls, recipe):
@@ -105,7 +108,7 @@ class Space(object):
         Given a recipe name, return the space name.
         Raise ValueError if it doesn't appear to be a space recipe.
         """
-        return cls._name_from_entity(recipe, ['_public', '_private'])
+        return cls._name_from_entity(recipe, [PUBLIC, PRIVATE])
 
     @classmethod
     def name_from_bag(cls, bag):
@@ -113,9 +116,45 @@ class Space(object):
         Given a bag name, return the space name.
         Raise ValueError if it doesn't appear to be a space bag.
         """
-        endings = ['_public', '_private'] + ['_%s' % name for
+        endings = [PUBLIC, PRIVATE] + ['_%s' % name for
                 name in Space.ASSOCIATED_BAG_MAP]
         return cls._name_from_entity(bag, endings)
+
+    @classmethod
+    def bag_is_public(cls, bag_name):
+        """
+        Given a bag name determine if it is public.
+        """
+        return cls._is_public(bag_name)
+
+    @classmethod
+    def bag_is_private(cls, bag_name):
+        """
+        Given a bag name determine if it is private.
+        """
+        return cls._is_private(bag_name)
+
+    @classmethod
+    def recipe_is_public(cls, recipe_name):
+        """
+        Given a recipe name determine if it is public.
+        """
+        return cls._is_public(recipe_name)
+
+    @classmethod
+    def recipe_is_private(cls, recipe_name):
+        """
+        Given a recipe name determine if it is private.
+        """
+        return cls._is_private(recipe_name)
+
+    @staticmethod
+    def _is_private(name):
+        return name.endswith(PRIVATE)
+
+    @staticmethod
+    def _is_public(name):
+        return name.endswith(PUBLIC)
 
     @staticmethod
     def _name_from_entity(name, endings):

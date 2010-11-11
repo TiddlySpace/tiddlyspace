@@ -160,7 +160,7 @@ def list_spaces(environ, start_response):
     else:
         spaces = [Space.name_from_recipe(recipe.name) for
                 recipe in store.list_recipes() if
-                recipe.name.endswith('_public')]
+                Space.recipe_is_public(recipe.name)]
     start_response('200 OK', [
         ('Cache-Control', 'no-cache'),
         ('Content-Type', 'application/json; charset=UTF-8')])
@@ -361,7 +361,7 @@ def _make_space(environ, space_name):
     for bag_name in space.list_bags():
         bag = Bag(bag_name)
         bag.policy = _make_policy(member)
-        if bag_name.endswith('_public'):
+        if Space.bag_is_public(bag_name):
             bag.policy.read = []
         store.put(bag)
 

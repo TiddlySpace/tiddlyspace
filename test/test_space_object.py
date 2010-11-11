@@ -36,3 +36,15 @@ def test_name_from_recipe():
 def test_name_from_bag():
     assert Space.name_from_bag('cat_private') == 'cat'
     py.test.raises(ValueError, 'Space.name_from_bag("cat_ball")')
+
+def test_bag_is():
+    assert Space.bag_is_public('cat_public')
+    assert not Space.bag_is_public('cat_private')
+    assert Space.bag_is_private('cat_private')
+    assert not Space.bag_is_private('cat_public')
+
+def test_recipe_is():
+    assert Space.recipe_is_public('cat_public')
+    assert not Space.recipe_is_public('cat_private')
+    assert Space.recipe_is_private('cat_private')
+    assert not Space.recipe_is_private('cat_public')
