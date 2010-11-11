@@ -178,9 +178,10 @@ class DropPrivs(object):
                 # add bags in the recipe which may have been added
                 # by the recipe mgt. That is: bags which are not
                 # included and not core.
-                # XXX not DRY, c.f Space class
+                # XXX not DRY, c.f Space class, the archive thing
+                # sticks out a bit sort thumbish.
                 acceptable_bags = [bag for bag in recipe_bags if not (
-                    bag.endswith('_public') or bag.endswith('_private')
+                    Space.bag_is_public(bag) or Space.bag_is_private(bag)
                     or bag.endswith('_archive'))]
                 acceptable_bags.extend(base_bags)
                 acceptable_bags.extend(ADMIN_BAGS)

@@ -7,6 +7,7 @@ from tiddlyweb.wikitext import render_wikitext
 from tiddlyweb.serializations.html import Serialization as HTMLSerialization
 from tiddlyweb.web.util import encode_name
 
+from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
 
 
@@ -57,7 +58,7 @@ class Serialization(HTMLSerialization):
         return space_link
 
     def _space_bag(self, bag_name):
-        return bag_name.endswith('_public') or bag_name.endswith('_private')
+        return Space.bag_is_public(bag_name) or Space.bag_is_private(bag_name)
 
     def _encode_space_link(self, tiddler):
         return '/#%%5B%%5B%s%%5D%%5D' % encode_name(tiddler.title)
