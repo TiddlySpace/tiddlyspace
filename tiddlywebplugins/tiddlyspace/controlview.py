@@ -95,29 +95,23 @@ class ControlView(object):
             filter_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
                 filter_string = 'oom=name:'
-                if recipe_name.endswith('_private'):
-                    filter_parts = ['%s_%s' % (space_name, status)
-                            for status in ('private', 'public')]
+                if recipe_name == space.private_recipe():
+                    filter_parts = space.list_recipes()
                 else:
-                    filter_parts = ['%s_public' % space_name]
+                    filter_parts = [space.public_recipe()]
                 filter_string += ','.join(filter_parts)
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
                 filter_string = 'oom=name:'
-                filter_parts = []
-                for bag in bags:
-                    filter_parts.append('%s' % bag)
+                filter_parts = bags
                 filter_string += ','.join(filter_parts)
             elif req_uri.startswith('/search') and req_uri.count('/') == 1:
                 filter_string = 'oom=bag:'
-                filter_parts = []
-                for bag in bags:
-                    filter_parts.append('%s' % bag)
+                filter_parts = bags
                 filter_string += ','.join(filter_parts)
             else:
                 entity_name = req_uri.split('/')[2]
                 if '/recipes/' in req_uri:
-                    valid_recipes = ['%s_%s' % (space_name, status)
-                            for status in ('private', 'public')]
+                    valid_recipes = space.list_recipes()
                     if entity_name not in valid_recipes:
                         raise HTTP404('recipe %s not found' % entity_name)
                 else:
