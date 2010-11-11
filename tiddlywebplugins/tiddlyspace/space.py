@@ -135,6 +135,17 @@ class Space(object):
         return cls._is_private(bag_name)
 
     @classmethod
+    def bag_is_associate(cls, bag_name):
+        """
+        Given a bag name determine if it is private.
+        """
+        try:
+            prefix, suffix = bag_name.rsplit('_', 1)
+            return prefix and suffix in cls.ASSOCIATED_BAG_MAP
+        except ValueError:
+            return False
+
+    @classmethod
     def recipe_is_public(cls, recipe_name):
         """
         Given a recipe name determine if it is public.
@@ -150,11 +161,11 @@ class Space(object):
 
     @staticmethod
     def _is_private(name):
-        return name.endswith(PRIVATE)
+        return _has_ending(name, PRIVATE)
 
     @staticmethod
     def _is_public(name):
-        return name.endswith(PUBLIC)
+        return _has_ending(name, PUBLIC)
 
     @staticmethod
     def _name_from_entity(name, endings):
@@ -163,3 +174,12 @@ class Space(object):
                 name = name.rsplit(ending, 1)[0]
                 return name
         raise ValueError('entity has wrong form')
+
+
+def _has_ending(name, ending):
+    try:
+        prefix, suffix = name.rsplit('_', 1)
+        suffix = '_%s' % suffix
+        return prefix and suffix == ending
+    except ValueError:
+        return False

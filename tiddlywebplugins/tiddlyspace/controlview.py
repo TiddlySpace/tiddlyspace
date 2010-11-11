@@ -182,7 +182,7 @@ class DropPrivs(object):
                 # sticks out a bit sort thumbish.
                 acceptable_bags = [bag for bag in recipe_bags if not (
                     Space.bag_is_public(bag) or Space.bag_is_private(bag)
-                    or bag.endswith('_archive'))]
+                    or Space.bag_is_associate(bag))]
                 acceptable_bags.extend(base_bags)
                 acceptable_bags.extend(ADMIN_BAGS)
                 if container_name in acceptable_bags:

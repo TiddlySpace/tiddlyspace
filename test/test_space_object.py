@@ -40,11 +40,18 @@ def test_name_from_bag():
 def test_bag_is():
     assert Space.bag_is_public('cat_public')
     assert not Space.bag_is_public('cat_private')
+    assert not Space.bag_is_public('_public')
     assert Space.bag_is_private('cat_private')
     assert not Space.bag_is_private('cat_public')
+    assert not Space.bag_is_private('_private')
 
 def test_recipe_is():
     assert Space.recipe_is_public('cat_public')
     assert not Space.recipe_is_public('cat_private')
     assert Space.recipe_is_private('cat_private')
     assert not Space.recipe_is_private('cat_public')
+
+def test_bag_is_associate():
+    assert Space.bag_is_associate('cat_archive')
+    assert not Space.bag_is_associate('cat_poo')
+    assert not Space.bag_is_associate('_archive')
