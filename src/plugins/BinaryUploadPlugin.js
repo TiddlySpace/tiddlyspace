@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.10|
+|''Version''|0.3.11|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -86,8 +86,11 @@ var macro = config.macros.binaryUpload = {
 		fileName = macro.getTiddlerName(fileName);
 		$("input[name=title]", place).val(fileName);
 		// we need to go somewhere afterwards to ensure the onload event triggers
-		var action = "%0?redirect=/%1/tiddlers.txt?select=title:%2".
-			format([baseURL, workspace, fileName]);
+		var redirectTo = "/%1/tiddlers.txt?select=title:%2".
+			format([workspace, fileName]);
+		var token = config.extensions.tiddlyspace.get_csrf_token();
+		var action = "%0?csrf_token=%1&redirect=%2"
+			.format([baseURL, token, redirectTo]);
 		form[0].action = action; // dont use jquery to work with ie
 		form[0].target = iframeName;
 		// do not refactor following line... won't work in IE6 otherwise
