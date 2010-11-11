@@ -84,14 +84,12 @@ class ControlView(object):
             except NoRecipeError, exc:
                 raise HTTP404('No recipe for space: %s', exc)
 
+            space = Space(space_name)
+
             template = recipe_template(environ)
-            bags = ['%s_archive' % space_name]
-            subscriptions = []
+            bags = space.extra_bags()
             for bag, _ in recipe.get_recipe(template):
                 bags.append(bag)
-                if (bag.endswith('_public') and
-                        not bag.startswith('%s_p' % space_name)):
-                    subscriptions.append(bag[:-7])
             bags.extend(ADMIN_BAGS)
 
             filter_string = None
@@ -102,8 +100,6 @@ class ControlView(object):
                             for status in ('private', 'public')]
                 else:
                     filter_parts = ['%s_public' % space_name]
-                for subscription in subscriptions:
-                    filter_parts.append('%s_public' % subscription)
                 filter_string += ','.join(filter_parts)
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
                 filter_string = 'oom=name:'
@@ -122,8 +118,6 @@ class ControlView(object):
                 if '/recipes/' in req_uri:
                     valid_recipes = ['%s_%s' % (space_name, status)
                             for status in ('private', 'public')]
-                    valid_recipes += ['%s_public' % _space_name
-                            for _space_name in subscriptions]
                     if entity_name not in valid_recipes:
                         raise HTTP404('recipe %s not found' % entity_name)
                 else:
