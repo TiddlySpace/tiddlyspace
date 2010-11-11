@@ -32,8 +32,9 @@ class CsrfProtector(object):
             """
             if environ['tiddlyweb.usersign']['name'] == 'GUEST':
                 start_response(status, headers, exc_info)
+                return
             user_cookie = Cookie.SimpleCookie()
-            user_cookie.load(environ['HTTP_COOKIE'])
+            user_cookie.load(environ.get('HTTP_COOKIE', {}))
             csrf_cookie = user_cookie.get('csrf_token')
             timestamp = ''
             if csrf_cookie:
@@ -44,7 +45,6 @@ class CsrfProtector(object):
                 nonce = gen_nonce(user, space, now, secret)
                 set_cookie = 'csrf_token=%s' % nonce
                 headers.append(('Set-Cookie', set_cookie))
-            print 'here'
             start_response(status, headers, exc_info)
         def app():
             output = self.application(environ, fake_start_response)
