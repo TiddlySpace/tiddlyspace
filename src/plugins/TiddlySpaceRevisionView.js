@@ -140,10 +140,13 @@ var me = config.macros.viewRevisions = {
 	},
 
 	createCloak: function(promoteElem) {
-		//store for later
-		$(promoteElem).attr("zindex", $(promoteElem).css("z-index"));
-		$(promoteElem).attr("top", $(promoteElem).css("top"));
-		$(promoteElem).attr("left", $(promoteElem).css("left"));
+		var el = $(promoteElem);
+		// cache styles for resetting later
+		el.data({
+			top: el.css("top"),
+			left: el.css("left"),
+			zIndex: el.css("z-index")
+		});
 
 		$('<div class="revisionCloak" />').css("z-index", me.zIndex)
 			.click(function() {
@@ -151,25 +154,22 @@ var me = config.macros.viewRevisions = {
 			})
 			.appendTo(document.body);
 
-		$(promoteElem).css("z-index", me.zIndex + 1);
+		el.css("z-index", me.zIndex + 1);
 	},
 
-	// clean up stuff. Remove all evidence of revision view.
+	// clean up, removing all evidence of revision view
 	closeRevisions: function(promoteElem) {
-		//revert the original tiddler back to its previous state
-		$(promoteElem)
-			.css("z-index", $(promoteElem).attr("zindex"))
-			.css("top", $(promoteElem).attr("top"))
-			.css("left", $(promoteElem).attr("left"))
-			.removeAttr("zindex")
-			.removeAttr("top")
-			.removeAttr("left")
-			.removeAttr("revName")
-			.removeClass("revisions");
+		var el = $(promoteElem);
+		// revert the original tiddler back to its previous state
+		el.removeAttr("revName").removeClass("revisions").css({
+			top: el.data("top"),
+			left: el.data("left"),
+			zIndex: el.data("zIndex")
+		});
 
-		//remove any revisions still in the store
+		// remove any revisions still in the store
 		var revisions = $(".revisions");
-		$(".revisions").each(function(index, revision) {
+		revisions.each(function(index, revision) {
 			var revAttributes = revision.attributes;
 			if ((revAttributes.revname) &&
 					(revAttributes.revision)) {
