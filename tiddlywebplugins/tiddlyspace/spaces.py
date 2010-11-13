@@ -299,7 +299,10 @@ def _do_subscriptions(environ, subscriptions, public_recipe_list,
     for space in subscriptions:
         _validate_subscription(environ, space, private_recipe_list)
         try:
-            subscribed_space = Space(space)
+            try:
+                subscribed_space = Space(space)
+            except ValueError, exc:
+                raise HTTP409('Invalid space name: %s' % exc)
             subscribed_recipe = store.get(
                     Recipe(subscribed_space.public_recipe()))
             for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
