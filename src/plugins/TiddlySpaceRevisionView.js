@@ -26,14 +26,14 @@ date is clicked.
 
 var me = config.macros.viewRevisions = {
 	revisionTemplate: "RevisionTemplate",
-	revSuffix: " [rev. #%0]", //text to append to each tiddler title
-	defaultPageSize: 5, //default number of revisions to show
-	defaultLinkText: "View Revisions", //when there's nothing else to use
-	offsetTop: 30, //in px
-	offsetLeft: 10, //in px
-	shiftDownDelay: 50, //in ms
-	visibleSlideAmount: 20, //amount of revisions to show on left hand edge after sliding
-	zIndex: 100, //default z-index
+	revSuffix: " [rev. #%0]", // text to append to each tiddler title
+	defaultPageSize: 5, // default number of revisions to show
+	defaultLinkText: "View Revisions", // when there's nothing else to use
+	offsetTop: 30, // in px
+	offsetLeft: 10, // in px
+	shiftDownDelay: 50, // in ms
+	visibleSlideAmount: 20, // amount of revisions to show on left hand edge after sliding
+	zIndex: 100, // default z-index
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		params = paramString.parseParams(null, null, true)[0];
 		var tiddlerElem = story.findContainingTiddler(place);
@@ -88,7 +88,7 @@ var me = config.macros.viewRevisions = {
 		};
 		me.createCloak(tiddlerElem);
 		adaptor.getTiddlerRevisionList(tiddler.title, null, context, userParams,
-				function (context, userParams) {
+				function(context, userParams) {
 					// strip the current revision
 					context.revisions.shift();
 					me.expandStack(context, userParams);
@@ -183,14 +183,14 @@ var me = config.macros.viewRevisions = {
 			}
 		});
 
-		//delete the previous revisions
+		// delete the previous revisions
 		revisions.remove();
 
-		//remove the cloak
+		// remove the cloak
 		$(".revisionCloak").remove();
 	},
 
-	// calback from getting list of revisions.
+	// calback from getting list of revisions
 	expandStack: function(context, userParams) {
 		var pageSize = userParams.pageSize;
 
@@ -205,10 +205,10 @@ var me = config.macros.viewRevisions = {
 		}
 	},
 
-	//place the next div above and behind the previous one.
+	// place the next div above and behind the previous one
 	displayNextRevision: function(tiddlerElem, userParams, context, from, to) {
 		var revision = context.revisions[from];
-		function callback() {
+		var callback = function() {
 			var revText = revBtn.getRevisionText(tiddlerElem, revision);
 			tiddlerElem = me.createRevisionObject(tiddlerElem, context,
 				userParams, revText);
@@ -333,7 +333,7 @@ var me = config.macros.viewRevisions = {
 					});
 				});
 			};
-			//make sure another revision isn't already out
+			// make sure another revision isn't already out
 			if ($(".viewRevision").length) {
 				var newRevElem = $(".viewRevision")[0];
 				var newRevision = store.getTiddler($(newRevElem)
