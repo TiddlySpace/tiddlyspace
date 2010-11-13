@@ -64,15 +64,21 @@ var me = config.macros.viewRevisions = {
 			host: tiddler.fields["server.host"],
 			workspace: tiddler.fields["server.workspace"]
 		};
-		$(tiddlerElem).addClass("revisions");
-		$(tiddlerElem).attr("revName", tiddler.title);
+		$(tiddlerElem).addClass("revisions").attr("revName", tiddler.title);
+		// ensure toolbar commands deactivate RevisionsView
 		$("a", ".toolbar", tiddlerElem).each(function(index, btn) {
 			var _onclick = btn.onclick;
-			$(btn).click(function() {
+			btn.onclick = function(e) {
 				me.closeRevisions(tiddlerElem);
 				_onclick.apply(this, arguments);
-			});
+			};
 		});
+		// ensure default action deactivates RevisionsView
+		var _ondblclick = tiddlerElem.ondblclick;
+		tiddlerElem.ondblclick = function(e) {
+			me.closeRevisions(tiddlerElem);
+			_ondblclick.apply(this, arguments);
+		};
 		var type = tiddler.fields["server.type"];
 		var adaptor = new config.adaptors[type]();
 		var userParams = {
@@ -83,7 +89,7 @@ var me = config.macros.viewRevisions = {
 		me.createCloak(tiddlerElem);
 		adaptor.getTiddlerRevisionList(tiddler.title, null, context, userParams,
 				function (context, userParams) {
-					//strip the current revision
+					// strip the current revision
 					context.revisions.shift();
 					me.expandStack(context, userParams);
 				});
