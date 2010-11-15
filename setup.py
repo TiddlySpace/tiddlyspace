@@ -39,7 +39,7 @@ setup(
         'tiddlywebplugins.prettyerror>=0.9.2',
         'tiddlywebplugins.pathinfohack>=0.8',
         'tiddlywebplugins.form==dev',
-        'tiddlywebplugins.reflector>=0.2',
+        'tiddlywebplugins.reflector>=0.6',
         'tiddlywebplugins.atom>=1.2.1',
         'tiddlywebplugins.mysql>=0.9.3',
         'tiddlywebplugins.sqlalchemy>=0.9.9',
