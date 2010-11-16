@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.10|
+|''Version''|0.6.13|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -99,10 +99,14 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 			}
 		};
 		adaptor.getTiddler(title, context, null, getCallback);
-		
 	});
 };
 tiddlyspace.displayReplyButton = function(el, tiddler) {
+	var replyLink = $(".replyLink", el);
+	if(replyLink.length > 0) {
+		el = replyLink.unbind("click").empty()[0];
+		el.onclick = null;
+	} 
 	var btn = $("<button />").addClass("reply").appendTo(el);
 	var publicBag = "%0_public".format([tiddlyspace.currentSpace.name]);
 	var serverTitle = tiddler.fields["server.title"];
@@ -334,7 +338,7 @@ var scanMacro = config.macros.tsScan = {
 			wikify(templateText, item, null, tiddler);
 		}
 	},
-	getOptions: function(paramString) {
+	getOptions: function(paramString, tiddler) {
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var tag = args.tag ? args.tag[0] : false;
 		var titles = args.title;
@@ -343,21 +347,22 @@ var scanMacro = config.macros.tsScan = {
 		// if user has set searchField to modifier, then use the modifiers value if available otherwise use searchValues.
 		var searchValues = args[searchField] ? args[searchField] : args.searchValues;
 		// if neither of those were used use the first parameter
-		searchValues = searchValues ? searchValues : ( args.name ? [args.name[0]] : []);
+		var defaultValues = tiddler ? [ tiddler.title ] : [];
+		searchValues = searchValues ? searchValues : ( args.name ? [args.name[0]] : defaultValues);
 		var fat = args.fat ? true : false;
 		var template = args.template ? args.template[0] : false;
 		var filter = args.filter ? args.filter[0] : false;
 		var query = args.query ? args.query[0] : false;
 		var sort = args.sort ? args.sort[0] : false;
-		var showBags = args.showBag ? args.show : false;
-		var hideBags = args.hideBag ? args.hide : false;
+		var showBags = args.show ? args.show : false;
+		var hideBags = args.hide ? args.hide : false;
 		return { searchField: searchField, searchValues: searchValues,
 			template: template, filter: filter, sort: sort, hideBags: hideBags, showBags: showBags,
 			query: query, tag: tag, fat: fat, spaceField: spaceField };
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var container = $("<div />").addClass("scanResults").appendTo(place)[0];
-		var options = scanMacro.getOptions(paramString);
+		var options = scanMacro.getOptions(paramString, tiddler);
 		scanMacro.scan(container, options);
 	}
 };
@@ -368,7 +373,7 @@ var followersMacro = config.macros.followers = {
 		noSupport: "We were unable to retrieve followers as your browser does not support following.",
 		pleaseWait: "Please wait while we look this up...",
 		error: "Whoops something went wrong. I was unable to find the followers of this user.",
-		noone: "No-one. :("
+		noone: "None."
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var locale = followersMacro.locale;
@@ -436,13 +441,22 @@ config.macros.view.views.spaceLink = function(value, place, params, wikifier,
 		var spaceName = tiddlyspace.resolveSpaceName(value);
 		var args = paramString.parseParams("anon")[0];
 		var titleField = args.anon[2];
+		var labelField = args.labelField ? args.labelField[0] : false;
+		var label;
+		if(labelField) {
+			label = tiddler[labelField] ? tiddler[labelField] : tiddler.fields[labelField];
+		} else {
+			label = args.label ? args.label[0] : false;
+		}
 		var title = tiddler[titleField] ? tiddler[titleField] : tiddler.fields[titleField];
-		var link = createSpaceLink(place, spaceName, title);
+
+		var link = createSpaceLink(place, spaceName, title, label);
 		if(args.external && args.external[0] == "no") {
 			$(link).click(function(ev) {
 				ev.preventDefault();
 				var el = $(ev.target);
-				tiddlyspace.displayServerTiddler(el[0], el.attr("tiddler"), "bags/%0_public".format([ el.attr("tiddlyspace") ]));
+				tiddlyspace.displayServerTiddler(el[0], el.attr("tiddler"),
+					"bags/%0_public".format([ el.attr("tiddlyspace") ]));
 				return false;
 			});
 		}
