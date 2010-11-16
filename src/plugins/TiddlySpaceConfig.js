@@ -158,7 +158,7 @@ var plugin = config.extensions.tiddlyspace = {
 		var tabIdentifier = match ? match[1] : tabTitle;
 		return disabledTabs.contains(tabIdentifier);
 	},
-	get_csrf_token: function() {
+	getCsrfToken: function() {
 		var regex = /^(?:.*; )?csrf_token=([^(;|$)]*)(?:;|$)/;
 		var match = regex.exec(document.cookie);
 		var csrf_token = null;

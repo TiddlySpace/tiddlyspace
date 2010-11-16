@@ -88,7 +88,7 @@ var macro = config.macros.binaryUpload = {
 		// we need to go somewhere afterwards to ensure the onload event triggers
 		var redirectTo = "/%1/tiddlers.txt?select=title:%2".
 			format([workspace, fileName]);
-		var token = config.extensions.tiddlyspace.get_csrf_token();
+		var token = config.extensions.tiddlyspace.getCsrfToken();
 		var action = "%0?csrf_token=%1&redirect=%2"
 			.format([baseURL, token, redirectTo]);
 		form[0].action = action; // dont use jquery to work with ie

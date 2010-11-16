@@ -83,7 +83,7 @@ var macro = config.macros.TiddlySpaceIdentities = {
 		var redirect = form.find("[name=tiddlyweb_redirect]");
 		var openid = form.find("[name=openid]").val();
 		redirect.val(redirect.val() + openid);
-		var token = config.extensions.tiddlyspace.get_csrf_token();
+		var token = config.extensions.tiddlyspace.getCsrfToken();
 		var csrf_token = form.find("[name=csrf_token]");
 		csrf_token.val(token);
 		return true;
