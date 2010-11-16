@@ -62,12 +62,12 @@ def determine_space_recipe(environ, space_name):
     """
     store = environ['tiddlyweb.store']
     user = environ['tiddlyweb.usersign']['name']
-    space = Space(space_name)
-    recipe = Recipe(space.public_recipe())
     try:
+        space = Space(space_name)
+        recipe = Recipe(space.public_recipe())
         recipe = store.get(recipe)
-    except StoreError:
-        raise HTTP404('Space for %s does not exist' % space_name)
+    except (ValueError, StoreError), exc:
+        raise HTTP404('Space for %s does not exist: %s' % (space_name, exc))
     members = recipe.policy.manage  # XXX: authoritative?
 
     space_type = 'private' if user in members else 'public'

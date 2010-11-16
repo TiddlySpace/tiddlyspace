@@ -80,6 +80,8 @@ def change_space_member(store, space_name, add=None, remove=None,
     if remove and len(private_bag.policy.manage) == 1:
         raise HTTP403('must not remove the last member from a space')
 
+    # This will throw NoUserError (to be handled by the caller)
+    # if the user does not exist.
     if add:
         store.get(User(add))
 
@@ -136,6 +138,8 @@ def delete_space_member(environ, start_response):
                 current_user=current_user)
     except (NoBagError, NoRecipeError):
         raise HTTP404('space %s does not exist' % space_name)
+    except NoUserError:
+        raise HTTP409('attempt to remove non-member user: %s' % user_name)
 
     start_response('204 No Content', [])
     return ['']
@@ -144,6 +148,9 @@ def delete_space_member(environ, start_response):
 def list_spaces(environ, start_response):
     """
     List all the spaces on the service, as a JSON list.
+
+    If a "mine" parameter is present, just get the current
+    user's spaces.
     """
     store = environ['tiddlyweb.store']
     mine = environ['tiddlyweb.query'].get('mine', [None])[0]
@@ -244,30 +251,11 @@ def subscribe_space(environ, start_response):
     public_recipe_list = public_recipe.get_recipe()
     private_recipe_list = private_recipe.get_recipe()
 
-    for space in subscriptions:
-        _validate_subscription(environ, space, private_recipe_list)
-        try:
-            subscribed_space = Space(space)
-            subscribed_recipe = store.get(
-                    Recipe(subscribed_space.public_recipe()))
-            for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
-                if [bag, filter_string] not in public_recipe_list:
-                    public_recipe_list.insert(-1, (bag, filter_string))
-                if [bag, filter_string] not in private_recipe_list:
-                    private_recipe_list.insert(-2, (bag, filter_string))
-        except NoRecipeError, exc:
-            raise HTTP409('Invalid content for subscription: %s' % exc)
-
-    for space in unsubscriptions:
-        if space == space_name:
-            raise HTTP409('Attempt to unsubscribe self')
-        unsubscribed_space = Space(space)
-        bag = unsubscribed_space.public_bag()
-        try:
-            public_recipe_list.remove([bag, ""])
-            private_recipe_list.remove([bag, ""])
-        except ValueError, exc:
-            raise HTTP409('Invalid content for unsubscription: %s' % exc)
+    # operate directly on the recipe lists
+    _do_subscriptions(environ, subscriptions, public_recipe_list,
+            private_recipe_list, store)
+    _do_unsubscriptions(space_name, unsubscriptions, public_recipe_list,
+            private_recipe_list, store)
 
     public_recipe.set_recipe(public_recipe_list)
     store.put(public_recipe)
@@ -300,6 +288,48 @@ def _create_space(environ, start_response, space_name):
         ('Location', space_uri(environ, space_name)),
         ])
     return ['']
+
+
+def _do_subscriptions(environ, subscriptions, public_recipe_list,
+        private_recipe_list, store):
+    """
+    Add subscriptions to the space represented by public_recipe_list
+    and private_recipe_list.
+    """
+    for space in subscriptions:
+        _validate_subscription(environ, space, private_recipe_list)
+        try:
+            try:
+                subscribed_space = Space(space)
+            except ValueError, exc:
+                raise HTTP409('Invalid space name: %s' % exc)
+            subscribed_recipe = store.get(
+                    Recipe(subscribed_space.public_recipe()))
+            for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
+                if [bag, filter_string] not in public_recipe_list:
+                    public_recipe_list.insert(-1, (bag, filter_string))
+                if [bag, filter_string] not in private_recipe_list:
+                    private_recipe_list.insert(-2, (bag, filter_string))
+        except NoRecipeError, exc:
+                raise HTTP409('Invalid content for subscription: %s' % exc)
+
+
+def _do_unsubscriptions(space_name, unsubscriptions, public_recipe_list,
+        private_recipe_list, store):
+    """
+    Remove unsubscriptions from the space represented by
+    public_recipe_list and private_recipe_list.
+    """
+    for space in unsubscriptions:
+        if space == space_name:
+            raise HTTP409('Attempt to unsubscribe self')
+        unsubscribed_space = Space(space)
+        bag = unsubscribed_space.public_bag()
+        try:
+            public_recipe_list.remove([bag, ""])
+            private_recipe_list.remove([bag, ""])
+        except ValueError, exc:
+            raise HTTP409('Invalid content for unsubscription: %s' % exc)
 
 
 def _get_subscription_info(environ):

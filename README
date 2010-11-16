@@ -2,9 +2,10 @@ TiddlySpace
 A discoursive social model for TiddlyWiki
 
 TiddlySpace provides a shared hosting environment for lots of users using lots
-of TiddlyWikis, presented in "spaces". Each space can optionally include other
-spaces to add content and functionality. Content can easily be followed,
-copied, shared, and modified to create a network of learning and sharing.
+of Tiddlers, contained in "spaces". Each space can be presented as a TiddlyWiki.
+Spaces can optionally include other spaces to add content and functionality.
+Content can easily be followed, copied, shared, and modified to create a
+network of learning and sharing.
 
 Public TiddlySpace Website: http://tiddlyspace.com
 GitHub Repository: http://github.com/TiddlySpace/tiddlyspace

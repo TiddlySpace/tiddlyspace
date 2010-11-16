@@ -31,7 +31,7 @@ from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 import tiddlywebplugins.status
 
 
-__version__ = '0.9.41'
+__version__ = '0.9.42'
 
 
 def init(config):
@@ -53,6 +53,7 @@ def init(config):
     import tiddlywebplugins.form
     import tiddlywebplugins.reflector
     import tiddlywebplugins.lazy
+    import tiddlywebplugins.privateer
 
     @make_command()
     def addmember(args):
@@ -108,6 +109,7 @@ def init(config):
     tiddlywebplugins.form.init(config)
     tiddlywebplugins.reflector.init(config)
     tiddlywebplugins.lazy.init(config)
+    tiddlywebplugins.privateer.init(config)
 
     # XXX This is required to work around issues with twp.instancer.
     # Without this, instance information from tiddlywebwiki wins

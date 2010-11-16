@@ -38,7 +38,10 @@ var macro = config.macros.TiddlySpaceMembers = {
 		noUserError: "user <em>%0</em> does not exist",
 		delTooltip: "click to remove member",
 		delPrompt: "Are you sure you want to remove member %0?",
-		delError: "error removing member %0: %1",
+		// we can also get an auth error when the user has no perms to
+		// delete but we wouldn't see the interface
+		delAuthError: "error removing %1 from %0: may not remove last member",
+		delSpaceError: "error removing %1 from %0: space does not exist",
 		addMessage: "please wait..."
 	},
 
@@ -152,7 +155,8 @@ var macro = config.macros.TiddlySpaceMembers = {
 			macro.refresh(container);
 		};
 		var errback = function(xhr, error, exc) {
-			displayMessage(macro.locale.delError.format([username, error]));
+			var msg = xhr.status == 403 ? "delAuthError" : "delSpaceError";
+			displayMessage(macro.locale[msg].format([username, error]));
 		};
 		if(confirm(msg)) {
 			macro.space.members().remove(username, callback, errback);

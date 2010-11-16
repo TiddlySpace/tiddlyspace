@@ -26,14 +26,14 @@ date is clicked.
 
 var me = config.macros.viewRevisions = {
 	revisionTemplate: "RevisionTemplate",
-	revSuffix: " [rev. #%0]", //text to append to each tiddler title
-	defaultPageSize: 5, //default number of revisions to show
-	defaultLinkText: "View Revisions", //when there's nothing else to use
-	offsetTop: 30, //in px
-	offsetLeft: 10, //in px
-	shiftDownDelay: 50, //in ms
-	visibleSlideAmount: 20, //amount of revisions to show on left hand edge after sliding
-	zIndex: 100, //default z-index
+	revSuffix: " [rev. #%0]", // text to append to each tiddler title
+	defaultPageSize: 5, // default number of revisions to show
+	defaultLinkText: "View Revisions", // when there's nothing else to use
+	offsetTop: 30, // in px
+	offsetLeft: 10, // in px
+	shiftDownDelay: 50, // in ms
+	visibleSlideAmount: 20, // amount of revisions to show on left hand edge after sliding
+	zIndex: 100, // default z-index
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		params = paramString.parseParams(null, null, true)[0];
 		var tiddlerElem = story.findContainingTiddler(place);
@@ -64,15 +64,21 @@ var me = config.macros.viewRevisions = {
 			host: tiddler.fields["server.host"],
 			workspace: tiddler.fields["server.workspace"]
 		};
-		$(tiddlerElem).addClass("revisions");
-		$(tiddlerElem).attr("revName", tiddler.title);
+		$(tiddlerElem).addClass("revisions").attr("revName", tiddler.title);
+		// ensure toolbar commands deactivate RevisionsView
 		$("a", ".toolbar", tiddlerElem).each(function(index, btn) {
 			var _onclick = btn.onclick;
-			$(btn).click(function() {
+			btn.onclick = function(e) {
 				me.closeRevisions(tiddlerElem);
 				_onclick.apply(this, arguments);
-			});
+			};
 		});
+		// ensure default action deactivates RevisionsView
+		var _ondblclick = tiddlerElem.ondblclick;
+		tiddlerElem.ondblclick = function(e) {
+			me.closeRevisions(tiddlerElem);
+			_ondblclick.apply(this, arguments);
+		};
 		var type = tiddler.fields["server.type"];
 		var adaptor = new config.adaptors[type]();
 		var userParams = {
@@ -82,8 +88,8 @@ var me = config.macros.viewRevisions = {
 		};
 		me.createCloak(tiddlerElem);
 		adaptor.getTiddlerRevisionList(tiddler.title, null, context, userParams,
-				function (context, userParams) {
-					//strip the current revision
+				function(context, userParams) {
+					// strip the current revision
 					context.revisions.shift();
 					me.expandStack(context, userParams);
 				});
@@ -134,10 +140,13 @@ var me = config.macros.viewRevisions = {
 	},
 
 	createCloak: function(promoteElem) {
-		//store for later
-		$(promoteElem).attr("zindex", $(promoteElem).css("z-index"));
-		$(promoteElem).attr("top", $(promoteElem).css("top"));
-		$(promoteElem).attr("left", $(promoteElem).css("left"));
+		var el = $(promoteElem);
+		// cache styles for resetting later
+		el.data({
+			top: el.css("top"),
+			left: el.css("left"),
+			zIndex: el.css("z-index")
+		});
 
 		$('<div class="revisionCloak" />').css("z-index", me.zIndex)
 			.click(function() {
@@ -145,25 +154,22 @@ var me = config.macros.viewRevisions = {
 			})
 			.appendTo(document.body);
 
-		$(promoteElem).css("z-index", me.zIndex + 1);
+		el.css("z-index", me.zIndex + 1);
 	},
 
-	// clean up stuff. Remove all evidence of revision view.
+	// clean up, removing all evidence of revision view
 	closeRevisions: function(promoteElem) {
-		//revert the original tiddler back to its previous state
-		$(promoteElem)
-			.css("z-index", $(promoteElem).attr("zindex"))
-			.css("top", $(promoteElem).attr("top"))
-			.css("left", $(promoteElem).attr("left"))
-			.removeAttr("zindex")
-			.removeAttr("top")
-			.removeAttr("left")
-			.removeAttr("revName")
-			.removeClass("revisions");
+		var el = $(promoteElem);
+		// revert the original tiddler back to its previous state
+		el.removeAttr("revName").removeClass("revisions").css({
+			top: el.data("top"),
+			left: el.data("left"),
+			zIndex: el.data("zIndex")
+		});
 
-		//remove any revisions still in the store
+		// remove any revisions still in the store
 		var revisions = $(".revisions");
-		$(".revisions").each(function(index, revision) {
+		revisions.each(function(index, revision) {
 			var revAttributes = revision.attributes;
 			if ((revAttributes.revname) &&
 					(revAttributes.revision)) {
@@ -177,14 +183,14 @@ var me = config.macros.viewRevisions = {
 			}
 		});
 
-		//delete the previous revisions
+		// delete the previous revisions
 		revisions.remove();
 
-		//remove the cloak
+		// remove the cloak
 		$(".revisionCloak").remove();
 	},
 
-	// calback from getting list of revisions.
+	// calback from getting list of revisions
 	expandStack: function(context, userParams) {
 		var pageSize = userParams.pageSize;
 
@@ -199,10 +205,10 @@ var me = config.macros.viewRevisions = {
 		}
 	},
 
-	//place the next div above and behind the previous one.
+	// place the next div above and behind the previous one
 	displayNextRevision: function(tiddlerElem, userParams, context, from, to) {
 		var revision = context.revisions[from];
-		function callback() {
+		var callback = function() {
 			var revText = revBtn.getRevisionText(tiddlerElem, revision);
 			tiddlerElem = me.createRevisionObject(tiddlerElem, context,
 				userParams, revText);
@@ -327,7 +333,7 @@ var me = config.macros.viewRevisions = {
 					});
 				});
 			};
-			//make sure another revision isn't already out
+			// make sure another revision isn't already out
 			if ($(".viewRevision").length) {
 				var newRevElem = $(".viewRevision")[0];
 				var newRevision = store.getTiddler($(newRevElem)
