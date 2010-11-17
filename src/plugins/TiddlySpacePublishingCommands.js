@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.8.1|
+|''Version''|0.8.2|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -174,52 +174,6 @@ config.commands.changeToPrivate = {
 	}
 };
 config.commands.changeToPublic = config.commands.publishTiddler;
-
-config.commands.deleteTiddler.deleteResource = function(tiddler, bag, userCallback) {
-	var workspace = "bags/%0".format([bag]);
-	var oldDirty = store.isDirty();
-	var originalBag = tiddler.fields["server.bag"];
-	var originalWorkspace = "bags/%0".format([originalBag]);
-	var deleteLocal = originalWorkspace == workspace;
-	var context = {
-		tiddler: tiddler,
-		workspace: workspace
-	};
-	tiddler.fields["server.bag"] = bag;
-	tiddler.fields["server.workspace"] = context.workspace;
-	tiddler.fields["server.page.revision"] = "false";
-	var defaultWorkspace = config.defaultCustomFields["server.workspace"];
-	delete tiddler.fields["server.etag"];
-	var callback;
-	if(deleteLocal) {
-		var _dirty = store.isDirty();
-		callback = function(context, userParams) {
-			var title = tiddler.title;
-			store.removeTiddler(title);
-			context.adaptor.getTiddler(title, { workspace: defaultWorkspace }, null, function(context) {
-				if(context.status) {
-					store.addTiddler(context.tiddler);
-					story.refreshTiddler(title, null, true);
-					userCallback(context);
-				}
-				store.setDirty(_dirty);
-			});
-		};
-	} else {
-		callback = function(context, userParams) {
-			if(context.status) {
-				tiddler.fields["server.workspace"] = originalWorkspace;
-				tiddler.fields["server.bag"] = originalBag;
-				story.refreshTiddler(tiddler.title, null, true);
-				store.setDirty(oldDirty); // will fail to delete locally and throw an error
-			}
-			if(userCallback) {
-				userCallback(context);
-			}
-		};
-	}
-	tiddler.getAdaptor().deleteTiddler(tiddler, context, {}, callback);
-};
 
 /* Save as draft command */
 var saveDraftCmd = config.commands.saveDraft = {

@@ -122,64 +122,6 @@ test("toggleBag", function() {
 	same(["jon_private", "jon_public", "bob_private", "bob_public"], actual);
 });
 
-
-
-test("deleteResource (where bag is different from tiddler)", function() {
-	var cmd = config.commands.deleteTiddler;
-	var tiddler = new Tiddler("foo");
-	tiddler.fields["server.workspace"] = "bags/jon_private";
-	tiddler.fields["server.etag"] = "etag/";
-	var expectedPath;
-	tiddler.getAdaptor = function() {
-		var adaptor = {
-			deleteTiddler: function(tiddler, context, userParams, callback) {
-				if(tiddler.fields["server.workspace"] == "bags/jon_public" &&
-					tiddler.fields["server.bag"] == "jon_public" &&
-					!tiddler.fields["server.etag"]) {
-						expectedPath = true;
-					}
-					callback({status: true});
-			}
-		};
-		return adaptor;
-	}
-
-	// run
-	cmd.deleteResource(tiddler, "jon_public");
-	strictEqual(expectedPath, true);
-});
-
-test("deleteResource private tiddler", function() {
-	var cmd = config.commands.deleteTiddler;
-	var tiddler = new Tiddler("foo");
-	tiddler.fields["server.bag"] = "foo_public";
-	tiddler.fields["server.workspace"] = "bags/jon_public";
-	tiddler.fields["server.etag"] = "etag/";
-	store.saveTiddler(tiddler);
-	var expectedPath;
-	tiddler.getAdaptor = function() {
-		var adaptor = {
-			deleteTiddler: function(tiddler, context, userParams, callback) {
-				if(tiddler.fields["server.bag"] == "jon_private"
-					&& tiddler.fields["server.workspace"] == "bags/jon_private"
-					&& !tiddler.fields["server.etag"]) {
-						expectedPath = true;
-					}
-					callback({status: true});
-			}
-		};
-		return adaptor;
-	}
-	strictEqual(store.tiddlerExists("foo"), true);
-
-	// run
-	cmd.deleteResource(tiddler, "jon_private");
-	strictEqual(expectedPath, true);
-	strictEqual(store.tiddlerExists("foo"), true); // the tiddler being deleted different to one in store
-	strictEqual(store.isDirty(), false);
-});
-
-
 test("copyTiddler", function() {
 	var cmd = config.commands.publishTiddler;
 	var tiddler = new Tiddler("pig");
