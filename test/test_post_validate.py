@@ -18,7 +18,7 @@ from tiddlyweb.config import config
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.util import sha
-from tiddlywebplugins.tiddlyspace.validator import CsrfProtector, InvalidNonceError
+from tiddlywebplugins.tiddlyspace.csrf import CsrfProtector, InvalidNonceError
 
 
 def setup_module(module):

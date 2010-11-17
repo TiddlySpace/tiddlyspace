@@ -25,7 +25,7 @@ from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
         friendly_uri, get_identities)
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
-from tiddlywebplugins.tiddlyspace.validator import CsrfProtector
+from tiddlywebplugins.tiddlyspace.csrf import CsrfProtector
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 
 import tiddlywebplugins.status
