@@ -358,4 +358,38 @@ a.baskstageTask.task_user {
 	_display: inline;
 	_float: none;
 }
+
+#backstage .unpluggedSpaceTab .wizard,
+.unpluggedSpaceTab .wizard {
+	background: white;
+	border: 2px solid #CCC;
+	padding: 5px;
+}
+
+.syncKey .keyItem {
+	border: 1px solid black;
+	display: inline-block;
+	margin: 0.2em;
+	padding: 0.1em 0.1em 0.1em 0.1em;
+}
+
+.keyHeading {
+	font-size: 2em;
+	font-weight: bold;
+	margin: 0.4em 0em -0.2em;
+}
+
+.unpluggedSpaceTab .putToServer,
+.unpluggedSpaceTab .notChanged {
+	display: none;
+}
+
+.tiddlyspaceMenu ul {
+	margin: 0;
+	padding: 0;
+}
+
+.tiddlyspaceMenu ul li {
+	list-style: none;
+}
 /*}}}*/
