@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceIdentities|
-|''Version''|0.1.1|
+|''Version''|0.1.2|
 |''Description''||
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceIdentities.js|
@@ -20,6 +20,7 @@
 			<dd><input type="text" name="openid" /></dd>
 		</dl>
 		<input type="hidden" name="tiddlyweb_redirect" />
+		<input type="hidden" name="csrf_token" />
 		<input type="submit" />
 	</fieldset>
 </form>
@@ -82,6 +83,9 @@ var macro = config.macros.TiddlySpaceIdentities = {
 		var redirect = form.find("[name=tiddlyweb_redirect]");
 		var openid = form.find("[name=openid]").val();
 		redirect.val(redirect.val() + openid);
+		var token = config.extensions.tiddlyspace.getCsrfToken();
+		var csrf_token = form.find("[name=csrf_token]");
+		csrf_token.val(token);
 		return true;
 	}
 };

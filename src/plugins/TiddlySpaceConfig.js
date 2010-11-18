@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.6.4|
+|''Version''|0.6.5|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -157,6 +157,16 @@ var plugin = config.extensions.tiddlyspace = {
 		var match = new RegExp("(?:\\[\\[([^\\]]+)\\]\\])", "mg").exec(tabTitle);
 		var tabIdentifier = match ? match[1] : tabTitle;
 		return disabledTabs.contains(tabIdentifier);
+	},
+	getCsrfToken: function() {
+		var regex = /^(?:.*; )?csrf_token=([^(;|$)]*)(?:;|$)/;
+		var match = regex.exec(document.cookie);
+		var csrf_token = null;
+		if (match && (match.length === 2)) {
+			csrf_token = match[1];
+		}
+
+		return csrf_token;
 	}
 };
 

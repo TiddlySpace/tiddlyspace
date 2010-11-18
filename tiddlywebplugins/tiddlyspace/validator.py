@@ -5,11 +5,9 @@ Input validation routines for TiddlySpace.
 
 import Cookie
 
-
 from tiddlyweb.util import sha
 from tiddlyweb.web.validator import TIDDLER_VALIDATORS, InvalidTiddlerError
 
-# XXX: importing private members, so they should probably not be private
 from tiddlywebplugins.tiddlyspace.web import (determine_host,
         determine_space, determine_space_recipe)
 
