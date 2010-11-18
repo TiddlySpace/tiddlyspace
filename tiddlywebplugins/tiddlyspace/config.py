@@ -3,15 +3,23 @@ Base configuration for TiddlySpace.
 
 This provides the basics which may be changed in tidlywebconfig.py.
 """
+
 from tiddlywebplugins.instancer.util import get_tiddler_locations
 
 from tiddlywebplugins.tiddlyspace.instance import store_contents
 
+try:
+    from pkg_resources import resource_filename
+except ImportError:
+    from tiddlywebplugins.utils import resource_filename
+
 
 PACKAGE_NAME = 'tiddlywebplugins.tiddlyspace'
+TIDDLYWIKI = resource_filename(PACKAGE_NAME, 'resources/empty.html')
 
 
 config = {
+    'base_tiddlywiki': TIDDLYWIKI,
     'instance_tiddlers': get_tiddler_locations(store_contents, PACKAGE_NAME),
     'atom.default_filter': 'select=tag:!excludeLists;sort=-modified;limit=20',
     'auth_systems': ['cookie_form', 'tiddlywebplugins.tiddlyspace.openid'],
