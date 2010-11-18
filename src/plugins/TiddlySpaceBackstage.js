@@ -1,8 +1,9 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.6.0|
+|''Version''|0.6.1|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
+|''Contributors''|Jon Lister, Jon Robson, Colm Britton|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin TiddlySpaceViewTypes|
 !Code
@@ -10,6 +11,12 @@
 //{{{
 (function($) {
 
+if(!config.extensions.tiddlyweb.status) {
+	config.extensions.tiddlyweb.status = {};
+}
+if(!config.extensions.tiddlyweb.status.tiddlyspace_version) {
+	config.extensions.tiddlyweb.status.tiddlyspace_version = "<unknown>" // for unplugged usage.
+}
 var disabled_tabs_for_nonmembers = ["PluginManager", "Backstage##FileImport", "Backstage##BatchOps",
 	"Backstage##SpaceMembers", "TiddlySpaceTabs##Private", "TiddlySpaceTabs##Drafts"];
 var tweb = config.extensions.tiddlyweb;
@@ -27,14 +34,12 @@ config.tasks.login = {
 
 config.tasks.user = {
 	text: "user: ",
-	tooltip: "user control panel",
-	content: "<<tiddler Backstage##User>>"
+	tooltip: "user control panel"
 };
 
 config.tasks.space = {
 	text: "space: ",
 	tooltip: "space control panel",
-	content: "<<tiddler Backstage##Space>>",
 	className: "right"
 };
 
@@ -44,6 +49,15 @@ config.tasks.tiddlyspace = {
 	content: "<<tiddler Backstage##Menu>>"
 }
 
+if(window.location.protocol == "file:") {
+	config.unplugged = true;
+	config.tasks.space.content = "<<tiddler Backstage##SpaceUnplugged>>";
+	config.tasks.user.content = "<<tiddler Backstage##UserUnplugged>>";
+} else {
+	config.tasks.space.content = "<<tiddler Backstage##Space>>";
+	config.tasks.user.content = "<<tiddler Backstage##User>>";
+}
+var unpluggedMode = config.unplugged;
 config.backstageTasks = ["login", "tiddlyspace", "user", "space"];
 
 config.messages.backstage.prompt = "";
@@ -52,14 +66,16 @@ var _show = backstage.show;
 backstage.show = function() {
 	// selectively hide backstage tasks and tabs based on user status
 	var tasks = $("#backstageToolbar .backstageTask").show();
-	tweb.getUserInfo(function(user) {
-		if(user.anon) {
-			$(".task_user", tasks).hide();
-			tiddlyspace.disableTab(disabled_tabs_for_nonmembers);
-		} else {
-			$(".task_login", tasks).hide();
-		}
-	});
+	if(!unpluggedMode) {
+		tweb.getUserInfo(function(user) {
+			if(user.anon) {
+				$(".task_user", tasks).hide();
+				tiddlyspace.disableTab(disabled_tabs_for_nonmembers);
+			} else {
+				$(".task_login", tasks).hide();
+			}
+		});
+	}
 	// display backstage
 	return _show.apply(this, arguments);
 };
@@ -78,7 +94,21 @@ backstage.tiddlyspace = {
 	locale: {
 		member: "You are a member of this space.",
 		nonmember: "You are a non-member of this space.",
-		loggedout: "You are currently logged out of TiddlySpace."
+		loggedout: "You are currently logged out of TiddlySpace.",
+		unplugged: "You are unplugged."
+	},
+	checkSyncStatus: function() {
+		var b = backstage.tiddlyspace;
+		var t = store.filterTiddlers("[is[unsynced]]");
+		var unsyncedList = $("#backstage .tiddlyspaceMenu .unsyncedList");
+		if(t.length > 0 && !readOnly) {
+			b.tweakMiddleButton("unsyncedIcon");
+			$("#backstage").addClass("unsyncedChanges");
+		} else {
+			b.tweakMiddleButton();
+			$("#backstage").removeClass("unsyncedChanges");
+		}
+		story.refreshAllTiddlers();
 	},
 	userButton: function(backstageArea, user) {
 		// override user button (logged in) to show username
@@ -107,25 +137,34 @@ backstage.tiddlyspace = {
 		imageMacro.renderImage(hideBtn, "close.svg",
 			{ altImage: commonUrl.format(["close.png"]), alt: altText, width: 24, height: 24 });
 	},
-	middleButton: function(backstageArea) {
-		var locale = backstage.tiddlyspace.locale;
+	middleButton: function(backstageArea, user) {
+		var b = backstage.tiddlyspace;
+		var locale = b.locale;
 		var backstageToolbar = $("#backstageToolbar", backstageArea)[0];
-		var backstageLogo = $("#[task=tiddlyspace]").empty()[0];
-		var iconName = readOnly ? "publicIcon" : "privateAndPublicIcon";
 		var space = tiddlyspace.currentSpace.name;
-		tweb.getUserInfo(function(user) {
-			if(!user.anon) {
-				config.messages.memberStatus = readOnly ? locale.nonmember : locale.member;
-			} else {
-				config.messages.memberStatus = locale.loggedout;
-			}
-		});
-		imageMacro.renderImage(backstageLogo, iconName, { width: 24, height: 24 });
-		$(".image", backstageLogo);
+		if(user.unplugged) {
+			config.messages.memberStatus = locale.unplugged;
+		} else if(!user.anon) {
+			config.messages.memberStatus = readOnly ? locale.nonmember : locale.member;
+		} else {
+			config.messages.memberStatus = locale.loggedout;
+		}
 		// construct the tiddlyspace logo
+		var backstageLogo = $("#[task=tiddlyspace]").empty()[0];
+		$("<span />").addClass("iconContainer").appendTo(backstageLogo);
 		$('<span class="logoText"><span class="privateLightText">tiddly</span>' +
 				'<span class="publicLightText">space</span></span>').
 			appendTo(backstageLogo);
+		b.tweakMiddleButton();
+	},
+	tweakMiddleButton: function(iconName) {
+		var backstageLogo = $("#[task=tiddlyspace] .iconContainer").empty()[0];
+		var backstageToolbar = $("#backstageToolbar");
+		var plugin = backstage.tiddlyspace;
+		if(!iconName) {
+			iconName = readOnly ? "publicIcon" : "privateAndPublicIcon";
+		}
+		config.macros.image.renderImage(backstageLogo, iconName, { width: 24, height: 24 });
 	},
 	spaceButton: function(backstageArea) {
 		// override space button to show SiteIcon
@@ -159,17 +198,24 @@ backstage.tiddlyspace = {
 };
 backstage.init = function() {
 	_init.apply(this, arguments);
-	tweb.getUserInfo(function(user) {
+	var init = function(user) {
 		var backstageArea = $("#backstageArea")[0];
-		var tiddlyspace_b = backstage.tiddlyspace;
-		tiddlyspace_b.userButton(backstageArea, user);
-		tiddlyspace_b.showButton();
-		tiddlyspace_b.hideButton();
-		tiddlyspace_b.middleButton(backstageArea);
-		tiddlyspace_b.spaceButton(backstageArea);
-		tiddlyspace_b.loginButton(backstageArea, user);
-		tiddlyspace_b.addClasses(backstageArea); // for IE styling purposes
-	});
+		var b = backstage.tiddlyspace;
+		store.addNotification(null, b.checkSyncStatus);
+		b.userButton(backstageArea, user);
+		b.showButton();
+		b.hideButton();
+		b.middleButton(backstageArea, user);
+		b.spaceButton(backstageArea);
+		b.loginButton(backstageArea, user);
+		b.addClasses(backstageArea); // for IE styling purposes
+		b.checkSyncStatus();
+	};
+	if(!unpluggedMode) {
+		tweb.getUserInfo(init);
+	} else {
+		init({unplugged: true, anon:false, name: config.options.txtUserName});
+	}
 };
 
 var home = config.macros.homeLink = {
@@ -221,6 +267,16 @@ config.macros.exportSpace = {
 		$('<a class="button">download</a>'). // XXX: i18n
 			attr("href", filename).appendTo(place);
 	}
+};
+
+$.extend(config.messages, {
+	syncExplanation: "You are currently viewing an offline version of this TiddlySpace. From here you can sync your offline copy with the online version.",
+	syncListHeading: "Unsaved tiddlers listed below"});
+
+var tmp_reportSuccess = config.extensions.ServerSideSavingPlugin.reportSuccess;
+config.extensions.ServerSideSavingPlugin.reportSuccess = function() {
+	backstage.tiddlyspace.checkSyncStatus();
+	tmp_reportSuccess.apply(this, arguments);
 };
 
 })(jQuery);
