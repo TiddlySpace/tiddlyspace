@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceFilters|
 |''Description''|provide an async list macro and list public, private and draft tiddlers|
 |''Author''|Jon Robson|
-|''Version''|0.4.4|
+|''Version''|0.4.5|
 |''Status''|@@experimental@@|
 |''Requires''|TiddlySpaceConfig ExtensibleFilterPlugin|
 |''CodeRepository''|<...>|
@@ -40,6 +40,9 @@ config.filterHelpers = {
 		local: function(tiddler) {
 			return config.filterHelpers.is["public"](tiddler) ||
 				config.filterHelpers.is["private"](tiddler);
+		},
+		unsynced: function(tiddler) {
+			return tiddler ? tiddler.isTouched() : false;
 		}
 	}
 };
