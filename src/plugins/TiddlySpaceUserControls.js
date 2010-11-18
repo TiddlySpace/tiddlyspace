@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceUserControls|
-|''Version''|0.5.2|
+|''Version''|0.5.3|
 |''Description''|registration and login UIs|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceUserControls.js|
@@ -165,7 +165,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		return true;
 	},
 	redirect: function() {
-		window.location = tweb.host;
+		window.location = window.location.protocol == "file:" ? window.location : tweb.host;
 	}
 };
 
