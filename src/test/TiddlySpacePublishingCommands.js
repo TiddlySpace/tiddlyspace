@@ -20,13 +20,21 @@ module("TiddlySpacePublishingCommands", {
 		tid2.fields["server.bag"] = "foo_private";
 		var tid3 = new Tiddler("bfoo3");
 		tid3.fields["server.bag"] = "bar_public";
+		var tid4 = new Tiddler("bfoo4");
+		tid4.fields["server.bag"] = "foo_private";
+		tid4.fields.changecount = 1;
+		var tid5 = new Tiddler("bfoo5");
+		tid5.fields.changecount = 1;
+		tid5.fields["server.bag"] = "foo_public";
 		store.saveTiddler(tid1);
 		store.saveTiddler(tid2);
 		store.saveTiddler(tid3);
+		store.saveTiddler(tid4);
+		store.saveTiddler(tid5);
 	},
 	teardown: function() {
 		var toDelete = ["pig", "foo", "foo [draft]", "foo [draft2]", "foo [draft3]",
-			"foo [draft5]", "bar [draft]", "bfoo", "bfoo2", "bfoo3"];
+			"foo [draft5]", "bar [draft]", "bfoo", "bfoo2", "bfoo3", "bfoo4", "bfoo5"];
 		for(var i = 0; i < toDelete.length; i++) {
 			store.removeTiddler(toDelete[i]);
 		}
@@ -45,12 +53,16 @@ test("tiddlyspace.getTiddlerStatusType", function() {
 	var type4 = tiddlyspace.getTiddlerStatusType(new Tiddler("ToolbarCommands"));
 	var type5 = tiddlyspace.getTiddlerStatusType(new Tiddler("MainMenuNotExistanceTiddler"));
 	var type6 = tiddlyspace.getTiddlerStatusType(false);
+	var type7 = tiddlyspace.getTiddlerStatusType(store.getTiddler("bfoo4"));
+	var type8 = tiddlyspace.getTiddlerStatusType(store.getTiddler("bfoo5"));
 	strictEqual(type1, "public");
 	strictEqual(type2, "private");
 	strictEqual(type3, "external");
 	strictEqual(type4, "shadow");
 	strictEqual(type5, "missing");
 	strictEqual(type6, "missing");
+	strictEqual(type7, "unsyncedPrivate");
+	strictEqual(type8, "unsyncedPublic");
 });
 test("getDraftTitle", function() {
 	// setup
