@@ -6,3 +6,4 @@ tiddler: deleteTiddler.tid
 tiddler: moreCommand.tid
 tiddler: saveDraft.tid
 tiddler: saveTiddler.tid
+tiddler: unsyncedIcon.tid
