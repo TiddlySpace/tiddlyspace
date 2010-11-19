@@ -15,11 +15,10 @@ except ImportError:
 
 
 PACKAGE_NAME = 'tiddlywebplugins.tiddlyspace'
-TIDDLYWIKI = resource_filename(PACKAGE_NAME, 'resources/empty.html')
+TIDDLYWIKI_BETA = resource_filename(PACKAGE_NAME, 'resources/beta.html')
 
 
 config = {
-    'base_tiddlywiki': TIDDLYWIKI,
     'instance_tiddlers': get_tiddler_locations(store_contents, PACKAGE_NAME),
     'atom.default_filter': 'select=tag:!excludeLists;sort=-modified;limit=20',
     'auth_systems': ['cookie_form', 'tiddlywebplugins.tiddlyspace.openid'],
@@ -32,6 +31,15 @@ config = {
     'server_store': ['tiddlywebplugins.tiddlyspace.store', {
         'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
     'indexer': 'tiddlywebplugins.mysql',
-    'tiddlywebwiki.binary_limit': 1048576,  # 1MB
+    'tiddlywebwiki.binary_limit': 1048576,  # 1 MB
     'lazy.titles': ['SiteIcon', 'ColorPalette'],
+    # TiddlyWiki beta serialization
+    'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
+    'extension_types': {
+        'bwiki': 'text/x-btiddlywiki',
+    },
+    'serializers': {
+        'text/x-btiddlywiki': ['tiddlywebplugins.tiddlyspace.betaserialization',
+            'text/html; charset=UTF-8']
+    }
 }

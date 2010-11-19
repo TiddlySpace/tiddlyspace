@@ -111,8 +111,7 @@ def init(config):
     tiddlywebplugins.privateer.init(config)
 
     # XXX: The following is required to work around issues with twp.instancer.
-    # Without this, config settings from tiddlywebwiki takes precedence.
-    config['base_tiddlywiki'] = space_config['base_tiddlywiki']
+    # Without this, config settings from tiddlywebwiki take precedence.
     # This only fixes 'twanager update', instance creation still does not have
     # the right information, thus requiring a twanager update after instance
     # creation. Presumably the instance script needs to do something similar.
