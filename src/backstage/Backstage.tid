@@ -55,6 +55,8 @@ You can associate your account with multiple identities. If you have an open id 
 <<TiddlySpaceRegister>>
 
 !Options
+upload a private file:
+<<binaryUpload>>
 <<search>><<closeAll>><<permaview>><<newTiddler>><<newJournal "DD MMM YYYY" "journal">><<saveChanges>><<slider chkSliderOptionsPanel OptionsPanel "options »" "Change TiddlyWiki advanced options">>
 
 !Password
