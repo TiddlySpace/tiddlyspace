@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceUserControls|
-|''Version''|0.5.2|
+|''Version''|0.5.3|
 |''Description''|registration and login UIs|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceUserControls.js|
@@ -50,6 +50,7 @@ Shows a registration form.
 (function($) {
 
 var tweb = config.extensions.tiddlyweb;
+var tiddlyspace = config.extensions.tiddlyspace;
 
 var tsl = config.macros.TiddlySpaceLogin = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -97,8 +98,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	printLoggedInMessage: function(container, user, options) {
 		options = options ? options : {};
 		tweb.getStatus(function(status) {
-			var uri = config.extensions.tiddlyspace.getHost(
-				status.server_host, user);
+			var uri = tiddlyspace.getHost(status.server_host, user);
 			var link = '<a href="%0">%1</a>'.format([uri, user]);
 			var msg = options.message ? options.message : tsl.locale.success;
 			$(container).html(msg.format([link]));
@@ -180,6 +180,9 @@ var logoutMacro = config.macros.TiddlySpaceLogout = {
 			if(!user.anon) {
 				var form = $('<form method="POST" />').addClass(macroName).
 					attr("action", tweb.host + "/logout");
+				var token = tiddlyspace.getCsrfToken();
+				$('<input type="hidden" name="csrf_token" />').val(token).
+					appendTo(form);
 				$("<button />", { text: logoutMacro.locale.label }).
 					click(function(ev) { form.submit(); }).
 					appendTo(form);
@@ -215,7 +218,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		var username = form.find("[name=username]").val();
 		var password = form.find("[name=password]").val();
 		var passwordConfirm = form.find("[name=password_confirm]").val();
-		var validName = config.extensions.tiddlyspace.isValidSpaceName(username);
+		var validName = tiddlyspace.isValidSpaceName(username);
 		if(validName && password && password == passwordConfirm) { // TODO: check password length?
 			tsr.register(username, password, form);
 		} else {
