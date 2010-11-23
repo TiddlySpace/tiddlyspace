@@ -35,11 +35,8 @@ config = {
     'lazy.titles': ['SiteIcon', 'ColorPalette'],
     # TiddlyWiki beta serialization
     'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
-    'extension_types': {
-        'bwiki': 'text/x-btiddlywiki',
-    },
     'serializers': {
-        'text/x-btiddlywiki': ['tiddlywebplugins.tiddlyspace.betaserialization',
+        'text/x-tiddlywiki': ['tiddlywebplugins.tiddlyspace.betaserialization',
             'text/html; charset=UTF-8']
     }
 }
