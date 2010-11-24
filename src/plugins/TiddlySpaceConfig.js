@@ -130,14 +130,14 @@ var plugin = config.extensions.tiddlyspace = {
 		}
 		var subdomain = nocors ? plugin.currentSpace.name : space;
 		host = host ? this.getHost(host, subdomain) : "";
-		var bag = space ? "%0_public".format([space]) : "tiddlyspace";
-		return "%0/bags/%1/tiddlers/SiteIcon".format([host, bag]);
+		var bag = space ? "%0_public".format(space) : "tiddlyspace";
+		return "%0/bags/%1/tiddlers/SiteIcon".format(host, bag);
 	},
 	// returns the URL based on a server_host object (scheme, host, port) and an
 	// optional subdomain
 	getHost: function(host, subdomain) {
 		subdomain = subdomain ? subdomain + "." : "";
-		var url = "%0://%1%2".format([host.scheme, subdomain, host.host]);
+		var url = "%0://%1%2".format(host.scheme, subdomain, host.host);
 		var port = host.port;
 		if(port && !["80", "443"].contains(port)) {
 			url += ":" + port;
@@ -252,9 +252,9 @@ if(config.options.chkPrivateMode === undefined) {
 config.paramifiers.follow = {
 	onstart: function(v) {
 		if(!readOnly) {
-			var bag = "%0_public".format([config.extensions.tiddlyspace.currentSpace.name]);
+			var bag = "%0_public".format(plugin.currentSpace.name);
 			story.displayTiddler(null, v, DEFAULT_EDIT_TEMPLATE, null, null,
-				"server.bag:%0 server.workspace:bags/%0".format([bag]));
+				"server.bag:%0 server.workspace:bags/%0".format(bag));
 			story.setTiddlerTag(v, "follow", 1);
 			story.focusTiddler(v, "text");
 		}

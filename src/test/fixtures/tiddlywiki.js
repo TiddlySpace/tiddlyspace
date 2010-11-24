@@ -64,11 +64,8 @@ Tiddler = function(title) {
 };
 Tiddler.prototype.incChangeCount = NOP;
 Tiddler.prototype.isTouched = function() {
-	var changeCount = this.fields.changecount;
-	if(changeCount === undefined) {
-		changeCount = 0;
-	}
-	return changeCount > 0;
+	var changecount = this.fields.changecount || 0;
+	return changecount > 0;
 };
 
 TiddlyWiki = function() {

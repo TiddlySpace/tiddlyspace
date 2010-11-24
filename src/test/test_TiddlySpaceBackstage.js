@@ -1,6 +1,7 @@
 (function(module, $) {
 
 var _image, _binaryTiddlersPlugin, _avatar, _filterTiddlers, _refreshAllTiddlers, refreshed;
+
 module("TiddlySpaceBackstage plugin", {
 	setup: function() {
 		$('<div id="backstagePanel"><div class="tiddlyspaceMenu"><div class="unsyncedList"></div></div></div>').
