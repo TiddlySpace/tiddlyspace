@@ -165,7 +165,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		return true;
 	},
 	redirect: function() {
-		window.location = tweb.host;
+		window.location = window.location.protocol == "file:" ? window.location : tweb.host;
 	}
 };
 

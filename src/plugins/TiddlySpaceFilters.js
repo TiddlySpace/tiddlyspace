@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceFilters|
 |''Description''|provide TiddlySpace-specific filter extensions|
 |''Author''|Jon Robson|
-|''Version''|0.5.0|
+|''Version''|0.5.1|
 |''Status''|@@beta@@|
 |''CoreVersion''|2.6.2|
 |''Requires''|TiddlySpaceConfig|
@@ -40,6 +40,9 @@ config.filterHelpers = {
 		local: function(tiddler) {
 			return config.filterHelpers.is["public"](tiddler) ||
 				config.filterHelpers.is["private"](tiddler);
+		},
+		unsynced: function(tiddler) {
+			return tiddler ? tiddler.isTouched() : false;
 		}
 	}
 };

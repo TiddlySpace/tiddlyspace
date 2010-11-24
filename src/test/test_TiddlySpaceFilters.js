@@ -82,5 +82,20 @@ test("config.filterHelpers.is.local", function() {
 		"xyz_private is not foo_private or foo_public so is alien (not local)");
 });
 
+test("config.filterHelpers.is.unsynced", function() {
+	var tiddler = new Tiddler("test");
+	var tiddler2 = new Tiddler("test");
+	tiddler2.fields.changecount = 0;
+	var tiddler3 = new Tiddler("test");
+	tiddler3.fields.changecount = 4;
+	var ftest = config.filterHelpers.is.unsynced;
+	var res1 = ftest(tiddler);
+	var res2 = ftest(tiddler2);
+	var res3 = ftest(tiddler3);
+	strictEqual(res1, false);
+	strictEqual(res2, false);
+	strictEqual(res3, true);
+});
+
 
 })(QUnit.module, jQuery);

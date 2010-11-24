@@ -24,17 +24,21 @@ var originMacro = config.macros.tiddlerOrigin;
 tiddlyspace.getTiddlerStatusType = function(tiddler) {
 	var isShadow = store.isShadowTiddler(tiddler.title);
 	var exists = store.tiddlerExists(tiddler.title);
+	var helpers = config.filterHelpers.is;
+	var unsynced = helpers.unsynced(tiddler);
 	if(isShadow && !exists) {
 		return "shadow";
 	} else if(!exists) {
 		return "missing";
 	} else {
-		var helpers = config.filterHelpers.is;
 		var types = ["private", "public"];
 		var type = "external";
 		for(var i = 0; i < types.length; i++) {
 			var t = types[i];
 			type = helpers[t](tiddler) ? t : type;
+		}
+		if(unsynced) {
+			type = type == "private" ? "unsyncedPrivate" : "unsyncedPublic";
 		}
 		return type;
 	}
@@ -170,7 +174,7 @@ config.commands.changeToPrivate = {
 		cmd.moveTiddler(tiddler, newTiddler);
 	}
 };
-config.commands.changeToPublic = config.commands.publishTiddler;
+config.commands.changeToPublic = cmd;
 
 /* Save as draft command */
 var saveDraftCmd = config.commands.saveDraft = {
@@ -258,7 +262,6 @@ var macro = config.macros.TiddlySpacePublisher = {
 	},
 
 	changeStatus: function(tiddlers, status, callback) { // this is what is called when you click the publish button
-		var cmd = config.commands.publishTiddler;
 		var publicBag;
 		for(var i = 0; i < tiddlers.length; i++) {
 			var tiddler = tiddlers[i];
@@ -266,7 +269,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 				title: tiddler.title,
 				fields: { "server.bag": cmd.toggleBag(tiddler, status) }
 			};
-			config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, callback);
+			cmd.moveTiddler(tiddler, newTiddler, callback);
 		}
 	},
 	getMode: function(paramString) {
