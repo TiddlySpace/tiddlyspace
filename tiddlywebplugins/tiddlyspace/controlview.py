@@ -128,6 +128,9 @@ class DropPrivs(object):
     """
     If the incoming request is addressed to some entity not in the
     current space, then drop privileges to GUEST.
+
+    If the incoming request is trying to use jsonp, then drop
+    privileges to GUEST
     """
 
     def __init__(self, application):
@@ -162,7 +165,9 @@ class DropPrivs(object):
         store = environ['tiddlyweb.store']
         container_name = req_uri.split('/')[2]
 
-        if req_uri.startswith('/bags/'):
+        jsonp = environ['tiddlyweb.query'].get('jsonp_callback')
+
+        if req_uri.startswith('/bags/') and not jsonp:
             recipe_name = determine_space_recipe(environ, space_name)
             space_recipe = store.get(Recipe(recipe_name))
             template = recipe_template(environ)
@@ -187,8 +192,9 @@ class DropPrivs(object):
                     return
 
         if (req_uri.startswith('/recipes/')
-                and container_name in space.list_recipes()):
-                return
+                and container_name in space.list_recipes()
+                and not jsonp):
+            return
 
         self.stored_user = environ['tiddlyweb.usersign']
         environ['tiddlyweb.usersign'] = {'name': 'GUEST', 'roles': []}
