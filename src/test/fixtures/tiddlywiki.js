@@ -32,6 +32,7 @@ config = {
 		backstage: {}
 	},
 	options: {},
+	optionsDesc: {},
 	paramifiers: {},
 	shadowTiddlers: {
 		TabMore: "",

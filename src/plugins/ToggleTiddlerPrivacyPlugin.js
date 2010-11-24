@@ -2,7 +2,7 @@
 |''Name''|ToggleTiddlerPrivacyPlugin|
 |''Version''|0.6.6|
 |''Status''|@@beta@@|
-|''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate|
+|''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate, and allows you to set a default privacy setting|
 |''Requires''|TiddlySpaceConfig|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/ToggleTiddlerPrivacyPlugin.js|
 !Notes
@@ -10,6 +10,8 @@ When used in conjunction with TiddlySpaceTiddlerIconsPlugin changing the privacy
 
 Currently use of
 {{{<<setPrivacy defaultValue:public>>}}} is in conflict with {{{<<newTiddler fields:"server.workspace:x_private">>}}}
+
+There is an option, found in the tweak tab of the backstage, called txtPrivacyMode. Set this to either ''public'' or ''private'' depending on your security preference. If you choose not to set it then it will default to ''public''.
 !Params
 defaultValue:[private|public]
 Allows you to set the default privacy value (Default is private)
@@ -21,8 +23,6 @@ Allows you to set the default privacy value (Default is private)
 
 var tiddlyspace = config.extensions.tiddlyspace;
 var macro = config.macros.setPrivacy = {
-	default_state: "private",
-
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		if(readOnly) {
 			return;
@@ -37,8 +37,13 @@ var macro = config.macros.setPrivacy = {
 		var customFields = el.attr("tiddlyfields");
 		customFields = customFields ? customFields.decodeHashMap() : {};
 		if(isNewTiddler || !["public", "private"].contains(status)) {
-			var defaultValue = args.defaultValue;
-			defaultValue = defaultValue ? "%0_%1".format([currentSpace, defaultValue[0]]) : customFields["server.bag"];
+			var defaultValue = "public";
+			if(args.defaultValue) {
+				defaultValue = args.defaultValue[0].toLowerCase();
+			} else {
+				defaultValue = (config.options.chkPrivateMode) ? "priavte":"public";
+			}
+			defaultValue = defaultValue ? "%0_%1".format([currentSpace, defaultValue]) : customFields["server.bag"];
 			var options = config.macros.tiddlerOrigin ?
 				config.macros.tiddlerOrigin.getOptions(paramString) : {};
 			this.createRoundel(container, tiddler, currentSpace, defaultValue, options);
@@ -98,7 +103,6 @@ var macro = config.macros.setPrivacy = {
 		$("<label />").text("private").appendTo(container); // TODO: i18n
 		var rPublic = rbtn.clone().val("public").addClass("isPublic").appendTo(container);
 		$("<label />").text("public").appendTo(container); // TODO: i18n
-		var status = macro.default_state;
 		var el = story.findContainingTiddler(container);
 		$("[type=radio]", container).click(function(ev) {
 			var btn = $(ev.target);
@@ -111,9 +115,6 @@ var macro = config.macros.setPrivacy = {
 				macro.setBag(el, publicBag, options);
 			}
 		});
-		if(!defaultValue) {
-			defaultValue = macro.default_state == "public" ? publicBag : privateBag;
-		}
 		window.setTimeout(function() {
 			macro.setBag(el, defaultValue, options);
 		}, 100);
