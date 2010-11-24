@@ -1,8 +1,9 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.6.6|
+|''Version''|0.6.7|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate, and allows you to set a default privacy setting|
+|''CoreVersion''|2.6.1|
 |''Requires''|TiddlySpaceConfig|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/ToggleTiddlerPrivacyPlugin.js|
 !Notes
@@ -41,9 +42,10 @@ var macro = config.macros.setPrivacy = {
 			if(args.defaultValue) {
 				defaultValue = args.defaultValue[0].toLowerCase();
 			} else {
-				defaultValue = (config.options.chkPrivateMode) ? "priavte":"public";
+				defaultValue = config.options.chkPrivateMode ? "private" : "public";
 			}
-			defaultValue = defaultValue ? "%0_%1".format([currentSpace, defaultValue]) : customFields["server.bag"];
+			defaultValue = defaultValue ?
+				"%0_%1".format(currentSpace, defaultValue) : customFields["server.bag"];
 			var options = config.macros.tiddlerOrigin ?
 				config.macros.tiddlerOrigin.getOptions(paramString) : {};
 			this.createRoundel(container, tiddler, currentSpace, defaultValue, options);
@@ -58,7 +60,7 @@ var macro = config.macros.setPrivacy = {
 		} else {
 			saveBagField.val(bag);
 		}
-		var workspace = "bags/%0".format([bag]);
+		var workspace = "bags/" + bag;
 		if(saveWorkspaceField.length === 0) {
 			input.clone().attr("edit", "server.workspace").val(workspace).appendTo(tiddlerEl);
 		} else {
@@ -77,7 +79,7 @@ var macro = config.macros.setPrivacy = {
 			}
 		};
 		macro.updateEditFields(tiddlerEl, newBag);
-		var newWorkspace = "bags/%0".format([newBag]);
+		var newWorkspace = "bags/" + newBag;
 		if(tiddler) {
 			tiddler.fields["server.bag"] = newBag;
 			tiddler.fields["server.workspace"] = newWorkspace; // for external tiddlers
@@ -96,8 +98,8 @@ var macro = config.macros.setPrivacy = {
 		refreshIcon(status);
 	},
 	createRoundel: function(container, tiddler, currentSpace, defaultValue, options) {
-		var privateBag = "%0_private".format([currentSpace]);
-		var publicBag = "%0_public".format([currentSpace]);
+		var privateBag = "%0_private".format(currentSpace);
+		var publicBag = "%0_public".format(currentSpace);
 		var rbtn = $("<input />").attr("type", "radio").attr("name", tiddler.title);
 		var rPrivate = rbtn.clone().val("private").addClass("isPrivate").appendTo(container);
 		$("<label />").text("private").appendTo(container); // TODO: i18n
