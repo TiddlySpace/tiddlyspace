@@ -104,7 +104,7 @@ test("tweakMiddleButton (edit mode)", function() {
 
 test("checkSyncStatus (ui) with unsynced tiddlers", function() {
 	backstage.tiddlyspace.checkSyncStatus();
-	strictEqual($("#backstagePanel.unsyncedChanges .unsyncedList").length, 1);
+	strictEqual($("#backstagePanel.unsyncedChanges .unsyncedList").length, 0);
 	strictEqual($(".iconContainer[image=privateAndPublicIcon]").length, 1, "note filterTiddlers returns no tiddlers");
 });
 
