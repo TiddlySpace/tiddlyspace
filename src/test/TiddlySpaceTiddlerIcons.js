@@ -96,7 +96,7 @@ test("render avatar", function() {
 	var place = $("<div />");
 
 	tiddlyspace.renderAvatar(place, "jon", { spaceLink: true, labelOptions: { include: false, prefix: "hello " } });
-	tiddlyspace.renderAvatar(place, "@foo", { spaceLink: true });
+	tiddlyspace.renderAvatar(place, "@foo", { spaceLink: true, labelOptions: {include: true } });
 	tiddlyspace.renderAvatar(place, "bar_public", {
 		labelOptions: { include: true, prefix: "from space ", suffix: " !!"}
 	});
