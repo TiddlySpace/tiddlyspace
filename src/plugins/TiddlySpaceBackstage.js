@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.6.2|
+|''Version''|0.6.3|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
 |''Contributors''|Jon Lister, Jon Robson, Colm Britton|
@@ -18,6 +18,7 @@ var disabled_tabs_for_nonmembers = ["PluginManager", "Backstage##FileImport", "B
 	"Backstage##SpaceMembers", "TiddlySpaceTabs##Private", "TiddlySpaceTabs##Drafts"];
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
+var currentSpaceName = tiddlyspace.currentSpace.name;
 var imageMacro = config.macros.image;
 
 if(config.options.chkBackstage === undefined) {
@@ -135,7 +136,6 @@ backstage.tiddlyspace = {
 	middleButton: function(backstageArea, user) {
 		var bs = backstage.tiddlyspace;
 		var backstageToolbar = $("#backstageToolbar", backstageArea)[0];
-		var space = tiddlyspace.currentSpace.name;
 		if(user.unplugged) {
 			config.messages.memberStatus = bs.locale.unplugged;
 		} else if(!user.anon) {
@@ -162,13 +162,12 @@ backstage.tiddlyspace = {
 	},
 	spaceButton: function(backstageArea) {
 		// override space button to show SiteIcon
-		var spaceName = tiddlyspace.currentSpace.name;
 		var btn = $("[task=space]", backstageArea);
 		btn.empty();
-		tiddlyspace.renderAvatar(btn[0], spaceName, { imageOptions: { imageClass:"spaceSiteIcon", height: 24, width: 24 },
+		tiddlyspace.renderAvatar(btn[0], currentSpaceName, { imageOptions: { imageClass:"spaceSiteIcon", height: 24, width: 24 },
 			labelOptions: { include: false } });
 		$("<span />").text(tasks.space.text).appendTo(btn);
-		$("<span />").addClass("spaceName").text(spaceName).appendTo(btn);
+		$("<span />").addClass("spaceName").text(currentSpaceName).appendTo(btn);
 	},
 	loginButton: function(backstageArea, user) {
 		var loginBtn = $("[task=login]", backstageArea).empty();
@@ -220,7 +219,7 @@ var home = config.macros.homeLink = {
 	handler: function(place) {
 		var container = $("<span />").appendTo(place)[0];
 		tweb.getUserInfo(function(user) {
-			if(!user.anon && user.name != tiddlyspace.currentSpace.name) {
+			if(!user.anon && user.name != currentSpaceName) {
 				createSpaceLink(container, user.name, null, home.locale.linkText);
 			}
 		});
@@ -246,10 +245,9 @@ var followLink = config.macros.followSpace = {
 	handler: function(place) {
 		var container = $("<span />").appendTo(place)[0];
 		tweb.getUserInfo(function(user) {
-			var space = tiddlyspace.currentSpace.name;
 			var username = user.name;
-			if(!user.anon && space != username) {
-				followLink.make(place, username, space);
+			if(!user.anon && currentSpaceName != username) {
+				followLink.make(place, username, currentSpaceName);
 			}
 		});
 	}
@@ -258,7 +256,7 @@ var followLink = config.macros.followSpace = {
 config.macros.exportSpace = {
 	handler: function(place, macroName, params) {
 		var filename = params[0] ||
-			"/?download=%0.html".format(tiddlyspace.currentSpace.name);
+			"/?download=%0.html".format([currentSpaceName]);
 		$('<a class="button">download</a>'). // XXX: i18n
 			attr("href", filename).appendTo(place);
 	}
