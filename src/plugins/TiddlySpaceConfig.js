@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.6.5|
+|''Version''|0.6.6|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -112,7 +112,7 @@ systemSpaces = $.map(systemSpaces, function(item, i) {
 	return "system-%0_public".format(item);
 });
 var disabledTabs = [];
-
+var currentSpaceName;
 var plugin = config.extensions.tiddlyspace = {
 	currentSpace: determineSpace(recipe),
 	coreBags: coreBags.concat(systemSpaces),
@@ -121,6 +121,12 @@ var plugin = config.extensions.tiddlyspace = {
 	isValidSpaceName: function(name) {
 		return name.match(/^[a-z][0-9a-z\-]*[0-9a-z]$/) ? true : false;
 	},
+	getCurrentBag: function(type) {
+		return "%0_%1".format(currentSpaceName, type);
+	},
+	getCurrentWorkspace: function(type) {
+		return "bags/%0".format(plugin.getCurrentBag(type));
+	},
 	// returns the URL for a space's avatar (SiteIcon) based on a server_host
 	// object and an optional space name
 	// optional nocors argument prevents cross-domain URLs from being generated
@@ -128,7 +134,7 @@ var plugin = config.extensions.tiddlyspace = {
 		if(space && typeof space != "string") { // backwards compatibility -- XXX: deprecated
 			space = space.name;
 		}
-		var subdomain = nocors ? plugin.currentSpace.name : space;
+		var subdomain = nocors ? currentSpaceName : space;
 		host = host ? this.getHost(host, subdomain) : "";
 		var bag = space ? "%0_public".format(space) : "tiddlyspace";
 		return "%0/bags/%1/tiddlers/SiteIcon".format(host, bag);
@@ -169,6 +175,7 @@ var plugin = config.extensions.tiddlyspace = {
 		return csrf_token;
 	}
 };
+currentSpaceName = plugin.currentSpace.name;
 
 tweb.serverPrefix = tweb.host.split("/")[3] || ""; // XXX: assumes root handler
 tweb.getStatus(function(status) {
@@ -242,17 +249,17 @@ config.optionsDesc.chkPrivateMode = "Set your default privacy mode to private";
 if(config.options.chkPrivateMode === undefined) {
 	config.options.chkPrivateMode = false;
 	config.defaultCustomFields["server.workspace"] = "bags/%0_public".
-		format(plugin.currentSpace.name);
+		format(currentSpaceName);
 } else {
 	var mode = config.options.chkPrivateMode ? "private" : "public";
 	config.defaultCustomFields["server.workspace"] =  "bags/%0_%1".
-		format(plugin.currentSpace.name, mode);
+		format(currentSpaceName, mode);
 }
 
 config.paramifiers.follow = {
 	onstart: function(v) {
 		if(!readOnly) {
-			var bag = "%0_public".format(plugin.currentSpace.name);
+			var bag = "%0_public".format(currentSpaceName);
 			story.displayTiddler(null, v, DEFAULT_EDIT_TEMPLATE, null, null,
 				"server.bag:%0 server.workspace:bags/%0".format(bag));
 			story.setTiddlerTag(v, "follow", 1);
