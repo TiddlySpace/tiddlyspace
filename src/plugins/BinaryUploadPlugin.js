@@ -89,7 +89,7 @@ var macro = config.macros.binaryUpload = {
 		fileName = macro.getTiddlerName(fileName);
 		$("input[name=title]", place).val(fileName);
 		// we need to go somewhere afterwards to ensure the onload event triggers
-		var redirectTo = "/%0/tiddlers.json?select=title:%1".
+		var redirectTo = "/%0/tiddlers.txt?select=title:%1".
 			format([workspace, fileName]);
 		var token = config.extensions.tiddlyspace.getCsrfToken();
 		var action = "%0?csrf_token=%1&redirect=%2"
@@ -100,8 +100,7 @@ var macro = config.macros.binaryUpload = {
 		$(place).append($('<iframe name="' + iframeName + '" id="' + iframeName + '"/>').css('display','none'));
 		macro.iFrameLoader(iframeName, function() {
 			var content = document.getElementById(iframeName).contentWindow.document.documentElement;
-			var contents = $.toJSON($(content).text());
-			if(contents.length > 0) {
+			if($(content).text().indexOf(fileName) > -1) {
 				options.callback(place, fileName, workspace, baseURL);
 			} else {
 				macro.errorHandler(fileName);
