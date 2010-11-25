@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.8.2|
+|''Version''|0.8.3|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -20,7 +20,6 @@ Provides TiddlySpacePublisher macro.
 (function($) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
-var currentSpace = tiddlyspace.currentSpace.name;
 var originMacro = config.macros.tiddlerOrigin;
 tiddlyspace.getTiddlerStatusType = function(tiddler) {
 	var isShadow = store.isShadowTiddler(tiddler.title);
@@ -216,9 +215,8 @@ var saveDraftCmd = config.commands.saveDraft = {
 				draftTiddler.fields[fieldName] = gatheredFields[fieldName];
 			}
 		}
-		var currentSpace = tiddlyspace.currentSpace.name;
-		var privateBag = "%0_private".format(currentSpace);
-		var privateWorkspace = "bags/%0".format(privateBag);
+		var privateBag = tiddlyspace.getCurrentBag("private");
+		var privateWorkspace = tiddlyspace.getCurrentWorkspace("private");
 		draftTiddler.title = draftTitle;
 		draftTiddler.fields["publish.name"] = title;
 		draftTiddler.fields["server.workspace"] = privateWorkspace;

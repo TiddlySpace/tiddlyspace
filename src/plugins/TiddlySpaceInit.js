@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.7|
+|''Version''|0.6.8|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -21,7 +21,8 @@
 
 var versionField = "tiddlyspaceinit_version";
 var markupPreHead = store.getTiddlerText(tiddler.title + "##MarkupPreHead", "");
-var currentSpace = config.extensions.tiddlyspace.currentSpace;
+var tiddlyspace = config.extensions.tiddlyspace;
+var currentSpace = tiddlyspace.currentSpace;
 
 var plugin = config.extensions.TiddlySpaceInit = {
 	version: "0.5",
@@ -61,7 +62,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		autoSaveChanges(null, tiddlers);
 	},
 	setupMarkupPreHead: function() {
-		var pubWorkspace = this.getPublicWorkspace();
+		var pubWorkspace = tiddlyspace.getCurrentWorkspace("public");
 		var existing = store.getTiddler("MarkupPreHead");
 		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
 			var tid = new Tiddler("MarkupPreHead");
@@ -90,7 +91,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		var pubTid = {
 			tags: ["excludeLists", "excludeSearch"],
 			fields: $.extend({}, config.defaultCustomFields, {
-				"server.workspace": this.getPublicWorkspace()
+				"server.workspace": tiddlyspace.getCurrentWorkspace("public")
 			})
 		};
 		// generate Site*itle
@@ -111,12 +112,6 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		this.setupMarkupPreHead();
 		return tiddlers;
 	},
-	getPublicWorkspace: function() {
-		return "bags/%0".format(this.getPublicBag());
-	},
-	getPublicBag: function() {
-		return currentSpace.name + "_public";
-	},
 	createAvatar: function() {
 		var avatar = "SiteIcon";
 		var tweb = config.extensions.tiddlyweb;
@@ -127,7 +122,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			// TODO: resolve!?
 		};
 
-		var pubBag = this.getPublicBag();
+		var pubBag = tiddlyspace.getCurrentBag("public");
 		var tid = new tiddlyweb.Tiddler(avatar);
 		tid.bag = new tiddlyweb.Bag(pubBag, host);
 
@@ -141,7 +136,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 				displayMessage("created avatar"); // TODO: i18n
 				var image = config.macros.image;
 				if(image && image.refreshImage) {
-					image.refreshImage("/bags/%0_public/tiddlers/SiteIcon".format([currentSpace.name]));
+					image.refreshImage("/%0/tiddlers/SiteIcon".format([tiddlyspace.getCurrentWorkspace("public")]));
 					image.refreshImage("SiteIcon");
 				}
 			};
