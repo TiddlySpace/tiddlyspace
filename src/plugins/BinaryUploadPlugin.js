@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.11|
+|''Version''|0.3.12|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -197,12 +197,12 @@ var macro = config.macros.binaryUpload = {
 	}
 };
 
-if(config.extensions.tiddlyspace) {
+var tiddlyspace = config.extensions.tiddlyspace;
+if(tiddlyspace) {
 	config.macros.binaryUploadPublic = {
 		handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 			var options = paramString.parseParams(null, null, true)[0];
-			var bag = "%0_public".
-				format([config.extensions.tiddlyspace.currentSpace.name]);
+			var bag = tiddlyspace.getCurrentBag("public");
 			options.bag = bag;
 			macro.createUploadForm(place, options);
 		}
