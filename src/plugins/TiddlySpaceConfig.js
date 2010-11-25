@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.6.6|
+|''Version''|0.7.0|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -14,6 +14,15 @@
 var tweb = config.extensions.tiddlyweb;
 
 var recipe = config.defaultCustomFields["server.workspace"].split("recipes/")[1];
+var currentSpace; // assigned later
+
+var disabledTabs = [];
+
+var coreBags = ["system", "tiddlyspace"];
+var systemSpaces = ["plugins", "info", "images", "theme"];
+systemSpaces = $.map(systemSpaces, function(item, i) {
+	return "system-%0_public".format(item);
+});
 
 // hijack search macro to add custom attributes for mobile devices
 var _search = config.macros.search.handler;
@@ -92,27 +101,6 @@ var split = function(str, sep, mode) {
 	return { type: type, name: arr.join(sep) };
 };
 
-// hijack saveTiddler to accept Tiddler instance
-var _saveTiddler = TiddlyWiki.prototype.saveTiddler;
-TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
-		modified, tags, fields, clearChangeCount, created, creator) {
-	if(title instanceof Tiddler) { // overloading first argument
-		var t = $.extend(new Tiddler(title.title), title);
-		t = _saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
-			t.modified, t.tags, t.fields, false, t.created, t.creator]);
-		return t;
-	} else {
-		return _saveTiddler.apply(this, arguments);
-	}
-};
-
-var coreBags = ["system", "tiddlyspace"];
-var systemSpaces = ["plugins", "info", "images", "theme"];
-systemSpaces = $.map(systemSpaces, function(item, i) {
-	return "system-%0_public".format(item);
-});
-var disabledTabs = [];
-var currentSpaceName;
 var plugin = config.extensions.tiddlyspace = {
 	currentSpace: determineSpace(recipe),
 	coreBags: coreBags.concat(systemSpaces),
@@ -122,10 +110,10 @@ var plugin = config.extensions.tiddlyspace = {
 		return name.match(/^[a-z][0-9a-z\-]*[0-9a-z]$/) ? true : false;
 	},
 	getCurrentBag: function(type) {
-		return "%0_%1".format(currentSpaceName, type);
+		return "%0_%1".format(currentSpace, type);
 	},
 	getCurrentWorkspace: function(type) {
-		return "bags/%0".format(plugin.getCurrentBag(type));
+		return "bags/" + this.getCurrentBag(type);
 	},
 	// returns the URL for a space's avatar (SiteIcon) based on a server_host
 	// object and an optional space name
@@ -134,7 +122,7 @@ var plugin = config.extensions.tiddlyspace = {
 		if(space && typeof space != "string") { // backwards compatibility -- XXX: deprecated
 			space = space.name;
 		}
-		var subdomain = nocors ? currentSpaceName : space;
+		var subdomain = nocors ? currentSpace : space;
 		host = host ? this.getHost(host, subdomain) : "";
 		var bag = space ? "%0_public".format(space) : "tiddlyspace";
 		return "%0/bags/%1/tiddlers/SiteIcon".format(host, bag);
@@ -175,7 +163,8 @@ var plugin = config.extensions.tiddlyspace = {
 		return csrf_token;
 	}
 };
-currentSpaceName = plugin.currentSpace.name;
+
+currentSpace = plugin.currentSpace.name;
 
 tweb.serverPrefix = tweb.host.split("/")[3] || ""; // XXX: assumes root handler
 tweb.getStatus(function(status) {
@@ -249,17 +238,17 @@ config.optionsDesc.chkPrivateMode = "Set your default privacy mode to private";
 if(config.options.chkPrivateMode === undefined) {
 	config.options.chkPrivateMode = false;
 	config.defaultCustomFields["server.workspace"] = "bags/%0_public".
-		format(currentSpaceName);
+		format(currentSpace);
 } else {
 	var mode = config.options.chkPrivateMode ? "private" : "public";
 	config.defaultCustomFields["server.workspace"] =  "bags/%0_%1".
-		format(currentSpaceName, mode);
+		format(currentSpace, mode);
 }
 
 config.paramifiers.follow = {
 	onstart: function(v) {
 		if(!readOnly) {
-			var bag = "%0_public".format(currentSpaceName);
+			var bag = "%0_public".format(currentSpace);
 			story.displayTiddler(null, v, DEFAULT_EDIT_TEMPLATE, null, null,
 				"server.bag:%0 server.workspace:bags/%0".format(bag));
 			story.setTiddlerTag(v, "follow", 1);
