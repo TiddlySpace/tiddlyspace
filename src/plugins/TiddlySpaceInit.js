@@ -136,7 +136,9 @@ var plugin = config.extensions.TiddlySpaceInit = {
 				displayMessage("created avatar"); // TODO: i18n
 				var image = config.macros.image;
 				if(image && image.refreshImage) {
-					image.refreshImage("/%0/tiddlers/SiteIcon".format([tiddlyspace.getCurrentWorkspace("public")]));
+					var uri = "/%0/tiddlers/SiteIcon".
+						format(tiddlyspace.getCurrentWorkspace("public"));
+					image.refreshImage(uri);
 					image.refreshImage("SiteIcon");
 				}
 			};

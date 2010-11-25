@@ -11,14 +11,15 @@
 //{{{
 (function($) {
 
-if(!config.extensions.tiddlyweb.status.tiddlyspace_version) {
-	config.extensions.tiddlyweb.status.tiddlyspace_version = "<unknown>"; // for unplugged usage.
+if(!config.extensions.tiddlyweb.status.tiddlyspace_version) { // unplugged
+	config.extensions.tiddlyweb.status.tiddlyspace_version = "<unknown>";
 }
-var disabled_tabs_for_nonmembers = ["PluginManager", "Backstage##FileImport", "Backstage##BatchOps",
-	"Backstage##SpaceMembers", "TiddlySpaceTabs##Private", "TiddlySpaceTabs##Drafts"];
+var disabled_tabs_for_nonmembers = ["PluginManager", "Backstage##FileImport",
+	"Backstage##BatchOps", "Backstage##SpaceMembers",
+	"TiddlySpaceTabs##Private", "TiddlySpaceTabs##Drafts"];
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
-var currentSpaceName = tiddlyspace.currentSpace.name;
+var currentSpace = tiddlyspace.currentSpace.name;
 var imageMacro = config.macros.image;
 
 if(config.options.chkBackstage === undefined) {
@@ -115,7 +116,8 @@ backstage.tiddlyspace = {
 			$("<span />").text(tasks.user.text).appendTo(userBtn);
 			$("<span />").addClass("txtUserName").text(user.name).appendTo(userBtn);
 			var container = $("<span />").appendTo(userBtn)[0];
-			tiddlyspace.renderAvatar(container, user.name, { imageOptions: { imageClass:"userSiteIcon", height: 24, width: 24 },
+			tiddlyspace.renderAvatar(container, user.name,
+				{ imageOptions: { imageClass:"userSiteIcon", height: 24, width: 24 },
 				labelOptions: { include: false } });
 		}
 	},
@@ -164,10 +166,11 @@ backstage.tiddlyspace = {
 		// override space button to show SiteIcon
 		var btn = $("[task=space]", backstageArea);
 		btn.empty();
-		tiddlyspace.renderAvatar(btn[0], currentSpaceName, { imageOptions: { imageClass:"spaceSiteIcon", height: 24, width: 24 },
+		tiddlyspace.renderAvatar(btn[0], currentSpace,
+			{ imageOptions: { imageClass:"spaceSiteIcon", height: 24, width: 24 },
 			labelOptions: { include: false } });
 		$("<span />").text(tasks.space.text).appendTo(btn);
-		$("<span />").addClass("spaceName").text(currentSpaceName).appendTo(btn);
+		$("<span />").addClass("spaceName").text(currentSpace).appendTo(btn);
 	},
 	loginButton: function(backstageArea, user) {
 		var loginBtn = $("[task=login]", backstageArea).empty();
@@ -189,6 +192,7 @@ backstage.tiddlyspace = {
 		}
 	}
 };
+
 var _init = backstage.init;
 backstage.init = function() {
 	_init.apply(this, arguments);
@@ -219,7 +223,7 @@ var home = config.macros.homeLink = {
 	handler: function(place) {
 		var container = $("<span />").appendTo(place)[0];
 		tweb.getUserInfo(function(user) {
-			if(!user.anon && user.name != currentSpaceName) {
+			if(!user.anon && user.name != currentSpace) {
 				createSpaceLink(container, user.name, null, home.locale.linkText);
 			}
 		});
@@ -246,8 +250,8 @@ var followLink = config.macros.followSpace = {
 		var container = $("<span />").appendTo(place)[0];
 		tweb.getUserInfo(function(user) {
 			var username = user.name;
-			if(!user.anon && currentSpaceName != username) {
-				followLink.make(place, username, currentSpaceName);
+			if(!user.anon && currentSpace != username) {
+				followLink.make(place, username, currentSpace);
 			}
 		});
 	}
@@ -256,7 +260,7 @@ var followLink = config.macros.followSpace = {
 config.macros.exportSpace = {
 	handler: function(place, macroName, params) {
 		var filename = params[0] ||
-			"/?download=%0.html".format([currentSpaceName]);
+			"/?download=%0.html".format(currentSpace);
 		$('<a class="button">download</a>'). // XXX: i18n
 			attr("href", filename).appendTo(place);
 	}

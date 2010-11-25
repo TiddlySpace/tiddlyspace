@@ -18,9 +18,9 @@
 //{{{
 (function($) {
 
-var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
-var privateBag = "%0_private".format(currentSpace);
-var publicBag = "%0_public".format(currentSpace);
+var tiddlyspace = config.extensions.tiddlyspace;
+var privateBag = tiddlyspace.getCurrentBag("private");
+var publicBag = tiddlyspace.getCurrentBag("public");
 
 config.filterHelpers = {
 	is: {
