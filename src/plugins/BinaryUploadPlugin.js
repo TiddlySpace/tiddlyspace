@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.12|
+|''Version''|0.3.13|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -22,6 +22,8 @@ tiddlywebplugins.form
 ***/
 //{{{
 (function($) {
+
+var tiddlyspace = config.extensions.tiddlyspace;
 
 var macro = config.macros.binaryUpload = {
 	locale: {
@@ -88,7 +90,7 @@ var macro = config.macros.binaryUpload = {
 		// we need to go somewhere afterwards to ensure the onload event triggers
 		var redirectTo = "/%1/tiddlers.txt?select=title:%2".
 			format([workspace, fileName]);
-		var token = config.extensions.tiddlyspace.getCsrfToken();
+		var token = tiddlyspace.getCSRFToken();
 		var action = "%0?csrf_token=%1&redirect=%2"
 			.format([baseURL, token, redirectTo]);
 		form[0].action = action; // dont use jquery to work with ie
@@ -197,7 +199,6 @@ var macro = config.macros.binaryUpload = {
 	}
 };
 
-var tiddlyspace = config.extensions.tiddlyspace;
 if(tiddlyspace) {
 	config.macros.binaryUploadPublic = {
 		handler: function(place, macroName, params, wikifier, paramString, tiddler) {
