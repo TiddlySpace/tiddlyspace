@@ -128,6 +128,9 @@ class DropPrivs(object):
     """
     If the incoming request is addressed to some entity not in the
     current space, then drop privileges to GUEST.
+
+    If the incoming request is trying to use JSONP, then drop
+    privileges to GUEST
     """
 
     def __init__(self, application):
@@ -140,6 +143,7 @@ class DropPrivs(object):
         if (req_uri.startswith('/bags/')
                 or req_uri.startswith('/recipes/')):
             self._handle_dropping_privs(environ, req_uri)
+        self._handle_jsonp(environ)
 
         output = self.application(environ, start_response)
         if self.stored_user:
@@ -161,6 +165,7 @@ class DropPrivs(object):
 
         store = environ['tiddlyweb.store']
         container_name = req_uri.split('/')[2]
+
 
         if req_uri.startswith('/bags/'):
             recipe_name = determine_space_recipe(environ, space_name)
@@ -188,10 +193,30 @@ class DropPrivs(object):
 
         if (req_uri.startswith('/recipes/')
                 and container_name in space.list_recipes()):
-                return
+            return
 
+        self._drop_privs(environ)
+        return
+
+    def _drop_privs(self, environ):
+        """
+        Drop privileges to GUEST user, and store current user so
+        we can replace them after all the work has been done
+        """
         self.stored_user = environ['tiddlyweb.usersign']
         environ['tiddlyweb.usersign'] = {'name': 'GUEST', 'roles': []}
+
+    def _handle_jsonp(self, environ):
+        """
+        If the user is requesting something as jsonp, then we _always_
+        want to drop privs
+        """
+        if environ['tiddlyweb.usersign']['name'] == 'GUEST':
+            return
+
+        if environ['tiddlyweb.query'].get('jsonp_callback'):
+            self._drop_privs(environ)
+
         return
 
 
