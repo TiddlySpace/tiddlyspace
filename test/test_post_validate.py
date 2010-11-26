@@ -18,7 +18,7 @@ from tiddlyweb.config import config
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.util import sha
-from tiddlywebplugins.tiddlyspace.csrf import CsrfProtector, InvalidNonceError
+from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector, InvalidNonceError
 
 
 def setup_module(module):
@@ -43,7 +43,7 @@ def test_validator_no_nonce():
     """
     store = get_store(config)
     try:
-        csrf = CsrfProtector({})
+        csrf = CSRFProtector({})
         result = csrf.check_csrf({}, None)
         raise AssertionError('check_csrf succeeded when no csrf_token supplied')
     except InvalidNonceError, exc:
@@ -75,7 +75,7 @@ def test_validator_nonce_success():
     }
     make_fake_space(store, spacename)
 
-    csrf = CsrfProtector({})
+    csrf = CSRFProtector({})
     result = csrf.check_csrf(environ, nonce)
 
     assert result == True
@@ -105,7 +105,7 @@ def test_validator_nonce_fail():
     make_fake_space(store, spacename)
 
     try:
-        csrf = CsrfProtector({})
+        csrf = CSRFProtector({})
         result = csrf.check_csrf(environ, nonce)
         raise AssertionError('check_csrf succeeded when nonce didn\'t match')
     except InvalidNonceError, exc:
@@ -136,7 +136,7 @@ def test_validator_nonce_hash_fail():
     make_fake_space(store, spacename)
 
     try:
-        csrf = CsrfProtector({})
+        csrf = CSRFProtector({})
         result = csrf.check_csrf(environ, nonce)
         raise AssertionError('check_csrf succeeded when nonce didn\'t match')
     except InvalidNonceError, exc:

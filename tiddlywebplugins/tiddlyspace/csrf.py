@@ -14,7 +14,7 @@ from tiddlywebplugins.tiddlyspace.web import (determine_host,
 class InvalidNonceError(Exception):
     pass
 
-class CsrfProtector(object):
+class CSRFProtector(object):
     """
     check for a nonce value if we are POSTing form data
     reject if it doesn't match

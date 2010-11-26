@@ -76,9 +76,12 @@ var macro = config.macros.binaryUpload = {
 		fileName = fileName.substr(fStart+1);
 		return fileName;
 	},
+	errorHandler: function(fileName) {
+		displayMessage("upload of file %0 failed".format([fileName]));
+	},
 	uploadFile: function(place, baseURL, workspace, options) {
 		var pleaseWait = $(".uploadProgress", place);
-		var iframeName = $("iframe", place).attr("name");
+		var iframeName = options.target;
 		var form = $("form", place);
 		var existingVal = $("input[name=title]", form).val();
 		var fileName = existingVal || $('input:file', form).val();
@@ -88,7 +91,7 @@ var macro = config.macros.binaryUpload = {
 		fileName = macro.getTiddlerName(fileName);
 		$("input[name=title]", place).val(fileName);
 		// we need to go somewhere afterwards to ensure the onload event triggers
-		var redirectTo = "/%1/tiddlers.txt?select=title:%2".
+		var redirectTo = "/%0/tiddlers.txt?select=title:%1".
 			format([workspace, fileName]);
 		var token = tiddlyspace.getCSRFToken();
 		var action = "%0?csrf_token=%1&redirect=%2"
@@ -98,7 +101,12 @@ var macro = config.macros.binaryUpload = {
 		// do not refactor following line... won't work in IE6 otherwise
 		$(place).append($('<iframe name="' + iframeName + '" id="' + iframeName + '"/>').css('display','none'));
 		macro.iFrameLoader(iframeName, function() {
-			options.callback(place, fileName, workspace, baseURL);
+			var content = document.getElementById(iframeName).contentWindow.document.documentElement;
+			if($(content).text().indexOf(fileName) > -1) {
+				options.callback(place, fileName, workspace, baseURL);
+			} else {
+				macro.errorHandler(fileName);
+			}
 			form.show(1000);
 			pleaseWait.hide(1000);
 		});
@@ -138,6 +146,7 @@ var macro = config.macros.binaryUpload = {
 			append('<div class="binaryUploadSubmit"><input type="submit" value="Upload" /></div>').
 			submit(function(ev) {
 				this.target = iframeName;
+				options.target = iframeName;
 				macro.uploadFile(place, baseURL, workspace, options);
 			});
 		$('<div />').addClass("uploadProgress").text(locale.uploadInProgress).hide().appendTo(place);
