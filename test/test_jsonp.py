@@ -60,6 +60,17 @@ def test_call_jsonp():
     assert content.startswith('%s(' % callback)
     assert content[-1:] == ')'
 
+    response, content = http.request('http://0.0.0.0:8080/bags/'
+        'foo_public/tiddlers/public?jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '200'
+    assert content.startswith('%s(' % callback)
+    assert content[-1:] == ')'
+
 
 def test_drop_privs():
     """
@@ -136,3 +147,91 @@ def test_drop_privs():
             'Accept': 'application/json'
         })
     assert response['status'] == '200'
+
+def test_no_subdomain():
+    """
+    As it's jsonp, we need to protect the tiddlyspace.com domain as well
+    (and not just the subdomains).
+
+    This includes bags, recipes and search.
+    """
+    tiddler = Tiddler('private')
+    tiddler.bag = 'foo_private'
+    tiddler.text = 'some text'
+    store.put(tiddler)
+
+    user_cookie = get_auth('foo', 'foobar')
+    callback = 'callback'
+
+    response, _ = http.request('http://0.0.0.0:8080/bags/'
+        'foo_private/tiddlers/private?jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://0.0.0.0:8080/recipes/'
+        'foo_private/tiddlers/private?jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://0.0.0.0:8080/bags/foo_private?'
+        'jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://0.0.0.0:8080/recipes/foo_private?'
+        'jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://0.0.0.0:8080/bags/foo_private/'
+        'tiddlers?jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://0.0.0.0:8080/recipes/foo_private/'
+        'tiddlers?jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://0.0.0.0:8080/bags/'
+        'foo_private/tiddlers/private',
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '200'
+
+    response, content = http.request('http://0.0.0.0:8080/search'
+        '?q=bag:foo_private&jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '200'
+    assert content == 'callback([])'
