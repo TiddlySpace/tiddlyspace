@@ -40,7 +40,7 @@ def teardown_module(module):
 
 def test_call_jsonp():
     """
-    test that we can get some stuff as jsonp
+    test that we can get some stuff as JSONP
     """
     tiddler = Tiddler('public')
     tiddler.bag = 'foo_public'
@@ -148,9 +148,10 @@ def test_drop_privs():
         })
     assert response['status'] == '200'
 
+
 def test_no_subdomain():
     """
-    As it's jsonp, we need to protect the tiddlyspace.com domain as well
+    As it's JSONP, we need to protect the tiddlyspace.com domain as well
     (and not just the subdomains).
 
     This includes bags, recipes and search.

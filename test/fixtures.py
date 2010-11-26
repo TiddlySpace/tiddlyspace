@@ -38,7 +38,7 @@ def make_test_env(module):
         shutil.rmtree('test_instance')
     except:
         pass
-        
+
     os.system('mysqladmin -f drop tiddlyspacetest create tiddlyspacetest')
     if SESSION_COUNT > 1:
         del sys.modules['tiddlywebplugins.tiddlyspace.store']
@@ -49,7 +49,7 @@ def make_test_env(module):
         import tiddlywebplugins.sqlalchemy
     SESSION_COUNT += 1
     db_config = init_config['server_store'][1]['db_config']
-    db_config = db_config.replace('///tiddlyspace?','///tiddlyspacetest?')
+    db_config = db_config.replace('///tiddlyspace?', '///tiddlyspacetest?')
     init_config['server_store'][1]['db_config'] = db_config
     init_config['log_level'] = 'DEBUG'
 
@@ -59,6 +59,7 @@ def make_test_env(module):
 
     from tiddlyweb.web import serve
     module.store = get_store(config)
+
     def app_fn():
         return serve.load_app()
     module.app_fn = app_fn
@@ -76,9 +77,9 @@ def make_fake_space(store, name):
     public_bag = Bag('%s_public' % name)
     private_bag = Bag('%s_private' % name)
     set_policy(public_recipe.policy)
-    set_policy(private_recipe.policy, True)
+    set_policy(private_recipe.policy, private=True)
     set_policy(public_bag.policy)
-    set_policy(private_bag.policy, True)
+    set_policy(private_bag.policy, private=True)
     public_recipe.set_recipe([('system', ''), ('tiddlyspace', ''), ('%s_public' % name, '')])
     private_recipe.set_recipe([('system', ''), ('tiddlyspace', ''), ('%s_public' % name, ''),
         ('%s_private' % name, '')])

@@ -166,7 +166,6 @@ class DropPrivs(object):
         store = environ['tiddlyweb.store']
         container_name = req_uri.split('/')[2]
 
-
         if req_uri.startswith('/bags/'):
             recipe_name = determine_space_recipe(environ, space_name)
             space_recipe = store.get(Recipe(recipe_name))
@@ -208,7 +207,7 @@ class DropPrivs(object):
 
     def _handle_jsonp(self, environ):
         """
-        If the user is requesting something as jsonp, then we _always_
+        If the user is requesting something as JSONP, then we _always_
         want to drop privs
         """
         if environ['tiddlyweb.usersign']['name'] == 'GUEST':
