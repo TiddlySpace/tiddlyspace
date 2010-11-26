@@ -1,6 +1,7 @@
 """
-Test the jsonp functionality
+Test the JSONP functionality
 """
+
 import os
 
 from fixtures import make_test_env, make_fake_space, get_auth
@@ -32,6 +33,7 @@ def setup_module(module):
     store.put(user)
     make_fake_space(store, 'foo')
 
+
 def teardown_module(module):
     import os
     os.chdir('..')
@@ -59,6 +61,7 @@ def test_call_jsonp():
     assert content.startswith('%s(' % callback)
     assert content[-1:] == ')'
 
+
 def test_drop_privs():
     """
     test that privileges are dropped when jsonp is requested
@@ -74,8 +77,54 @@ def test_drop_privs():
 
     user_cookie = get_auth('foo', 'foobar')
     callback = 'callback'
+
     response, _ = http.request('http://foo.0.0.0.0:8080/bags/'
         'foo_private/tiddlers/private?jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://foo.0.0.0.0:8080/recipes/'
+        'foo_private/tiddlers/private?jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_private?'
+        'jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://foo.0.0.0.0:8080/recipes/foo_private?'
+        'jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_private/'
+        'tiddlers?jsonp_callback=%s' % callback,
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
+            'Accept': 'application/json'
+        })
+    assert response['status'] == '401'
+
+    response, _ = http.request('http://foo.0.0.0.0:8080/recipes/foo_private/'
+        'tiddlers?jsonp_callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,

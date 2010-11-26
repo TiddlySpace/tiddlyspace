@@ -129,7 +129,7 @@ class DropPrivs(object):
     If the incoming request is addressed to some entity not in the
     current space, then drop privileges to GUEST.
 
-    If the incoming request is trying to use jsonp, then drop
+    If the incoming request is trying to use JSONP, then drop
     privileges to GUEST
     """
 
