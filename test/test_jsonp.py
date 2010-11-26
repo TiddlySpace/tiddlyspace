@@ -12,7 +12,6 @@ import httplib2
 
 from tiddlyweb.model.user import User
 from tiddlyweb.model.tiddler import Tiddler
-from tiddlyweb.model.bag import Bag
 from tiddlyweb.config import config
 from tiddlywebplugins.utils import get_store
 
@@ -71,9 +70,6 @@ def test_drop_privs():
     tiddler.bag = 'foo_private'
     tiddler.text = 'some text'
     store.put(tiddler)
-    bag = store.get(Bag('foo_private'))
-    bag.policy.read = ['foo']
-    store.put(bag)
 
     user_cookie = get_auth('foo', 'foobar')
     callback = 'callback'
