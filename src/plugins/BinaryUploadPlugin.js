@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.12|
+|''Version''|0.3.13|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -24,6 +24,7 @@ tiddlywebplugins.form
 (function($) {
 
 var macro = config.macros.binaryUpload = {
+	defaultWorkspace: config.defaultCustomFields["server.workspace"],
 	locale: {
 		titleDefaultValue: "Please enter a title...",
 		tagsDefaultValue: "Please enter some tags...",
@@ -128,7 +129,7 @@ var macro = config.macros.binaryUpload = {
 			};
 		var defaults = config.defaultCustomFields;
 		place = $("<div />").addClass("container").appendTo(place)[0];
-		var workspace = bag ? "bags/%0".format([bag]) : defaults["server.workspace"];
+		var workspace = bag ? "bags/%0".format([bag]) : macro.defaultWorkspace;
 		var baseURL = defaults["server.host"];
 		baseURL += (baseURL[baseURL.length - 1] !== "/") ? "/" : "";
 		baseURL = "%0%1/tiddlers".format([baseURL, workspace]);
@@ -207,15 +208,20 @@ var macro = config.macros.binaryUpload = {
 };
 
 if(config.extensions.tiddlyspace) {
+	var currentSpaceName = config.extensions.tiddlyspace.currentSpace.name;
 	config.macros.binaryUploadPublic = {
 		handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 			var options = paramString.parseParams(null, null, true)[0];
 			var bag = "%0_public".
-				format([config.extensions.tiddlyspace.currentSpace.name]);
+				format(currentSpaceName);
 			options.bag = bag;
 			macro.createUploadForm(place, options);
 		}
 	};
+	var suffix = config.options.chkPrivateMode ? "private" : "public";
+	config.macros.binaryUpload.defaultWorkspace = "bags/%0_%1".format(currentSpaceName, suffix);
+	// todo: refactor to getCurrentWorkspace
+	config.messages.privacySetting = suffix;
 }
 
 })(jQuery);
