@@ -11,10 +11,10 @@ modifier: osmosoft
 	</span>
 	<span class="titleBar">
 		<div class='title' macro='view title text'></div>
-		<div class="subtitle" macro='viewRevisions page:5'>
+		<span class="subtitle" macro='viewRevisions page:5'>
 			last modified on
 			<span macro="view modified date"></span>
-		</div>
+		</span>
 		<div macro="view title replyLink"></div>
 	</span>
 	<span class='followPlaceHolder' macro='followTiddlers'></span>
