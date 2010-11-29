@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceSpaces|
-|''Version''|0.5.8|
+|''Version''|0.5.9|
 |''Description''|TiddlySpace spaces management|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
@@ -30,7 +30,8 @@
 //{{{
 (function($) {
 
-var host = config.extensions.tiddlyweb.host;
+var tweb = config.extensions.tiddlyweb;
+var host = tweb.host;
 var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
@@ -41,9 +42,10 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		charError: "error: invalid space name - must start with a letter, be " +
 			"at least two characters in length and only contain lowercase " +
 			"letters, digits or hyphens",
-		noSpaces: "you have no spaces",
-		addSpace: "creating your new space...",
-		loadingSpaces: "please wait while we load your spaces..."
+		noSpaces: "You have no spaces",
+		addSpace: "Creating your new space...",
+		loadingSpaces: "Wait while we load your spaces...",
+		anon: "Login to view your spaces"
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -64,28 +66,34 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		container.text(macro.locale.loadingSpaces).addClass("inProgress").
 			attr("refresh", "macro").attr("macroName", "TiddlySpaceSpaces").
 			addClass("listTiddlySpaceSpaces");
-		$.ajax({ // XXX: DRY; cf. TiddlySpaceInclusion
-			url: host + "/spaces?mine=1",
-			type: "GET",
-			success: function(data, status, xhr) {
-				container.empty().removeClass("inProgress").append("<ul />");
-				var spaces = $.map(data, function(item, i) {
-					var link = $("<a />", {
-						href: item.uri,
-						text: item.name
-					});
-					return $("<li />").append(link)[0];
+		tweb.getUserInfo(function(user) {
+			if(!user.anon) {
+				$.ajax({ // XXX: DRY; cf. TiddlySpaceInclusion
+					url: host + "/spaces?mine=1",
+					type: "GET",
+					success: function(data, status, xhr) {
+						container.empty().removeClass("inProgress").append("<ul />");
+						var spaces = $.map(data, function(item, i) {
+							var link = $("<a />", {
+								href: item.uri,
+								text: item.name
+							});
+							return $("<li />").append(link)[0];
+						});
+						var el = $("ul", container);
+						if(data.length > 0) {
+							el.append(spaces);
+						} else { // XXX: should never occur!?
+							$('<p class="annotation" />').text(macro.locale.noSpaces).
+								replaceAll(el);
+						}
+					},
+					error: function(xhr, error, exc) {
+						displayMessage(macro.locale.listError.format([error]));
+					}
 				});
-				var el = $("ul", container);
-				if(data.length > 0) {
-					el.append(spaces);
-				} else { // XXX: should never occur!?
-					$('<p class="annotation" />').text(macro.locale.noSpaces).
-						replaceAll(el);
-				}
-			},
-			error: function(xhr, error, exc) {
-				displayMessage(macro.locale.listError.format([error]));
+			} else {
+				container.text(macro.locale.anon).addClass("annotation");
 			}
 		});
 	},
