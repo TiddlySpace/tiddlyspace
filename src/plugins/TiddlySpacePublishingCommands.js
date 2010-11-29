@@ -21,7 +21,6 @@ Provides TiddlySpacePublisher macro.
 var tiddlyspace = config.extensions.tiddlyspace;
 var currentSpace = tiddlyspace.currentSpace.name;
 var originMacro = config.macros.tiddlerOrigin;
-
 tiddlyspace.getTiddlerStatusType = function(tiddler) {
 	var isShadow = store.isShadowTiddler(tiddler.title);
 	var exists = store.tiddlerExists(tiddler.title);
@@ -132,6 +131,7 @@ var cmd = config.commands.publishTiddler = {
 							el = el ? el : story.refreshTiddler(oldTitle, null, true);
 							if(oldTitle != newTitle) {
 								store.deleteTiddler(oldTitle);
+								refreshDisplay();
 							}
 							if(el) {
 								story.displayTiddler(el, newTitle);
