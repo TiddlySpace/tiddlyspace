@@ -4,6 +4,7 @@
 |''Description''|TiddlySpace spaces management|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
+|''CoreVersion''|2.6.1|
 |''Requires''|TiddlyWebConfig TiddlySpaceInclusion TiddlySpaceUserControls|
 !HTMLForm
 <div class='createSpace'>
@@ -31,7 +32,7 @@
 (function($) {
 
 var tweb = config.extensions.tiddlyweb;
-var host = tweb.host;
+
 var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
@@ -69,7 +70,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		tweb.getUserInfo(function(user) {
 			if(!user.anon) {
 				$.ajax({ // XXX: DRY; cf. TiddlySpaceInclusion
-					url: host + "/spaces?mine=1",
+					url: tweb.host + "/spaces?mine=1",
 					type: "GET",
 					success: function(data, status, xhr) {
 						container.empty().removeClass("inProgress").append("<ul />");
@@ -89,7 +90,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 						}
 					},
 					error: function(xhr, error, exc) {
-						displayMessage(macro.locale.listError.format([error]));
+						displayMessage(macro.locale.listError.format(error));
 					}
 				});
 			} else {
@@ -121,7 +122,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var statusMessage = $(".status", container);
 		var space = form.find("[name=space]").val();
 		var subscribe = form.find("[name=subscribe]").attr("checked");
-		space = new tiddlyweb.Space(space, host);
+		space = new tiddlyweb.Space(space, tweb.host);
 		var displayError = config.macros.TiddlySpaceLogin.displayError;
 		var ns = config.extensions.tiddlyspace;
 		var callback = function(resource, status, xhr) {
@@ -138,7 +139,7 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		};
 		var errback = function(xhr, error, exc) { // TODO: DRY (cf. TiddlySpaceLogin)
 			var ctx = {
-				msg: { 409: macro.locale.conflictError.format([space.name]) },
+				msg: { 409: macro.locale.conflictError.format(space.name) },
 				form: form,
 				selector: "[name=space]"
 			};
