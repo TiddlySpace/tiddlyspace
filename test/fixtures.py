@@ -4,17 +4,16 @@ import shutil
 import httplib2
 import Cookie
 
-from tiddlyweb.store import HOOKS
-
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
-from tiddlywebplugins.utils import get_store
-
 from tiddlyweb.config import config
-from tiddlywebplugins.instancer.util import spawn
+from tiddlyweb.store import HOOKS
 
+from tiddlywebplugins.utils import get_store
+from tiddlywebplugins.instancer.util import spawn
 from tiddlywebplugins.tiddlyspace import instance as instance_module
 from tiddlywebplugins.tiddlyspace.config import config as init_config
+
 
 SESSION_COUNT = 1
 
@@ -64,6 +63,7 @@ def make_test_env(module):
     module.store = get_store(config)
 
     app = serve.load_app()
+
     def app_fn():
         return app
     module.app_fn = app_fn
@@ -91,7 +91,7 @@ def make_fake_space(store, name):
         store.put(entity)
 
 
-def clear_hooks(hooks):
+def clear_hooks(hooks): # XXX: temporary workaround?
     for entity, actions in hooks.items():
         actions['put'] = []
         actions['delete'] = []
