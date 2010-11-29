@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.8.2|
+|''Version''|0.8.3|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -131,7 +131,7 @@ var cmd = config.commands.publishTiddler = {
 							}
 							el = el ? el : story.refreshTiddler(oldTitle, null, true);
 							if(oldTitle != newTitle) {
-								store.removeTiddler(oldTitle);
+								store.deleteTiddler(oldTitle);
 							}
 							if(el) {
 								story.displayTiddler(el, newTitle);
@@ -239,6 +239,7 @@ var saveDraftCmd = config.commands.saveDraft = {
 			new Date(), tid.tags, tid.fields);
 		autoSaveChanges(null, [tid]);
 		story.closeTiddler(title);
+		story.displayTiddler(src, title);
 		story.displayTiddler(src, tid.title);
 	}
 };
