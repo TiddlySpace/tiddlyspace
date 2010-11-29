@@ -1,5 +1,5 @@
 
-from test.fixtures import make_test_env, make_fake_space
+from test.fixtures import make_test_env, make_fake_space, get_auth
 
 from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
@@ -8,6 +8,7 @@ import simplejson
 
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.recipe import Recipe
+from tiddlyweb.model.user import User
 
 
 def setup_module(module):
@@ -153,6 +154,11 @@ def test_space_not_expose_subscription_recipes():
 
     http = httplib2.Http()
 
+    user = User('foo')
+    user.set_password('foobar')
+    store.put(user)
+    user_cookie = get_auth('foo', 'foobar')
+
     response, content = http.request('http://foo.0.0.0.0:8080/recipes',
             method='GET')
 
@@ -168,7 +174,10 @@ def test_space_not_expose_subscription_recipes():
     assert response['status'] == '200'
 
     response, content = http.request('http://foo.0.0.0.0:8080/recipes/foo_private',
-            method='GET')
+            method='GET',
+            headers={
+                'Cookie': 'tiddlyweb_user="%s"' % user_cookie
+            })
     assert response['status'] == '200'
 
     response, content = http.request('http://foo.0.0.0.0:8080/recipes/bar_public',
@@ -176,7 +185,10 @@ def test_space_not_expose_subscription_recipes():
     assert response['status'] == '404'
 
     response, content = http.request('http://foo.0.0.0.0:8080/recipes/bar_private',
-            method='GET')
+            method='GET',
+            headers={
+                'Cookie': 'tiddlyweb_user="%s"' % user_cookie
+            })
     assert response['status'] == '404'
 
     response, content = http.request('http://foo.0.0.0.0:8080/recipes/baz_public',

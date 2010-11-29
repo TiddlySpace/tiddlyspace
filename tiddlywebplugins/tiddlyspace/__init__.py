@@ -25,13 +25,13 @@ from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
         friendly_uri, get_identities)
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
-from tiddlywebplugins.tiddlyspace.csrf import CsrfProtector
+from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 
 import tiddlywebplugins.status
 
 
-__version__ = '0.9.44'
+__version__ = '0.9.46'
 
 
 def init(config):
@@ -54,6 +54,7 @@ def init(config):
     import tiddlywebplugins.reflector
     import tiddlywebplugins.lazy
     import tiddlywebplugins.privateer
+    import tiddlywebplugins.jsonp
 
     @make_command()
     def addmember(args):
@@ -110,14 +111,14 @@ def init(config):
     tiddlywebplugins.reflector.init(config)
     tiddlywebplugins.lazy.init(config)
     tiddlywebplugins.privateer.init(config)
+    tiddlywebplugins.jsonp.init(config)
 
-    # XXX This is required to work around issues with twp.instancer.
-    # Without this, instance information from tiddlywebwiki wins
-    # because each plugin does its own get_tiddler_locations.
-    # This only fixes 'twanager update', instance creation
-    # still does not have the right information, thus requiring a
-    # twanager update after instance creation. Presumably the
-    # instance script needs to do something similar.
+    # XXX: The following is required to work around issues with twp.instancer.
+    # Without this, config settings from tiddlywebwiki take precedence.
+    config['serializers']['text/x-tiddlywiki'] = space_config['serializers']['text/x-tiddlywiki']
+    # This only fixes 'twanager update', instance creation still does not have
+    # the right information, thus requiring a twanager update after instance
+    # creation. Presumably the instance script needs to do something similar.
     config['instance_tiddlers'] = get_tiddler_locations(store_contents,
             'tiddlywebplugins.tiddlyspace')
 
@@ -139,8 +140,8 @@ def init(config):
                     config['server_request_filters'].
                     index(ControlView) + 1, DropPrivs)
 
-        if CsrfProtector not in config['server_request_filters']:
-            config['server_request_filters'].append(CsrfProtector)
+        if CSRFProtector not in config['server_request_filters']:
+            config['server_request_filters'].append(CSRFProtector)
 
         if AllowOrigin not in config['server_response_filters']:
             config['server_response_filters'].insert(

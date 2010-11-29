@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceCloneCommand|
-|''Version''|0.5.4|
+|''Version''|0.5.5|
 |''Description''|provides a toolbar command for cloning external tiddlers|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceCloneCommand.js|
@@ -22,7 +22,9 @@ cmd.cloneTiddler = {
 
 	isEnabled: function(tiddler) {
 		if(!store.tiddlerExists(tiddler.title)) {
-			return true;
+			var el = story.getTiddler(tiddler.title);
+			// disable if new tiddler already has (inherited) fields
+			return el ? !$(el).attr("tiddlyFields") : true;
 		}
 		var bag = tiddler.fields["server.bag"];
 		if(readOnly) {

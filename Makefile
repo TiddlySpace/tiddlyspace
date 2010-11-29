@@ -9,7 +9,12 @@ wrap_jslib = curl -s $(2) | \
 test:
 	py.test -x test
 
-remotes: jslib
+tiddlywiki:
+	mkdir tiddlywebplugins/tiddlyspace/resources || true
+	wget http://tiddlywiki.com/beta/empty.html \
+		-O tiddlywebplugins/tiddlyspace/resources/beta.html
+
+remotes: tiddlywiki jslib
 	./cacher
 
 jslib: qunit

@@ -21,6 +21,7 @@ Provides TiddlySpacePublisher macro.
 var tiddlyspace = config.extensions.tiddlyspace;
 var currentSpace = tiddlyspace.currentSpace.name;
 var originMacro = config.macros.tiddlerOrigin;
+
 tiddlyspace.getTiddlerStatusType = function(tiddler) {
 	var isShadow = store.isShadowTiddler(tiddler.title);
 	var exists = store.tiddlerExists(tiddler.title);
@@ -342,7 +343,6 @@ var macro = config.macros.TiddlySpacePublisher = {
 						macro.refresh(el);
 					});
 				};
-				
 				macro.changeStatus(tiddlers, status[1], callback);
 			};
 			wizard.setButtons([

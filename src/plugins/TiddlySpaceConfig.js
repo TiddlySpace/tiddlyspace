@@ -237,6 +237,18 @@ httpReq = function(type, url, callback, params, headers, data, contentType,
 // register style sheet for backstage separately (important)
 store.addNotification("StyleSheetBackstage", refreshStyles);
 
+// option for default privacy setting
+config.optionsDesc.chkPrivateMode = "Set your default privacy mode to private";
+if(config.options.chkPrivateMode === undefined) {
+	config.options.chkPrivateMode = false;
+	config.defaultCustomFields["server.workspace"] = "bags/%0_public".
+		format(plugin.currentSpace.name);
+} else {
+	var mode = config.options.chkPrivateMode ? "private" : "public";
+	config.defaultCustomFields["server.workspace"] =  "bags/%0_%1".
+		format(plugin.currentSpace.name, mode);
+}
+
 config.paramifiers.follow = {
 	onstart: function(v) {
 		if(!readOnly) {
