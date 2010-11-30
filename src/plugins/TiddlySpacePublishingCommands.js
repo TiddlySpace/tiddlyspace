@@ -21,6 +21,7 @@ Provides TiddlySpacePublisher macro.
 var tiddlyspace = config.extensions.tiddlyspace;
 var currentSpace = tiddlyspace.currentSpace.name;
 var originMacro = config.macros.tiddlerOrigin;
+
 tiddlyspace.getTiddlerStatusType = function(tiddler) {
 	var isShadow = store.isShadowTiddler(tiddler.title);
 	var exists = store.tiddlerExists(tiddler.title);
@@ -30,9 +31,8 @@ tiddlyspace.getTiddlerStatusType = function(tiddler) {
 		return "missing";
 	} else {
 		var bag = tiddler.fields["server.bag"];
-		var currentSpace = tiddlyspace.currentSpace.name;
-		var privateBag = "%0_private".format([currentSpace]);
-		var publicBag = "%0_public".format([currentSpace]);
+		var privateBag = "%0_private".format(currentSpace);
+		var publicBag = "%0_public".format(currentSpace);
 		if(bag == privateBag) {
 			return "private";
 		} else if (bag == publicBag) {
@@ -89,7 +89,7 @@ var cmd = config.commands.publishTiddler = {
 			var tiddler = $.extend(new Tiddler(newTitle), original);
 			tiddler.fields = $.extend({}, original.fields, {
 				"server.bag": newBag,
-				"server.workspace": "bags/%0".format([newBag]),
+				"server.workspace": "bags/%0".format(newBag),
 				"server.page.revision": "false"
 			});
 			delete tiddler.fields["server.title"];
@@ -110,7 +110,7 @@ var cmd = config.commands.publishTiddler = {
 		delete tiddler.fields["server.workspace"];
 		var oldBag = tiddler.fields["server.bag"];
 		var newBag = newTiddler.fields["server.bag"];
-		var newWorkspace = "bags/%0".format([newBag]);
+		var newWorkspace = "bags/%0".format(newBag);
 		cmd.copyTiddler(oldTitle, newTitle, newBag, function(ctx) {
 				info.copyContext = ctx;
 				var context = {
@@ -131,7 +131,7 @@ var cmd = config.commands.publishTiddler = {
 							el = el ? el : story.refreshTiddler(oldTitle, null, true);
 							if(oldTitle != newTitle) {
 								store.deleteTiddler(oldTitle);
-								refreshDisplay();
+								store.notify(oldTitle, true);
 							}
 							if(el) {
 								story.displayTiddler(el, newTitle);
@@ -192,7 +192,7 @@ var saveDraftCmd = config.commands.saveDraft = {
 		var draftTitle;
 		var draftNum = "";
 		while(!draftTitle) {
-			var suggestedTitle = "%0 [draft%1]".format([title, draftNum]);
+			var suggestedTitle = "%0 [draft%1]".format(title, draftNum);
 			if(store.getTiddler(suggestedTitle)) {
 				draftNum = !draftNum ? 2 : draftNum + 1;
 			} else {
@@ -217,9 +217,8 @@ var saveDraftCmd = config.commands.saveDraft = {
 				draftTiddler.fields[fieldName] = gatheredFields[fieldName];
 			}
 		}
-		var currentSpace = tiddlyspace.currentSpace.name;
-		var privateBag = "%0_private".format([currentSpace]);
-		var privateWorkspace = "bags/%0".format([privateBag]);
+		var privateBag = "%0_private".format(currentSpace);
+		var privateWorkspace = "bags/%0".format(privateBag);
 		draftTiddler.title = draftTitle;
 		draftTiddler.fields["publish.name"] = title;
 		draftTiddler.fields["server.workspace"] = privateWorkspace;
@@ -288,7 +287,8 @@ var macro = config.macros.TiddlySpacePublisher = {
 		var locale = macro.locale;
 		var status = macro.getMode(paramString);
 		wizard.createWizard(place, locale.title);
-		wizard.addStep(macro.locale.description.format([status[0], status[1]]), '<input type="hidden" name="markList" />');
+		wizard.addStep(macro.locale.description.format(status[0], status[1]),
+			'<input type="hidden" name="markList" />');
 		var markList = wizard.getElement("markList");
 		var listWrapper = $("<div />").addClass("batchPublisher").
 			attr("refresh", "macro").attr("macroName", macroName).attr("params", paramString)[0];
@@ -317,7 +317,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 		var publishCandidates = [];
 		var tiddlers = params.filter ? store.filterTiddlers(params.filter[0]) : store.getTiddlers("title", "excludePublisher");
 		var status = macro.getMode(paramString);
-		var fromBag = "%0_%1".format([currentSpace, status[0]]);
+		var fromBag = "%0_%1".format(currentSpace, status[0]);
 
 		// TODO: would be good if filterTiddlers could do the bag checking.
 		var enabled = [];
@@ -346,10 +346,11 @@ var macro = config.macros.TiddlySpacePublisher = {
 				};
 				macro.changeStatus(tiddlers, status[1], callback);
 			};
-			wizard.setButtons([
-				{ caption: locale.changeStatusLabel.format([status[1]]), tooltip: locale.changeStatusPrompt.format([status[1]]),
-					onClick: btnHandler }
-			]);
+			wizard.setButtons([{
+				caption: locale.changeStatusLabel.format(status[1]),
+				tooltip: locale.changeStatusPrompt.format(status[1]),
+				onClick: btnHandler
+			}]);
 			$(enabled.join(",")).attr("checked", true); // retain what was checked before.
 		}
 	}
