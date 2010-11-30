@@ -31,7 +31,8 @@ var getParamString = function(anon, subscribe) {
 
 test("add space form", function() {
 	var place = $("<div />");
-	config.macros.TiddlySpaceSpaces.handler(place, null, ["add"], null, getParamString(["add"]));
+	config.macros.TiddlySpaceSpaces.handler(place, null, ["add"], null,
+		getParamString(["add"]));
 	var form = place.find("form");
 	var checkbox = $("input[name=subscribe]", form);
 	strictEqual(form.length, 1);
