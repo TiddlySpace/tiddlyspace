@@ -84,14 +84,6 @@ body ul { margin: 0; }
 	position: relative;
 }
 
-.public {
-	border-color: #C7EAFF;
-}
-
-.private {
-	border-color: #FFCAE9;
-}
-
 .revisionCloak {
 	position: absolute;
 	position: fixed !important;
@@ -108,12 +100,16 @@ body ul { margin: 0; }
 }
 
 /* *** Header *** */
+.header {
+	position: relative;
+	background-color: [[ColorPalette::PrimaryMid]];
+	_width: 100%; /* ie 6 demands */
+}
+
 .headerForeground {
 	background-color: [[ColorPalette::PrimaryMid]];
 	float: left;
-	margin-left: 72px;
-	margin-right: 16px;
-	margin-top: 24px;
+	margin: 24px 16px 0px 72px;
 	padding: 0;
 	position: relative;
 	top: 0;
@@ -135,17 +131,10 @@ body ul { margin: 0; }
 	_position: relative; /* ie 6*/
 }
 
-.header {
-	position: relative;
-	background-color: [[ColorPalette::PrimaryMid]];
-	_width: 100%; /* ie 6 demands */
-}
-
 .siteTitle {
 	clear: both;
 	display: block;
 	font-size: 32px;
-	height: 32px;
 	font-weight: bold;
 	line-height: 32px;
 }
@@ -192,6 +181,18 @@ body ul { margin: 0; }
 	line-height: normal;
 }
 
+#mainMenu a {
+	color: #fff;
+	padding: 8px;
+	font-size: 0.9em;
+	margin-right: 16px;
+}
+
+#mainMenu a:hover {
+	background-color: [[ColorPalette::PrimaryMid]];
+	color: [[ColorPalette::Background]]
+}
+
 #sidebarOptions {
 	margin-right: 72px;
 	float: right;
@@ -203,11 +204,6 @@ body ul { margin: 0; }
 
 #sidebarOptions a {
 	margin-right: 8px;
-}
-
-#mainMenu a:hover {
-	background-color: [[ColorPalette::PrimaryMid]];
-	color: [[ColorPalette::Background]]
 }
 
 .confirmationPopup .button,
@@ -229,6 +225,7 @@ body ul { margin: 0; }
 	float: left;
 	width: 80px;
 	padding: 0px;
+        color: #fff;
 }
 
 .confirmationPopup a.button,
@@ -262,10 +259,6 @@ body ul { margin: 0; }
 	margin-top: 0px;
 }
 
-/*******************/
-/* --- New CSS --- */
-/*******************/
-
 #menuBar {
 	background: [[ColorPalette::PrimaryLight]];
 	left: 0;
@@ -276,17 +269,6 @@ body ul { margin: 0; }
 	min-height: 1em;
 	overflow: hidden;
 	_width: 100%; /* for ie 6 */
-}
-
-#mainMenu a {
-	color: #fff;
-	padding: 8px;
-	font-size: 0.9em;
-	margin-right: 16px;
-}
-
-#sidebarOptions a.button {
-	color: #fff;
 }
 
 #sidebarOptions a.button:hover {
@@ -478,6 +460,7 @@ div.tiddler .toolbar a {
 * html #tiddlerDisplay {
 	margin-top: 0px;
 }
+
 /* for printing purposes */
 @media print {
 	#mainMenu,

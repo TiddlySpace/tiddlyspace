@@ -6,13 +6,14 @@ import Cookie
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
-from tiddlywebplugins.utils import get_store
-
 from tiddlyweb.config import config
-from tiddlywebplugins.instancer.util import spawn
+from tiddlyweb.store import HOOKS
 
+from tiddlywebplugins.utils import get_store
+from tiddlywebplugins.instancer.util import spawn
 from tiddlywebplugins.tiddlyspace import instance as instance_module
 from tiddlywebplugins.tiddlyspace.config import config as init_config
+
 
 SESSION_COUNT = 1
 
@@ -47,6 +48,7 @@ def make_test_env(module):
         import tiddlywebplugins.tiddlyspace.store
         import tiddlywebplugins.mysql
         import tiddlywebplugins.sqlalchemy
+        clear_hooks(HOOKS)
     SESSION_COUNT += 1
     db_config = init_config['server_store'][1]['db_config']
     db_config = db_config.replace('///tiddlyspace?', '///tiddlyspacetest?')
@@ -60,8 +62,10 @@ def make_test_env(module):
     from tiddlyweb.web import serve
     module.store = get_store(config)
 
+    app = serve.load_app()
+
     def app_fn():
-        return serve.load_app()
+        return app
     module.app_fn = app_fn
 
 
@@ -85,3 +89,10 @@ def make_fake_space(store, name):
         ('%s_private' % name, '')])
     for entity in [public_recipe, private_recipe, public_bag, private_bag]:
         store.put(entity)
+
+
+def clear_hooks(hooks): # XXX: temporary workaround?
+    for entity, actions in hooks.items():
+        actions['put'] = []
+        actions['delete'] = []
+        actions['get'] = []

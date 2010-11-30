@@ -11,6 +11,9 @@ config.extensions.tiddlyweb = {
 	},
 
 	getStatus: function(callback) {
-		return callback(this.status);
+		callback(this.status);
+	},
+	getUserInfo: function(callback) {
+		callback({});
 	}
 };

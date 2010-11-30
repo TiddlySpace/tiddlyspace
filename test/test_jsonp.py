@@ -50,7 +50,7 @@ def test_call_jsonp():
     user_cookie = get_auth('foo', 'foobar')
     callback = 'callback'
     response, content = http.request('http://foo.0.0.0.0:8080/bags/'
-        'foo_public/tiddlers/public?jsonp_callback=%s' % callback,
+        'foo_public/tiddlers/public?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -61,7 +61,7 @@ def test_call_jsonp():
     assert content[-1:] == ')'
 
     response, content = http.request('http://0.0.0.0:8080/bags/'
-        'foo_public/tiddlers/public?jsonp_callback=%s' % callback,
+        'foo_public/tiddlers/public?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -86,7 +86,7 @@ def test_drop_privs():
     callback = 'callback'
 
     response, _ = http.request('http://foo.0.0.0.0:8080/bags/'
-        'foo_private/tiddlers/private?jsonp_callback=%s' % callback,
+        'foo_private/tiddlers/private?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -95,7 +95,7 @@ def test_drop_privs():
     assert response['status'] == '401'
 
     response, _ = http.request('http://foo.0.0.0.0:8080/recipes/'
-        'foo_private/tiddlers/private?jsonp_callback=%s' % callback,
+        'foo_private/tiddlers/private?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -104,7 +104,7 @@ def test_drop_privs():
     assert response['status'] == '401'
 
     response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_private?'
-        'jsonp_callback=%s' % callback,
+        'callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -113,7 +113,7 @@ def test_drop_privs():
     assert response['status'] == '401'
 
     response, _ = http.request('http://foo.0.0.0.0:8080/recipes/foo_private?'
-        'jsonp_callback=%s' % callback,
+        'callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -122,7 +122,7 @@ def test_drop_privs():
     assert response['status'] == '401'
 
     response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_private/'
-        'tiddlers?jsonp_callback=%s' % callback,
+        'tiddlers?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -131,7 +131,7 @@ def test_drop_privs():
     assert response['status'] == '401'
 
     response, _ = http.request('http://foo.0.0.0.0:8080/recipes/foo_private/'
-        'tiddlers?jsonp_callback=%s' % callback,
+        'tiddlers?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -165,7 +165,7 @@ def test_no_subdomain():
     callback = 'callback'
 
     response, _ = http.request('http://0.0.0.0:8080/bags/'
-        'foo_private/tiddlers/private?jsonp_callback=%s' % callback,
+        'foo_private/tiddlers/private?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -174,7 +174,7 @@ def test_no_subdomain():
     assert response['status'] == '401'
 
     response, _ = http.request('http://0.0.0.0:8080/recipes/'
-        'foo_private/tiddlers/private?jsonp_callback=%s' % callback,
+        'foo_private/tiddlers/private?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -183,7 +183,7 @@ def test_no_subdomain():
     assert response['status'] == '401'
 
     response, _ = http.request('http://0.0.0.0:8080/bags/foo_private?'
-        'jsonp_callback=%s' % callback,
+        'callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -192,7 +192,7 @@ def test_no_subdomain():
     assert response['status'] == '401'
 
     response, _ = http.request('http://0.0.0.0:8080/recipes/foo_private?'
-        'jsonp_callback=%s' % callback,
+        'callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -201,7 +201,7 @@ def test_no_subdomain():
     assert response['status'] == '401'
 
     response, _ = http.request('http://0.0.0.0:8080/bags/foo_private/'
-        'tiddlers?jsonp_callback=%s' % callback,
+        'tiddlers?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -210,7 +210,7 @@ def test_no_subdomain():
     assert response['status'] == '401'
 
     response, _ = http.request('http://0.0.0.0:8080/recipes/foo_private/'
-        'tiddlers?jsonp_callback=%s' % callback,
+        'tiddlers?callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,
@@ -228,7 +228,7 @@ def test_no_subdomain():
     assert response['status'] == '200'
 
     response, content = http.request('http://0.0.0.0:8080/search'
-        '?q=bag:foo_private&jsonp_callback=%s' % callback,
+        '?q=bag:foo_private&callback=%s' % callback,
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie,

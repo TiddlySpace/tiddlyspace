@@ -213,7 +213,7 @@ class DropPrivs(object):
         if environ['tiddlyweb.usersign']['name'] == 'GUEST':
             return
 
-        if environ['tiddlyweb.query'].get('jsonp_callback'):
+        if environ['tiddlyweb.query'].get('callback'):
             self._drop_privs(environ)
 
         return

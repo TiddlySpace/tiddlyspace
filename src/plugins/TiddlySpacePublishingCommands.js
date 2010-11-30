@@ -130,7 +130,8 @@ var cmd = config.commands.publishTiddler = {
 							}
 							el = el ? el : story.refreshTiddler(oldTitle, null, true);
 							if(oldTitle != newTitle) {
-								store.removeTiddler(oldTitle);
+								store.deleteTiddler(oldTitle);
+								store.notify(oldTitle, true);
 							}
 							if(el) {
 								story.displayTiddler(el, newTitle);
@@ -237,6 +238,7 @@ var saveDraftCmd = config.commands.saveDraft = {
 			new Date(), tid.tags, tid.fields);
 		autoSaveChanges(null, [tid]);
 		story.closeTiddler(title);
+		story.displayTiddler(src, title);
 		story.displayTiddler(src, tid.title);
 	}
 };
@@ -340,12 +342,12 @@ var macro = config.macros.TiddlySpacePublisher = {
 				};
 				macro.changeStatus(tiddlers, newPubType, callback);
 			};
-			wizard.setButtons([
-				{ caption: locale.changeStatusLabel.format(newPubType),
-					tooltip: locale.changeStatusPrompt.format(newPubType),
-					onClick: btnHandler }
-			]);
-			$(enabled.join(",")).attr("checked", true); // retain what was checked before.
+			wizard.setButtons([{
+				caption: locale.changeStatusLabel.format(newPubType),
+				tooltip: locale.changeStatusPrompt.format(newPubType),
+				onClick: btnHandler
+			}]);
+			$(enabled.join(",")).attr("checked", true); // retain what was checked before
 		}
 	}
 };
