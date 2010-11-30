@@ -83,14 +83,19 @@ TiddlyWiki.prototype.getTiddlerText = function(title, defaultText) {
 };
 TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
 		modified, tags, fields, clearChangeCount, created, creator) {
-	var tiddler = new Tiddler(newTitle);
-	tiddler.creator = creator;
-	tiddler.created = created;
-	tiddler.modifier = modifier;
-	tiddler.modified = modifier;
-	tiddler.tags = tags;
-	tiddler.text = newBody;
-	tiddler.fields = fields;
+	var tiddler;
+	if(title instanceof Tiddler) {
+		tiddler = title;
+	} else {
+		tiddler = new Tiddler(newTitle);
+		tiddler.creator = creator;
+		tiddler.created = created;
+		tiddler.modifier = modifier;
+		tiddler.modified = modifier;
+		tiddler.tags = tags;
+		tiddler.text = newBody;
+		tiddler.fields = fields;
+	}
 	this.addTiddler(tiddler);
 	return tiddler;
 };
