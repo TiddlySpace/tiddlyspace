@@ -50,7 +50,7 @@ class CSRFProtector(object):
             return app()
         if environ['tiddlyweb.usersign']['name'] == 'GUEST':
             return app()
-        if environ['tiddlyweb.type'] not in [
+        if environ.get('tiddlyweb.type', '') not in [
                 'application/x-www-form-urlencoded',
                 'multipart/form-data']:
             return app()
