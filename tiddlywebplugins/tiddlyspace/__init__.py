@@ -115,6 +115,7 @@ def init(config):
 
     # XXX: The following is required to work around issues with twp.instancer.
     # Without this, config settings from tiddlywebwiki take precedence.
+    config['base_tiddlywiki'] = config['base_tiddlywiki_beta'] # XXX: temporary
     config['serializers']['text/x-tiddlywiki'] = space_config['serializers']['text/x-tiddlywiki']
     # This only fixes 'twanager update', instance creation still does not have
     # the right information, thus requiring a twanager update after instance
