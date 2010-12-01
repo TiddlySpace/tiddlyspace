@@ -238,15 +238,9 @@ store.addNotification("StyleSheetBackstage", refreshStyles);
 
 // option for default privacy setting
 config.optionsDesc.chkPrivateMode = "Set your default privacy mode to private";
-if(config.options.chkPrivateMode === undefined) {
-	config.options.chkPrivateMode = false;
-	config.defaultCustomFields["server.workspace"] = "bags/%0_public".
-		format(currentSpace);
-} else {
-	var mode = config.options.chkPrivateMode ? "private" : "public";
-	config.defaultCustomFields["server.workspace"] =  "bags/%0_%1".
-		format(currentSpace, mode);
-}
+config.options.chkPrivateMode = config.options.chkPrivateMode || false;
+config.defaultCustomFields["server.workspace"] = getCurrentWorkspace(
+	config.options.chkPrivateMode ? "private" : "public");
 
 config.paramifiers.follow = {
 	onstart: function(v) {
