@@ -118,7 +118,7 @@ var macro = config.macros.setPrivacy = {
 			}
 		});
 		window.setTimeout(function() {
-			macro.setBag(container, defaultValue, options);
+			macro.setBag(el, defaultValue, options); // XXX: breaks in jQuery 1.4.4 (cf. TiddlyWiki ticket #472)
 		}, 100);
 		// annoyingly this is needed as customFields are added to end of EditTemplate so are not present yet
 		// and don't seem to respect any existing customFields.
