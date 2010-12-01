@@ -6,6 +6,7 @@ httpReq = NOP; // XXX: deprecated
 backstage = {};
 ajaxReq = NOP;
 refreshStyles = NOP;
+saveChanges = NOP;
 autoSaveChanges = NOP;
 createTiddlyButton = NOP;
 getTiddlyLinkInfo = NOP;
@@ -34,6 +35,7 @@ config = {
 	},
 	options: {},
 	optionsDesc: {},
+	optionSource: {},
 	paramifiers: {},
 	shadowTiddlers: {
 		TabMore: "",

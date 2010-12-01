@@ -187,6 +187,18 @@ if(window.location.protocol != "file:") {
 	}
 }
 
+// hijack saveChanges to ensure SystemSettings is private by default
+var _saveChanges = saveChanges;
+saveChanges = function(onlyIfDirty, tiddlers) {
+	if(tiddlers && tiddlers.length == 1 && tiddlers[0].title == "SystemSettings") {
+		var fields = tiddlers[0].fields;
+		delete fields["server.recipe"];
+		fields["server.bag"] = plugin.getCurrentBag("private");
+		fields["server.workspace"] = plugin.getCurrentWorkspace("private");
+	}
+	return _saveChanges.apply(this, arguments);
+};
+
 // ensure backstage is always initialized
 // required to circumvent TiddlyWiki's read-only based handling
 config.macros.backstageInit = {
@@ -240,8 +252,8 @@ store.addNotification("StyleSheetBackstage", refreshStyles);
 config.optionsDesc.chkPrivateMode = "Set your default privacy mode to private";
 config.optionSource.chkPrivateMode = "setting";
 config.options.chkPrivateMode = config.options.chkPrivateMode || false;
-config.defaultCustomFields["server.workspace"] = getCurrentWorkspace(
-	config.options.chkPrivateMode ? "private" : "public");
+config.defaultCustomFields["server.workspace"] = plugin.
+	getCurrentWorkspace(config.options.chkPrivateMode ? "private" : "public");
 
 config.paramifiers.follow = {
 	onstart: function(v) {
