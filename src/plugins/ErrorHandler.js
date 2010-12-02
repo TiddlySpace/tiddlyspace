@@ -21,9 +21,9 @@ var msgs = config.messages.editConflict = {
 	saveTooltip: "Ignore the changes made",
 	discard: "discard this change",
 	discardTooltip: "Discard your changes and reset to server version",
-	diffTitle: "%0 [edit conflict@%1]",
-	diffFieldTitle: "%0 - fields [edit conflict@%1]",
-	diffTextTitle: "%0 - text [edit conflict@%1]",
+	diffTitle: "%0 [edit conflict %1]",
+	diffFieldTitle: "%0 - fields [edit conflict %1]",
+	diffTextTitle: "%0 - text [edit conflict %1]",
 	updating: "updating your version...",
 	diffHeader: ["Review the changes that have been made whilst you were editing this tiddler. ",
 			"Fold relevant changes back into your version.\n",
@@ -105,7 +105,6 @@ var ext = config.extensions.errorHandler = {
 			format(msgs.diffHeader, diffTextTitle, msgs.diffTextHeader,
 				diffFieldsTitle, msgs.diffFieldsHeader);
 		store.saveTiddler(newTiddler);
-		story.displayTiddler(src, diffTitle, null, true);
 
 		var callback = function(r) {
 			var text = ext.getDiffTiddlerTexts(r);
@@ -123,6 +122,7 @@ var ext = config.extensions.errorHandler = {
 				displayMessage(msgs.reviewDiffError);
 			}
 		});
+		story.displayTiddler(src, diffTitle);
 	},
 	resetToServerVersion: function(tiddler) {
 		var adaptor = tiddler.getAdaptor();
