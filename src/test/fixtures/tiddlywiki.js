@@ -35,7 +35,7 @@ config = {
 	},
 	options: {},
 	optionsDesc: {},
-	optionSource: {},
+	optionsSource: {},
 	paramifiers: {},
 	shadowTiddlers: {
 		TabMore: "",
