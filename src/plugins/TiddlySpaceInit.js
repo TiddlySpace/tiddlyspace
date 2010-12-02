@@ -107,6 +107,7 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		$.extend(true, tid, pubTid);
 		tid.text = config.macros.RandomColorPalette.generatePalette({}, false);
 		tid = store.saveTiddler(tid);
+		store.notify(tid.title, true); // XXX: temporary workaround; bug in TiddlyWiki 2.6.2b5
 		tiddlers.push(tid);
 		this.createAvatar();
 		this.setupMarkupPreHead();
