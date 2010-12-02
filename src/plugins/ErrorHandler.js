@@ -3,6 +3,7 @@
 |''Version''|0.3.1|
 |''Author''|Jon Robson|
 |''Description''|Localised tiddler save errors including edit conflict resolution.|
+|''Requires''|TiddlyWebConfig|
 ***/
 
 //{{{
