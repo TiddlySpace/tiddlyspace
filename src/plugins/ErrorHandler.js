@@ -1,6 +1,6 @@
 /***
 |''Name''|ErrorHandlerPlugin|
-|''Version''|0.3.1|
+|''Version''|0.4.0|
 |''Author''|Jon Robson|
 |''Description''|Localised tiddler save errors including edit conflict resolution.|
 |''Requires''|TiddlyWebConfig|
@@ -21,9 +21,9 @@ var msgs = config.messages.editConflict = {
 	saveTooltip: "Ignore the changes made",
 	discard: "discard this change",
 	discardTooltip: "Discard your changes and reset to server version",
-	diffTitle: "%0 (edit conflict@%1)",
-	diffFieldTitle: "%0 - fields (edit conflict@%1)",
-	diffTextTitle: "%0 - text (edit conflict@%1)",
+	diffTitle: "%0 [edit conflict@%1]",
+	diffFieldTitle: "%0 - fields [edit conflict@%1]",
+	diffTextTitle: "%0 - text [edit conflict@%1]",
 	updating: "updating your version...",
 	diffHeader: ["Review the changes that have been made whilst you were editing this tiddler. ",
 			"Fold relevant changes back into your version.\n",
