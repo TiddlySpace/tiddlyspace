@@ -13,14 +13,14 @@ var plugin = config.extensions.ServerSideSavingPlugin;
 
 var msgs = config.messages.editConflict = {
 	loading: "Loading..",
-	resolve: "Resolution of issue required. A user has edited this tiddler at the same time as you",
-	reviewDiff: "review difference (recommended)",
-	reviewDiffTooltip: "View a diff of the changes that have been made since you edited.",
+	resolve: "[[Edit Conflict]]@glossary: this tiddler may have been changed by someone else.",
+	reviewDiff: "review (recommended)",
+	reviewDiffTooltip: "review changes made to this tiddler",
 	reviewDiffError: "error retrieving revision.",
-	save: "save anyway",
-	saveTooltip: "Ignore the changes made",
-	discard: "discard this change",
-	discardTooltip: "Discard your changes and reset to server version",
+	save: "overwrite",
+	saveTooltip: "make this revision the top revision of this tiddler",
+	discard: "cancel",
+	discardTooltip: "undo changes to this tiddler and get most recent version",
 	diffTitle: "%0 [edit conflict %1]",
 	diffFieldTitle: "%0 - fields [edit conflict %1]",
 	diffTextTitle: "%0 - text [edit conflict %1]",
@@ -41,7 +41,7 @@ var ext = config.extensions.errorHandler = {
 		var reportArea = ext.reportError(tiddler.title);
 		var msg = $("<div />").appendTo(reportArea);
 		if(message == "saveConflict") {
-			msg.text(msgs.resolve);
+			wikify(msgs.resolve, msg[0]);
 			var choiceArea = $("<div />").appendTo(reportArea)[0];
 			ext.editConflictHandler(choiceArea, tiddler);
 		} else {
