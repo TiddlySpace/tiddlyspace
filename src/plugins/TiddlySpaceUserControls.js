@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceUserControls|
-|''Version''|0.5.3|
+|''Version''|0.5.4|
 |''Description''|registration and login UIs|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceUserControls.js|
@@ -165,7 +165,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		return true;
 	},
 	redirect: function() {
-		window.location = tweb.host;
+		window.location = window.location.protocol == "file:" ? window.location : tweb.host;
 	}
 };
 
@@ -180,7 +180,7 @@ var logoutMacro = config.macros.TiddlySpaceLogout = {
 			if(!user.anon) {
 				var form = $('<form method="POST" />').addClass(macroName).
 					attr("action", tweb.host + "/logout");
-				var token = tiddlyspace.getCsrfToken();
+				var token = tiddlyspace.getCSRFToken();
 				$('<input type="hidden" name="csrf_token" />').val(token).
 					appendTo(form);
 				$("<button />", { text: logoutMacro.locale.label }).

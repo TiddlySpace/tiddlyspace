@@ -5,7 +5,8 @@
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpacePublishingCommands.js|
-|''Requires''|TiddlySpaceConfig|
+|''CoreVersion''|2.6.1|
+|''Requires''|TiddlySpaceConfig TiddlySpaceFilters|
 !Usage
 Provides changeToPrivate, changeToPublic and saveDraft commands
 Provides TiddlySpacePublisher macro.
@@ -19,7 +20,6 @@ Provides TiddlySpacePublisher macro.
 (function($) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
-var currentSpace = tiddlyspace.currentSpace.name;
 var originMacro = config.macros.tiddlerOrigin;
 
 tiddlyspace.getTiddlerStatusType = function(tiddler) {
@@ -30,16 +30,16 @@ tiddlyspace.getTiddlerStatusType = function(tiddler) {
 	} else if(!exists) {
 		return "missing";
 	} else {
-		var bag = tiddler.fields["server.bag"];
-		var privateBag = "%0_private".format(currentSpace);
-		var publicBag = "%0_public".format(currentSpace);
-		if(bag == privateBag) {
-			return "private";
-		} else if (bag == publicBag) {
-			return "public";
-		} else {
-			return "external";
+		var types = ["private", "public"];
+		var type = "external";
+		for(var i = 0; i < types.length; i++) {
+			var t = types[i];
+			type = config.filterHelpers.is[t](tiddler) ? t : type;
 		}
+		if(config.filterHelpers.is.unsynced(tiddler)) {
+			type = type == "private" ? "unsyncedPrivate" : "unsyncedPublic";
+		}
+		return type;
 	}
 };
 
@@ -174,7 +174,7 @@ config.commands.changeToPrivate = {
 		cmd.moveTiddler(tiddler, newTiddler);
 	}
 };
-config.commands.changeToPublic = config.commands.publishTiddler;
+config.commands.changeToPublic = cmd;
 
 /* Save as draft command */
 var saveDraftCmd = config.commands.saveDraft = {
@@ -217,8 +217,8 @@ var saveDraftCmd = config.commands.saveDraft = {
 				draftTiddler.fields[fieldName] = gatheredFields[fieldName];
 			}
 		}
-		var privateBag = "%0_private".format(currentSpace);
-		var privateWorkspace = "bags/%0".format(privateBag);
+		var privateBag = tiddlyspace.getCurrentBag("private");
+		var privateWorkspace = tiddlyspace.getCurrentWorkspace("private");
 		draftTiddler.title = draftTitle;
 		draftTiddler.fields["publish.name"] = title;
 		draftTiddler.fields["server.workspace"] = privateWorkspace;
@@ -262,7 +262,6 @@ var macro = config.macros.TiddlySpacePublisher = {
 	},
 
 	changeStatus: function(tiddlers, status, callback) { // this is what is called when you click the publish button
-		var cmd = config.commands.publishTiddler;
 		var publicBag;
 		for(var i = 0; i < tiddlers.length; i++) {
 			var tiddler = tiddlers[i];
@@ -270,7 +269,7 @@ var macro = config.macros.TiddlySpacePublisher = {
 				title: tiddler.title,
 				fields: { "server.bag": cmd.toggleBag(tiddler, status) }
 			};
-			config.commands.publishTiddler.moveTiddler(tiddler, newTiddler, callback);
+			cmd.moveTiddler(tiddler, newTiddler, callback);
 		}
 	},
 	getMode: function(paramString) {
@@ -282,7 +281,6 @@ var macro = config.macros.TiddlySpacePublisher = {
 		return [status, newStatus];
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		tiddler = tiddler ? tiddler : store.getTiddlers()[0];
 		var wizard = new Wizard();
 		var locale = macro.locale;
 		var status = macro.getMode(paramString);
@@ -291,10 +289,11 @@ var macro = config.macros.TiddlySpacePublisher = {
 			'<input type="hidden" name="markList" />');
 		var markList = wizard.getElement("markList");
 		var listWrapper = $("<div />").addClass("batchPublisher").
-			attr("refresh", "macro").attr("macroName", macroName).attr("params", paramString)[0];
+			attr("refresh", "macro").attr("macroName", macroName).
+			attr("params", paramString)[0];
 		markList.parentNode.insertBefore(listWrapper, markList);
 		$.data(listWrapper, "wizard", wizard);
-		macro.refresh(listWrapper)
+		macro.refresh(listWrapper);
 	},
 	getCheckedTiddlers: function(listWrapper, titlesOnly) {
 		var tiddlers = [];
@@ -315,20 +314,17 @@ var macro = config.macros.TiddlySpacePublisher = {
 		var locale = macro.locale;
 		var params = paramString.parseParams("anon")[0];
 		var publishCandidates = [];
-		var tiddlers = params.filter ? store.filterTiddlers(params.filter[0]) : store.getTiddlers("title", "excludePublisher");
 		var status = macro.getMode(paramString);
-		var fromBag = "%0_%1".format(currentSpace, status[0]);
-
-		// TODO: would be good if filterTiddlers could do the bag checking.
+		var pubType = status[0];
+		var newPubType = status[1];
+		var tiddlers = params.filter ? store.filterTiddlers(params.filter[0]) :
+			store.filterTiddlers("[is[%0]]".format(pubType));
 		var enabled = [];
 		for(var i = 0; i < tiddlers.length; i++) {
 			var tiddler = tiddlers[i];
-			var bag = tiddler.fields["server.bag"];
-			if(bag == fromBag) {
-					publishCandidates.push({ title: tiddler.title, tiddler: tiddler, status: status[0]});
-					if(checked.contains(tiddler.title)) {
-						enabled.push("[rowname=%0]".format(tiddler.title));
-					}
+			publishCandidates.push({ title: tiddler.title, tiddler: tiddler, status: pubType});
+			if(checked.contains(tiddler.title)) {
+				enabled.push("[rowname=%0]".format(tiddler.title));
 			}
 		}
 
@@ -338,20 +334,20 @@ var macro = config.macros.TiddlySpacePublisher = {
 			var listView = ListView.create(listWrapper, publishCandidates, macro.listViewTemplate);
 			wizard.setValue("listView", listView);
 			var btnHandler = function(ev) {
-				var tiddlers = macro.getCheckedTiddlers(listWrapper)
+				var tiddlers = macro.getCheckedTiddlers(listWrapper);
 				var callback = function(status) {
 					$(".batchPublisher").each(function(i, el) {
 						macro.refresh(el);
 					});
 				};
-				macro.changeStatus(tiddlers, status[1], callback);
+				macro.changeStatus(tiddlers, newPubType, callback);
 			};
 			wizard.setButtons([{
-				caption: locale.changeStatusLabel.format(status[1]),
-				tooltip: locale.changeStatusPrompt.format(status[1]),
+				caption: locale.changeStatusLabel.format(newPubType),
+				tooltip: locale.changeStatusPrompt.format(newPubType),
 				onClick: btnHandler
 			}]);
-			$(enabled.join(",")).attr("checked", true); // retain what was checked before.
+			$(enabled.join(",")).attr("checked", true); // retain what was checked before
 		}
 	}
 };

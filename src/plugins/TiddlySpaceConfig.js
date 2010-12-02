@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.6.5|
+|''Version''|0.7.0|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -14,6 +14,15 @@
 var tweb = config.extensions.tiddlyweb;
 
 var recipe = config.defaultCustomFields["server.workspace"].split("recipes/")[1];
+var currentSpace; // assigned later
+
+var disabledTabs = [];
+
+var coreBags = ["system", "tiddlyspace"];
+var systemSpaces = ["plugins", "info", "images", "theme"];
+systemSpaces = $.map(systemSpaces, function(item, i) {
+	return "system-%0_public".format(item);
+});
 
 // hijack search macro to add custom attributes for mobile devices
 var _search = config.macros.search.handler;
@@ -92,27 +101,6 @@ var split = function(str, sep, mode) {
 	return { type: type, name: arr.join(sep) };
 };
 
-// hijack saveTiddler to accept Tiddler instance
-var _saveTiddler = TiddlyWiki.prototype.saveTiddler;
-TiddlyWiki.prototype.saveTiddler = function(title, newTitle, newBody, modifier,
-		modified, tags, fields, clearChangeCount, created, creator) {
-	if(title instanceof Tiddler) { // overloading first argument
-		var t = $.extend(new Tiddler(title.title), title);
-		t = _saveTiddler.apply(this, [t.title, t.title, t.text, t.modifier,
-			t.modified, t.tags, t.fields, false, t.created, t.creator]);
-		return t;
-	} else {
-		return _saveTiddler.apply(this, arguments);
-	}
-};
-
-var coreBags = ["system", "tiddlyspace"];
-var systemSpaces = ["plugins", "info", "images", "theme"];
-systemSpaces = $.map(systemSpaces, function(item, i) {
-	return "system-%0_public".format(item);
-});
-var disabledTabs = [];
-
 var plugin = config.extensions.tiddlyspace = {
 	currentSpace: determineSpace(recipe),
 	coreBags: coreBags.concat(systemSpaces),
@@ -121,6 +109,12 @@ var plugin = config.extensions.tiddlyspace = {
 	isValidSpaceName: function(name) {
 		return name.match(/^[a-z][0-9a-z\-]*[0-9a-z]$/) ? true : false;
 	},
+	getCurrentBag: function(type) {
+		return "%0_%1".format(currentSpace, type);
+	},
+	getCurrentWorkspace: function(type) {
+		return "bags/" + this.getCurrentBag(type);
+	},
 	// returns the URL for a space's avatar (SiteIcon) based on a server_host
 	// object and an optional space name
 	// optional nocors argument prevents cross-domain URLs from being generated
@@ -128,16 +122,16 @@ var plugin = config.extensions.tiddlyspace = {
 		if(space && typeof space != "string") { // backwards compatibility -- XXX: deprecated
 			space = space.name;
 		}
-		var subdomain = nocors ? plugin.currentSpace.name : space;
+		var subdomain = nocors ? currentSpace : space;
 		host = host ? this.getHost(host, subdomain) : "";
-		var bag = space ? "%0_public".format([space]) : "tiddlyspace";
-		return "%0/bags/%1/tiddlers/SiteIcon".format([host, bag]);
+		var bag = space ? "%0_public".format(space) : "tiddlyspace";
+		return "%0/bags/%1/tiddlers/SiteIcon".format(host, bag);
 	},
 	// returns the URL based on a server_host object (scheme, host, port) and an
 	// optional subdomain
 	getHost: function(host, subdomain) {
 		subdomain = subdomain ? subdomain + "." : "";
-		var url = "%0://%1%2".format([host.scheme, subdomain, host.host]);
+		var url = "%0://%1%2".format(host.scheme, subdomain, host.host);
 		var port = host.port;
 		if(port && !["80", "443"].contains(port)) {
 			url += ":" + port;
@@ -158,7 +152,10 @@ var plugin = config.extensions.tiddlyspace = {
 		var tabIdentifier = match ? match[1] : tabTitle;
 		return disabledTabs.contains(tabIdentifier);
 	},
-	getCsrfToken: function() {
+	getCSRFToken: function() {
+		// XXX: should not use RegEx - cf.
+		// http://www.quirksmode.org/js/cookies.html
+		// https://github.com/TiddlySpace/tiddlyspace/commit/5f4adbe009ed4bda3ce39058a3fb07de1420358d
 		var regex = /^(?:.*; )?csrf_token=([^(;|$)]*)(?:;|$)/;
 		var match = regex.exec(document.cookie);
 		var csrf_token = null;
@@ -169,6 +166,8 @@ var plugin = config.extensions.tiddlyspace = {
 		return csrf_token;
 	}
 };
+
+currentSpace = plugin.currentSpace.name;
 
 tweb.serverPrefix = tweb.host.split("/")[3] || ""; // XXX: assumes root handler
 tweb.getStatus(function(status) {
@@ -187,6 +186,18 @@ if(window.location.protocol != "file:") {
 		$.extend(config.macros.importTiddlers, config.macros.fileImport);
 	}
 }
+
+// hijack saveChanges to ensure SystemSettings is private by default
+var _saveChanges = saveChanges;
+saveChanges = function(onlyIfDirty, tiddlers) {
+	if(tiddlers && tiddlers.length == 1 && tiddlers[0].title == "SystemSettings") {
+		var fields = tiddlers[0].fields;
+		delete fields["server.recipe"];
+		fields["server.bag"] = plugin.getCurrentBag("private");
+		fields["server.workspace"] = plugin.getCurrentWorkspace("private");
+	}
+	return _saveChanges.apply(this, arguments);
+};
 
 // ensure backstage is always initialized
 // required to circumvent TiddlyWiki's read-only based handling
@@ -239,22 +250,17 @@ store.addNotification("StyleSheetBackstage", refreshStyles);
 
 // option for default privacy setting
 config.optionsDesc.chkPrivateMode = "Set your default privacy mode to private";
-if(config.options.chkPrivateMode === undefined) {
-	config.options.chkPrivateMode = false;
-	config.defaultCustomFields["server.workspace"] = "bags/%0_public".
-		format(plugin.currentSpace.name);
-} else {
-	var mode = config.options.chkPrivateMode ? "private" : "public";
-	config.defaultCustomFields["server.workspace"] =  "bags/%0_%1".
-		format(plugin.currentSpace.name, mode);
-}
+config.optionsSource.chkPrivateMode = "setting";
+config.options.chkPrivateMode = config.options.chkPrivateMode || false;
+config.defaultCustomFields["server.workspace"] = plugin.
+	getCurrentWorkspace(config.options.chkPrivateMode ? "private" : "public");
 
 config.paramifiers.follow = {
 	onstart: function(v) {
 		if(!readOnly) {
-			var bag = "%0_public".format([config.extensions.tiddlyspace.currentSpace.name]);
+			var bag = "%0_public".format(currentSpace);
 			story.displayTiddler(null, v, DEFAULT_EDIT_TEMPLATE, null, null,
-				"server.bag:%0 server.workspace:bags/%0".format([bag]));
+				"server.bag:%0 server.workspace:bags/%0".format(bag));
 			story.setTiddlerTag(v, "follow", 1);
 			story.focusTiddler(v, "text");
 		}

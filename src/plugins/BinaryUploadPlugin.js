@@ -24,6 +24,8 @@ tiddlywebplugins.form
 //{{{
 (function($) {
 
+var tiddlyspace = config.extensions.tiddlyspace;
+
 var macro = config.macros.binaryUpload = {
 	defaultWorkspace: config.defaultCustomFields["server.workspace"],
 	locale: {
@@ -93,7 +95,7 @@ var macro = config.macros.binaryUpload = {
 		// we need to go somewhere afterwards to ensure the onload event triggers
 		var redirectTo = "/%0/tiddlers.txt?select=title:%1".
 			format(workspace, fileName);
-		var token = config.extensions.tiddlyspace.getCsrfToken();
+		var token = tiddlyspace.getCSRFToken();
 		var action = "%0?csrf_token=%1&redirect=%2"
 			.format(baseURL, token, redirectTo);
 		form[0].action = action; // dont use jquery to work with ie
@@ -208,21 +210,19 @@ var macro = config.macros.binaryUpload = {
 	}
 };
 
-if(config.extensions.tiddlyspace) {
-	var currentSpace = config.extensions.tiddlyspace.currentSpace.name;
+if(tiddlyspace) {
 	config.macros.binaryUploadPublic = {
 		handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 			var options = paramString.parseParams(null, null, true)[0];
-			var bag = "%0_public".
-				format(currentSpace);
+			var bag = tiddlyspace.getCurrentBag("public");
 			options.bag = bag;
 			macro.createUploadForm(place, options);
 		}
 	};
-	// TODO: refactor to use getCurrentWorkspace
-	var suffix = config.options.chkPrivateMode ? "private" : "public";
-	config.macros.binaryUpload.defaultWorkspace = "bags/%0_%1".format(currentSpace, suffix);
-	config.messages.privacySetting = suffix;
+	config.messages.privacySetting = config.options.chkPrivateMode ?
+		"private" : "public";
+	config.macros.binaryUpload.defaultWorkspace = tiddlyspace.
+		getCurrentWorkspace(config.messages.privacySetting);
 }
 
 })(jQuery);

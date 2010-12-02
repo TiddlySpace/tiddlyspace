@@ -1,6 +1,21 @@
 modifier: osmosoft
 tags: excludeLists excludeSearch excludeMissing
 
+!UserUnplugged
+<<TiddlySpaceLogin>>
+
+!SpaceUnplugged
+{{unpluggedSpaceTab{
+{{wizard{
+<<image unsyncedIcon width:48>> <<message messages.syncExplanation>>
+}}}
+{{wizard syncKey{
+{{keyHeading{
+Key}}}
+{{changedServer keyItem{<<message macros.sync.syncStatusList.changedServer.text>>}}} {{changedBoth keyItem{<<message macros.sync.syncStatusList.changedBoth.text>>}}} {{changedLocally keyItem{<<message macros.sync.syncStatusList.changedLocally.text>>}}} {{notFound keyItem{<<message macros.sync.syncStatusList.notFound.text>>}}}
+}}}
+<<sync>>
+
 !User
 {{textRight{
 <<TiddlySpaceLogout>>
@@ -14,6 +29,8 @@ tags: excludeLists excludeSearch excludeMissing
 !Menu
 {{tiddlyspaceMenu{
 <<message messages.memberStatus>>
+
+{{unsyncedList{<<message messages.syncListHeading>> <<list filter [is[unsynced]]>>}}}
 
 <<homeLink>> [[help|@@docs]] [[blog|@@blog]] [[featured|@@featured]]
 

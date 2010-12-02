@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.8.3|
+|''Version''|0.8.5|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -61,7 +61,7 @@ tiddlyspace.resolveSpaceName = function(value) {
 
 tiddlyspace.renderAvatar = function(place, value, options) {
 	options = options ? options : {};
-	options.labelOptions = options.labelOptions ? options.labelOptions : { include: true };
+	options.labelOptions = options.labelOptions ? options.labelOptions : { include: false, height: 48, width: 48 };
 	options.imageOptions = options.imageOptions ? options.imageOptions : {};
 	options.imageOptions.altImage = "/bags/common/tiddlers/defaultUserIcon";
 	var container = $('<div class="siteIcon" />').appendTo(place);
@@ -130,6 +130,8 @@ var originMacro = config.macros.tiddlerOrigin = {
 		"private": "private",
 		"unknown": "unknown state",
 		"public": "public",
+		"unsyncedPrivate": "unsynced and private",
+		"unsyncedPublic": "unsynced and public",
 		externalPrefix: "from ",
 		externalBagSuffix: " bag",
 		externalSuffix: " space",
@@ -212,6 +214,9 @@ var originMacro = config.macros.tiddlerOrigin = {
 		// use of hashes would be useful here.
 		$(button).empty();
 		var icon = "%0Icon".format([privacyType]);
+		if(privacyType.indexOf("unsynced") === 0 && !store.tiddlerExists(icon)) {
+			icon = "unsyncedIcon";
+		}
 		if(privacyType == "shadow") {
 			if(!store.tiddlerExists(icon)) {
 				icon = "bags/tiddlyspace/tiddlers/SiteIcon";
