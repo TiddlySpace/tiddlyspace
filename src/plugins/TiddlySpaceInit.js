@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.8|
+|''Version''|0.6.9|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -97,15 +97,15 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		// generate Site*itle
 		$.each(["SiteTitle", "SiteSubtitle"], function(i, item) {
 			var tid = new Tiddler(item);
-			$.extend(tid, pubTid);
+			$.extend(true, tid, pubTid);
 			tid.text = plugin[item].format([currentSpace.name]);
 			tid = store.saveTiddler(tid);
 			tiddlers.push(tid);
 		});
 		// generate public ColorPalette
 		var tid = new Tiddler("ColorPalette");
-		$.extend(tid, pubTid);
-		tid.text = config.macros.RandomColorPalette.generatePalette({}, true);
+		$.extend(true, tid, pubTid);
+		tid.text = config.macros.RandomColorPalette.generatePalette({}, false);
 		tid = store.saveTiddler(tid);
 		tiddlers.push(tid);
 		this.createAvatar();
