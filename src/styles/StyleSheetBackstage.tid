@@ -10,6 +10,10 @@ modifier: osmosoft
 	color: #E2C1D6;
 }
 
+.tiddler .error.annotation .button{
+	display: inline-block;
+}
+
 #backstageArea #backstageToolbar a.task_tiddlyspace {
 	margin: 0px auto auto -75px;
 	font-weight: bold;
