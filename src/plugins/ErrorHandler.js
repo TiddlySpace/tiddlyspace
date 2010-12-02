@@ -1,15 +1,15 @@
 /***
 |''Name''|ErrorHandlerPlugin|
-|''Version''|0.4.0|
+|''Version''|0.4.1|
 |''Author''|Jon Robson|
 |''Description''|Localised tiddler save errors including edit conflict resolution.|
+|''CoreVersion''|2.6.1|
 |''Requires''|TiddlyWebConfig|
 ***/
-
 //{{{
 (function($) {
 
-var plugin = config.extensions.ServerSideSavingPlugin;
+var sssp = config.extensions.ServerSideSavingPlugin;
 
 var msgs = config.messages.editConflict = {
 	loading: "Loading..",
@@ -26,38 +26,38 @@ var msgs = config.messages.editConflict = {
 	diffTextTitle: "%0 - text [edit conflict %1]",
 	updating: "updating your version...",
 	diffHeader: ["Review the changes that have been made whilst you were editing this tiddler. ",
-			"Fold relevant changes back into your version.\n",
+		"Fold relevant changes back into your version.\n",
 		"{{removed{Red}}} highlight shows content removed. ",
 		"{{added{Green}}} highlight shows content added.\n"].join(""),
 	diffTextHeader: "View changes in text",
 	diffFieldsHeader: "View changes in fields"
 };
 
-var ext = config.extensions.errorHandler = {
+var plugin = config.extensions.errorHandler = {
 	diffTags: ["excludeLists", "excludeMissing", "excludeSearch"],
 	displayMessage: function(message, tiddler, context) {
 		var desc = context && context.httpStatus ? context.statusText :
-			plugin.locale.connectionError;
-		var reportArea = ext.reportError(tiddler.title);
+			sssp.locale.connectionError;
+		var reportArea = plugin.reportError(tiddler.title);
 		var msg = $("<div />").appendTo(reportArea);
 		if(message == "saveConflict") {
 			wikify(msgs.resolve, msg[0]);
 			var choiceArea = $("<div />").appendTo(reportArea)[0];
-			ext.editConflictHandler(choiceArea, tiddler);
+			plugin.editConflictHandler(choiceArea, tiddler);
 		} else {
-			msg.text(plugin.locale[message].format(tiddler.title, desc));
+			msg.text(sssp.locale[message].format(tiddler.title, desc));
 		}
 	},
 	editConflictHandler: function(container, tiddler) {
 		var title = tiddler.title;
 		var myrev = tiddler.fields["server.page.revision"];
 		// note user now needs to edit, fix problem and save. 
-			// todo: make sure this gets reset in save callback
+		// TODO: make sure this gets reset in save callback
 		store.getTiddler(title).fields["server.page.revision"] = "false";
 
 		var diffBtn = createTiddlyButton(container, msgs.reviewDiff, msgs.reviewDiffTooltip, function(ev) {
 			var title = $(ev.target).data("title");
-			ext.displayDiff(ev.target, store.getTiddler(title), myrev);
+			plugin.displayDiff(ev.target, store.getTiddler(title), myrev);
 		});
 		var saveBtn = createTiddlyButton(container, msgs.save, msgs.saveTooltip, function(ev) {
 				var title = $(ev.target).data("title");
@@ -66,7 +66,7 @@ var ext = config.extensions.errorHandler = {
 			});
 		var ignoreBtn = createTiddlyButton(container, msgs.discard, msgs.discardTooltip, function(ev) {
 			var title = $(ev.target).text(msgs.updating).data("title");
-			ext.resetToServerVersion(store.getTiddler(title));
+			plugin.resetToServerVersion(store.getTiddler(title));
 		});
 		$([diffBtn, ignoreBtn, saveBtn]).data("title", title);
 	},
@@ -82,12 +82,12 @@ var ext = config.extensions.errorHandler = {
 	},
 	makeDiffTiddler: function(title, diff) {
 		var newTiddler = new Tiddler(title);
-		var tags = ext.diffTags;
+		var tags = plugin.diffTags;
 		newTiddler.text = msgs.loading;
 		newTiddler.tags = diff ? tags.concat(["diff"]) : tags;
 		newTiddler = store.saveTiddler(newTiddler);
 		$.extend(store.getTiddler(title).fields,
-			config.defaultCustomFields); // allow option to save it.
+			config.defaultCustomFields); // allow option to save it
 		return newTiddler;
 	},
 	displayDiff: function(src, tiddler, latestRevision) {
@@ -97,9 +97,9 @@ var ext = config.extensions.errorHandler = {
 		var diffTitle = msgs.diffTitle.format(title, ts);
 		var diffTextTitle = msgs.diffTextTitle.format(title, ts);
 		var diffFieldsTitle = msgs.diffFieldTitle.format(title, ts);
-		ext.makeDiffTiddler(diffTextTitle, true);
-		ext.makeDiffTiddler(diffFieldsTitle, true);
-		var newTiddler = ext.makeDiffTiddler(diffTitle, false);
+		plugin.makeDiffTiddler(diffTextTitle, true);
+		plugin.makeDiffTiddler(diffFieldsTitle, true);
+		var newTiddler = plugin.makeDiffTiddler(diffTitle, false);
 		newTiddler.text = ['%0\n<<slider chkViewDiffText "%1" "%2">>\n',
 			'<<slider chkViewDiffField "%3" "%4">>'].join("").
 			format(msgs.diffHeader, diffTextTitle, msgs.diffTextHeader,
@@ -107,7 +107,7 @@ var ext = config.extensions.errorHandler = {
 		store.saveTiddler(newTiddler);
 
 		var callback = function(r) {
-			var text = ext.getDiffTiddlerTexts(r);
+			var text = plugin.getDiffTiddlerTexts(r);
 			store.getTiddler(diffTextTitle).text = text[0];
 			store.getTiddler(diffFieldsTitle).text = text[1];
 			story.refreshTiddler(diffTitle, null, true);
@@ -145,14 +145,11 @@ var ext = config.extensions.errorHandler = {
 	}
 };
 
-
-plugin.reportFailure = function(message, tiddler, context) {
-	config.options.chkViewDiffText = config.options.chkViewDiffText == "undefined" ?
+sssp.reportFailure = function(message, tiddler, context) {
+	config.options.chkViewDiffText = config.options.chkViewDiffText === undefined ?
 		true : config.options.chkViewDiffText;
-	config.options.chkViewDiffFields = config.options.chkViewDiffFields == "undefined" ?
-		false : config.options.chkViewDiffFields;
-
-	ext.displayMessage(message, tiddler, context);
+	config.options.chkViewDiffFields = config.options.chkViewDiffFields || false;
+	plugin.displayMessage(message, tiddler, context);
 };
 
 })(jQuery);
