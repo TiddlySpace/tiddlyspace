@@ -250,7 +250,7 @@ store.addNotification("StyleSheetBackstage", refreshStyles);
 
 // option for default privacy setting
 config.optionsDesc.chkPrivateMode = "Set your default privacy mode to private";
-config.optionSource.chkPrivateMode = "setting";
+config.optionsSource.chkPrivateMode = "setting";
 config.options.chkPrivateMode = config.options.chkPrivateMode || false;
 config.defaultCustomFields["server.workspace"] = plugin.
 	getCurrentWorkspace(config.options.chkPrivateMode ? "private" : "public");
