@@ -80,6 +80,14 @@ test("userButton (not logged in)", function() {
 	strictEqual(user.length, 0);
 });
 
+test("userButton (not logged in and unplugged)", function() {
+	var el = $("<div />")[0];
+	var task = $("<div />").attr("task", "user").text("foo").appendTo(el);
+	backstage.tiddlyspace.userButton(el, { anon: true, unplugged: true });
+	var user = $("[task=user]", el);
+	strictEqual(user.text(), config.tasks.user.unpluggedText);
+});
+
 test("spaceButton", function() {
 	var el = $("<div />")[0];
 	var task = $("<div />").attr("task", "space").text(":D").appendTo(el);
@@ -88,6 +96,14 @@ test("spaceButton", function() {
 	strictEqual(space.length, 1);
 	strictEqual(space.text(), "space: foo");
 	strictEqual($("[site-icon=foo]", el).length, 1);
+});
+
+test("spaceButton (unplugged)", function() {
+	var el = $("<div />")[0];
+	var task = $("<div />").attr("task", "space").text(":D").appendTo(el);
+	backstage.tiddlyspace.spaceButton(el);
+	var space = $("[task=space]:hidden", el);
+	strictEqual(space.length, 1);
 });
 
 test("tweakMiddleButton (unsynced changes exist)", function() {
