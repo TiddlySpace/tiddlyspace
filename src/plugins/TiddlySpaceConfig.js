@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.7.0|
+|''Version''|0.7.1|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -190,7 +190,8 @@ if(window.location.protocol != "file:") {
 // hijack saveChanges to ensure SystemSettings is private by default
 var _saveChanges = saveChanges;
 saveChanges = function(onlyIfDirty, tiddlers) {
-	if(tiddlers && tiddlers.length == 1 && tiddlers[0].title == "SystemSettings") {
+	if(tiddlers && tiddlers.length == 1 &&
+			tiddlers[0] && tiddlers[0].title == "SystemSettings") {
 		var fields = tiddlers[0].fields;
 		delete fields["server.recipe"];
 		fields["server.bag"] = plugin.getCurrentBag("private");
