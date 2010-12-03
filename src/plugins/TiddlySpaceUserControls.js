@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceUserControls|
-|''Version''|0.5.4|
+|''Version''|0.5.5|
 |''Description''|registration and login UIs|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceUserControls.js|
@@ -137,7 +137,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	login: function(username, password, callback, errback) {
 		var challenger = "cookie_form";
 		var uri = "%0/challenge/%1".format([tweb.host, challenger]);
-		$.ajax({
+		ajaxReq({
 			url: uri,
 			type: "POST",
 			data: {
