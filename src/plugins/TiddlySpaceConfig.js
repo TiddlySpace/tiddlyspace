@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.7.2|
+|''Version''|0.7.3|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -189,6 +189,9 @@ if(window.location.protocol != "file:") {
 	if(config.macros.fileImport) {
 		$.extend(config.macros.importTiddlers, config.macros.fileImport);
 	}
+} else { // setup autosave by default.
+	var autoSave = config.options.chkAutoSave;
+	config.options.chkAutoSave = autoSave == undefined ? true : autoSave;
 }
 
 // hijack saveChanges to ensure SystemSettings is private by default
