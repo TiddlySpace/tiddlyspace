@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.6.3|
+|''Version''|0.6.4|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
 |''Contributors''|Jon Lister, Jon Robson, Colm Britton|
@@ -33,7 +33,8 @@ config.tasks.login = {
 
 config.tasks.user = {
 	text: "user: ",
-	tooltip: "user control panel"
+	tooltip: "user control panel",
+	unpluggedText: "unplugged user"
 };
 
 config.tasks.space = {
@@ -110,7 +111,9 @@ backstage.tiddlyspace = {
 	userButton: function(backstageArea, user) {
 		// override user button (logged in) to show username
 		var userBtn = $("[task=user]", backstageArea).empty();
-		if(user.anon) {
+		if(user.unplugged && user.anon) {
+			$("<span />").text(tasks.user.unpluggedText).appendTo(userBtn);
+		} else if(!user.unplugged && user.anon) {
 			userBtn.remove();
 		} else {
 			$("<span />").text(tasks.user.text).appendTo(userBtn);
@@ -162,9 +165,13 @@ backstage.tiddlyspace = {
 		}
 		config.macros.image.renderImage(backstageLogo, iconName, { width: 24, height: 24 });
 	},
-	spaceButton: function(backstageArea) {
+	spaceButton: function(backstageArea, user) {
 		// override space button to show SiteIcon
-		var btn = $("[task=space]", backstageArea);
+		var btn = $("[task=space]", backstageArea).show();
+		if(user && user.anon && user.unplugged) {
+			btn.hide();
+			return;
+		}
 		btn.empty();
 		tiddlyspace.renderAvatar(btn[0], currentSpace,
 			{ imageOptions: { imageClass:"spaceSiteIcon", height: 24, width: 24 },
@@ -174,7 +181,7 @@ backstage.tiddlyspace = {
 	},
 	loginButton: function(backstageArea, user) {
 		var loginBtn = $("[task=login]", backstageArea).empty();
-		if(user.anon) {
+		if(user.anon && !user.unplugged) {
 			$("<span />").text(tasks.login.text).appendTo(loginBtn);
 			var container = $("<span />").appendTo(loginBtn)[0];
 			imageMacro.renderImage(container, commonUrl.format("defaultUserIcon"),
@@ -204,7 +211,7 @@ backstage.init = function() {
 		bs.showButton();
 		bs.hideButton();
 		bs.middleButton(backstageArea, user);
-		bs.spaceButton(backstageArea);
+		bs.spaceButton(backstageArea, user);
 		bs.loginButton(backstageArea, user);
 		bs.addClasses(backstageArea); // for IE styling purposes
 		bs.checkSyncStatus();
