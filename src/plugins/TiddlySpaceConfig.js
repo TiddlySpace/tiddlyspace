@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.7.1|
+|''Version''|0.7.2|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -130,6 +130,10 @@ var plugin = config.extensions.tiddlyspace = {
 	// returns the URL based on a server_host object (scheme, host, port) and an
 	// optional subdomain
 	getHost: function(host, subdomain) {
+		if(host === undefined) { // offline
+			tweb.status.server_host = {}; // prevents exceptions further down the stack -- XXX: hacky workaround, breaks encapsulation
+			return null;
+		}
 		subdomain = subdomain ? subdomain + "." : "";
 		var url = "%0://%1%2".format(host.scheme, subdomain, host.host);
 		var port = host.port;
