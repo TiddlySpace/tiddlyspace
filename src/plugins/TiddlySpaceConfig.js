@@ -180,7 +180,11 @@ tweb.getStatus(function(status) {
 	config.messages.tsVersion = status.version;
 });
 
-if(window.location.protocol != "file:") {
+if(window.location.protocol == "file:") {
+	// enable AutoSave by default
+	config.options.chkAutoSave = config.options.chkAutoSave === undefined ?
+		true : config.options.chkAutoSave;
+} else {
 	// set global read-only mode based on membership heuristics
 	var indicator = store.getTiddler("SiteTitle") || tiddler;
 	readOnly = !(recipe.split("_").pop() == "private" ||
