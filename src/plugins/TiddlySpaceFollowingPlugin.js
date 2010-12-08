@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.13|
+|''Version''|0.6.13dev|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -48,6 +48,7 @@ If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default 
 
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
+var currentSpace = tiddlyspace.currentSpace.name;
 
 var shadows = config.shadowTiddlers;
 config.annotations.ScanTemplate = "This tiddler is a template used in the display of tiddlers from spaces you are following. Use the wildcard {{{$1}}} to access the spaceField. To access attributes use the view macro e.g. {{{<<view title text>>}}}";
@@ -71,12 +72,12 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 	var adaptor = store.getTiddlers()[0].getAdaptor();
 	var isPublic = endsWith(workspace, "_public");
 	var space = tiddlyspace.resolveSpaceName(workspace);
-	if(tiddlyspace.currentSpace.name == space) {
+	if(currentSpace == space) {
 		space = isPublic ? "public" : "private";
 	} else {
-		space = "@%0".format([space]);
+		space = "@%0".format(space);
 	}
-	var localTitle = "%0 [%1]".format([title, space]);
+	var localTitle = "%0 [%1]".format(title, space);
 	var tiddler = new Tiddler(localTitle);
 	tiddler.text = "Please wait while this tiddler is retrieved...";
 	tiddler.fields.doNotSave = "true";
@@ -108,7 +109,7 @@ tiddlyspace.displayReplyButton = function(el, tiddler) {
 		el.onclick = null;
 	} 
 	var btn = $("<button />").addClass("reply").appendTo(el);
-	var publicBag = "%0_public".format([tiddlyspace.currentSpace.name]);
+	var publicBag = "%0_public".format(currentSpace);
 	var serverTitle = tiddler.fields["server.title"];
 	var yourTiddler = store.getTiddler(serverTitle);
 	if(yourTiddler) {
@@ -123,13 +124,14 @@ tiddlyspace.displayReplyButton = function(el, tiddler) {
 			var text = yourTiddler ? yourTiddler.text : "";
 			var newFields = {};
 			merge(newFields, config.defaultCustomFields);
-			merge(newFields, { "server.workspace": "bags/%0".format([publicBag]) });
+			merge(newFields, { "server.workspace": "bags/%0".format(publicBag) });
 			var customFields = String.encodeHashMap(newFields);
 			if(customFields) {
 				story.addCustomFields(tiddlerEl, customFields);
 			}
-			var replyTemplate = "in reply to @%0:\n<<<\n%1\n<<<\n\n%2".format([tiddler.modifier, tiddler.text, text]);
+			var replyTemplate = "in reply to @%0:\n<<<\n%1\n<<<\n\n%2".format(tiddler.modifier, tiddler.text, text);
 			$("[edit=text]", tiddlerEl).val(replyTemplate);
+			
 		} else {
 			story.displayTiddler(ev.target, serverTitle, DEFAULT_VIEW_TEMPLATE, false, null, null);
 		}
@@ -214,8 +216,8 @@ var followMacro = config.macros.followTiddlers = {
 		var x = [];
 		for(var i = 0; i < followers.length; i++) {
 			var name = followers[i];
-			if(name != tiddlyspace.currentSpace.name) {
-				x.push("%0_public".format([name]));
+			if(name != currentSpace) {
+				x.push("%0_public".format(name));
 			}
 		}
 		return x;
@@ -224,7 +226,7 @@ var followMacro = config.macros.followTiddlers = {
 		// returns a list of spaces being followed by the existing space
 		var followersCallback = function(user) {
 			if(!user.anon) {
-				scanMacro.scan(null, { searchField: "bag", searchValues: ["%0_public".format([user.name])],
+				scanMacro.scan(null, { searchField: "bag", searchValues: ["%0_public".format(user.name)],
 					spaceField: "title", template: null, tag: "follow", cache: true,
 					callback: function(tiddlers) {
 						var followers = [];
@@ -386,7 +388,7 @@ var followersMacro = config.macros.followers = {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
 				var options = scanMacro.getOptions(paramString);
-				$.extend(options, { searchValues: [user.name, "@%0".format([user.name])],
+				$.extend(options, { searchValues: [user.name, "@%0".format(user.name)],
 					spaceField: "bag", tag: followMacro.followTag,
 					template: options.template ? options.template : "FollowersTemplate"
 				});
@@ -394,7 +396,7 @@ var followersMacro = config.macros.followers = {
 			}
 		};
 		if(!username) {
-			followersCallback({ name: tiddlyspace.currentSpace.name });
+			followersCallback({ name: currentSpace });
 		} else {
 			followersCallback({ name: username });
 		}
@@ -421,7 +423,7 @@ var followingMacro = config.macros.following = {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
 				var options = scanMacro.getOptions(paramString);
-				$.extend(options, { searchValues: ["%0_public".format([user.name])],
+				$.extend(options, { searchValues: ["%0_public".format(user.name)],
 					tag: followMacro.followTag, searchField: "bag", spaceField: "title",
 					template: options.template ? options.template : "FollowingTemplate"
 				});
@@ -429,7 +431,7 @@ var followingMacro = config.macros.following = {
 			}
 		};
 		if(!username) {
-			followingCallback({ name: tiddlyspace.currentSpace.name });
+			followingCallback({ name: currentSpace });
 		} else {
 			followingCallback({ name: username });
 		}
@@ -456,7 +458,7 @@ config.macros.view.views.spaceLink = function(value, place, params, wikifier,
 				ev.preventDefault();
 				var el = $(ev.target);
 				tiddlyspace.displayServerTiddler(el[0], el.attr("tiddler"),
-					"bags/%0_public".format([ el.attr("tiddlyspace") ]));
+					"bags/%0_public".format(el.attr("tiddlyspace")));
 				return false;
 			});
 		}
