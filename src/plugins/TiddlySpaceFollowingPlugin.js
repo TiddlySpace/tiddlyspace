@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.15|
+|''Version''|0.6.16|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -292,6 +292,9 @@ var scanMacro = config.macros.tsScan = {
 		}
 	},
 	constructSearchUrl: function(host, options) {
+		if(options.url) {
+			return options.url;
+		}
 		var inputs = options.searchValues;
 		var tag = options.tag;
 		var searchField = options.searchField || "title";
@@ -360,9 +363,10 @@ var scanMacro = config.macros.tsScan = {
 		var sort = args.sort ? args.sort[0] : false;
 		var showBags = args.show ? args.show : false;
 		var hideBags = args.hide ? args.hide : false;
+		var url = args.url ? args.url[0] : false;
 		return { searchField: searchField, searchValues: searchValues,
 			template: template, filter: filter, sort: sort, hideBags: hideBags, showBags: showBags,
-			query: query, tag: tag, fat: fat, spaceField: spaceField };
+			query: query, tag: tag, fat: fat, spaceField: spaceField, url: url };
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var container = $("<div />").addClass("scanResults").appendTo(place)[0];
