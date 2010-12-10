@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.14|
+|''Version''|0.6.15|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -80,7 +80,6 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 	var localTitle = "%0 [%1]".format(title, space);
 	var tiddler = new Tiddler(localTitle);
 	tiddler.text = "Please wait while this tiddler is retrieved...";
-	tiddler.fields.doNotSave = "true";
 	store.addTiddler(tiddler);
 	src = story.displayTiddler(src || null, tiddler.title);
 	tweb.getStatus(function(status) {
@@ -92,6 +91,8 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 		var getCallback = function(context, userParams) {
 			var tiddler = context.tiddler;
 			tiddler.title = localTitle;
+			tiddler.fields["tiddler.source"] = workspace;
+			tiddler.fields["server.title"] = title;
 			store.addTiddler(tiddler);
 			story.refreshTiddler(localTitle, null, true); // overriding existing allows updating
 			if(callback) {
