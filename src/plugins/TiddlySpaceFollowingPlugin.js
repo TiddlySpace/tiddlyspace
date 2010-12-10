@@ -210,15 +210,10 @@ var followMacro = config.macros.followTiddlers = {
 		ev.stopPropagation();
 		return popup;
 	},
-	_getFollowerBags: function(followers) {
-		var x = [];
-		for(var i = 0; i < followers.length; i++) {
-			var name = followers[i];
-			if(name != currentSpace) {
-				x.push("%0_public".format(name));
-			}
-		}
-		return x;
+	_getFollowerBags: function(followers) { // XXX: private or not?
+		return $.map(followers, function(name, i) {
+			return name != currentSpace ? "%0_public".format(name) : null;
+		});
 	},
 	getFollowers: function(callback, username) {
 		// returns a list of spaces being followed by the existing space
