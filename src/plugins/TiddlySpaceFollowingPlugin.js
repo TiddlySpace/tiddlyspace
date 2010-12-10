@@ -309,22 +309,9 @@ var scanMacro = config.macros.tsScan = {
 		var locale = followersMacro.locale;
 		options.template = options.template ? options.template : "ScanTemplate";
 		followMacro.getHosts(function(host, tsHost) {
-			var inputs = options.searchValues;
-			var tag = options.tag;
 			$(place).text(followersMacro.locale.pleaseWait);
 			options = options ? options: {};
-			options.filter = options.filter;
-			searchField = options.searchField || "title";
-			var searchQuery = [];
-			for(var i = 0; i < inputs.length; i++) {
-				searchQuery.push('%0:"%1"'.format([searchField, inputs[i]]));
-			}
-			var query = searchQuery.join(" OR ");
-			query = tag ? "(%0) AND tag:%1;".format([query, tag]) : query;
-			query = options.query ? "%0;%1;".format([query, options.query]) : query;
-			query = options.fat ? "%0&fat=y".format([query]) : query;
-
-			var url = '%0/search?q=%1'.format([host, query]);
+			var url = scanMacro.constructSearchUrl(host, options);
 			if(options.cache && scanMacro.scanned[url]) {
 				var tiddlers = scanMacro.scanned[url].tiddlers;
 				scanMacro._scanCallback(place, tiddlers, options);
