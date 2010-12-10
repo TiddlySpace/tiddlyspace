@@ -82,7 +82,8 @@ test("makeDiffTiddler", function() {
 	var tid1 = ext.makeDiffTiddler("diff1", true);
 	var tid2 = ext.makeDiffTiddler("diff2", false);
 	strictEqual(tid1.tags.contains("diff"), true);
-	strictEqual(tid1.fields["server.workspace"], "bags/foo_public");
+	strictEqual(tid1.fields["server.workspace"],
+		config.defaultCustomFields["server.workspace"]);
 	strictEqual(tid2.tags.contains("diff"), false);
 });
 
