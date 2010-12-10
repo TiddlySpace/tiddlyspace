@@ -92,4 +92,37 @@ test("tsScan.getOptions", function() {
 	strictEqual(options.searchValues[0], "SiteInfo");
 });
 
+test("tsScan.constructSearchUrl", function() {
+	var url = config.macros.tsScan.constructSearchUrl("", {
+		searchField: "title",
+		searchValues: ["hello", "test"],
+		tag: "foo"
+	});
+	var url2 = config.macros.tsScan.constructSearchUrl("", {
+		searchField: "tag",
+		searchValues: ["hello"],
+		fat: "y"
+	});
+	var url3 = config.macros.tsScan.constructSearchUrl("", {
+		searchValues: ["@jon"],
+		tag: "foo",
+		query: "select=modified:>20101202000000"
+	});
+	var url4 = config.macros.tsScan.constructSearchUrl("", {
+		searchField: "tag",
+		searchValues: ["great"]
+	});
+	var url5 = config.macros.tsScan.constructSearchUrl("", {
+		searchField: "tag",
+		searchValues: ["great"],
+		url: "/search?q=myquery"
+	});
+
+	strictEqual(url, '/search?q=(title:"hello" OR title:"test") AND tag:foo');
+	strictEqual(url2, '/search?q=tag:"hello"&fat=y');
+	strictEqual(url3, '/search?q=(title:"@jon") AND tag:foo;select=modified:>20101202000000;');
+	strictEqual(url4, '/search?q=tag:"great"');
+	strictEqual(url5, '/search?q=myquery');
+});
+
 })(QUnit.module, jQuery);

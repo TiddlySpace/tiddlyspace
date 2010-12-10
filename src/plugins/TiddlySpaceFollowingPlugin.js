@@ -288,6 +288,23 @@ var scanMacro = config.macros.tsScan = {
 			options.callback(tiddlers);
 		}
 	},
+	constructSearchUrl: function(host, options) {
+		if(options.url) {
+			return options.url;
+		}
+		var inputs = options.searchValues;
+		var tag = options.tag;
+		var searchField = options.searchField || "title";
+		var searchQuery = [];
+		for(var i = 0; i < inputs.length; i++) {
+			searchQuery.push('%0:"%1"'.format(searchField, inputs[i]));
+		}
+		var query = searchQuery.join(" OR ");
+		query = tag ? "(%0) AND tag:%1".format(query, tag) : query;
+		query = options.query ? "%0;%1;".format(query, options.query) : query;
+		query = options.fat ? "%0&fat=y".format(query) : query;
+		return '%0/search?q=%1'.format(host, query);
+	},
 	scan: function(place, options) {
 		var locale = followersMacro.locale;
 		options.template = options.template ? options.template : "ScanTemplate";
