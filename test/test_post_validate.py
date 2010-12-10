@@ -21,7 +21,7 @@ from tiddlyweb.util import sha
 from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector, InvalidNonceError
 
 
-BAD_MATCH_MESSAGE = 'csrf token doesn\'t match'
+BAD_MATCH_MESSAGE = 'CSRF token does not match'
 
 
 def setup_module(module):
