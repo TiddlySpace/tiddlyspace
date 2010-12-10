@@ -90,6 +90,53 @@ test("tsScan.getOptions", function() {
 	};
 	var options = config.macros.tsScan.getOptions(paramString, "http://foo");
 	strictEqual(options.searchValues[0], "SiteInfo");
+	strictEqual(options.searchField, "title");
+	strictEqual(options.template, false);
+	strictEqual(options.spaceField, "bag");
+	strictEqual(options.fat, false);
+	strictEqual(options.query, false);
+	strictEqual(options.hideBags, false);
+	strictEqual(options.showBags, false);
+	strictEqual(options.filter, false);
+	strictEqual(options.tag, false);
+	strictEqual(options.sort, false);
+});
+
+test("tsScan.getOptions 2", function() {
+	var paramString = {
+		parseParams: function() {
+			return [
+				{
+					name: ["SiteInfo"],
+					searchField: ["bag"],
+					spaceField: ["title"],
+					bag: ["foo", "bar"],
+					template: ["Foo"],
+					fat: ["yes"],
+					hide: ["jon_public", "ben_public"],
+					show: ["fnd_public"],
+					filter: ["[tag[foo]]"],
+					query: ["select=tag:bar"],
+					tag: ["follow"],
+					sort: ["modified"]
+				}
+			];
+		}
+	};
+	var options = config.macros.tsScan.getOptions(paramString, "http://foo");
+	strictEqual(options.searchValues[0], "foo");
+	strictEqual(options.searchValues[1], "bar");
+	strictEqual(options.searchField, "bag");
+	strictEqual(options.template, "Foo");
+	strictEqual(options.spaceField, "title");
+	strictEqual(options.fat, true);
+	strictEqual(options.query, "select=tag:bar");
+	strictEqual(options.hideBags.length, 2);
+	strictEqual(options.hideBags.contains("jon_public"), true);
+	strictEqual(options.showBags.length, 1);
+	strictEqual(options.filter, "[tag[foo]]");
+	strictEqual(options.tag, "follow");
+	strictEqual(options.sort, "modified");
 });
 
 test("tsScan.constructSearchUrl", function() {

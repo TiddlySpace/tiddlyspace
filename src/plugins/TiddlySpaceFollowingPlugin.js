@@ -344,25 +344,24 @@ var scanMacro = config.macros.tsScan = {
 	},
 	getOptions: function(paramString, tiddler) {
 		var args = paramString.parseParams("name", null, true, false, true)[0];
-		var tag = args.tag ? args.tag[0] : false;
-		var titles = args.title;
-		var spaceField = args.spaceField ? args.spaceField[0] : "bag";
-		var searchField = args.searchField ? args.searchField[0] : "title";
+		var options = { query: false, sort: false, tag: false, template: false, showBags: args.show || false,
+			hideBags: args.hide || false, filter: false, spaceField: "bag", searchField: "title", fat: false };
+		for(var name in args) {
+			if(name != "name") {
+				if(name == "fat") {
+					options[name] = true;
+				} else {
+					options[name] = args[name][0];
+				}
+			}
+		}
 		// if user has set searchField to modifier, then use the modifiers value if available otherwise use searchValues.
+		var searchField = options.searchField;
 		var searchValues = args[searchField] ? args[searchField] : args.searchValues;
 		// if neither of those were used use the first parameter
 		var defaultValues = tiddler ? [ tiddler.title ] : [];
-		searchValues = searchValues ? searchValues : ( args.name ? [args.name[0]] : defaultValues);
-		var fat = args.fat ? true : false;
-		var template = args.template ? args.template[0] : false;
-		var filter = args.filter ? args.filter[0] : false;
-		var query = args.query ? args.query[0] : false;
-		var sort = args.sort ? args.sort[0] : false;
-		var showBags = args.show ? args.show : false;
-		var hideBags = args.hide ? args.hide : false;
-		return { searchField: searchField, searchValues: searchValues,
-			template: template, filter: filter, sort: sort, hideBags: hideBags, showBags: showBags,
-			query: query, tag: tag, fat: fat, spaceField: spaceField };
+		options.searchValues = searchValues ? searchValues : ( args.name ? [args.name[0]] : defaultValues);
+		return options;
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var container = $("<div />").addClass("scanResults").appendTo(place)[0];
