@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.13|
+|''Version''|0.3.14|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -95,7 +95,7 @@ var macro = config.macros.binaryUpload = {
 		// we need to go somewhere afterwards to ensure the onload event triggers
 		var redirectTo = "/%0/tiddlers.txt?select=title:%1".
 			format(workspace, fileName);
-		var token = tiddlyspace.getCSRFToken();
+		var token = tiddlyspace ? tiddlyspace.getCSRFToken() : "";
 		var action = "%0?csrf_token=%1&redirect=%2"
 			.format(baseURL, token, redirectTo);
 		form[0].action = action; // dont use jquery to work with ie
