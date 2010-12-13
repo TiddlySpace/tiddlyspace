@@ -21,6 +21,9 @@ from tiddlyweb.util import sha
 from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector, InvalidNonceError
 
 
+BAD_MATCH_MESSAGE = 'CSRF token does not match'
+
+
 def setup_module(module):
     make_test_env(module)
     # we have to have a function that returns the callable,
@@ -109,7 +112,7 @@ def test_validator_nonce_fail():
         result = csrf.check_csrf(environ, nonce)
         raise AssertionError('check_csrf succeeded when nonce didn\'t match')
     except InvalidNonceError, exc:
-        assert exc.message == 'Nonce doesn\'t match'
+        assert exc.message == BAD_MATCH_MESSAGE
 
 def test_validator_nonce_hash_fail():
     """
@@ -140,7 +143,7 @@ def test_validator_nonce_hash_fail():
         result = csrf.check_csrf(environ, nonce)
         raise AssertionError('check_csrf succeeded when nonce didn\'t match')
     except InvalidNonceError, exc:
-        assert exc.message == 'Nonce doesn\'t match'
+        assert exc.message == BAD_MATCH_MESSAGE
 
 def test_post_data_form_urlencoded():
     """

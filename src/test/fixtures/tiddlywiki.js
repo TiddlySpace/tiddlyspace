@@ -8,6 +8,7 @@ ajaxReq = NOP;
 refreshStyles = NOP;
 saveChanges = NOP;
 autoSaveChanges = NOP;
+saveSystemSetting = NOP;
 createTiddlyButton = NOP;
 getTiddlyLinkInfo = NOP;
 createTiddlyLink = NOP;

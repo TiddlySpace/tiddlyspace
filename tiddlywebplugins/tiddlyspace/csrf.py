@@ -86,7 +86,7 @@ class CSRFProtector(object):
         try:
             assert new_nonce == nonce
         except AssertionError:
-            raise InvalidNonceError('Nonce doesn\'t match')
+            raise InvalidNonceError('CSRF token does not match')
 
         return True
 
