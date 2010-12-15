@@ -1,12 +1,12 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.14|
+|''Version''|0.3.15|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
 |''Description''|Upload a binary file to TiddlyWeb|
 |''CoreVersion''|2.6.1|
-|''Requires''|TiddlySpaceConfig|
+|''Requires''|TiddlySpaceConfig TiddlyWebConfig|
 !Usage
 {{{
 <<binaryUpload bag:<name> edit:tags edit:title tags:<default tags> title:<title> >>
@@ -27,7 +27,6 @@ tiddlywebplugins.form
 var tiddlyspace = config.extensions.tiddlyspace;
 
 var macro = config.macros.binaryUpload = {
-	defaultWorkspace: config.defaultCustomFields["server.workspace"],
 	locale: {
 		titleDefaultValue: "Please enter a title...",
 		tagsDefaultValue: "Please enter some tags...",
@@ -132,7 +131,7 @@ var macro = config.macros.binaryUpload = {
 			};
 		var defaults = config.defaultCustomFields;
 		place = $("<div />").addClass("container").appendTo(place)[0];
-		var workspace = bag ? "bags/%0".format(bag) : macro.defaultWorkspace;
+		var workspace = bag ? "bags/%0".format(bag) : config.defaultCustomFields["server.workspace"];
 		var baseURL = defaults["server.host"];
 		baseURL += (baseURL[baseURL.length - 1] !== "/") ? "/" : "";
 		baseURL = "%0%1/tiddlers".format(baseURL, workspace);
@@ -204,7 +203,7 @@ var macro = config.macros.binaryUpload = {
 					image.refreshImage("%0/%1/tiddlers/%2".format(config.extensions.tiddlyweb.host, workspace, title));
 				}
 			} else {
-				displayMessage(locale.loadError.format(title));
+				displayMessage(macro.locale.loadError.format(title));
 			}
 		});
 	}
