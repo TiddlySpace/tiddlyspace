@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.14|
+|''Version''|0.6.15|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
@@ -51,10 +51,10 @@ var tiddlyspace = config.extensions.tiddlyspace;
 var currentSpace = tiddlyspace.currentSpace.name;
 
 var shadows = config.shadowTiddlers;
-config.annotations.ScanTemplate = "This tiddler is a template used in the display of tiddlers from spaces you are following. Use the wildcard {{{$1}}} to access the spaceField. To access attributes use the view macro e.g. {{{<<view title text>>}}}";
+config.annotations.ScanTemplate = "This tiddler is the default template used in the display of tiddlers founding using the tsScan macro. To access attributes use the view macro e.g. {{{<<view title text>>}}}";
 shadows.ScanTemplate = "<<view modifier SiteIcon width:24 height:24 spaceLink:yes label:no>> <<view title link>>";
-shadows.FollowersTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> @$1";
-shadows.FollowingTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> @$1";
+shadows.FollowersTemplate = "<<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> <<view server.bag spaceLink>>";
+shadows.FollowingTemplate = "<<view title SiteIcon width:24 height:24 spaceLink:yes label:no>> <<view title spaceLink>>";
 shadows.FollowTiddlersBlackList = "";
 shadows.FollowTiddlersHeading = "There are tiddlers in spaces you follow using the follow tag which use the title <<view title text>>";
 shadows.FollowTiddlersTemplate = ["* <<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> ",
@@ -245,12 +245,10 @@ var scanMacro = config.macros.tsScan = {
 	init: function () {
 		this.scanned = {};
 	},
-	_scanCallback: function(place, jsontiddlers, options) {
-		var locale = followersMacro.locale;
-		var spaceField = options.spaceField || "bag";
+	_tiddlerfy: function(jsontiddlers, options) {
 		var tiddlers = [];
-		for(var i = 0; i < jsontiddlers.length; i++) {
-			var t = jsontiddlers[i];
+		var spaceField = options.spaceField || "bag"; // TODO: phase out use view types instead
+		$.each(jsontiddlers, function(i, t) {
 			var use = false;
 			if(!options.showBags || (options.showBags && options.showBags.contains(t.bag))) {
 				use = true;
@@ -264,7 +262,13 @@ var scanMacro = config.macros.tsScan = {
 				tiddler.fields["server.space"] = tiddlyspace.resolveSpaceName(spaceName);
 				tiddlers.push(tiddler);
 			}
-		}
+		});
+		return tiddlers;
+	},
+	_scanCallback: function(place, jsontiddlers, options) {
+		var locale = followersMacro.locale;
+		var tiddlers = scanMacro._tiddlerfy(jsontiddlers, options);
+		
 		if(options.sort) {
 			tiddlers = store.sortTiddlers(tiddlers, options.sort);
 		}
@@ -276,7 +280,8 @@ var scanMacro = config.macros.tsScan = {
 			var list = $("<ul />").appendTo(place)[0];
 			scanMacro.template(list, tiddlers, options.template);
 			if(tiddlers.length === 0) {
-				$("<li />").text(locale.noone).appendTo(list);
+				$("<li />").text(options.emptyMessage || locale.noone).appendTo(list);
+				$(list).addClass("emptyList");
 			}
 		}
 		if(options.callback) {
@@ -300,7 +305,7 @@ var scanMacro = config.macros.tsScan = {
 		query = options.fat ? "%0&fat=y".format(query) : query;
 		return '%0/search?q=%1'.format(host, query);
 	},
-	scan: function(place, options) {
+	scan: function(place, options) { // TODO: make use of list macro with url filter
 		var locale = followersMacro.locale;
 		options.template = options.template ? options.template : "ScanTemplate";
 		followMacro.getHosts(function(host, tsHost) {
@@ -328,7 +333,7 @@ var scanMacro = config.macros.tsScan = {
 			}
 		});
 	},
-	template: function(place, tiddlers, template) {
+	template: function(place, tiddlers, template) { // TODO: make use of list macro.
 		for(var i = 0; i < tiddlers.length; i++) {
 			var tiddler = tiddlers[i];
 			var item = $('<li class="spaceName" />').appendTo(place)[0];
@@ -340,7 +345,8 @@ var scanMacro = config.macros.tsScan = {
 	getOptions: function(paramString, tiddler) {
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var options = { query: false, sort: false, tag: false, template: false, showBags: args.show || false,
-			hideBags: args.hide || false, filter: false, spaceField: "bag", searchField: "title", fat: false };
+			hideBags: args.hide || false, filter: false, spaceField: "bag", searchField: "title", fat: false,
+			emptyMessage: false };
 		for(var name in args) {
 			if(name != "name") {
 				if(name == "fat") {
