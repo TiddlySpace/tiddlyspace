@@ -28,15 +28,23 @@ Key}}}
 
 !Menu
 {{tiddlyspaceMenu{
-<<message messages.memberStatus>>
-
+<<message messages.memberStatus>> <<homeLink>>
 {{unsyncedList{<<message messages.syncListHeading>> <<list filter [is[unsynced]]>>}}}
 
-<<homeLink>> [[help|@@docs]] [[blog|@@blog]] [[featured|@@featured]]
-
-----
+<<tabs txtTiddlySpaceTab
+search "search across TiddlySpace" Backstage##Search
+help "quick access to useful space resources" Backstage##Resources
+>>
 running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddlyspace_version>>
 }}}
+
+!Resources
+[[blog|@@blog]]
+[[documentation|@@docs]]
+[[featured spaces|@@featured]]
+
+!Search
+<<tsSearch>>
 
 !Space
 <<followSpace>>
