@@ -404,4 +404,8 @@ a.baskstageTask.task_user {
 .unsyncedList {
 	display: none;
 }
+
+.notFound td .externalLink {
+	display: none;
+}
 /*}}}*/
