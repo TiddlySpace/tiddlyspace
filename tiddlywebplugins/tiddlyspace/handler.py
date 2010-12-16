@@ -5,6 +5,7 @@ The extensions and modifications to the default TiddlyWeb routes.
 """
 
 import simplejson
+from datetime import datetime
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
@@ -22,6 +23,7 @@ from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
 
+from tiddlywebplugins.tiddlyspace.csrf import gen_nonce, get_nonce_components
 from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.web import (determine_host,
         determine_space, determine_space_recipe)
@@ -212,13 +214,17 @@ def _send_safe_mode(environ, start_response):
     and we don't want that.
     """
     environ['tiddlyweb.title'] = 'Confirm Safe Mode'
+    now = datetime.now().strftime('%Y%m%d%H')
+    user, space, secret = get_nonce_components(environ)
+    csrf_token = gen_nonce(user, space, now, secret)
     start_response('200 OK', [('Content-Type', 'text/html; charset=UTF-8')])
     return ["""
 <div id='content'><div class='tiddler'>
 <form method='POST'>
 <p>Are you sure you wish to run safe mode?</p>
+<input type="hidden" name="csrf_token" value="%s" />
 <input type='submit' value='Yes' />
 </form>
 <p><a href='/'>Return to my Space.</a></p>
 </div></div>
-"""]
+""" % csrf_token]
