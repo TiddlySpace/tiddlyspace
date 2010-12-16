@@ -1,9 +1,11 @@
 (function(module, $) {
 
-var _image, _binaryTiddlersPlugin, _avatar, _filterTiddlers, _refreshAllTiddlers, refreshed;
+var _image, _avatar, _filterTiddlers, _refreshAllTiddlers, refreshed, _unplugged;
 
 module("TiddlySpaceBackstage plugin", {
 	setup: function() {
+		_unplugged = config.unplugged;
+		config.unplugged =  false;
 		$('<div id="backstagePanel"><div class="tiddlyspaceMenu"><div class="unsyncedList"></div></div></div>').
 			appendTo(document.body);
 		$('<div task="tiddlyspace"><div class="iconContainer"></div></div>').appendTo(document.body);
@@ -27,12 +29,12 @@ module("TiddlySpaceBackstage plugin", {
 	},
 	teardown: function() {
 		config.macros.image = _image;
-		config.extensions.BinaryTiddlersPlugin = _binaryTiddlersPlugin;
 		config.extensions.tiddlyspace.renderAvatar = _avatar;
 		$("[task=tiddlyspace]").remove();
 		store.filterTiddlers = _filterTiddlers;
 		story.refreshAllTiddlers = _refreshAllTiddlers;
 		$("#backstagePanel").remove();
+		config.unplugged = _unplugged;
 	}
 });
 
@@ -80,14 +82,6 @@ test("userButton (not logged in)", function() {
 	strictEqual(user.length, 0);
 });
 
-test("userButton (not logged in and unplugged)", function() {
-	var el = $("<div />")[0];
-	var task = $("<div />").attr("task", "user").text("foo").appendTo(el);
-	backstage.tiddlyspace.userButton(el, { anon: true, unplugged: true });
-	var user = $("[task=user]", el);
-	strictEqual(user.text(), config.tasks.user.unpluggedText);
-});
-
 test("spaceButton", function() {
 	var el = $("<div />")[0];
 	var task = $("<div />").attr("task", "space").text(":D").appendTo(el);
@@ -96,14 +90,6 @@ test("spaceButton", function() {
 	strictEqual(space.length, 1);
 	strictEqual(space.text(), "space: foo");
 	strictEqual($("[site-icon=foo]", el).length, 1);
-});
-
-test("spaceButton (unplugged)", function() {
-	var el = $("<div />")[0];
-	var task = $("<div />").attr("task", "space").text(":D").appendTo(el);
-	backstage.tiddlyspace.spaceButton(el);
-	var space = $("[task=space]:hidden", el);
-	strictEqual(space.length, 1);
 });
 
 test("tweakMiddleButton (unsynced changes exist)", function() {
@@ -139,5 +125,36 @@ test("followSpace make", function() {
 	strictEqual(link.attr("href"), "http://jerm.tiddlyspace.com/#follow:[[@bob]]");
 	strictEqual(link.text(), "follow bob");
 })
+
+module("TiddlySpaceBackstage plugin - unplugged tests", {
+	setup: function() {
+		_unplugged = config.unplugged;
+		config.unplugged =  true;
+		_avatar = config.extensions.tiddlyspace.renderAvatar;
+		config.extensions.tiddlyspace.renderAvatar = function(el, name){
+			$(el).attr("site-icon", name);
+		};
+	},
+	teardown: function() {
+		config.extensions.tiddlyspace.renderAvatar = _avatar;
+		config.unplugged = _unplugged;
+	}
+});
+
+test("userButton (not logged in and unplugged)", function() {
+	var el = $("<div />")[0];
+	var task = $("<div />").attr("task", "user").text("foo").appendTo(el);
+	backstage.tiddlyspace.userButton(el, { anon: true });
+	var user = $("[task=user]", el);
+	strictEqual(user.text(), config.tasks.user.unpluggedText);
+});
+
+test("spaceButton (unplugged)", function() {
+	var el = $("<div />")[0];
+	var task = $("<div />").attr("task", "space").text(":D").appendTo(el);
+	backstage.tiddlyspace.spaceButton(el);
+	var space = $("[task=space]:hidden", el);
+	strictEqual(space.length, 1);
+});
 
 })(QUnit.module, jQuery);

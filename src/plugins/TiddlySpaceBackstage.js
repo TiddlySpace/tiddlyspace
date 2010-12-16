@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.6.4|
+|''Version''|0.6.5|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
 |''Contributors''|Jon Lister, Jon Robson, Colm Britton|
@@ -111,9 +111,9 @@ backstage.tiddlyspace = {
 	userButton: function(backstageArea, user) {
 		// override user button (logged in) to show username
 		var userBtn = $("[task=user]", backstageArea).empty();
-		if(user.unplugged && user.anon) {
+		if(config.unplugged && user.anon) {
 			$("<span />").text(tasks.user.unpluggedText).appendTo(userBtn);
-		} else if(!user.unplugged && user.anon) {
+		} else if(!config.unplugged && user.anon) {
 			userBtn.remove();
 		} else {
 			$("<span />").text(tasks.user.text).appendTo(userBtn);
@@ -141,7 +141,7 @@ backstage.tiddlyspace = {
 	middleButton: function(backstageArea, user) {
 		var bs = backstage.tiddlyspace;
 		var backstageToolbar = $("#backstageToolbar", backstageArea)[0];
-		if(user.unplugged) {
+		if(config.unplugged) {
 			config.messages.memberStatus = bs.locale.unplugged;
 		} else if(!user.anon) {
 			config.messages.memberStatus = readOnly ? bs.locale.nonmember : bs.locale.member;
@@ -168,7 +168,7 @@ backstage.tiddlyspace = {
 	spaceButton: function(backstageArea, user) {
 		// override space button to show SiteIcon
 		var btn = $("[task=space]", backstageArea).show();
-		if(user && user.anon && user.unplugged) {
+		if(user && user.anon && config.unplugged) {
 			btn.hide();
 			return;
 		}
@@ -181,7 +181,7 @@ backstage.tiddlyspace = {
 	},
 	loginButton: function(backstageArea, user) {
 		var loginBtn = $("[task=login]", backstageArea).empty();
-		if(user.anon && !user.unplugged) {
+		if(user.anon && !config.unplugged) {
 			$("<span />").text(tasks.login.text).appendTo(loginBtn);
 			var container = $("<span />").appendTo(loginBtn)[0];
 			imageMacro.renderImage(container, commonUrl.format("defaultUserIcon"),
@@ -216,11 +216,7 @@ backstage.init = function() {
 		bs.addClasses(backstageArea); // for IE styling purposes
 		bs.checkSyncStatus();
 	};
-	if(!config.unplugged) {
-		tweb.getUserInfo(init);
-	} else {
-		init({ unplugged: true, anon: false, name: config.options.txtUserName });
-	}
+	tweb.getUserInfo(init);
 };
 
 var home = config.macros.homeLink = {
