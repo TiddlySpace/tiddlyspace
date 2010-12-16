@@ -281,7 +281,7 @@ var scanMacro = config.macros.tsScan = {
 			scanMacro.template(list, tiddlers, options.template);
 			if(tiddlers.length === 0) {
 				$("<li />").text(options.emptyMessage || locale.noone).appendTo(list);
-				list.addClass("emptyList");
+				$(list).addClass("emptyList");
 			}
 		}
 		if(options.callback) {
