@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceSearcher|
-|''Version''|0.2.3|
+|''Version''|0.2.4|
 |''Requires''|TiddlySpaceConfig TiddlySpaceFollowingPlugin|
 ***/
 //{{{
@@ -113,15 +113,15 @@ var search = config.macros.tsSearch = {
 			}
 			config.extensions.tiddlyweb.getStatus(function(status) {
 				$(query).text(locale.query);
-				var url = status.server_host.url + url;
-				$("<a />").attr("href", url).text(url).appendTo(place);
+				var href = status.server_host.url + url;
+				$("<a />").attr("href", href).text(href).appendTo(query);
 				tsScan.scan(results, { url: url, emptyMessage: search.locale.noResults, cache: true,
 					template: "SearchTemplate", sort: "title", callback: function(tiddlers) {
 						$("<h2 />").text(locale.resultsHeader.format(tiddlers.length)).prependTo(results);
 					}
 				});
 			});
-		}
+		};
 		$(form).submit(function(ev) {
 			ev.preventDefault();
 			var url = search.constructSearchQuery(form);
