@@ -38,7 +38,7 @@ class CSRFProtector(object):
                 timestamp = csrf_cookie.value.rsplit(':', 1)[0]
             now = datetime.now().strftime('%Y%m%d%H')
             if now != timestamp:
-                user, space, secret = self.get_nonce_components(environ)
+                user, space, secret = get_nonce_components(environ)
                 nonce = gen_nonce(user, space, now, secret)
                 set_cookie = 'csrf_token=%s' % nonce
                 headers.append(('Set-Cookie', set_cookie))
@@ -74,7 +74,7 @@ class CSRFProtector(object):
         if not nonce:
             raise InvalidNonceError('No csrf_token supplied')
 
-        user, space, secret = self.get_nonce_components(environ)
+        user, space, secret = get_nonce_components(environ)
         time = datetime.now().strftime('%Y%m%d%H')
         nonce_time = nonce.rsplit(':', 1)[0]
         if time != nonce_time:
@@ -90,15 +90,17 @@ class CSRFProtector(object):
 
         return True
 
-    def get_nonce_components(self, environ):
-        """
-        return username, spacename, timestamp (from cookie) and secret
-        """
-        username = environ['tiddlyweb.usersign']['name']
-        http_host = determine_host(environ)[0]
-        spacename = determine_space(environ, http_host) or ''
-        secret = environ['tiddlyweb.config']['secret']
-        return (username, spacename, secret)
+
+def get_nonce_components(environ):
+    """
+    return username, spacename, timestamp (from cookie) and secret
+    """
+    username = environ['tiddlyweb.usersign']['name']
+    http_host = determine_host(environ)[0]
+    spacename = determine_space(environ, http_host) or ''
+    secret = environ['tiddlyweb.config']['secret']
+    return (username, spacename, secret)
+
 
 def gen_nonce(username, spacename, timestamp, secret):
     """
