@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.6.5|
+|''Version''|0.6.6|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
 |''Contributors''|Jon Lister, Jon Robson, Colm Britton|
@@ -91,7 +91,7 @@ tiddlyspace.renderAvatar = tiddlyspace.renderAvatar || function() {};
 backstage.tiddlyspace = {
 	locale: {
 		member: "You are a member of this space.",
-		nonmember: "You are a non-member of this space.",
+		nonmember: "You are not a member of this space.",
 		loggedout: "You are currently logged out of TiddlySpace.",
 		unplugged: "You are unplugged."
 	},
@@ -221,7 +221,7 @@ backstage.init = function() {
 
 var home = config.macros.homeLink = {
 	locale: {
-		linkText: "your home"
+		linkText: "your home space"
 	},
 	handler: function(place) {
 		var container = $("<span />").appendTo(place)[0];
