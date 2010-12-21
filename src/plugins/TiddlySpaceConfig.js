@@ -281,8 +281,8 @@ var fImport = config.macros.fileImport;
 fImport.uploadTo = "Upload to: ";
 var _createForm = config.macros.fileImport.createForm;
 config.macros.fileImport.createForm = function(place, wizard, iframeName) {
-	$("<span />").text(fImport.uploadTo).appendTo(place);
-	var select = $('<select name="mode" />').appendTo(place)[0];
+	var container = $("<div />").text(fImport.uploadTo).appendTo(place);
+	var select = $('<select name="mode" />').appendTo(container)[0];
 	$('<option value="private" selected>private</a>').appendTo(select);
 	$('<option value="public">public</a>').appendTo(select);
 	wizard.setValue("mode", select);
