@@ -30,7 +30,7 @@ Key}}}
 {{tiddlyspaceMenu{
 <<message messages.memberStatus>>
 
-{{unsyncedList{<<message messages.syncListHeading>> <<list filter [is[unsynced]]>>}}}
+{{unsyncedList{<<message messages.syncListHeading>> <<list filter [is[unsynced]]>> <<saveChanges>>}}}
 
 <<homeLink>> [[help|@@docs]] [[blog|@@blog]] [[featured|@@featured]]
 
