@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceViewTypes|
-|''Version''|0.5.0|
+|''Version''|0.5.1|
 |''Status''|@@beta@@|
 |''Description''|Provides TiddlySpace specific view types|
 |''Author''|Jon Robson|
@@ -24,6 +24,8 @@ config.macros.view.replyLink = {
 
 config.macros.view.views.replyLink = function(value, place, params, wikifier,
 		paramString, tiddler) {
+	var args = paramString.parseParams("anon")[0];
+	var label = (args.label) ? args.label : config.macros.view.replyLink.locale.label;
 	var space;
 	if(tiddler) {
 		var bag = tiddler.fields["server.bag"];
@@ -34,8 +36,7 @@ config.macros.view.views.replyLink = function(value, place, params, wikifier,
 		if(!user.anon) {
 			if(space && user.name != space &&
 					user.name != tiddlyspace.currentSpace.name) {
-				createSpaceLink(container, user.name, value,
-					config.macros.view.replyLink.locale.label);
+				createSpaceLink(container, user.name, value, label);
 			}
 		}
 	});
