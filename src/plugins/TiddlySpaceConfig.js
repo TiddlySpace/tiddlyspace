@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.7.4|
+|''Version''|0.7.5|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -278,24 +278,26 @@ config.paramifiers.follow = {
 };
 
 var fImport = config.macros.fileImport;
-fImport.uploadTo = "Upload to: ";
-var _createForm = config.macros.fileImport.createForm;
-config.macros.fileImport.createForm = function(place, wizard, iframeName) {
-	var container = $("<div />").text(fImport.uploadTo).appendTo(place);
-	var select = $('<select name="mode" />').appendTo(container)[0];
-	$('<option value="private" selected>private</a>').appendTo(select);
-	$('<option value="public">public</a>').appendTo(select);
-	wizard.setValue("mode", select);
-	_createForm.apply(this, [place, wizard, iframeName]);
-};
+if(fImport) {
+	fImport.uploadTo = "Upload to: ";
+	var _createForm = config.macros.fileImport.createForm;
+	config.macros.fileImport.createForm = function(place, wizard, iframeName) {
+		var container = $("<div />").text(fImport.uploadTo).appendTo(place);
+		var select = $('<select name="mode" />').appendTo(container)[0];
+		$('<option value="private" selected>private</a>').appendTo(select);
+		$('<option value="public">public</a>').appendTo(select);
+		wizard.setValue("mode", select);
+		_createForm.apply(this, [place, wizard, iframeName]);
+	};
 
-var _onGet = config.macros.importTiddlers.onGetTiddler;
-config.macros.importTiddlers.onGetTiddler = function(context, wizard) {
-	var type = $(wizard.getValue("mode")).val();
-	var ws =  plugin.getCurrentWorkspace(type);
-	wizard.setValue("workspace", ws);
-	_onGet.apply(this, [context, wizard]);
-};
+	var _onGet = config.macros.importTiddlers.onGetTiddler;
+	config.macros.importTiddlers.onGetTiddler = function(context, wizard) {
+		var type = $(wizard.getValue("mode")).val();
+		var ws =  plugin.getCurrentWorkspace(type);
+		wizard.setValue("workspace", ws);
+		_onGet.apply(this, [context, wizard]);
+	};
+}
 
 })(jQuery);
 //}}}
