@@ -23,8 +23,13 @@ var _mockResolveSpaceName = function(x) {
 var runTest = function(container, bag) {
 	var tiddler = new Tiddler("hello");
 	tiddler.fields["server.bag"] = bag;
+	paramString = {
+		parseParams: function() {
+			return [{}]
+		}
+	};
 	config.macros.view.views.replyLink("hello", container, ["title", "replyLink"], null,
-			null, tiddler);
+			paramString, tiddler);
 };
 
 module("TiddlySpaceViewTypes - user not logged in", {
