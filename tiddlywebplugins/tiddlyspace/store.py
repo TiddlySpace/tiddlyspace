@@ -17,14 +17,20 @@ class Store(MySQLStore):
         list of spaces. More correctly: Get those public recipes on which
         this user passes the manage constraint.
         """
-        query = (self.session.query(sRecipe.name)
-                .join((recipe_policy_table,
-                    sRecipe.id == recipe_policy_table.c.recipe_id))
-                .join((sPolicy, recipe_policy_table.c.policy_id == sPolicy.id))
-                .filter(sPolicy.principal_name == username)
-                .filter(sPolicy.constraint == 'manage')
-                .filter(sRecipe.name.like('%_public')))
-        return (name[0] for name in query.all())
+        try:
+            query = (self.session.query(sRecipe.name)
+                    .join((recipe_policy_table,
+                        sRecipe.id == recipe_policy_table.c.recipe_id))
+                    .join((sPolicy, recipe_policy_table.c.policy_id == sPolicy.id))
+                    .filter(sPolicy.principal_name == username)
+                    .filter(sPolicy.constraint == 'manage')
+                    .filter(sRecipe.name.like('%_public')))
+            for name in query.all():
+                yield name[0]
+            self.session.close()
+        except:
+            self.session.rollback()
+            raise
 
     def tiddler_put(self, tiddler):
         """
