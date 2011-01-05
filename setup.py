@@ -24,7 +24,7 @@ setup(
     scripts = ['tiddlyspace'],
     install_requires = [
         'setuptools',
-        'tiddlyweb>=1.2.0',
+        'tiddlyweb>=1.2.10',
         'tiddlywebwiki>=0.53',
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout>=0.6',
@@ -40,7 +40,7 @@ setup(
         'tiddlywebplugins.pathinfohack>=0.8',
         'tiddlywebplugins.form==dev',
         'tiddlywebplugins.reflector>=0.6',
-        'tiddlywebplugins.atom>=1.2.1',
+        'tiddlywebplugins.atom>=1.2.2',
         'tiddlywebplugins.mysql>=0.9.3',
         'tiddlywebplugins.sqlalchemy>=0.9.9',
         'tiddlywebplugins.privateer',
