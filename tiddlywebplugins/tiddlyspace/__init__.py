@@ -169,6 +169,8 @@ def _status_gather_data(environ):
         store.get(User(usersign))
     except NoUserError:
         data['username'] = 'GUEST'
+        if usersign != 'GUEST':
+          data['identity'] = usersign
     return data
 
 
