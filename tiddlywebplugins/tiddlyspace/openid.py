@@ -19,6 +19,9 @@ class Challenger(OpenID):
     def __init__(self):
         self.name = __name__
 
+    def _domain_path(self, environ):
+        return "." + environ['tiddlyweb.config']['server_host']['host']
+
     def _success(self, environ, start_response, info):
         """
         After successful validation of an openid generate
@@ -46,18 +49,23 @@ class Challenger(OpenID):
             fragment = uri.rsplit('#', 1)[1]
         except (ValueError, IndexError):
             fragment = None
+        secondary_cookie_name = 'tiddlyweb_secondary_user'
+        secondary_cookie_age = None
         if fragment:
             openid = fragment[len(FRAGMENT_PREFIX):]
             uri = uri.replace(FRAGMENT_PREFIX + openid,
                     FRAGMENT_PREFIX + usersign)
-            cookie_name = 'tiddlyweb_secondary_user'
-            cookie_age = None
+
         secret = environ['tiddlyweb.config']['secret']
         cookie_header_string = make_cookie(cookie_name, usersign,
                 mac_key=secret, path=self._cookie_path(environ),
                 expires=cookie_age)
+        secondary_cookie_header_string = make_cookie(secondary_cookie_name, usersign,
+                mac_key=secret, path=self._cookie_path(environ),
+                expires=cookie_age, domain=self._domain_path(environ))
         start_response('303 See Other',
                 [('Location', uri.encode('utf-8')),
                     ('Content-Type', 'text/plain'),
+                    ('Set-Cookie', secondary_cookie_header_string),
                     ('Set-Cookie', cookie_header_string)])
         return [uri]
