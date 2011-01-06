@@ -1,9 +1,43 @@
 (function(module, $) {
 module("TiddlySpaceFilters", {
 	setup: function() {
+		var tiddlers = ["elephant", "pig", "Ant"];
+		var bag = "foo_private";
+		for(var i = 0; i < tiddlers.length; i++) {
+			var tiddler = new Tiddler(tiddlers[i]);
+			tiddler.fields["server.bag"] = bag;
+			store.saveTiddler(tiddler);
+		}
+		tiddlers = ["Bee", "zebra"];
+		bag = "foo_public";
+		for(var i = 0; i < tiddlers.length; i++) {
+			var tiddler = new Tiddler(tiddlers[i]);
+			tiddler.fields["server.bag"] = bag;
+			store.saveTiddler(tiddler);
+		}
+		
 	},
 	teardown: function() {
+		var tiddlers = ["Ant", "Bee", "elephant", "pig", "zebra"];
+		for(var i = 0; i < tiddlers.length; i++) {
+			store.removeTiddler(tiddlers[i]);
+		}
 	}
+});
+
+test("config.filters.is (public)", function() {
+	var results = config.filters.is([], [null, null, null, "public"]);
+	strictEqual(results.length, 2, "only 2 results are expected possibly another test is interfering.");
+	strictEqual(results[0].title, "Bee");
+	strictEqual(results[1].title, "zebra", "they should be sorted alphabetically by default");
+});
+
+test("config.filters.is (private)", function() {
+	var results = config.filters.is([], [null, null, null, "private"]);
+	strictEqual(results.length, 3, "only 3 results are expected possibly another test is interfering.");
+	strictEqual(results[0].title, "Ant");
+	strictEqual(results[1].title, "elephant");
+	strictEqual(results[2].title, "pig");
 });
 
 test("config.filterHelpers.is.private", function() {

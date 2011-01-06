@@ -70,13 +70,36 @@ Tiddler.prototype.isTouched = function() {
 	var changecount = this.fields.changecount || 0;
 	return changecount > 0;
 };
-
+Tiddler.prototype.isTagged = function(tag)
+{
+	return this.tags.indexOf(tag) != -1;
+};
 TiddlyWiki = function() {
 	this._tiddlers = {};
 	this.addTiddler = function(tiddler) {
 		this._tiddlers[tiddler.title] = tiddler;
 	};
+	this.forEachTiddler = function(callback) {
+		for(var t in this._tiddlers) {
+			var tiddler = this._tiddlers[t];
+			if(tiddler instanceof Tiddler)
+				callback.call(this,t,tiddler);
+		}
+	};
 };
+
+TiddlyWiki.prototype.getTiddlers = function(field,excludeTag)
+{
+	var results = [];
+	this.forEachTiddler(function(title,tiddler) {
+		if(excludeTag == undefined || !tiddler.isTagged(excludeTag))
+			results.push(tiddler);
+	});
+	if(field)
+		results.sort(function(a,b) {return a[field] < b[field] ? -1 : (a[field] == b[field] ? 0 : +1);});
+	return results;
+};
+
 TiddlyWiki.prototype.getTiddler = function(title) {
 	return this._tiddlers[title];
 };

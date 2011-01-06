@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceFilters|
 |''Description''|provide TiddlySpace-specific filter extensions|
 |''Author''|Jon Robson|
-|''Version''|0.6.0|
+|''Version''|0.6.1|
 |''Status''|@@beta@@|
 |''CoreVersion''|2.6.2|
 |''Requires''|TiddlySpaceConfig|
@@ -48,7 +48,7 @@ config.filterHelpers = {
 };
 
 config.filters.is = function(results, match) {
-	var candidates = store.getTiddlers();
+	var candidates = store.getTiddlers("title");
 	var type = match[3];
 	for (var i = 0; i < candidates.length; i++) {
 		var tiddler = candidates[i];
