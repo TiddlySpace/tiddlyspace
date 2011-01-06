@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.7.5|
+|''Version''|0.7.6|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -261,7 +261,7 @@ store.addNotification("StyleSheetBackstage", refreshStyles);
 config.optionsDesc.chkPrivateMode = "Set your default privacy mode to private";
 config.optionsSource.chkPrivateMode = "setting";
 config.options.chkPrivateMode = config.options.chkPrivateMode || false;
-saveSystemSetting("chkPrivateMode", false);
+saveSystemSetting("chkPrivateMode", true);
 config.defaultCustomFields["server.workspace"] = plugin.
 	getCurrentWorkspace(config.options.chkPrivateMode ? "private" : "public");
 
