@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceUserControls|
-|''Version''|0.5.5|
+|''Version''|0.5.6|
 |''Description''|registration and login UIs|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceUserControls.js|
@@ -143,6 +143,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			data: {
 				user: username,
 				password: password,
+				csrf_token: tiddlyspace.getCSRFToken(),
 				tiddlyweb_redirect: tweb.serverPrefix + "/status" // workaround to marginalize automatic subsequent GET
 			},
 			success: callback,
