@@ -2,7 +2,8 @@ tiddler: TiddlySpaceSearcher.js
 tiddler: TiddlySpaceConfig.js
 tiddler: TiddlySpaceBackstage.js
 tiddler: TiddlySpaceInit.js
-tiddler: TiddlySpaceUserControls.js
+tiddler: TiddlySpaceForms.js
+tiddler: TiddlySpaceAdmin.js
 tiddler: TiddlySpaceIdentities.js
 tiddler: TiddlySpaceMembers.js
 tiddler: TiddlySpaceSpaces.js
