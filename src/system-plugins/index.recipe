@@ -1,5 +1,5 @@
 tiddler: http://svn.tiddlywiki.org/Trunk/contributors/JonRobson/plugins/RandomColorPalettePlugin/plugins/RandomColorPalettePlugin.js
 tiddler: http://svn.tiddlywiki.org/Trunk/contributors/PaulDowney/plugins/TiddlySpaceLinkPlugin/TiddlySpaceLinkPlugin.js
-tiddler: http://svn.tiddlywiki.org/Trunk/contributors/BenGillies/TiddlyWeb/Plugins/Importing/tiddlers/TiddlyFileImporter.js
+tiddler: https://github.com/bengillies/tiddlyweb-client-plugins/raw/master/Importing/tiddlers/TiddlyFileImporter.js
 recipe: ../plugins/system-plugins.recipe
 tiddler: SiteIcon.tid
