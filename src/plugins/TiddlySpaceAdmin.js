@@ -1,5 +1,5 @@
 /***
-|''Name''|TiddlySpaceManagement|
+|''Name''|TiddlySpaceAdmin|
 |''Version''|0.5.5dev|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/|
@@ -18,7 +18,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		var locale = tsl.locale;
 		var type = params[0];
 		this.name = macroName;
-		var container = $("<div />", { className: this.name }).appendTo(place);
+		var container = $("<div />", { className: this.name }).appendTo(place)[0];
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var options = {};
 		options.message = args.message ? args.message[0] : false;
@@ -26,7 +26,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 	},
 	refresh: function(container, type, options) {
 		type = type || "basic";
-		container.empty();
+		$(container).empty();
 		tweb.getUserInfo(function(user) {
 			if(user.anon) {
 				var template, handler;
@@ -119,7 +119,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		return false;
 	},
 	register: function(username, password, form) {
-		var locale = tsr.locale;
+		var locale = admin.locale;
 		var options = {
 			annotate: "[name=username]"
 		};
