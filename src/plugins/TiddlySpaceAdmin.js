@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceAdmin|
-|''Version''|0.5.5dev|
+|''Version''|0.5.5|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/|
 |''Requires''|TiddlySpaceConfig TiddlySpaceFormsPlugin|
