@@ -158,12 +158,14 @@ var admin = config.macros.TiddlySpaceAdmin = {
 		logout: { submit: "Log out" },
 		login: { submit: "Login" },
 		register: { submit: "Sign Up" },
+		identities: { submit: "Add Identity" },
 		userSuccess: "created user %0",
 		userError: "user <em>%0</em> already exists",
 		spaceSuccess: "created space %0",
 		spaceError: "space <em>%0</em> already exists",
 		charError: "error: invalid username - must only contain lowercase letters, digits or hyphens",
-		passwordError: "error: passwords do not match"
+		passwordError: "error: passwords do not match",
+		listError: "Error retrieving list of identities for user %0",
 	},
 	elements: {
 		openid: function() {
@@ -187,8 +189,81 @@ var admin = config.macros.TiddlySpaceAdmin = {
 		tsl.openidFormTemplate = [ locale.openid, elements.openid(), elements.redirect() ];
 		tsr.formTemplate = [locale.username, elements.username(),
 			locale.password, elements.password(), locale.confirmPassword, elements.password(true)];
+		identities.template = [ locale.openid, elements.openid() ];
 	}
 };
+
+var identities = config.macros.TiddlySpaceIdentities = {
+
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		var mode = params[0] || "list";
+		var container = $("<div />").appendTo(place)[0];
+		if(mode == "add") {
+			identities.generateForm(container);
+		} else if(mode == "list") {
+			tweb.getUserInfo(function(user) {
+				if(!user.anon) {
+					$(container).addClass("listIdentities");
+					identities.refresh(container);
+				}
+			});
+		}
+	},
+	refresh: function(container) {
+		$(container).empty().append("<ul />");
+		$.ajax({ // TODO: add (dynamically) to chrjs user extension?
+			url: "%0/users/%1/identities".format(tweb.host, tweb.username),
+			type: "GET",
+			success: function(data, status, xhr) {
+				var identities = $.map(data, function(item, i) {
+					return $("<li />").text(item)[0];
+				});
+				$("ul", container).append(identities);
+			},
+			error: function(xhr, error, exc) {
+				displayMessage(admin.locale.listError.format(tweb.username));
+			}
+		});
+	},
+	generateForm: function(container) {
+		var uri = "%0/challenge/tiddlywebplugins.tiddlyspace.openid".format(tweb.host);
+		var ready = false;
+		config.extensions.formMaker.make(container, identities.template, uri, {
+			beforeSubmit: function(ev, form) {
+				var openid = $("[name=openid]").val();
+				$('<input name="tiddlyweb_redirect" />').
+					val("%0#auth:OpenID=%1".format(tweb.serverPrefix, openid)).appendTo(form);
+			}, locale: admin.locale.identities });
+	}
+};
+
+config.paramifiers.auth = {
+	locale: {
+		success: "successfully added identity %0",
+		error: "error adding identity %0: %1"
+	},
+
+	onstart: function(v) {
+		var identity = window.location.hash.split("auth:OpenID=")[1];
+		if(identity) {
+			this.addIdentity(identity);
+		}
+	},
+	addIdentity: function(name) {
+		var msg = config.paramifiers.auth.locale;
+		var tiddler = new tiddlyweb.Tiddler(name);
+		tiddler.bag = new tiddlyweb.Bag("MAPUSER", tweb.host);
+		var callback = function(data, status, xhr) {
+			displayMessage(msg.success.format(name));
+			window.location = window.location.toString().split("#")[0] + "#";
+		};
+		var errback = function(xhr, error, exc) {
+			displayMessage(msg.error.format(name, error));
+		};
+		tiddler.put(callback, errback);
+	}
+};
+
 
 }(jQuery));
 //}}}

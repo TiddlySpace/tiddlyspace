@@ -97,6 +97,9 @@ var ext = config.extensions.formMaker = {
 			};
 		}
 		var submitHandler = function(ev) {
+			if(options.beforeSubmit) {
+				options.beforeSubmit(ev, form);
+			}
 			ev.preventDefault();
 			ext.reset();
 			ext.doSubmit(form, locale);

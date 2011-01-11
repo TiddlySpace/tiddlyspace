@@ -123,4 +123,20 @@ test("make (callback)", function() {
 	strictEqual(testOK, true, "able to access form elements");
 });
 
+test("make (test beforeSend)", function() {
+	var testOK, beforeSubmitRun;
+	var callback = function(ev, form) {
+		if(beforeSubmitRun) {
+			testOK = true;
+		}
+	};
+	var beforeSubmit = function(ev, form) {
+		beforeSubmitRun = true;
+	};
+
+	var myForm = macro.make(container, [], callback, { beforeSubmit: beforeSubmit });
+	$(myForm).submit();
+	strictEqual(testOK, true, "the beforeSubmit ran before the form was submitted");
+});
+
 })(QUnit.module, jQuery);
