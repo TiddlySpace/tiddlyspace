@@ -71,6 +71,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			data: {
 				user: username,
 				password: password,
+				csrf_token: tiddlyspace.getCSRFToken(),
 				tiddlyweb_redirect: tweb.serverPrefix + "/status" // workaround to marginalize automatic subsequent GET
 			},
 			error: function(xhr, error, exc) {
