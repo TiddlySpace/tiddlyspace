@@ -76,7 +76,16 @@ You can associate your account with multiple identities. If you have an open id 
 {{backstageClear{}}}
 
 !Login
-<<TiddlySpaceLogin>>
+<<tabs chkLoginTab 
+"TiddlySpace Username" "Login via a TiddlySpace username and password" Backstage##UserUnplugged
+"OpenID" "Login via an OpenID"  Backstage##TabOpenID
+"Register" "Register a TiddlySpace account" Backstage##TabRegister
+>>
+
+!TabOpenID
+<<TiddlySpaceLogin openid>>
+
+!TabRegister
 <<TiddlySpaceRegister>>
 
 !Options
