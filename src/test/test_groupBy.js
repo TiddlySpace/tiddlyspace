@@ -1,8 +1,40 @@
 (function(module, $) {
 
-var _createTiddlyButton, _createTiddlyLink, _getTiddlyLinkInfo;
+var _createTiddlyButton, _createTiddlyLink, _getTiddlyLinkInfo, getTiddlers, _store, _wikify;
 module("GroupBy Plugin", {
 	setup: function() {
+		_store = store;
+		_wikify = wikify;
+		wikify = function(text, el, b, tiddler) {
+			if(text == "1") {
+				$(el).text("click me " + tiddler.title);
+			} else if(text == "2") {
+				$(el).text("item template" + tiddler.title);
+			}
+		};
+
+		store.getTiddlerText = function (title) {
+			if(title == "Templates##Group") {
+				return "1";
+			} else if(title == "Templates##Item") {
+				return "2";
+			}
+		};
+
+		store.saveTiddler(tiddler);
+		getTiddlers = function() {
+			var tiddlers = [];
+			for(var i = 0; i < 10; i++) {
+				tiddlers.push(new Tiddler("t"+i))
+			}
+			tiddlers[0].tags = ["foo", "bar"];
+			tiddlers[1].tags = ["foo"];
+			tiddlers[2].tags = ["z"];
+			tiddlers[2].fields = {foo: "bar", bar: "jack"};
+			tiddlers[3].fields = {foo: "bar", bar: "dave"};
+			tiddlers[4].fields = {foo: "wazzup", bar: "mike"};
+			return tiddlers;
+		};
 		_getTiddlyLinkInfo = getTiddlyLinkInfo;
 		_createTiddlyButton = createTiddlyButton;
 		_createTiddlyLink = createTiddlyLink;
@@ -23,6 +55,9 @@ module("GroupBy Plugin", {
 		};
 	},
 	teardown: function() {
+		wikify = _wikify;
+		store = _store;
+		store.removeTiddler("Templates");
 		getTiddlyLinkInfo = _getTiddlyLinkInfo;
 		createTiddlyButton = _createTiddlyButton;
 		createTiddlyLink = _createTiddlyLink;
@@ -48,16 +83,7 @@ test("_refresh", function() {
 	var place2 = $("<div />")[0];
 	var place3 = $("<div />")[0];
 	var place4 = $("<div />")[0];
-	var tiddlers = [];
-	for(var i = 0; i < 10; i++) {
-		tiddlers.push(new Tiddler("t"+i))
-	}
-	tiddlers[0].tags = ["foo", "bar"];
-	tiddlers[1].tags = ["foo"];
-	tiddlers[2].tags = ["z"];
-	tiddlers[2].fields = {foo: "bar", bar: "jack"};
-	tiddlers[3].fields = {foo: "bar", bar: "dave"};
-	tiddlers[4].fields = {foo: "wazzup", bar: "mike"};
+	var tiddlers = getTiddlers();
 	macro._refresh(place, tiddlers, {field: "tags", exclude: []});
 	macro._refresh(place2, tiddlers, {field: "foo", exclude: []});
 	macro._refresh(place3, tiddlers, {field: "foo", exclude: ["wazzup"]});
@@ -72,6 +98,17 @@ test("_refresh", function() {
 	strictEqual(buttons3.text(), "bar (2)", "check label");
 	strictEqual(buttons4.length, 1, "because of the morpher they all resolve to ok");
 	strictEqual(buttons4.text(), "ok (3)", "check label");
+});
+
+test("_refresh (with templates)", function() {
+	var macro = config.macros.groupBy;
+	var place = $("<div />")[0];
+	var tiddlers = getTiddlers();
+	macro._refresh(place, tiddlers, {field: "tags", exclude: [],
+		groupTemplate: "Templates##Group", template: "Templates##Item"});
+	var buttons = $(".button", place);
+	var zGroup = buttons[2];
+	strictEqual($(zGroup).text(), "click me t2", "the group template is run on the first tiddler encountered");
 });
 
 test("morpher.server.bag", function() {

@@ -12,6 +12,7 @@ saveSystemSetting = NOP;
 createTiddlyButton = NOP;
 getTiddlyLinkInfo = NOP;
 createTiddlyLink = NOP;
+wikify = NOP;
 readOnly = false;
 
 config = {

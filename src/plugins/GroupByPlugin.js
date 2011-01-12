@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.5.6|
+|''Version''|0.5.7dev|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
@@ -56,7 +56,7 @@ var macro = config.macros.groupBy = {
 	handler: function(place, macroName, params, wikifier, paramString) {
 		var field = params[0] || "server.workspace";
 		var dateFormat = params[1] || "DD MMM YYYY";
-		var container = $("<div />").attr("macroName", macroName).
+		var container = $("<div />").attr("macroName", macroName).addClass("groupBy").
 			attr("refresh", "macro").attr("fieldName", field).
 			attr("paramString", paramString).
 			attr("dateFormat", dateFormat).appendTo(place)[0];
@@ -104,7 +104,7 @@ var macro = config.macros.groupBy = {
 		}
 		var onClickGroup = function(ev) {
 			var target = ev.target;
-			var tiddlers = $.data(target, "tiddlers");
+			var tiddlers = $(target).closest(".templateContainer").data("tiddlers");
 			var popup = $(Popup.create(target)).addClass("taggedTiddlerList")[0];
 			var value = $(target).attr("value");
 			var openAll = CTB($("<li />").appendTo(popup)[0],
@@ -116,7 +116,9 @@ var macro = config.macros.groupBy = {
 				});
 			var listBreak = $("<li />").addClass("listBreak").html("<div />").appendTo(popup);
 			for(var i = 0; i < tiddlers.length; i++) {
-				CTL($("<li />").appendTo(popup)[0], tiddlers[i].title, true);
+				var item = $("<li />").appendTo(popup)[0];
+				var template = store.getTiddlerText(options.template) || macro.template;
+				wikify(template, item, null, tiddlers[i]);
 			}
 			listBreak.clone().appendTo(popup);
 			$(CTL($("<li />").appendTo(popup)[0], value, false)).
@@ -126,24 +128,31 @@ var macro = config.macros.groupBy = {
 			return false;
 		};
 		value_ids = value_ids.sort();
+		var groupTemplate = store.getTiddlerText(options.groupTemplate);
 		for(var i = 0; i < value_ids.length; i++) {
 			var title = value_ids[i];
 			var info = getTiddlyLinkInfo(title);
 			var tiddlers = values[title];
 			var btn = CTB($("<li />").appendTo(ul)[0],
 				"%0 (%1)".format([title, tiddlers.length]), locale.tooltip.format([title]), null, info.classes);
+			if(groupTemplate) {
+				$(btn).empty();
+				wikify(groupTemplate, btn, null, tiddlers[0]);
+			}
 			$(btn).click(onClickGroup).attr("value", title).attr("refresh", "link").attr("tiddlyLink", title);
-			$.data(btn, "tiddlers", tiddlers);
+			$(btn).addClass("templateContainer").data("tiddlers", tiddlers);
 		}
 	},
 	refresh: function(container) {
 		var container = $(container).empty();
 		var paramString = container.attr("paramString");
 		var args = paramString.parseParams("name", null, true, false, true)[0];
-		var options = { field: container.attr("fieldName"), dateFormat: container.attr("dateFormat"), exclude: args.exclude || [] };
+		var options = { field: container.attr("fieldName"), dateFormat: container.attr("dateFormat"), exclude: args.exclude || [],
+			template: args.template ? args.template[0] : false, groupTemplate: args.groupTemplate ? args.groupTemplate[0] : false };
 		var tiddlers = args.filter ? store.filterTiddlers(args.filter[0]) : store.getTiddlers("title");
 		macro._refresh(container, tiddlers, options);
-	}
+	},
+	template: "<<view title link>>"
 };
 
 })(jQuery);
