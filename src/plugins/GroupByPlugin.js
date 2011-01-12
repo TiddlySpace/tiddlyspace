@@ -38,10 +38,10 @@ var macro = config.macros.groupBy = {
 			return macro.morpher["server.bag"](value.replace("bags/", "").replace("recipes/", ""));
 		},
 		"server.bag": function(value, options) {
-			if(typeof(value) != "string") {
+			if(typeof(value) !== "string") {
 				return false;
-			} else if(value.indexOf("_public") == -1 && value.indexOf("_private") == -1) {
-				value = "*%0".format([value]); // add star for non-space bags.
+			} else if(value.indexOf("_public") === -1 && value.indexOf("_private") === -1) {
+				value = "*%0".format(value); // add star for non-space bags.
 			}
 			return value.replace("_public", "").replace("_private", "");
 		},
@@ -64,7 +64,7 @@ var macro = config.macros.groupBy = {
 	},
 	isTypeArray: function(value) {
 		var valueType = typeof value;
-		if(valueType == "object" && typeof value.length === "number" &&
+		if(valueType === "object" && typeof value.length === "number" &&
 			!(value.propertyIsEnumerable("length")) &&
 			typeof value.splice === "function") { //is Array
 			return true;
@@ -73,20 +73,20 @@ var macro = config.macros.groupBy = {
 		}
 	},
 	_refresh: function(container, tiddlers, options) {
-		var totalGroups = 0, locale = macro.locale;
+		var totalGroups = 0, locale = macro.locale, i, j;
 		var excludeValues = options.exclude;
 		var values = {}, value_ids = [];
-		var field = options.field
+		var field = options.field;
 		var morpher = macro.morpher[field] || function(value) {
 			return value;
 		};
-		for(var i = 0; i < tiddlers.length; i++) {
+		for(i = 0; i < tiddlers.length; i++) {
 			var tiddler = tiddlers[i];
 			var value = tiddler[field] || tiddler.fields[field];
 			value = macro.isTypeArray(value) ? value : [ value ];
-			for(var j = 0; j < value.length; j++) {
+			for(j = 0; j < value.length; j++) {
 				var v = morpher(value[j], options);
-				if(v && excludeValues.indexOf(v) == -1) {
+				if(v && excludeValues.indexOf(v) === -1) {
 					totalGroups += 1;
 					if(!values[v]) {
 						values[v] = [];
@@ -103,38 +103,38 @@ var macro = config.macros.groupBy = {
 			$("<li />").addClass("listTitle").text(locale.noTiddlers);
 		}
 		var onClickGroup = function(ev) {
-			var target = ev.target;
+			var i, target = ev.target;
 			var tiddlers = $(target).closest(".templateContainer").data("tiddlers");
 			var popup = $(Popup.create(target)).addClass("taggedTiddlerList")[0];
 			var value = $(target).attr("value");
 			var openAll = CTB($("<li />").appendTo(popup)[0],
-				locale.openAllText.format([value]), locale.openAllTooltip,
+				locale.openAllText.format(value), locale.openAllTooltip,
 				function(ev) {
-					for(var i = 0; i < tiddlers.length; i++) {
+					for(i = 0; i < tiddlers.length; i++) {
 						story.displayTiddler(ev.target, tiddlers[i].title);
 					}
 				});
 			var listBreak = $("<li />").addClass("listBreak").html("<div />").appendTo(popup);
-			for(var i = 0; i < tiddlers.length; i++) {
+			for(i = 0; i < tiddlers.length; i++) {
 				var item = $("<li />").appendTo(popup)[0];
 				var template = store.getTiddlerText(options.template) || macro.template;
 				wikify(template, item, null, tiddlers[i]);
 			}
 			listBreak.clone().appendTo(popup);
 			$(CTL($("<li />").appendTo(popup)[0], value, false)).
-				text(locale.openTiddler.format([value]));
+				text(locale.openTiddler.format(value));
 			Popup.show();
 			ev.stopPropagation();
 			return false;
 		};
 		value_ids = value_ids.sort();
 		var groupTemplate = store.getTiddlerText(options.groupTemplate);
-		for(var i = 0; i < value_ids.length; i++) {
+		for(i = 0; i < value_ids.length; i++) {
 			var title = value_ids[i];
 			var info = getTiddlyLinkInfo(title);
-			var tiddlers = values[title];
+			tiddlers = values[title];
 			var btn = CTB($("<li />").appendTo(ul)[0],
-				"%0 (%1)".format([title, tiddlers.length]), locale.tooltip.format([title]), null, info.classes);
+				"%0 (%1)".format(title, tiddlers.length), locale.tooltip.format(title), null, info.classes);
 			if(groupTemplate) {
 				$(btn).empty();
 				wikify(groupTemplate, btn, null, tiddlers[0]);
@@ -144,7 +144,7 @@ var macro = config.macros.groupBy = {
 		}
 	},
 	refresh: function(container) {
-		var container = $(container).empty();
+		container = $(container).empty();
 		var paramString = container.attr("paramString");
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var options = { field: container.attr("fieldName"), dateFormat: container.attr("dateFormat"), exclude: args.exclude || [],
@@ -155,5 +155,5 @@ var macro = config.macros.groupBy = {
 	template: "<<view title link>>"
 };
 
-})(jQuery);
+}(jQuery));
 //}}}
