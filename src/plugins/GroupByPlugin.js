@@ -72,6 +72,31 @@ var macro = config.macros.groupBy = {
 			return false;
 		}
 	},
+	_onClickGroup: function(ev, options) {
+		var i, target = ev.target, locale = macro.locale;
+		var tiddlers = $(target).closest(".templateContainer").data("tiddlers");
+		var popup = $(Popup.create(target)).addClass("taggedTiddlerList")[0];
+		var value = $(target).attr("value");
+		var openAll = createTiddlyButton($("<li />").appendTo(popup)[0],
+			locale.openAllText.format(value), locale.openAllTooltip,
+			function(ev) {
+				for(i = 0; i < tiddlers.length; i++) {
+					story.displayTiddler(ev.target, tiddlers[i].title);
+				}
+			});
+		var listBreak = $("<li />").addClass("listBreak").html("<div />").appendTo(popup);
+		for(i = 0; i < tiddlers.length; i++) {
+			var item = $("<li />").appendTo(popup)[0];
+			var template = store.getTiddlerText(options.template) || macro.template;
+			wikify(template, item, null, tiddlers[i]);
+		}
+		listBreak.clone().appendTo(popup);
+		$(createTiddlyLink($("<li />").appendTo(popup)[0], value, false)).
+			text(locale.openTiddler.format(value));
+		Popup.show();
+		ev.stopPropagation();
+		return false;
+	},
 	_refresh: function(container, tiddlers, options) {
 		var totalGroups = 0, locale = macro.locale, i, j;
 		var excludeValues = options.exclude;
@@ -96,50 +121,26 @@ var macro = config.macros.groupBy = {
 				}
 			}
 		}
-		var CTB = createTiddlyButton;
-		var CTL = createTiddlyLink;
 		var ul = $("<ul />").appendTo(container)[0];
 		if(totalGroups === 0) {
 			$("<li />").addClass("listTitle").text(locale.noTiddlers);
 		}
-		var onClickGroup = function(ev) {
-			var i, target = ev.target;
-			var tiddlers = $(target).closest(".templateContainer").data("tiddlers");
-			var popup = $(Popup.create(target)).addClass("taggedTiddlerList")[0];
-			var value = $(target).attr("value");
-			var openAll = CTB($("<li />").appendTo(popup)[0],
-				locale.openAllText.format(value), locale.openAllTooltip,
-				function(ev) {
-					for(i = 0; i < tiddlers.length; i++) {
-						story.displayTiddler(ev.target, tiddlers[i].title);
-					}
-				});
-			var listBreak = $("<li />").addClass("listBreak").html("<div />").appendTo(popup);
-			for(i = 0; i < tiddlers.length; i++) {
-				var item = $("<li />").appendTo(popup)[0];
-				var template = store.getTiddlerText(options.template) || macro.template;
-				wikify(template, item, null, tiddlers[i]);
-			}
-			listBreak.clone().appendTo(popup);
-			$(CTL($("<li />").appendTo(popup)[0], value, false)).
-				text(locale.openTiddler.format(value));
-			Popup.show();
-			ev.stopPropagation();
-			return false;
-		};
 		value_ids = value_ids.sort();
 		var groupTemplate = store.getTiddlerText(options.groupTemplate);
+		var onClick = function(ev) {
+			macro._onClickGroup(ev, options);
+		};
 		for(i = 0; i < value_ids.length; i++) {
 			var title = value_ids[i];
 			var info = getTiddlyLinkInfo(title);
 			tiddlers = values[title];
-			var btn = CTB($("<li />").appendTo(ul)[0],
+			var btn = createTiddlyButton($("<li />").appendTo(ul)[0],
 				"%0 (%1)".format(title, tiddlers.length), locale.tooltip.format(title), null, info.classes);
 			if(groupTemplate) {
 				$(btn).empty();
 				wikify(groupTemplate, btn, null, tiddlers[0]);
 			}
-			$(btn).click(onClickGroup).attr("value", title).attr("refresh", "link").attr("tiddlyLink", title);
+			$(btn).click(onClick).attr("value", title).attr("refresh", "link").attr("tiddlyLink", title);
 			$(btn).addClass("templateContainer").data("tiddlers", tiddlers);
 		}
 	},

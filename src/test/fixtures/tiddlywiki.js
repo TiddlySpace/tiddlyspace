@@ -14,6 +14,9 @@ getTiddlyLinkInfo = NOP;
 createTiddlyLink = NOP;
 wikify = NOP;
 readOnly = false;
+Popup = {
+	
+};
 
 config = {
 	adaptors: {},
