@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.5.7dev|
+|''Version''|0.5.7|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
