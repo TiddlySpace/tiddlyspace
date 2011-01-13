@@ -30,7 +30,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			if(user.anon) {
 				var template, handler;
 				if(challenger == "openid"){
-					var challenger = "tiddlywebplugins.tiddlyspace.openid";
+					challenger = "tiddlywebplugins.tiddlyspace.openid";
 					handler = "%0/challenge/%1".format(tweb.host, challenger);
 					template = tsl.openidFormTemplate;
 				} else {
