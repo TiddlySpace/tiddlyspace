@@ -1,8 +1,49 @@
 (function(module, $) {
 
-var _createTiddlyButton, _createTiddlyLink, _getTiddlyLinkInfo;
+var _createTiddlyButton, _createTiddlyLink, _getTiddlyLinkInfo, getTiddlers, _store, _wikify, el, _Popup;
 module("GroupBy Plugin", {
 	setup: function() {
+		config.macros.groupBy.locale.openAllText = "hello";
+		el = $("<div />").addClass("templateContainer").appendTo(document.body)[0];
+		_Popup = Popup;
+		Popup = {
+			create: function(src){
+				return src;
+			},
+			show: function(){}
+		};
+		_store = store;
+		_wikify = wikify;
+		wikify = function(text, el, b, tiddler) {
+			if(text == "1") {
+				$(el).text("click me " + tiddler.title);
+			} else if(text == "2") {
+				$(el).text("item template" + tiddler.title);
+			}
+		};
+
+		store = {
+			getTiddlerText: function (title) {
+				if(title == "Templates##Group") {
+					return "1";
+				} else if(title == "Templates##Item") {
+					return "2";
+				}
+			}
+		};
+		getTiddlers = function() {
+			var tiddlers = [];
+			for(var i = 0; i < 10; i++) {
+				tiddlers.push(new Tiddler("t"+i))
+			}
+			tiddlers[0].tags = ["foo", "bar"];
+			tiddlers[1].tags = ["foo"];
+			tiddlers[2].tags = ["z"];
+			tiddlers[2].fields = {foo: "bar", bar: "jack"};
+			tiddlers[3].fields = {foo: "bar", bar: "dave"};
+			tiddlers[4].fields = {foo: "wazzup", bar: "mike"};
+			return tiddlers;
+		};
 		_getTiddlyLinkInfo = getTiddlyLinkInfo;
 		_createTiddlyButton = createTiddlyButton;
 		_createTiddlyLink = createTiddlyLink;
@@ -23,6 +64,11 @@ module("GroupBy Plugin", {
 		};
 	},
 	teardown: function() {
+		Popup = _Popup;
+		$(el).remove();
+		el = null;
+		wikify = _wikify;
+		store = _store;
 		getTiddlyLinkInfo = _getTiddlyLinkInfo;
 		createTiddlyButton = _createTiddlyButton;
 		createTiddlyLink = _createTiddlyLink;
@@ -48,16 +94,7 @@ test("_refresh", function() {
 	var place2 = $("<div />")[0];
 	var place3 = $("<div />")[0];
 	var place4 = $("<div />")[0];
-	var tiddlers = [];
-	for(var i = 0; i < 10; i++) {
-		tiddlers.push(new Tiddler("t"+i))
-	}
-	tiddlers[0].tags = ["foo", "bar"];
-	tiddlers[1].tags = ["foo"];
-	tiddlers[2].tags = ["z"];
-	tiddlers[2].fields = {foo: "bar", bar: "jack"};
-	tiddlers[3].fields = {foo: "bar", bar: "dave"};
-	tiddlers[4].fields = {foo: "wazzup", bar: "mike"};
+	var tiddlers = getTiddlers();
 	macro._refresh(place, tiddlers, {field: "tags", exclude: []});
 	macro._refresh(place2, tiddlers, {field: "foo", exclude: []});
 	macro._refresh(place3, tiddlers, {field: "foo", exclude: ["wazzup"]});
@@ -74,6 +111,17 @@ test("_refresh", function() {
 	strictEqual(buttons4.text(), "ok (3)", "check label");
 });
 
+test("_refresh (with templates)", function() {
+	var macro = config.macros.groupBy;
+	var place = $("<div />")[0];
+	var tiddlers = getTiddlers();
+	macro._refresh(place, tiddlers, {field: "tags", exclude: [],
+		groupTemplate: "Templates##Group", template: "Templates##Item"});
+	var buttons = $(".button", place);
+	var zGroup = buttons[2];
+	strictEqual($(zGroup).text(), "click me t2", "the group template is run on the first tiddler encountered");
+});
+
 test("morpher.server.bag", function() {
 	var macro = config.macros.groupBy;
 	var a1 = macro.morpher["server.bag"]("jon_public");
@@ -83,5 +131,20 @@ test("morpher.server.bag", function() {
 	strictEqual(a2, false);
 	strictEqual(a3, "*blah");
 });
+
+test("_onClickGroup", function() {
+	var ev = {
+		target: el,
+		stopPropagation: function() {}
+	};
+	var tiddler = new Tiddler("hello world");
+	$(el).data("tiddlers", [ tiddler ]);
+	config.macros.groupBy._onClickGroup(ev, { template: "Templates##Item" });
+	var items = $("li", el);
+	strictEqual(items.length, 5,
+	"should be only one tiddler in the popup plus the open all and open with this title, plus 2 list breaks");
+	strictEqual($(items[2]).text(), "item templatehello world")
+});
+
 
 })(QUnit.module, jQuery);
