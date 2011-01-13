@@ -1,8 +1,17 @@
 (function(module, $) {
 
-var form, container, macro, _getCSRFToken;
+var form, container, macro, _getCSRFToken, _ajaxReq, _ajaxSuccess, _ajaxMode;
 module("TiddlySpaceForms plugin", {
 	setup: function() {
+		_ajaxSuccess = false;
+		_ajaxReq = ajaxReq;
+		ajaxReq = function(options) {
+			if(_ajaxMode == 1 && options.url == "/challenge/cookie_form") {
+				_ajaxSuccess = true;
+			} else if(_ajaxMode == 2 && options.url == "/challenge/custom") {
+				_ajaxSuccess = true;
+			}
+		};
 		container = $("<div />").appendTo(document.body)[0];
 		macro = config.macros.TiddlySpaceAdmin;
 		form = $("<form />").appendTo(document.body)[0];
@@ -12,6 +21,9 @@ module("TiddlySpaceForms plugin", {
 		};
 	},
 	teardown: function() {
+		_ajaxMode = null;
+		_ajaxSuccess = true;
+		ajaxReq = _ajaxReq;
 		$(form).remove();
 		$(container).remove();
 		macro = null;
@@ -64,6 +76,22 @@ test("printLoggedInMessage custom message", function() {
 	strictEqual(link.length, 1);
 	strictEqual(link.attr("href"), "http://bob.tiddlyspace.com");
 	strictEqual($(place).text(), "hello bob you sexy thing");
+});
+
+test("login (default)", function() {
+	var tsl = config.macros.TiddlySpaceLogin;
+	var NOP = function() {};
+	_ajaxMode = 1;
+	tsl.login("k", "k", NOP, NOP);
+	strictEqual(_ajaxSuccess, true, "the ajax request was made as expected to default challenger");
+});
+
+test("login (custom)", function() {
+	var tsl = config.macros.TiddlySpaceLogin;
+	var NOP = function() {};
+	_ajaxMode = 2;
+	tsl.login("k", "k", NOP, NOP, "custom");
+	strictEqual(_ajaxSuccess, true, "the ajax request was made as expected to a custom challenger");
 });
 
 })(QUnit.module, jQuery);
