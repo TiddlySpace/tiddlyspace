@@ -85,6 +85,7 @@ test("makeDiffTiddler", function() {
 	strictEqual(tid1.fields["server.workspace"],
 		config.defaultCustomFields["server.workspace"]);
 	strictEqual(tid2.tags.contains("diff"), false);
+	strictEqual(tid2.fields.doNotSave, true);
 });
 
 })(QUnit.module, jQuery);
