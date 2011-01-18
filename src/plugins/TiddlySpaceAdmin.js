@@ -166,7 +166,7 @@ var admin = config.macros.TiddlySpaceAdmin = {
 		spaceError: "space <em>%0</em> already exists",
 		charError: "error: invalid username - must only contain lowercase letters, digits or hyphens",
 		passwordError: "error: passwords do not match",
-		listError: "Error retrieving list of identities for user %0",
+		listError: "Error retrieving list of identities for user %0"
 	},
 	elements: {
 		openid: function() {
@@ -199,9 +199,9 @@ var identities = config.macros.TiddlySpaceIdentities = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var mode = params[0] || "list";
 		var container = $("<div />").appendTo(place)[0];
-		if(mode == "add") {
+		if(mode === "add") {
 			identities.generateForm(container);
-		} else if(mode == "list") {
+		} else if(mode === "list") {
 			tweb.getUserInfo(function(user) {
 				if(!user.anon) {
 					$(container).addClass("listIdentities");
