@@ -84,6 +84,7 @@ var plugin = config.extensions.errorHandler = {
 		var newTiddler = new Tiddler(title);
 		var tags = plugin.diffTags;
 		newTiddler.text = msgs.loading;
+		newTiddler.fields.doNotSave = true;
 		newTiddler.tags = diff ? tags.concat(["diff"]) : tags;
 		newTiddler = store.saveTiddler(newTiddler);
 		$.extend(store.getTiddler(title).fields,
