@@ -3,7 +3,7 @@
 |''Version''|0.6.16|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
-|''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
+|''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
 |''License''|[[BSD|http://www.opensource.org/licenses/bsd-license.php]]|
 !Usage
 Tag a tiddler with "follow" to express a list of followers.
@@ -68,16 +68,8 @@ store.addNotification(name, refreshStyles);
 
 // provide support for sucking in tiddlers from the server
 tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
-	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
 	var adaptor = store.getTiddlers()[0].getAdaptor();
-	var isPublic = endsWith(workspace, "_public");
-	var space = tiddlyspace.resolveSpaceName(workspace);
-	if(currentSpace == space) {
-		space = isPublic ? "public" : "private";
-	} else {
-		space = "@%0".format(space);
-	}
-	var localTitle = "%0 [%1]".format(title, space);
+	var localTitle = tiddlyspace.getLocalTitle(title, workspace);
 	var tiddler = new Tiddler(localTitle);
 	tiddler.text = "Please wait while this tiddler is retrieved...";
 	tiddler.fields.doNotSave = "true";
