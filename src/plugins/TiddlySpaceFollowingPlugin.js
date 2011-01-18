@@ -67,17 +67,22 @@ shadows[name] = "/*{{{*/\n%0\n/*}}}*/".
 store.addNotification(name, refreshStyles);
 
 // provide support for sucking in tiddlers from the server
-tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
+tiddlyspace.getLocalTitle = function(title, workspace, suffix) {
 	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
-	var adaptor = store.getTiddlers()[0].getAdaptor();
-	var isPublic = endsWith(workspace, "_public");
-	var space = tiddlyspace.resolveSpaceName(workspace);
-	if(currentSpace == space) {
-		space = isPublic ? "public" : "private";
-	} else {
-		space = "@%0".format(space);
+	if(!suffix) {
+		var isPublic = endsWith(workspace, "_public");
+		suffix = tiddlyspace.resolveSpaceName(workspace);
+		if(currentSpace == suffix) {
+			suffix = isPublic ? "public" : "private";
+		} else {
+			suffix = "@%0".format(suffix);
+		}
 	}
-	var localTitle = "%0 [%1]".format(title, space);
+	return "%0 *(%1)*".format(title, suffix);
+};
+tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
+	var adaptor = store.getTiddlers()[0].getAdaptor();
+	var localTitle = tiddlyspace.getLocalTitle(title, workspace);
 	var tiddler = new Tiddler(localTitle);
 	tiddler.text = "Please wait while this tiddler is retrieved...";
 	tiddler.fields.doNotSave = "true";
