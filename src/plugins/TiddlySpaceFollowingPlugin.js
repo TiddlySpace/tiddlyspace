@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.15|
+|''Version''|0.6.16|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
-|''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
+|''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
 |''License''|[[BSD|http://www.opensource.org/licenses/bsd-license.php]]|
 !Usage
 Tag a tiddler with "follow" to express a list of followers.
@@ -67,19 +67,6 @@ shadows[name] = "/*{{{*/\n%0\n/*}}}*/".
 store.addNotification(name, refreshStyles);
 
 // provide support for sucking in tiddlers from the server
-tiddlyspace.getLocalTitle = function(title, workspace, suffix) {
-	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
-	if(!suffix) {
-		var isPublic = endsWith(workspace, "_public");
-		suffix = tiddlyspace.resolveSpaceName(workspace);
-		if(currentSpace == suffix) {
-			suffix = isPublic ? "public" : "private";
-		} else {
-			suffix = "@%0".format(suffix);
-		}
-	}
-	return "%0 *(%1)*".format(title, suffix);
-};
 tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 	var adaptor = store.getTiddlers()[0].getAdaptor();
 	var localTitle = tiddlyspace.getLocalTitle(title, workspace);
