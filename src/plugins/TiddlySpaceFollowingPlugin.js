@@ -1,9 +1,9 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.15|
+|''Version''|0.6.16|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
-|''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
+|''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin TiddlySpaceViewTypes|
 |''License''|[[BSD|http://www.opensource.org/licenses/bsd-license.php]]|
 !Usage
 Tag a tiddler with "follow" to express a list of followers.
@@ -145,9 +145,6 @@ var followMacro = config.macros.followTiddlers = {
 	init: function() {
 		followMacro.lookup = {};
 	},
-	beforeSend: function(xhr) {
-		xhr.setRequestHeader("X-ControlView", "false");
-	},
 	followTag: "follow",
 	getHosts: function(callback) {
 		tweb.getStatus(function(status) {
@@ -233,11 +230,7 @@ var followMacro = config.macros.followTiddlers = {
 				callback(false);
 			}
 		};
-		if(!username) {
-			tweb.getUserInfo(followersCallback);
-		} else {
-			followersCallback({ name: username });
-		}
+		return !username ? tweb.getUserInfo(followersCallback) : followersCallback({ name: username });
 	}
 };
 
@@ -319,7 +312,6 @@ var scanMacro = config.macros.tsScan = {
 				ajaxReq({
 					url: url,
 					dataType: "json",
-					beforeSend: followMacro.beforeSend,
 					success: function(tiddlers) {
 						scanMacro.scanned[url] = {
 							tiddlers: tiddlers
@@ -365,7 +357,7 @@ var scanMacro = config.macros.tsScan = {
 		return options;
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		var container = $("<div />").addClass("scanResults").appendTo(place)[0];
+		var container = $("<div />").addClass("scanResults resultsArea").appendTo(place)[0];
 		var options = scanMacro.getOptions(paramString, tiddler);
 		scanMacro.scan(container, options);
 	}
@@ -397,11 +389,7 @@ var followersMacro = config.macros.followers = {
 				scanMacro.scan(container, options);
 			}
 		};
-		if(!username) {
-			followersCallback({ name: currentSpace });
-		} else {
-			followersCallback({ name: username });
-		}
+		return !username ? followersCallback({ name: currentSpace }) : followersCallback({ name: username });
 	}
 };
 
@@ -432,11 +420,7 @@ var followingMacro = config.macros.following = {
 				scanMacro.scan(container, options);
 			}
 		};
-		if(!username) {
-			followingCallback({ name: currentSpace });
-		} else {
-			followingCallback({ name: username });
-		}
+		return !username ? followingCallback({ name: currentSpace }) : followingCallback({ name: username });
 	}
 };
 
