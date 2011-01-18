@@ -5,7 +5,7 @@ to provide special optimized functionality.
 
 from tiddlywebplugins.sqlalchemy import (sRecipe, sPolicy,
         recipe_policy_table)
-from tiddlywebplugins.mysql import Store as MySQLStore
+from tiddlywebplugins.mysql2 import Store as MySQLStore
 from tiddlywebplugins.hashmaker import hash_tiddler
 
 
