@@ -28,7 +28,17 @@ module("TiddlySpaceFollowing", {
 		_binaryTiddlersPlugin = config.extensions.BinaryTiddlersPlugin;
 		config.extensions.BinaryTiddlersPlugin = {
 			endsWith: function(str, substr) {
-				
+				str = str.replace("bags/", "");
+				substr = substr.indexOf("_") === 0 ? substr.substr(1) : substr;
+				if(str == "foo_public" && substr == "public") {
+					return true;
+				} else if(str == "foo_private" && substr == "private") {
+					return true;
+				} else if(str == "bob_public" && substr == "public") {
+					return true;
+				} else {
+					return false;
+				}
 			}
 		};
 	},
@@ -40,6 +50,17 @@ module("TiddlySpaceFollowing", {
 		config.extensions.tiddlyweb.getUserInfo = _getUserInfo;
 		config.extensions.BinaryTiddlersPlugin = _binaryTiddlersPlugin;
 	}
+});
+
+test("getLocalTitle", function() {
+	var title1 = config.extensions.tiddlyspace.getLocalTitle("jon tiddler", "bags/foo_public");
+	var title2 = config.extensions.tiddlyspace.getLocalTitle("jon tiddler", "bags/foo_private");
+	var title3 = config.extensions.tiddlyspace.getLocalTitle("jon tiddler", "bags/bob_public");
+	var title4 = config.extensions.tiddlyspace.getLocalTitle("jon tiddler", null, "edit conflict");
+	strictEqual(title1, "jon tiddler *(public)*");
+	strictEqual(title2, "jon tiddler *(private)*");
+	strictEqual(title3, "jon tiddler *(@bob)*");
+	strictEqual(title4, "jon tiddler *(edit conflict)*");
 });
 
 test("_getFollowerBags", function() {

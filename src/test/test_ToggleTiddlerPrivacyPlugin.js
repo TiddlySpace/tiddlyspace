@@ -37,7 +37,7 @@ test("setBag", function() {
 	var macro = config.macros.setPrivacy;
 	var tiddler = new Tiddler("foo");
 	store.addTiddler(tiddler);
-	var el = $("<div />").attr("tiddler", "foo")[0];
+	var el = $("<div />").attr("tiddler", "foo").attr("tiddlyfields", "server.bag: foo_public")[0];
 	var bagInput = $("<input />").attr("edit", "server.bag").val("foo_private").appendTo(el);
 	var workspaceInput = $("<input />").attr("edit", "server.workspace").val("recipes/foo_private").appendTo(el);
 	var radioPublic = $("<input />").attr("type", "radio").addClass("isPublic").appendTo(el);
@@ -54,6 +54,7 @@ test("setBag", function() {
 	strictEqual(tiddler.fields["server.workspace"], "bags/foo_private");
 	strictEqual(radioPrivate.attr("checked"), true);
 	strictEqual(radioPublic.attr("checked"), false);
+	strictEqual($(el).attr("tiddlyfields"), "")
 });
 
 test("updateEditFields (custom fields already exist)", function() {

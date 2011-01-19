@@ -2,6 +2,7 @@
 Web related utility functions.
 """
 
+from tiddlyweb.model.policy import PermissionsError
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.store import StoreError
@@ -61,16 +62,20 @@ def determine_space_recipe(environ, space_name):
     named space. If so, use the private recipe.
     """
     store = environ['tiddlyweb.store']
-    user = environ['tiddlyweb.usersign']['name']
+    usersign = environ['tiddlyweb.usersign']
     try:
         space = Space(space_name)
         recipe = Recipe(space.public_recipe())
         recipe = store.get(recipe)
     except (ValueError, StoreError), exc:
         raise HTTP404('Space for %s does not exist: %s' % (space_name, exc))
-    members = recipe.policy.manage  # XXX: authoritative?
 
-    space_type = 'private' if user in members else 'public'
+    try:
+        recipe.policy.allows(usersign, 'manage')
+        space_type = 'private'
+    except PermissionsError:
+        space_type = 'public'
+
     recipe_name_method = getattr(space, '%s_recipe' % space_type)
     recipe_name = recipe_name_method()
     return recipe_name

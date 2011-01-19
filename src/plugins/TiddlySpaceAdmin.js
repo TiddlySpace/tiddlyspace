@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceAdmin|
-|''Version''|0.5.5|
+|''Version''|0.5.6|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/|
 |''Requires''|TiddlySpaceConfig TiddlySpaceFormsPlugin|
@@ -16,29 +16,28 @@ var formMaker = config.extensions.formMaker;
 var tsl = config.macros.TiddlySpaceLogin = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var locale = tsl.locale;
-		var type = params[0];
+		var challenger = params[0];
 		this.name = macroName;
 		var container = $("<div />", { className: this.name }).appendTo(place)[0];
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var options = {};
 		options.message = args.message ? args.message[0] : false;
-		this.refresh(container, type, options);
+		this.refresh(container, challenger, options);
 	},
-	refresh: function(container, type, options) {
-		type = type || "basic";
+	refresh: function(container, challenger, options) {
 		$(container).empty();
 		tweb.getUserInfo(function(user) {
 			if(user.anon) {
 				var template, handler;
-				if(type === "basic") {
-					template = tsl.basicFormTemplate;
-					handler = function(ev, form) {
-						return tsl.basicLogin(form);
-					};
-				} else {
-					var challenger = "tiddlywebplugins.tiddlyspace.openid";
+				if(challenger == "openid"){
+					challenger = "tiddlywebplugins.tiddlyspace.openid";
 					handler = "%0/challenge/%1".format(tweb.host, challenger);
 					template = tsl.openidFormTemplate;
+				} else {
+					template = tsl.basicFormTemplate;
+					handler = function(ev, form) {
+						return tsl.basicLogin(form, challenger);
+					};
 				}
 				formMaker.make(container, template, handler, { locale: admin.locale.login });
 			} else {
@@ -55,17 +54,18 @@ var tsl = config.macros.TiddlySpaceLogin = {
 			$(container).html(msg.format([link]));
 		});
 	},
-	basicLogin: function(form) {
+	basicLogin: function(form, challenger) {
+		challenger = challenger ? challenger : "cookie_form";
 		var username = $(form).find("[name=username]").val();
 		var password = $(form).find("[name=password]").val();
 		this.login(username, password, tsl.redirect, function(xhr, error, exc) { // TODO: DRY (cf. displayMembers)
 			var msg = { 401: admin.locale.forbiddenError.format(username) };
 			formMaker.displayMessage(form, msg[xhr.status], true, { annotate: "[name=username],[name=password]" });
-		});
+		}, challenger);
 		return false;
 	},
-	login: function(username, password, callback, errback) {
-		var challenger = "cookie_form";
+	login: function(username, password, callback, errback, challenger) {
+		challenger = challenger ? challenger : "cookie_form";
 		var uri = "%0/challenge/%1".format([tweb.host, challenger]);
 		ajaxReq({ url: uri, type: "POST", success: callback,
 			data: {
@@ -166,7 +166,7 @@ var admin = config.macros.TiddlySpaceAdmin = {
 		spaceError: "space <em>%0</em> already exists",
 		charError: "error: invalid username - must only contain lowercase letters, digits or hyphens",
 		passwordError: "error: passwords do not match",
-		listError: "Error retrieving list of identities for user %0",
+		listError: "Error retrieving list of identities for user %0"
 	},
 	elements: {
 		openid: function() {
@@ -199,9 +199,9 @@ var identities = config.macros.TiddlySpaceIdentities = {
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var mode = params[0] || "list";
 		var container = $("<div />").appendTo(place)[0];
-		if(mode == "add") {
+		if(mode === "add") {
 			identities.generateForm(container);
-		} else if(mode == "list") {
+		} else if(mode === "list") {
 			tweb.getUserInfo(function(user) {
 				if(!user.anon) {
 					$(container).addClass("listIdentities");

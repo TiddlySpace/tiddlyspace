@@ -1,13 +1,29 @@
 /***
 |''Name''|ErrorHandlerPlugin|
-|''Version''|0.4.1|
+|''Version''|0.4.2|
 |''Author''|Jon Robson|
 |''Description''|Localised tiddler save errors including edit conflict resolution.|
 |''CoreVersion''|2.6.1|
-|''Requires''|TiddlyWebConfig|
+|''Requires''|TiddlySpaceConfig|
 ***/
 //{{{
 (function($) {
+
+var tiddlyspace = config.extensions.tiddlyspace;
+var currentSpace = tiddlyspace.currentSpace.name;
+tiddlyspace.getLocalTitle = function(title, workspace, suffix) {
+	var endsWith = config.extensions.BinaryTiddlersPlugin.endsWith;
+	if(!suffix) {
+		var isPublic = endsWith(workspace, "_public");
+		suffix = tiddlyspace.resolveSpaceName(workspace);
+		if(currentSpace == suffix) {
+			suffix = isPublic ? "public" : "private";
+		} else {
+			suffix = "@%0".format(suffix);
+		}
+	}
+	return "%0 *(%1)*".format(title, suffix);
+};
 
 var sssp = config.extensions.ServerSideSavingPlugin;
 
@@ -21,9 +37,9 @@ var msgs = config.messages.editConflict = {
 	saveTooltip: "make this revision the top revision of this tiddler",
 	discard: "cancel",
 	discardTooltip: "undo changes to this tiddler and get most recent version",
-	diffTitle: "%0 [edit conflict %1]",
-	diffFieldTitle: "%0 - fields [edit conflict %1]",
-	diffTextTitle: "%0 - text [edit conflict %1]",
+	diffTitle: "%0",
+	diffFieldTitle: "%0 - fields",
+	diffTextTitle: "%0 - text",
 	updating: "updating your version...",
 	diffHeader: ["Review the changes that have been made whilst you were editing this tiddler. ",
 		"Fold relevant changes back into your version.\n",
@@ -84,6 +100,7 @@ var plugin = config.extensions.errorHandler = {
 		var newTiddler = new Tiddler(title);
 		var tags = plugin.diffTags;
 		newTiddler.text = msgs.loading;
+		newTiddler.fields.doNotSave = true;
 		newTiddler.tags = diff ? tags.concat(["diff"]) : tags;
 		newTiddler = store.saveTiddler(newTiddler);
 		$.extend(store.getTiddler(title).fields,
@@ -94,9 +111,10 @@ var plugin = config.extensions.errorHandler = {
 		var adaptor = tiddler.getAdaptor();
 		var title = tiddler.title;
 		var ts = new Date().formatString("0hh:0mm:0ss");
-		var diffTitle = msgs.diffTitle.format(title, ts);
-		var diffTextTitle = msgs.diffTextTitle.format(title, ts);
-		var diffFieldsTitle = msgs.diffFieldTitle.format(title, ts);
+		var suffix = "edit conflict %0".format(ts);
+		var diffTitle = tiddlyspace.getLocalTitle(msgs.diffTitle.format(title), "", suffix);
+		var diffTextTitle = tiddlyspace.getLocalTitle(msgs.diffTextTitle.format(title), "", suffix);
+		var diffFieldsTitle = tiddlyspace.getLocalTitle(msgs.diffFieldTitle.format(title), "", suffix);
 		plugin.makeDiffTiddler(diffTextTitle, true);
 		plugin.makeDiffTiddler(diffFieldsTitle, true);
 		var newTiddler = plugin.makeDiffTiddler(diffTitle, false);
