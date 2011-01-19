@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.16|
+|''Version''|0.6.17|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
