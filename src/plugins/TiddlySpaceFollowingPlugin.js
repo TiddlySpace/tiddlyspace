@@ -95,44 +95,10 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 			store.addTiddler(tiddler);
 			story.refreshTiddler(localTitle, null, true); // overriding existing allows updating
 			if(callback) {
-				tiddlyspace.displayReplyButton(src, tiddler);
 				callback(src, tiddler);
 			}
 		};
 		adaptor.getTiddler(title, context, null, getCallback);
-	});
-};
-tiddlyspace.displayReplyButton = function(el, tiddler) {
-	var replyLink = $(".replyLink", el);
-	if(replyLink.length > 0) {
-		el = replyLink.unbind("click").empty()[0];
-		el.onclick = null;
-	} 
-	var btn = $("<button />").addClass("reply").appendTo(el);
-	var serverTitle = tiddler.fields["server.title"];
-	var yourTiddler = store.getTiddler(serverTitle);
-	if(yourTiddler) {
-		btn.text("your version");
-	} else {
-		btn.text("reply");
-	}
-	btn.click(function(ev) {
-		if(!yourTiddler) {
-			story.displayTiddler(ev.target, serverTitle, DEFAULT_EDIT_TEMPLATE, false, null, null);
-			var tiddlerEl = story.getTiddler(serverTitle);
-			var text = yourTiddler ? yourTiddler.text : "";
-			var newFields = {};
-			merge(newFields, config.defaultCustomFields);
-			merge(newFields, { "server.workspace": tiddlyspace.getCurrentWorkspace("public") });
-			var customFields = String.encodeHashMap(newFields);
-			if(customFields) {
-				story.addCustomFields(tiddlerEl, customFields);
-			}
-			var replyTemplate = "in reply to @%0:\n<<<\n%1\n<<<\n\n%2".format(tiddler.modifier, tiddler.text, text);
-			$("[edit=text]", tiddlerEl).val(replyTemplate);
-		} else {
-			story.displayTiddler(ev.target, serverTitle, DEFAULT_VIEW_TEMPLATE, false, null, null);
-		}
 	});
 };
 
