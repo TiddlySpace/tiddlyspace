@@ -1,6 +1,7 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
 |''Version''|0.6.17|
+=======
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -399,10 +400,14 @@ config.macros.view.views.spaceLink = function(value, place, params, wikifier,
 		var link = createSpaceLink(place, spaceName, title, label);
 		if(args.external && args.external[0] == "no") {
 			$(link).click(function(ev) {
-				ev.preventDefault();
 				var el = $(ev.target);
-				tiddlyspace.displayServerTiddler(el[0], el.attr("tiddler"),
-					"bags/%0_public".format( el.attr("tiddlyspace") ));
+				var title = el.attr("tiddler");
+				var space = el.attr("tiddlyspace");
+				if(title && space) {
+					ev.preventDefault();
+					tiddlyspace.displayServerTiddler(el[0], title,
+						"bags/%0_public".format( space ));
+				}
 				return false;
 			});
 		}
