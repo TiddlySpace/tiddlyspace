@@ -30,7 +30,7 @@ config = {
     'cookie_age': '2592000',  # 1 month
     'server_store': ['tiddlywebplugins.tiddlyspace.store', {
         'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
-    'indexer': 'tiddlywebplugins.mysql',
+    'indexer': 'tiddlywebplugins.mysql2',
     'tiddlywebwiki.binary_limit': 1048576,  # 1 MB
     'lazy.titles': ['SiteIcon', 'ColorPalette'],
     # TiddlyWiki beta serialization
