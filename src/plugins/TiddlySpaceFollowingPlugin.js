@@ -382,38 +382,5 @@ var followingMacro = config.macros.following = {
 	}
 };
 
-config.macros.view.views.spaceLink = function(value, place, params, wikifier,
-		paramString, tiddler) {
-		var spaceName = tiddlyspace.resolveSpaceName(value);
-		var isBag = value === spaceName ? true : false;
-		var args = paramString.parseParams("anon")[0];
-		var titleField = args.anon[2];
-		var labelField = args.labelField ? args.labelField[0] : false;
-		var label;
-		if(labelField) {
-			label = tiddler[labelField] ? tiddler[labelField] : tiddler.fields[labelField];
-		} else {
-			label = args.label ? args.label[0] : false;
-		}
-		var title = tiddler[titleField] ? tiddler[titleField] : tiddler.fields[titleField];
-
-		var link = createSpaceLink(place, spaceName, title, label, isBag);
-		if(args.external && args.external[0] == "no") {
-			$(link).click(function(ev) {
-				var el = $(ev.target);
-				var title = el.attr("tiddler");
-				var bag = el.attr("bag");
-				var space = el.attr("tiddlyspace");
-				bag = space ? space + "_public" : bag;
-				if(title && bag) {
-					ev.preventDefault();
-					tiddlyspace.displayServerTiddler(el[0], title,
-						"bags/" + bag);
-				}
-				return false;
-			});
-		}
-};
-
 })(jQuery);
 //}}}
