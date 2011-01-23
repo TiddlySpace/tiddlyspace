@@ -1,8 +1,15 @@
 (function(module, $) {
 var _getUserInfo, _createSpaceLink, _resolveSpaceName;
 
-var _mockCreateSpaceLink = function(container) {
-	$("<a />").appendTo(container);
+var _mockCreateSpaceLink = function(container, space, title) {
+	var link = $("<a />").appendTo(container)[0];
+	if(space) {
+		$(link).attr("space", space);
+	}
+	if(title) {
+		$(link).attr("tiddler", title);
+	}
+	return link;
 };
 
 var _mockResolveSpaceName = function(x) {
@@ -20,8 +27,11 @@ var _mockResolveSpaceName = function(x) {
 	return false;
 };
 
-var runTest = function(container, bag) {
+var runTest = function(container, bag, serverTitle) {
 	var tiddler = new Tiddler("hello");
+	if(serverTitle) {
+		tiddler.fields["server.title"] = serverTitle;
+	}
 	tiddler.fields["server.bag"] = bag;
 	paramString = {
 		parseParams: function() {
@@ -75,11 +85,19 @@ module("TiddlySpaceViewTypes - in a users home space", {
 	}
 });
 
-test("reply link on included/sucked in tiddler", function() {
+test("reply link on included tiddler", function() {
 	var container = $("<div />")[0];
 	runTest(container, "bar_public");
 	var link = $("a", container);
 	strictEqual(link.length, 0, "a reply link does not exist as in the users homespace.");
+});
+
+test("reply link for imported tiddler", function() {
+	var container = $("<div />")[0];
+	runTest(container, "bar_public", "non-mangled title");
+	var link = $("a", container);
+	strictEqual(link.length, 1, "a reply link should be created as it is imported");
+	strictEqual(link.attr("tiddler"), "non-mangled title");
 });
 
 module("TiddlySpaceViewTypes - in a non-homespace", {
@@ -105,6 +123,14 @@ test("reply link on a tiddler in a non-homespace that did not originate from hom
 	runTest(container, "bar_public");
 	var link = $("a", container);
 	strictEqual(link.length, 1, "the bag is not the users bag so it is possible to reply.");
+});
+
+test("reply link on an imported tiddler in a non-homespace", function() {
+	var container = $("<div />")[0];
+	runTest(container, "bar_public", "imported");
+	var link = $("a", container);
+	strictEqual(link.length, 1, "the tiddler is imported so a reply link is added");
+	strictEqual(link.attr("tiddler"), "imported", "make sure the real name is shown (the server.title)");
 });
 
 test("reply link on a tiddler in a non-homespace that originated from homespace", function() {
