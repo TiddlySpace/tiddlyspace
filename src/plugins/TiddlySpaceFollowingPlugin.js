@@ -1,7 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.17|
-=======
+|''Version''|0.6.18|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -386,6 +385,7 @@ var followingMacro = config.macros.following = {
 config.macros.view.views.spaceLink = function(value, place, params, wikifier,
 		paramString, tiddler) {
 		var spaceName = tiddlyspace.resolveSpaceName(value);
+		var isBag = value === spaceName ? true : false;
 		var args = paramString.parseParams("anon")[0];
 		var titleField = args.anon[2];
 		var labelField = args.labelField ? args.labelField[0] : false;
@@ -397,16 +397,18 @@ config.macros.view.views.spaceLink = function(value, place, params, wikifier,
 		}
 		var title = tiddler[titleField] ? tiddler[titleField] : tiddler.fields[titleField];
 
-		var link = createSpaceLink(place, spaceName, title, label);
+		var link = createSpaceLink(place, spaceName, title, label, isBag);
 		if(args.external && args.external[0] == "no") {
 			$(link).click(function(ev) {
 				var el = $(ev.target);
 				var title = el.attr("tiddler");
+				var bag = el.attr("bag");
 				var space = el.attr("tiddlyspace");
-				if(title && space) {
+				bag = space ? space + "_public" : bag;
+				if(title && bag) {
 					ev.preventDefault();
 					tiddlyspace.displayServerTiddler(el[0], title,
-						"bags/%0_public".format( space ));
+						"bags/" + bag);
 				}
 				return false;
 			});
