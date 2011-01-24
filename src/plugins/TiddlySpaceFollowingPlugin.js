@@ -1,7 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.17|
-=======
+|''Version''|0.6.18|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -381,36 +380,6 @@ var followingMacro = config.macros.following = {
 		};
 		return !username ? followingCallback({ name: currentSpace }) : followingCallback({ name: username });
 	}
-};
-
-config.macros.view.views.spaceLink = function(value, place, params, wikifier,
-		paramString, tiddler) {
-		var spaceName = tiddlyspace.resolveSpaceName(value);
-		var args = paramString.parseParams("anon")[0];
-		var titleField = args.anon[2];
-		var labelField = args.labelField ? args.labelField[0] : false;
-		var label;
-		if(labelField) {
-			label = tiddler[labelField] ? tiddler[labelField] : tiddler.fields[labelField];
-		} else {
-			label = args.label ? args.label[0] : false;
-		}
-		var title = tiddler[titleField] ? tiddler[titleField] : tiddler.fields[titleField];
-
-		var link = createSpaceLink(place, spaceName, title, label);
-		if(args.external && args.external[0] == "no") {
-			$(link).click(function(ev) {
-				var el = $(ev.target);
-				var title = el.attr("tiddler");
-				var space = el.attr("tiddlyspace");
-				if(title && space) {
-					ev.preventDefault();
-					tiddlyspace.displayServerTiddler(el[0], title,
-						"bags/%0_public".format( space ));
-				}
-				return false;
-			});
-		}
 };
 
 })(jQuery);
