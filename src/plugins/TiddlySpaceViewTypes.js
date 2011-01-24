@@ -34,7 +34,7 @@ config.macros.view.views.replyLink = function(value, place, params, wikifier,
 			imported = true;
 		}
 	} else {
-		title = tiddler[titleField] ? tiddler[titleField] : tiddler.fields[titleField];
+		title = tiddler[valueField] ? tiddler[valueField] : tiddler.fields[valueField];
 	}
 	var args = paramString.parseParams("anon")[0];
 	var label = (args.label) ? args.label : config.macros.view.replyLink.locale.label;
