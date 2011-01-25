@@ -62,7 +62,7 @@ def test_validator_nonce_success():
     spacename = 'foo'
     secret = '12345'
     timestamp = datetime.now().strftime('%Y%m%d%H')
-    nonce = '%s:%s' % (timestamp,
+    nonce = '%s:%s:%s' % (timestamp, username,
         sha('%s:%s:%s:%s' % (username, timestamp, spacename, secret)).
         hexdigest())
     environ = {
@@ -124,7 +124,7 @@ def test_validator_nonce_hash_fail():
     spacename = 'foo'
     secret = '12345'
     timestamp = datetime.now().strftime('%Y%m%d%H')
-    nonce = '%s:dwaoiju277218ywdhdnakas72' % timestamp
+    nonce = '%s:%s:dwaoiju277218ywdhdnakas72' % (timestamp, username)
     environ = {
        'tiddlyweb.usersign': {'name': username},
        'tiddlyweb.config': {
@@ -158,7 +158,7 @@ def test_post_data_form_urlencoded():
     store.put(user)
     timestamp = datetime.now().strftime('%Y%m%d%H')
     secret = config['secret']
-    nonce = '%s:%s' % (timestamp,
+    nonce = '%s:%s:%s' % (timestamp, user.usersign,
         sha('%s:%s:%s:%s' % (user.usersign, timestamp, space, secret)).
         hexdigest())
 
@@ -200,7 +200,7 @@ def test_post_data_multipart_form():
     store.put(user)
     timestamp = datetime.now().strftime('%Y%m%d%H')
     secret = config['secret']
-    nonce = '%s:%s' % (timestamp,
+    nonce = '%s:%s:%s' % (timestamp, user.usersign,
         sha('%s:%s:%s:%s' % (user.usersign, timestamp, space, secret)).
         hexdigest())
 
@@ -255,7 +255,7 @@ def test_nonce_not_left_over():
     store.put(user)
     timestamp = datetime.now().strftime('%Y%m%d%H')
     secret = config['secret']
-    nonce = '%s:%s' % (timestamp,
+    nonce = '%s:%s:%s' % (timestamp, user.usersign,
         sha('%s:%s:%s:%s' % (user.usersign, timestamp, space, secret)).
         hexdigest())
 
@@ -305,7 +305,8 @@ def test_cookie_set():
     assert response['status'] == '200'
 
     time = datetime.now().strftime('%Y%m%d%H')
-    cookie = 'csrf_token=%s:%s' % (time, sha('%s:%s:%s:%s' % (user.usersign,
+    cookie = 'csrf_token=%s:%s:%s' % (time, user.usersign,
+        sha('%s:%s:%s:%s' % (user.usersign,
         time, space, config['secret'])).hexdigest())
     assert response['set-cookie'] == cookie
 
@@ -334,7 +335,8 @@ def test_no_cookie_sent():
 
     user_cookie = get_auth('foo', 'foobar')
     time = datetime.now().strftime('%Y%m%d%H')
-    cookie = 'csrf_token=%s:%s' % (time, sha('%s:%s:%s:%s' % (user.usersign,
+    cookie = 'csrf_token=%s:%s:%s' % (time, user.usersign,
+        sha('%s:%s:%s:%s' % (user.usersign,
         time, space, config['secret'])).hexdigest())
 
     response, _ = http.request('http://foo.0.0.0.0:8080/status',
@@ -361,7 +363,8 @@ def test_invalid_cookie():
     user_cookie = get_auth('foo', 'foobar')
     time = datetime.now() - timedelta(hours=3)
     time = time.strftime('%Y%m%d%H')
-    cookie = 'csrf_token=%s:%s' % (time, sha('%s:%s:%s:%s' % (user.usersign,
+    cookie = 'csrf_token=%s:%s:%s' % (time, user.usersign,
+        sha('%s:%s:%s:%s' % (user.usersign,
         time, space, config['secret'])).hexdigest())
 
     response, _ = http.request('http://foo.0.0.0.0:8080/status',
@@ -380,3 +383,16 @@ def test_invalid_cookie():
         })
 
     assert 'csrf_token' in response['set-cookie']
+
+    user2 = User('bar')
+    user2.set_password('foobar')
+    store.put(user2)
+    user2_cookie = get_auth('bar', 'foobar')
+
+    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+        method='GET',
+        headers={
+            'Cookie': 'tiddlyweb_user="%s"; %s' % (user2_cookie, cookie)
+        })
+
+    assert 'csrf_token' in response.get('set-cookie', '')

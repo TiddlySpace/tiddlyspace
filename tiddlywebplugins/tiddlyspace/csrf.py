@@ -34,14 +34,20 @@ class CSRFProtector(object):
             user_cookie.load(environ.get('HTTP_COOKIE', {}))
             csrf_cookie = user_cookie.get('csrf_token')
             timestamp = ''
+            cookie_user = None
             if csrf_cookie:
-                timestamp = csrf_cookie.value.rsplit(':', 1)[0]
+                try:
+                    timestamp, cookie_user, _ = csrf_cookie.value.split(':', 2)
+                except ValueError:
+                    timestamp = ''
+                    cookie_user = ''
+            username = environ['tiddlyweb.usersign']['name']
             now = datetime.now().strftime('%Y%m%d%H')
-            if now != timestamp:
+            if now != timestamp or cookie_user != username:
                 user, space, secret = get_nonce_components(environ)
                 nonce = gen_nonce(user, space, now, secret)
                 set_cookie = 'csrf_token=%s' % nonce
-                headers.append(('Set-Cookie', set_cookie))
+                headers.append(('Set-Cookie', set_cookie.encode()))
             start_response(status, headers, exc_info)
         def app():
             output = self.application(environ, fake_start_response)
@@ -66,7 +72,7 @@ class CSRFProtector(object):
     def check_csrf(self, environ, nonce):
         """
         Check to ensure that the incoming request isn't a csrf attack.
-        Do this by expecting a nonce that is made up of timestamp:hash
+        Do this by expecting a nonce that is made up of timestamp:user:hash
         where hash is the hash of username:timestamp:spacename:secret
 
         Returns True
@@ -76,7 +82,7 @@ class CSRFProtector(object):
 
         user, space, secret = get_nonce_components(environ)
         time = datetime.now().strftime('%Y%m%d%H')
-        nonce_time = nonce.rsplit(':', 1)[0]
+        nonce_time = nonce.split(':', 1)[0]
         if time != nonce_time:
             date = datetime.strptime(time, '%Y%m%d%H')
             date -= timedelta(hours=1)
@@ -106,8 +112,8 @@ def gen_nonce(username, spacename, timestamp, secret):
     """
     generate a hash suitable for using as a nonce.
 
-    the hash is: timestamp:hash(user:time:space:secret)
+    the hash is: timestamp:username:hash(user:time:space:secret)
     """
-    return '%s:%s' % (timestamp,
+    return '%s:%s:%s' % (timestamp, username,
         sha('%s:%s:%s:%s' % (username, timestamp, spacename, secret)).
         hexdigest())
