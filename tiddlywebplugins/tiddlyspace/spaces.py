@@ -71,7 +71,10 @@ def change_space_member(store, space_name, add=None, remove=None,
     """
     The guts of adding a member to space.
     """
-    space = Space(space_name)
+    try:
+        space = Space(space_name)
+    except ValueError, exc:
+        raise HTTP404('Space %s invalid: %s' % (space_name, exc))
     private_bag = store.get(Bag(space.private_bag()))
 
     if current_user:
@@ -183,13 +186,13 @@ def list_space_members(environ, start_response):
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     current_user = environ['tiddlyweb.usersign']
-    space = Space(space_name)
     try:
+        space = Space(space_name)
         private_space_bag = store.get(Bag(space.private_bag()))
         private_space_bag.policy.allows(current_user, 'manage')
         members = [member for member in private_space_bag.policy.manage if
                 not member.startswith('R:')]
-    except NoBagError:
+    except (ValueError, NoBagError):
         raise HTTP404('No space for %s' % space_name)
     start_response('200 OK', [
         ('Cache-Control', 'no-cache'),
@@ -235,7 +238,10 @@ def subscribe_space(environ, start_response):
     store = environ['tiddlyweb.store']
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     current_user = environ['tiddlyweb.usersign']
-    current_space = Space(space_name)
+    try:
+        current_space = Space(space_name)
+    except ValueError, exc:
+        raise HTTP409('Invalid space name: %s' % exc)
     try:
         # checked for existence, but not used
         store.get(Bag(current_space.public_bag()))
@@ -297,12 +303,12 @@ def _do_subscriptions(environ, subscriptions, public_recipe_list,
     and private_recipe_list.
     """
     for space in subscriptions:
-        _validate_subscription(environ, space, private_recipe_list)
         try:
-            try:
-                subscribed_space = Space(space)
-            except ValueError, exc:
-                raise HTTP409('Invalid space name: %s' % exc)
+            subscribed_space = _validate_subscription(
+                    environ, space, private_recipe_list)
+        except ValueError, exc:
+            raise HTTP409('Invalid space name: %s' % exc)
+        try:
             subscribed_recipe = store.get(
                     Recipe(subscribed_space.public_recipe()))
             for bag, filter_string in subscribed_recipe.get_recipe()[2:]:
@@ -323,9 +329,9 @@ def _do_unsubscriptions(space_name, unsubscriptions, public_recipe_list,
     for space in unsubscriptions:
         if space == space_name:
             raise HTTP409('Attempt to unsubscribe self')
-        unsubscribed_space = Space(space)
-        bag = unsubscribed_space.public_bag()
         try:
+            unsubscribed_space = Space(space)
+            bag = unsubscribed_space.public_bag()
             public_recipe_list.remove([bag, ""])
             private_recipe_list.remove([bag, ""])
         except ValueError, exc:
@@ -457,3 +463,4 @@ def _validate_subscription(environ, name, recipe):
         raise HTTP409('Subscription not allowed to space: %s' % name)
     elif [space.public_bag(), ''] in recipe:
         raise HTTP409('Space already subscribed: %s' % name)
+    return space
