@@ -1,29 +1,10 @@
 /***
 |''Name''|TiddlySpaceInclusion|
-|''Version''|0.5.2|
+|''Version''|0.6.0|
 |''Description''|provides user interfaces for managing TiddlySpace inclusions|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceInclusion.js|
-|''Requires''|TiddlySpaceConfig TiddlySpaceUserControls chrjs|
-!HTMLForm
-<form action="#">
-	<fieldset>
-		<legend />
-		<p class="description" />
-		<dl>
-			<dt class="_passive">Space Name:</dt>
-			<dd class="_passive"><input type="text" name="space" /></dd>
-			<dt class="_active">Space Selection:</dt>
-			<dd class="_active">
-				<select>
-					<option></option>
-				</select>
-			</dd>
-		</dl>
-		<p class="annotation" />
-		<input type="submit" />
-	</fieldset>
-</form>
+|''Requires''|TiddlySpaceConfig TiddlySpaceAdmin chrjs|
 !Code
 ***/
 //{{{
@@ -32,51 +13,39 @@
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
 var currentSpace = tiddlyspace.currentSpace.name;
+var formMaker = config.extensions.formMaker;
 
 var macro = config.macros.TiddlySpaceInclusion = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
-		addPassiveLabel: "Include space",
-		addActiveLabel: "Include into space",
-		passiveDesc: "Include a space into the current space",
-		activeDesc: "Include another space in the current space",
+		submit: "Include space",
+		sending: "Including space...",
 		addSuccess: "included %0 in %1",
 		delPrompt: "Are you sure you want to exclude %0 from the current space?",
 		delTooltip: "click to exclude from the space",
 		delError: "error excluding %0: %1",
 		listError: "error retrieving spaces included in space %0: %1",
-		forbiddenError: "unauthorized to modify space <em>%0</em>",
-		noSpaceError: "space <em>%0</em> does not exist",
-		conflictError: "space <em>%0</em> is already included in <em>%1</em>",
 		noInclusions: "no spaces are included",
 		recursiveInclusions: "Spaces that were included by the removed space and not part of the core TiddlySpace application are highlighted and can be removed manually if wished.",
-		reloadPrompt: "The page must be reloaded for inclusion to take effect. Reload now?"
+		reloadPrompt: "The page must be reloaded for inclusion to take effect. Reload now?",
+		errors: {
+			403: "unauthorized to modify space <em>%1</em>",
+			404: "space <em>%1</em> does not exist", // XXX: only relevant for passive mode
+			"409a": "space <em>%0</em> is already included in <em>%1</em>",
+			"409b": "space <em>%0</em> does not exist"
+		}
 	},
 
+	elements: ["Space Name:", { name: "space" }],
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		// passive mode means subscribing given space to current space
-		// active mode means subscribing current space to given space
 		this.name = macroName;
 		var mode = params[0] || "list";
-		var form = $(this.formTemplate).
-			find(".annotation").hide().end();
+
 		if(mode == "passive") {
 			if(!readOnly) {
-				form.submit(function(ev) { return macro.onSubmit(this, mode); }).
-					find("._active").remove().end().
-					find("legend").text(this.locale.addPassiveLabel).end().
-					find(".description").text(this.locale.passiveDesc).end().
-					find("[type=submit]").val(this.locale.addPassiveLabel).end().
-					appendTo(place);
+				formMaker.make(place, macro.elements, macro.onSubmit, { locale: macro.locale });
 			}
-		} else if(mode == "active") {
-			form.submit(function(ev) { return macro.onSubmit(this, mode); }).
-				find("._passive").remove().end().
-				find("legend").text(this.locale.addActiveLabel).end().
-				find(".description").text(this.locale.activeDesc).end().
-				find("[type=submit]").val(this.locale.addActiveLabel).end().
-				appendTo(place);
-			this.populateSpaces(form);
 		} else {
 			var container = $("<div />").addClass(this.name).appendTo(place);
 			$('<p class="annotation" />').hide().appendTo(container);
@@ -116,30 +85,18 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			displayMessage(macro.locale.listError.format([currentSpace, error]));
 		});
 	},
-	populateSpaces: function(form) { // TODO: rename?
-		$.ajax({ // TODO: add to model/space.js?
-			url: tweb.host + "/spaces?mine=1",
-			type: "GET",
-			success: function(data, status, xhr) {
-				var spaces = $.map(data, function(item, i) {
-					return $("<option />", { value: item.name }).text(item.name)[0];
-				});
-				$("select", form).append(spaces);
-			} // TODO: error handling?
-		});
-	},
-	onSubmit: function(el, mode) {
-		var form = $(el).closest("form");
-		var selector = mode == "passive" ? "[name=space]" : "select";
-		var space = form.find(selector).val();
-		var provider = mode == "passive" ? space : currentSpace;
-		var subscriber = mode == "passive" ? currentSpace : space;
+	onSubmit: function(ev, form) {
+		var selector = "[name=space]";
+		var space = $(form).find(selector).val();
+		var provider = space;
+		var subscriber = currentSpace;
 		var loc = macro.locale;
 		var callback = function(data, status, xhr) {
 			displayMessage(loc.addSuccess.format([provider, subscriber]));
 			if(confirm(loc.reloadPrompt)) {
 				window.location.reload();
 			}
+			formMaker.reset();
 		};
 		var errback = function(xhr, error, exc) {
 			if(xhr.status == 409) {
@@ -148,19 +105,13 @@ var macro = config.macros.TiddlySpaceInclusion = {
 					status: xhr.responseText.indexOf(included) != -1 ? "409a" : "409b"
 				};
 			}
-			var ctx = {
-				msg: {
-					403: loc.forbiddenError.format([subscriber]),
-					404: loc.noSpaceError.format([subscriber]), // XXX: only relevant for passive mode
-					"409a": loc.conflictError.format([provider, subscriber]),
-					"409b": loc.noSpaceError.format([provider])
-				},
-				form: form,
+			var options = {
+				format: [ provider, subscriber ],
 				selector: selector
 			};
-			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
+			formMaker.displayError(form, xhr.status, macro.locale.errors, options);
 		};
-		this.inclusion(provider, subscriber, callback, errback, false);
+		macro.inclusion(provider, subscriber, callback, errback, false);
 		return false;
 	},
 	onDelClick: function(ev) { // XXX: too long, needs refactoring

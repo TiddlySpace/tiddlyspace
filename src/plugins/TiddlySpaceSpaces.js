@@ -1,52 +1,33 @@
 /***
 |''Name''|TiddlySpaceSpaces|
-|''Version''|0.5.9|
+|''Version''|0.6.0|
 |''Description''|TiddlySpace spaces management|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
 |''CoreVersion''|2.6.1|
-|''Requires''|TiddlyWebConfig TiddlySpaceInclusion TiddlySpaceUserControls|
-!HTMLForm
-<div class='createSpace'>
-	<div class='status'></div>
-	<form action="#">
-		<fieldset>
-			<legend />
-			<dl>
-				<dt>Name:</dt>
-				<dd><input type="text" name="space" /></dd>
-			</dl>
-			<p>
-				<input type="checkbox" name="subscribe" />
-				Include the current space in the new space.
-			</p>
-			<p class="success" />
-			<p class="annotation" />
-			<input type="submit" />
-		</fieldset>
-	</form>
-</div>
+|''Requires''|TiddlyWebConfig TiddlySpaceInclusion TiddlySpaceAdmin|
 !Code
 ***/
 //{{{
 (function($) {
 
 var tweb = config.extensions.tiddlyweb;
+var formMaker = config.extensions.formMaker;
 
 var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
 		listError: "error listing spaces: %0",
-		addLabel: "Create space",
+		submit: "Create space",
 		addSuccess: "created space %0",
-		conflictError: "space <em>%0</em> already exists",
-		charError: "error: invalid space name - must start with a letter, be " +
-			"at least two characters in length and only contain lowercase " +
-			"letters, digits or hyphens",
 		noSpaces: "You have no spaces",
-		addSpace: "Creating your new space...",
+		sending: "Creating your new space...",
 		loadingSpaces: "Wait while we load your spaces...",
-		anon: "Login to view your spaces"
+		anon: "Login to view your spaces",
+		errors:  { 409: "space <em>%0</em> already exists",
+			"409a": "error: invalid space name - must start with a letter, be " +
+				"at least two characters in length and only contain lowercase " +
+				"letters, digits or hyphens" }
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -98,17 +79,10 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			}
 		});
 	},
+	elements: [ "Name:", { name: "space" }, { type: "checkbox", name: "subscribe" },
+		"Include the current space in the new space."],
 	generateForm: function(container, options) {
-		var locale = macro.locale;
-		$(this.formTemplate).submit(function(ev) {
-			$(".status", container).text(locale.addSpace).show();
-			$("form", container).fadeOut("slow");
-			ev.preventDefault();
-			return macro.onSubmit(ev);
-		}).
-		find("legend").text(this.locale.addLabel).end().
-		find(".annotation").hide().end().
-		find("[type=submit]").val(this.locale.addLabel).end().appendTo(container);
+		formMaker.make(container, macro.elements, macro.onSubmit, { locale: macro.locale });
 		if(options.subscribe) {
 			$("[name=subscribe]", container).attr("checked", true);
 		}
@@ -123,7 +97,6 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 		var space = form.find("[name=space]").val();
 		var subscribe = form.find("[name=subscribe]").attr("checked");
 		space = new tiddlyweb.Space(space, tweb.host);
-		var displayError = config.macros.TiddlySpaceLogin.displayError;
 		var ns = config.extensions.tiddlyspace;
 		var callback = function(resource, status, xhr) {
 			if(subscribe) {
@@ -133,32 +106,16 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			$(".listTiddlySpaceSpaces").each(function(i, el) {
 				refreshElements(el.parentNode);
 			});
-			form.stop(true, true).fadeIn("slow");
 			$("input[type=text]", form).val("");
-			statusMessage.hide();
+			formMaker.reset();
 		};
 		var errback = function(xhr, error, exc) { // TODO: DRY (cf. TiddlySpaceLogin)
-			var ctx = {
-				msg: { 409: macro.locale.conflictError.format(space.name) },
-				form: form,
-				selector: "[name=space]"
-			};
-			form.stop(true, true).fadeIn("slow");
-			statusMessage.hide();
-			displayError(xhr, error, exc, ctx);
+			formMaker.displayError(form[0], xhr.status, macro.locale.errors, { selector: "[name=space]", format: [ space.name ] });
 		};
 		if(ns.isValidSpaceName(space.name)) {
 			space.create(callback, errback);
 		} else {
-			xhr = { status: 409 }; // XXX: hacky
-			var ctx = {
-				msg: { 409: macro.locale.charError },
-				form: form,
-				selector: "[name=space]"
-			};
-			form.stop(true, true).fadeIn("slow");
-			statusMessage.hide();
-			displayError(xhr, null, null, ctx);
+			formMaker.displayError(form[0], "409a", macro.locale.errors, { selector: "[name=space]" });
 		}
 		return false;
 	}

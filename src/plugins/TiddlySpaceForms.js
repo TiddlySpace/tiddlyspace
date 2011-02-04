@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFormsPlugin|
-|''Version''|0.2.1|
+|''Version''|0.2.5|
 |''Requires''|TiddlySpaceConfig|
 !Code
 ***/
@@ -12,7 +12,10 @@ var ext = config.extensions.formMaker = {
 		submit: "submit",
 		sending: "submitting the form...",
 		error: "an error occurred",
-		tryAgain: "try again"
+		tryAgain: "try again",
+		errors: {
+			"default": "An error occurred."
+		}
 	},
 	localise: function(i, locale) {
 		return locale[i] || ext.locale[i];
@@ -25,6 +28,16 @@ var ext = config.extensions.formMaker = {
 	doSubmit: function(form, locale) {
 		$(".inputArea", form).hide();
 		$(".messageArea", form).text(ext.localise("sending", locale)).show(100);
+	},
+	displayError: function(form, code, locale, options) {
+		locale = locale || {};
+		options = options || {};
+		merge(ext.locale.errors, locale);
+		var msg = locale[code] || locale["default"];
+		if(options.format) {
+			msg = msg.format(options.format);
+		}
+		ext.displayMessage(form, msg, true, options);
 	},
 	displayMessage: function(form, msg, error, options) {
 		options = options || {};
@@ -66,7 +79,7 @@ var ext = config.extensions.formMaker = {
 			if(typeof(el) == "string") {
 				$("<div />").addClass("label").text(el).appendTo(inputArea);
 			} else if(el) {
-				if(el.type && ["password", "hidden"].contains(el.type)) {
+				if(el.type && ["password", "hidden", "checkbox"].contains(el.type)) {
 					el._typeAttr = "type='%0'".format(el.type);
 					el.type = "input";
 				} else if(!el.type) {

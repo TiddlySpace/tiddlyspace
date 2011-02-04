@@ -1,104 +1,71 @@
 /***
 |''Name''|TiddlySpaceChangePassword|
-|''Version''|0.2.0|
+|''Version''|0.3.0|
 |''Author''|Osmosoft|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceChangePassword.js|
-|''Requires''|TiddlyWebConfig TiddlySpaceUserControls|
-!HTMLForm
-<form action="#">
-	<fieldset>
-		<legend />
-		<dl>
-			<dt>Current password:</dt>
-			<dd>
-				<input type="password" name="password" />
-			</dd>
-			<dd>
-				<dt>New password:</dt>
-				<input type="password" name="new_password" />
-				<dt>Confirm new password:</dt>
-				<input type="password" name="new_password_confirm" />
-			</dd>
-		</dl>
-		<p class="annotation" />
-		<input type="submit" />
-	</fieldset>
-</form>
+|''Requires''|TiddlyWebConfig TiddlySpaceAdmin|
 !Code
 ***/
 //{{{
 (function($) {
 
 var tweb = config.extensions.tiddlyweb;
-var displayError = config.macros.TiddlySpaceLogin.displayError;
+var formMaker = config.extensions.formMaker;
+var admin = config.macros.TiddlySpaceAdmin;
 
 var macro = config.macros.TiddlySpaceChangePassword = {
 	locale: {
-		label: "Change password",
+		submit: "Change password",
 		cpwSuccess: "Password changed",
 		noPasswordError: "Please enter password",
-		passwordMatchError: "Error: passwords do not match",
-		passwordShortError: "Error: password must be at least %0 characters",
-		passwordAuthError: "Error: old password is incorrect",
-		passwordMinLength: 6
+		passwordMinLength: 6,
+		errors: {
+			"409a": "Passwords do not match",
+			"409b": "Error: password must be at least %0 characters",
+			400: "The old password you provided is incorrect"
+		}
 	},
-	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
+	elements: [ "Current password:", admin.elements.password(),
+		"New password:", admin.elements.password("new_password"),
+		"Confirm new password:", admin.elements.password("new_password_confirm") ],
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		$(macro.formTemplate).submit(macro.onSubmit).
-			find("legend").text(macro.locale.label).end().
-			find(".annotation").hide().end().
-			find("[type=submit]").val(macro.locale.label).end().
-			appendTo(place);
+		formMaker.make(place, macro.elements, macro.onSubmit, { locale: macro.locale });
 	},
 
-	onSubmit: function(ev) {
+	onSubmit: function(ev, form) {
 		var msg = macro.locale;
-		var form = $(this).closest("form");
-		form.find(".annotation").hide();
-		var password = form.find("[name=password]").val();
-		var npassword = form.find("[name=new_password]").val();
-		var npasswordConfirm = form.find("[name=new_password_confirm]").val();
-		var xhr, ctx;
+		$(form).find(".annotation").hide();
+		var password = $(form).find("[name=password]").val();
+		var npassword = $(form).find("[name=new_password]").val();
+		var npasswordConfirm = $(form).find("[name=new_password_confirm]").val();
+		var options;
 		if(npassword != npasswordConfirm) {
-			xhr = { status: 409 }; // XXX: hacky
-			ctx = {
-				msg: {
-					409: msg.passwordMatchError
-				},
-				form: form,
+			options = {
 				selector: "[name=new_password], [name=new_password_confirm]"
 			};
-			displayError(xhr, null, null, ctx);
+			formMaker.displayError(form, "409a", macro.locale.errors, options);
 		} else if(npassword.length < msg.passwordMinLength) {
-			xhr = { status: 409 }; // XXX: hacky
-			ctx = {
-				msg: {
-					409: msg.passwordShortError.format([msg.passwordMinLength])
-				},
-				form: form,
-				selector: "[name=new_password]"
+			options = {
+				format: [ msg.passwordMinLength ],
+				selector: "[name=new_password]",
 			};
-			displayError(xhr, null, null, ctx);
+			formMaker.displayError(form, "409b", macro.locale.errors, options);
 		} else {
-			macro.changePassword(tweb.username, password, npassword);
+			macro.changePassword(tweb.username, password, npassword, form);
 		}
 		return false;
 	},
 
 	changePassword: function(username, password, npassword, form) {
 		var pwCallback = function(resource, status, xhr) {
-			displayMessage(macro.locale.cpwSuccess);
+			$(form).empty().text(macro.locale.cpwSuccess);
 		};
 		var pwErrback = function(xhr, error, exc) {
-			var ctx = {
-				msg: {
-					400: macro.locale.passwordAuthError
-				},
-				form: form,
+			var options = {
 				selector: "[name=password]"
 			};
-			displayError(xhr, null, null, ctx);
+			formMaker.displayError(form, xhr.status, macro.locale.errors, options);
 		};
 		var user = new tiddlyweb.User(username, password, tweb.host);
 		user.setPassword(npassword, pwCallback, pwErrback);
