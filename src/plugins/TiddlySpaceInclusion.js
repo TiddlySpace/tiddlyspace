@@ -18,9 +18,8 @@ var formMaker = config.extensions.formMaker;
 var macro = config.macros.TiddlySpaceInclusion = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
-		addPassiveLabel: "Include space",
-		addActiveLabel: "Include into space",
-		passiveDesc: "Include a space into the current space",
+		submit: "Include space",
+		sending: "Including space...",
 		addSuccess: "included %0 in %1",
 		delPrompt: "Are you sure you want to exclude %0 from the current space?",
 		delTooltip: "click to exclude from the space",
@@ -46,7 +45,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		if(mode == "passive") {
 			if(!readOnly) {
 				var handler = function(ev) { return macro.onSubmit(ev.target, mode); };
-				formMaker.make(place, macro.elements, handler, {});
+				formMaker.make(place, macro.elements, handler, { locale: macro.locale });
 			}
 		} else {
 			var container = $("<div />").addClass(this.name).appendTo(place);
