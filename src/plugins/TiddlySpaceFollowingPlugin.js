@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.18|
+|''Version''|0.6.19|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -94,6 +94,48 @@ tiddlyspace.displayServerTiddler = function(src, title, workspace, callback) {
 	});
 };
 
+tiddlyspace.scroller = {
+	runHandler: function(title, top, bottom, height) {
+		var i;
+		var handlers = tiddlyspace.scroller.handlers;
+		var tidEl = story.getTiddler(title);
+		if(tidEl) {
+			var topEl = $(tidEl).offset().top;
+			if(top === false || (topEl > top && topEl < bottom)) {
+				var h = handlers[title];
+				for(i = 0; i < h.length; i++) {
+					h[i]();
+				}
+				tiddlyspace.scroller.clearHandlers();
+			}
+		} else {
+			tiddlyspace.scroller.clearHandlers();
+		}
+	},
+	clearHandlers: function(title) {
+		tiddlyspace.scroller.handlers[title] = [];
+	},
+	registerIsVisibleEvent: function(title, handler) {
+		tiddlyspace.scroller.handlers[title] = tiddlyspace.scroller.handlers[title] || [];
+		tiddlyspace.scroller.handlers[title].push(handler);
+	},
+	init: function() {
+		this.handlers = {};
+		this.interval = window.setInterval(function() {
+			var top = $(window).scrollTop();
+			var height = $(window).height();
+			var bottom = top + height;
+			var title;
+			for(title in tiddlyspace.scroller.handlers) {
+				if(title) {
+					tiddlyspace.scroller.runHandler(title, top, bottom, height);
+				}
+			}
+		}, 2000); // every 2 seconds check scroll position
+	}
+};
+tiddlyspace.scroller.init();
+
 var followMacro = config.macros.followTiddlers = {
 	locale: {
 		followListHeader: "Here are tiddlers from spaces you follow using the follow tag which use this title.",
@@ -119,19 +161,21 @@ var followMacro = config.macros.followTiddlers = {
 		} else {
 			var options = {};
 			var user = params[1] || false; // allows a user to use the macro on another username
-			this.getFollowers(function(followers) {
-				if(!followers) {
-					$(btn).remove();
-				} else {
-					scanMacro.scan(null, { searchFields: "title", searchValues: [title],
-						spaceField: "bag", template: null, sort: "-modified",
-						showBags: followMacro._getFollowerBags(followers), hideBags: [tiddler.fields["server.bag"]],
-						callback: function(tiddlers) {
-							followMacro.constructInterface(btn, tiddlers);
-						}
-					});
-				}
-			}, user);
+			tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
+				followMacro.getFollowers(function(followers) {
+					if(!followers) {
+						$(btn).remove();
+					} else {
+						scanMacro.scan(null, { searchFields: "title", searchValues: [title],
+							spaceField: "bag", template: null, sort: "-modified",
+							showBags: followMacro._getFollowerBags(followers), hideBags: [tiddler.fields["server.bag"]],
+							callback: function(tiddlers) {
+								followMacro.constructInterface(btn, tiddlers);
+							}
+						});
+					}
+				}, user);
+			});
 		}
 	},
 	constructInterface: function(container, tiddlers) {
