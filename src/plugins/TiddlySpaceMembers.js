@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceMembers|
-|''Version''|0.5.4|
+|''Version''|0.6.0|
 |''Description''|provides a UI for managing space members|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceMembers.js|
@@ -28,6 +28,7 @@
 //{{{
 (function($) {
 
+var formMaker = config.extensions.formMaker;
 var macro = config.macros.TiddlySpaceMembers = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
@@ -35,14 +36,16 @@ var macro = config.macros.TiddlySpaceMembers = {
 		authError: "list of members is only visible to members of space <em>%0</em>",
 		listError: "error retrieving members for space <em>%0</em>: %1",
 		addLabel: "Add member",
-		noUserError: "user <em>%0</em> does not exist",
 		delTooltip: "click to remove member",
 		delPrompt: "Are you sure you want to remove member %0?",
 		// we can also get an auth error when the user has no perms to
 		// delete but we wouldn't see the interface
 		delAuthError: "error removing %0 from %1: may not remove last member",
 		delSpaceError: "error removing %0 from %1: space does not exist",
-		addMessage: "please wait..."
+		addMessage: "please wait...",
+		errors: {
+			409: "user <em>%0</em> does not exist"
+		}
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -130,14 +133,13 @@ var macro = config.macros.TiddlySpaceMembers = {
 			});
 		};
 		var errback = function(xhr, error, exc) {
-			var ctx = {
-				msg: { 409: macro.locale.noUserError.format([username]) },
-				form: form,
+			var options = {
+				format: [ username ],
 				selector: selector
 			};
 			$(form).stop(true, true).fadeIn("slow");
 			$(".messageArea", container).hide();
-			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
+			formMaker.displayError(form, xhr.status, macro.locale.errors, options);
 		};
 		macro.space.members().add(username, callback, errback);
 		return false;
