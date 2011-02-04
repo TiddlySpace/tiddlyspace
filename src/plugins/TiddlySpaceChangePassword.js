@@ -3,7 +3,7 @@
 |''Version''|0.3.0|
 |''Author''|Osmosoft|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceChangePassword.js|
-|''Requires''|TiddlyWebConfig TiddlySpaceUserControls|
+|''Requires''|TiddlyWebConfig TiddlySpaceAdmin|
 !Code
 ***/
 //{{{

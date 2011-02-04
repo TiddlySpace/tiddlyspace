@@ -5,7 +5,7 @@
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceSpaces.js|
 |''CoreVersion''|2.6.1|
-|''Requires''|TiddlyWebConfig TiddlySpaceInclusion TiddlySpaceUserControls TiddlySpaceAdmin|
+|''Requires''|TiddlyWebConfig TiddlySpaceInclusion TiddlySpaceAdmin|
 !Code
 ***/
 //{{{

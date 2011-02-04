@@ -4,7 +4,7 @@
 |''Description''|provides a UI for managing space members|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceMembers.js|
-|''Requires''|TiddlySpaceConfig TiddlySpaceUserControls|
+|''Requires''|TiddlySpaceConfig TiddlySpaceAdmin|
 !Usage
 <<TiddlySpaceMembers list>> provides list of members
 <<TiddlySpaceMembers add>> creates a form to add new members.

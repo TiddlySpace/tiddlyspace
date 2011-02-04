@@ -4,7 +4,7 @@
 |''Description''|provides user interfaces for managing TiddlySpace inclusions|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceInclusion.js|
-|''Requires''|TiddlySpaceConfig TiddlySpaceUserControls chrjs|
+|''Requires''|TiddlySpaceConfig TiddlySpaceAdmin chrjs|
 !Code
 ***/
 //{{{
