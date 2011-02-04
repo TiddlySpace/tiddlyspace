@@ -28,6 +28,7 @@
 //{{{
 (function($) {
 
+var admin = config.macros.TiddlySpaceAdmin;
 var formMaker = config.extensions.formMaker;
 var macro = config.macros.TiddlySpaceMembers = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -35,14 +36,14 @@ var macro = config.macros.TiddlySpaceMembers = {
 		authAddError: "You must be a member to add members to this space.",
 		authError: "list of members is only visible to members of space <em>%0</em>",
 		listError: "error retrieving members for space <em>%0</em>: %1",
-		addLabel: "Add member",
+		submit: "Add member",
 		delTooltip: "click to remove member",
 		delPrompt: "Are you sure you want to remove member %0?",
 		// we can also get an auth error when the user has no perms to
 		// delete but we wouldn't see the interface
 		delAuthError: "error removing %0 from %1: may not remove last member",
 		delSpaceError: "error removing %0 from %1: space does not exist",
-		addMessage: "please wait...",
+		sending: "please wait...",
 		errors: {
 			409: "user <em>%0</em> does not exist"
 		}
@@ -103,42 +104,26 @@ var macro = config.macros.TiddlySpaceMembers = {
 			$("<ul />").addClass("spaceMembersList").append(items).appendTo(container);
 		});
 	},
+	elements: [ admin.locale.username, admin.elements.username() ],
 	generateForm: function(container) {
-		var submitFunction = function(ev) {
-			ev.preventDefault();
-			$(".messageArea", container).text(macro.locale.addMessage).show();
-			$("form", container).fadeOut("slow");
-			return macro.onSubmit(ev);
-		};
-		return $(this.formTemplate).submit(submitFunction).
-			find("legend").text(this.locale.addLabel).end().
-			find(".annotation").hide().end().
-			find("[type=submit]").val(this.locale.addLabel).end().appendTo(container);
+		return formMaker.make(container, macro.elements, macro.onSubmit, { locale: macro.locale });
 	},
-	clearErrors: function(place) {
-		$(".annotation", place).hide();
-		$(".error", place).removeClass("error");
-	},
-	onSubmit: function(ev) {
-		var form = $(ev.target).closest("form");
-		var container = form.closest(".memberForm");
-		macro.clearErrors(container);
+	onSubmit: function(ev, form) {
 		var selector = "[name=username]";
-		var username = form.find(selector).val();
+		var input = $(form).find(selector)
+		var username = input.val();
 		var callback = function(data, status, xhr) {
-			$("form", container).stop(true, true).fadeIn("slow");
-			$(".messageArea", container).hide();
 			$(".spaceMembersList").each(function(i, el) {
 				macro.refresh($(el.parentNode));
 			});
+			input.val("");
+			formMaker.reset();
 		};
 		var errback = function(xhr, error, exc) {
 			var options = {
 				format: [ username ],
 				selector: selector
 			};
-			$(form).stop(true, true).fadeIn("slow");
-			$(".messageArea", container).hide();
 			formMaker.displayError(form, xhr.status, macro.locale.errors, options);
 		};
 		macro.space.members().add(username, callback, errback);
