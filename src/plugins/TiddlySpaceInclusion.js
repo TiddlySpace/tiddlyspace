@@ -5,25 +5,6 @@
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceInclusion.js|
 |''Requires''|TiddlySpaceConfig TiddlySpaceUserControls chrjs|
-!HTMLForm
-<form action="#">
-	<fieldset>
-		<legend />
-		<p class="description" />
-		<dl>
-			<dt class="_passive">Space Name:</dt>
-			<dd class="_passive"><input type="text" name="space" /></dd>
-			<dt class="_active">Space Selection:</dt>
-			<dd class="_active">
-				<select>
-					<option></option>
-				</select>
-			</dd>
-		</dl>
-		<p class="annotation" />
-		<input type="submit" />
-	</fieldset>
-</form>
 !Code
 ***/
 //{{{
@@ -56,20 +37,16 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		}
 	},
 
+	elements: ["Space Name:", { name: "space" }],
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		// passive mode means subscribing given space to current space
 		this.name = macroName;
 		var mode = params[0] || "list";
-		var form = $(this.formTemplate).
-			find(".annotation").hide().end();
+
 		if(mode == "passive") {
 			if(!readOnly) {
-				form.submit(function(ev) { return macro.onSubmit(this, mode); }).
-					find("._active").remove().end().
-					find("legend").text(this.locale.addPassiveLabel).end().
-					find(".description").text(this.locale.passiveDesc).end().
-					find("[type=submit]").val(this.locale.addPassiveLabel).end().
-					appendTo(place);
+				var handler = function(ev) { return macro.onSubmit(ev.target, mode); };
+				formMaker.make(place, macro.elements, handler, {});
 			}
 		} else {
 			var container = $("<div />").addClass(this.name).appendTo(place);
@@ -122,6 +99,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			if(confirm(loc.reloadPrompt)) {
 				window.location.reload();
 			}
+			formMaker.reset();
 		};
 		var errback = function(xhr, error, exc) {
 			if(xhr.status == 409) {
