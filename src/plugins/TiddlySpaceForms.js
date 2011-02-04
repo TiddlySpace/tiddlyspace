@@ -79,7 +79,7 @@ var ext = config.extensions.formMaker = {
 			if(typeof(el) == "string") {
 				$("<div />").addClass("label").text(el).appendTo(inputArea);
 			} else if(el) {
-				if(el.type && ["password", "hidden"].contains(el.type)) {
+				if(el.type && ["password", "hidden", "checkbox"].contains(el.type)) {
 					el._typeAttr = "type='%0'".format(el.type);
 					el.type = "input";
 				} else if(!el.type) {
