@@ -40,7 +40,6 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		addPassiveLabel: "Include space",
 		addActiveLabel: "Include into space",
 		passiveDesc: "Include a space into the current space",
-		activeDesc: "Include another space in the current space",
 		addSuccess: "included %0 in %1",
 		delPrompt: "Are you sure you want to exclude %0 from the current space?",
 		delTooltip: "click to exclude from the space",
@@ -59,7 +58,6 @@ var macro = config.macros.TiddlySpaceInclusion = {
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		// passive mode means subscribing given space to current space
-		// active mode means subscribing current space to given space
 		this.name = macroName;
 		var mode = params[0] || "list";
 		var form = $(this.formTemplate).
@@ -73,14 +71,6 @@ var macro = config.macros.TiddlySpaceInclusion = {
 					find("[type=submit]").val(this.locale.addPassiveLabel).end().
 					appendTo(place);
 			}
-		} else if(mode == "active") {
-			form.submit(function(ev) { return macro.onSubmit(this, mode); }).
-				find("._passive").remove().end().
-				find("legend").text(this.locale.addActiveLabel).end().
-				find(".description").text(this.locale.activeDesc).end().
-				find("[type=submit]").val(this.locale.addActiveLabel).end().
-				appendTo(place);
-			this.populateSpaces(form);
 		} else {
 			var container = $("<div />").addClass(this.name).appendTo(place);
 			$('<p class="annotation" />').hide().appendTo(container);
@@ -120,24 +110,12 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			displayMessage(macro.locale.listError.format([currentSpace, error]));
 		});
 	},
-	populateSpaces: function(form) { // TODO: rename?
-		$.ajax({ // TODO: add to model/space.js?
-			url: tweb.host + "/spaces?mine=1",
-			type: "GET",
-			success: function(data, status, xhr) {
-				var spaces = $.map(data, function(item, i) {
-					return $("<option />", { value: item.name }).text(item.name)[0];
-				});
-				$("select", form).append(spaces);
-			} // TODO: error handling?
-		});
-	},
 	onSubmit: function(el, mode) {
 		var form = $(el).closest("form");
-		var selector = mode == "passive" ? "[name=space]" : "select";
+		var selector = "[name=space]";
 		var space = form.find(selector).val();
-		var provider = mode == "passive" ? space : currentSpace;
-		var subscriber = mode == "passive" ? currentSpace : space;
+		var provider = space;
+		var subscriber = currentSpace;
 		var loc = macro.locale;
 		var callback = function(data, status, xhr) {
 			displayMessage(loc.addSuccess.format([provider, subscriber]));
