@@ -1,29 +1,9 @@
 /***
 |''Name''|TiddlySpaceChangePassword|
-|''Version''|0.2.0|
+|''Version''|0.3.0|
 |''Author''|Osmosoft|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceChangePassword.js|
 |''Requires''|TiddlyWebConfig TiddlySpaceUserControls|
-!HTMLForm
-<form action="#">
-	<fieldset>
-		<legend />
-		<dl>
-			<dt>Current password:</dt>
-			<dd>
-				<input type="password" name="password" />
-			</dd>
-			<dd>
-				<dt>New password:</dt>
-				<input type="password" name="new_password" />
-				<dt>Confirm new password:</dt>
-				<input type="password" name="new_password_confirm" />
-			</dd>
-		</dl>
-		<p class="annotation" />
-		<input type="submit" />
-	</fieldset>
-</form>
 !Code
 ***/
 //{{{
@@ -31,6 +11,7 @@
 
 var tweb = config.extensions.tiddlyweb;
 var formMaker = config.extensions.formMaker;
+var admin = config.macros.TiddlySpaceAdmin;
 
 var macro = config.macros.TiddlySpaceChangePassword = {
 	locale: {
@@ -44,23 +25,20 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 			400: "The old password you provided is incorrect"
 		}
 	},
-	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
+	elements: [ "Current password:", admin.elements.password(),
+		"New password:", admin.elements.password("new_password"),
+		"Confirm new password:", admin.elements.password("new_password_confirm") ],
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
-		$(macro.formTemplate).submit(macro.onSubmit).
-			find("legend").text(macro.locale.label).end().
-			find(".annotation").hide().end().
-			find("[type=submit]").val(macro.locale.label).end().
-			appendTo(place);
+		formMaker.make(place, macro.elements, macro.onSubmit, { locale: macro.locale });
 	},
 
-	onSubmit: function(ev) {
+	onSubmit: function(ev, form) {
 		var msg = macro.locale;
-		var form = $(this).closest("form");
-		form.find(".annotation").hide();
-		var password = form.find("[name=password]").val();
-		var npassword = form.find("[name=new_password]").val();
-		var npasswordConfirm = form.find("[name=new_password_confirm]").val();
+		$(form).find(".annotation").hide();
+		var password = $(form).find("[name=password]").val();
+		var npassword = $(form).find("[name=new_password]").val();
+		var npasswordConfirm = $(form).find("[name=new_password_confirm]").val();
 		var options;
 		if(npassword != npasswordConfirm) {
 			options = {
@@ -74,14 +52,14 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 			};
 			formMaker.displayError(form, "409b", macro.locale.errors, options);
 		} else {
-			macro.changePassword(tweb.username, password, npassword);
+			macro.changePassword(tweb.username, password, npassword, form);
 		}
 		return false;
 	},
 
 	changePassword: function(username, password, npassword, form) {
 		var pwCallback = function(resource, status, xhr) {
-			displayMessage(macro.locale.cpwSuccess);
+			$(form).empty().text(macro.locale.cpwSuccess);
 		};
 		var pwErrback = function(xhr, error, exc) {
 			var options = {
