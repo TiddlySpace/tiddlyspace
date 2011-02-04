@@ -44,8 +44,7 @@ var macro = config.macros.TiddlySpaceInclusion = {
 
 		if(mode == "passive") {
 			if(!readOnly) {
-				var handler = function(ev) { return macro.onSubmit(ev.target, mode); };
-				formMaker.make(place, macro.elements, handler, { locale: macro.locale });
+				formMaker.make(place, macro.elements, macro.onSubmit, { locale: macro.locale });
 			}
 		} else {
 			var container = $("<div />").addClass(this.name).appendTo(place);
@@ -86,10 +85,9 @@ var macro = config.macros.TiddlySpaceInclusion = {
 			displayMessage(macro.locale.listError.format([currentSpace, error]));
 		});
 	},
-	onSubmit: function(el, mode) {
-		var form = $(el).closest("form");
+	onSubmit: function(ev, form) {
 		var selector = "[name=space]";
-		var space = form.find(selector).val();
+		var space = $(form).find(selector).val();
 		var provider = space;
 		var subscriber = currentSpace;
 		var loc = macro.locale;
@@ -111,9 +109,9 @@ var macro = config.macros.TiddlySpaceInclusion = {
 				format: [ provider, subscriber ],
 				selector: selector
 			};
-			formMaker.displayError(form[0], xhr.status, macro.locale.errors, options);
+			formMaker.displayError(form, xhr.status, macro.locale.errors, options);
 		};
-		this.inclusion(provider, subscriber, callback, errback, false);
+		macro.inclusion(provider, subscriber, callback, errback, false);
 		return false;
 	},
 	onDelClick: function(ev) { // XXX: too long, needs refactoring
