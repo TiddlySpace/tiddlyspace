@@ -15,7 +15,7 @@ var admin = config.macros.TiddlySpaceAdmin;
 
 var macro = config.macros.TiddlySpaceChangePassword = {
 	locale: {
-		label: "Change password",
+		submit: "Change password",
 		cpwSuccess: "Password changed",
 		noPasswordError: "Please enter password",
 		passwordMinLength: 6,
