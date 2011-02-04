@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInclusion|
-|''Version''|0.5.2|
+|''Version''|0.6.0|
 |''Description''|provides user interfaces for managing TiddlySpace inclusions|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceInclusion.js|
@@ -32,6 +32,7 @@
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
 var currentSpace = tiddlyspace.currentSpace.name;
+var formMaker = config.extensions.formMaker;
 
 var macro = config.macros.TiddlySpaceInclusion = {
 	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
@@ -45,12 +46,15 @@ var macro = config.macros.TiddlySpaceInclusion = {
 		delTooltip: "click to exclude from the space",
 		delError: "error excluding %0: %1",
 		listError: "error retrieving spaces included in space %0: %1",
-		forbiddenError: "unauthorized to modify space <em>%0</em>",
-		noSpaceError: "space <em>%0</em> does not exist",
-		conflictError: "space <em>%0</em> is already included in <em>%1</em>",
 		noInclusions: "no spaces are included",
 		recursiveInclusions: "Spaces that were included by the removed space and not part of the core TiddlySpace application are highlighted and can be removed manually if wished.",
-		reloadPrompt: "The page must be reloaded for inclusion to take effect. Reload now?"
+		reloadPrompt: "The page must be reloaded for inclusion to take effect. Reload now?",
+		errors: {
+			403: "unauthorized to modify space <em>%1</em>",
+			404: "space <em>%1</em> does not exist", // XXX: only relevant for passive mode
+			"409a": "space <em>%0</em> is already included in <em>%1</em>",
+			"409b": "space <em>%0</em> does not exist"
+		}
 	},
 
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -148,17 +152,11 @@ var macro = config.macros.TiddlySpaceInclusion = {
 					status: xhr.responseText.indexOf(included) != -1 ? "409a" : "409b"
 				};
 			}
-			var ctx = {
-				msg: {
-					403: loc.forbiddenError.format([subscriber]),
-					404: loc.noSpaceError.format([subscriber]), // XXX: only relevant for passive mode
-					"409a": loc.conflictError.format([provider, subscriber]),
-					"409b": loc.noSpaceError.format([provider])
-				},
-				form: form,
+			var options = {
+				format: [ provider, subscriber ],
 				selector: selector
 			};
-			config.macros.TiddlySpaceLogin.displayError(xhr, error, exc, ctx);
+			formMaker.displayError(form[0], xhr.status, macro.locale.errors, options);
 		};
 		this.inclusion(provider, subscriber, callback, errback, false);
 		return false;
