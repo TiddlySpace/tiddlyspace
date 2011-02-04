@@ -106,10 +106,10 @@ tiddlyspace.scroller = {
 				for(i = 0; i < h.length; i++) {
 					h[i]();
 				}
-				tiddlyspace.scroller.clearHandlers();
+				tiddlyspace.scroller.clearHandlers(title);
 			}
 		} else {
-			tiddlyspace.scroller.clearHandlers();
+			tiddlyspace.scroller.clearHandlers(title);
 		}
 	},
 	clearHandlers: function(title) {
