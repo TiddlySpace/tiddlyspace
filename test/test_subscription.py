@@ -73,6 +73,12 @@ def test_subscription():
     response, content = add_subscription('cdent', 'fnd') # identical to above
     assert response['status'] == '409'
 
+    response, content = add_subscription('cdent', 'Fnd') # bad space
+    assert response['status'] == '409'
+
+    response, content = add_subscription('cDent', 'fnd') # bad space
+    assert response['status'] == '409'
+
     recipe = Recipe('fnd_public')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
