@@ -79,8 +79,8 @@ var macro = config.macros.TiddlySpaceSpaces = { // TODO: rename
 			}
 		});
 	},
-	elements: [ "Name:", { name: "space" }, { type: "checkbox", name: "subscribe" },
-		"Include the current space in the new space."],
+	elements: [ "Name:", { name: "space" }, { type: "checkbox", name: "subscribe",
+		label: "Include the current space in the new space." }],
 	generateForm: function(container, options) {
 		formMaker.make(container, macro.elements, macro.onSubmit, { locale: macro.locale });
 		if(options.subscribe) {
