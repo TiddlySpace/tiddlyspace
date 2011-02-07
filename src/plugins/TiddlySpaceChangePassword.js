@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceChangePassword|
-|''Version''|0.3.0|
+|''Version''|0.3.1|
 |''Author''|Osmosoft|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceChangePassword.js|
 |''Requires''|TiddlyWebConfig TiddlySpaceAdmin|
@@ -40,7 +40,7 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 		var npassword = $(form).find("[name=new_password]").val();
 		var npasswordConfirm = $(form).find("[name=new_password_confirm]").val();
 		var options;
-		if(npassword != npasswordConfirm) {
+		if(npassword !== npasswordConfirm) {
 			options = {
 				selector: "[name=new_password], [name=new_password_confirm]"
 			};
@@ -48,7 +48,7 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 		} else if(npassword.length < msg.passwordMinLength) {
 			options = {
 				format: [ msg.passwordMinLength ],
-				selector: "[name=new_password]",
+				selector: "[name=new_password]"
 			};
 			formMaker.displayError(form, "409b", macro.locale.errors, options);
 		} else {
@@ -72,5 +72,5 @@ var macro = config.macros.TiddlySpaceChangePassword = {
 	}
 };
 
-})(jQuery);
+}(jQuery));
 //}}}
