@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFormsPlugin|
-|''Version''|0.2.5|
+|''Version''|0.2.6|
 |''Requires''|TiddlySpaceConfig|
 !Code
 ***/
@@ -75,9 +75,10 @@ var ext = config.extensions.formMaker = {
 		var inputArea = $("<div />").addClass("inputArea").appendTo(form);
 		var inputs = 0;
 		for(var i = 0; i < elements.length; i++) {
+			var container = $("<div />").appendTo(inputArea)[0];
 			var el = elements[i];
 			if(typeof(el) == "string") {
-				$("<div />").addClass("label").text(el).appendTo(inputArea);
+				$("<div />").addClass("label").text(el).appendTo(container);
 			} else if(el) {
 				if(el.type && ["password", "hidden", "checkbox"].contains(el.type)) {
 					el._typeAttr = "type='%0'".format(el.type);
@@ -93,7 +94,7 @@ var ext = config.extensions.formMaker = {
 					inputs += 1;
 				}
 				var input = $('<%0 %1/>'.format(el.type, el._typeAttr)).addClass("form-" + el.type).
-					attr("name", name).appendTo(inputArea)[0];
+					attr("name", name).appendTo(container)[0];
 				if(el.type == "select") {
 					$(el.values).each(function(i, def) {
 						$("<option />").text(def[0]).val(def[1]).appendTo(input);
@@ -101,6 +102,9 @@ var ext = config.extensions.formMaker = {
 				}
 				var value = el.value || "";
 				$(input).val(value);
+				if(el.label) {
+					$("<label />").text(el.label).appendTo(container);
+				}
 			}
 		}
 		if(typeof(handler) == "string") {
