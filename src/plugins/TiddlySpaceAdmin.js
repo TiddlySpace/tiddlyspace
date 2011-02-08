@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceAdmin|
-|''Version''|0.5.7|
+|''Version''|0.5.8|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/|
 |''Requires''|TiddlySpaceConfig TiddlySpaceFormsPlugin|
@@ -236,7 +236,7 @@ var identities = config.macros.TiddlySpaceIdentities = {
 		config.extensions.formMaker.make(container, identities.template, uri, {
 			beforeSubmit: function(ev, form) {
 				var openid = $("[name=openid]").val();
-				$('<input name="tiddlyweb_redirect" />').
+				$('<input name="tiddlyweb_redirect" />').attr("type", "hidden").
 					val("%0#auth:OpenID=%1".format(tweb.serverPrefix, openid)).appendTo(form);
 			}, locale: admin.locale.identities });
 	}
