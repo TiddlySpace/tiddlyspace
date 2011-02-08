@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.8.3|
+|''Version''|0.8.4|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -322,9 +322,12 @@ var macro = config.macros.TiddlySpacePublisher = {
 		var enabled = [];
 		for(var i = 0; i < tiddlers.length; i++) {
 			var tiddler = tiddlers[i];
-			publishCandidates.push({ title: tiddler.title, tiddler: tiddler, status: pubType});
-			if(checked.contains(tiddler.title)) {
-				enabled.push("[rowname=%0]".format(tiddler.title));
+			var title = tiddler.title;
+			if(!tiddler.tags.contains("excludePublisher") && title !== "SystemSettings") {
+				publishCandidates.push({ title: title, tiddler: tiddler, status: pubType});
+			}
+			if(checked.contains(title)) {
+				enabled.push("[rowname=%0]".format(title));
 			}
 		}
 
