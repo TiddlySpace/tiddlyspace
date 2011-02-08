@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.19|
+|''Version''|0.6.20|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -100,7 +100,7 @@ tiddlyspace.scroller = {
 		var handlers = tiddlyspace.scroller.handlers;
 		var tidEl = story.getTiddler(title);
 		if(tidEl) {
-			var topEl = $(tidEl).offset().top;
+			var topEl = $(tidEl).offset().top + 20;
 			if(top === false || (topEl > top && topEl < bottom)) {
 				var h = handlers[title];
 				for(i = 0; i < h.length; i++) {
