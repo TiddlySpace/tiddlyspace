@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.7.0|
+|''Version''|0.7.1|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -13,6 +13,7 @@
 <link rel="shortcut icon" href="/recipes/%0_public/tiddlers/favicon.ico" />
 <link href="/bags/%0_public/tiddlers.atom" rel="alternate"
 	type="application/atom+xml" title="%0's public feed" />
+<link rel="canonical" href="%1" />
 <!--}}}-->
 !Code
 ***/
@@ -23,6 +24,7 @@ var versionField = "tiddlyspaceinit_version";
 var markupPreHead = store.getTiddlerText(tiddler.title + "##MarkupPreHead", "");
 var tiddlyspace = config.extensions.tiddlyspace;
 var currentSpace = tiddlyspace.currentSpace;
+var tweb = config.extensions.tiddlyweb;
 
 var plugin = config.extensions.TiddlySpaceInit = {
 	version: "0.6",
@@ -116,7 +118,6 @@ var plugin = config.extensions.TiddlySpaceInit = {
 	},
 	createAvatar: function() {
 		var avatar = "SiteIcon";
-		var tweb = config.extensions.tiddlyweb;
 		var host = tweb.host;
 		var notify = function(xhr, error, exc) {
 			displayMessage("ERROR: could not create avatar - " + // TODO: i18n
@@ -164,14 +165,17 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		var pubWorkspace = tiddlyspace.getCurrentWorkspace("public");
 		var existing = store.getTiddler("MarkupPreHead");
 		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
-			var tid = new Tiddler("MarkupPreHead");
-			tid.text = markupPreHead.format(currentSpace.name);
-			tid.tags = ["excludeLists"];
-			tid.fields = $.extend({}, config.defaultCustomFields);
-			tid.fields["server.workspace"] = pubWorkspace;
-			tid.fields["server.page.revision"] = "false";
-			tid = store.saveTiddler(tid);
-			autoSaveChanges(null, [tid]);
+			tweb.getStatus(function(status) {
+				var tid = new Tiddler("MarkupPreHead");
+				tid.text = markupPreHead.format(currentSpace.name, tiddlyspace.getHost(status.server_host,
+					currentSpace.name));
+				tid.tags = ["excludeLists"];
+				tid.fields = $.extend({}, config.defaultCustomFields);
+				tid.fields["server.workspace"] = pubWorkspace;
+				tid.fields["server.page.revision"] = "false";
+				tid = store.saveTiddler(tid);
+				autoSaveChanges(null, [tid]);
+			});
 		}
 	}
 };
