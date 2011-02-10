@@ -13,7 +13,7 @@
 <link rel="shortcut icon" href="/recipes/%0_public/tiddlers/favicon.ico" />
 <link href="/bags/%0_public/tiddlers.atom" rel="alternate"
 	type="application/atom+xml" title="%0's public feed" />
-<link rel="canonical" href="%1" />
+<link rel="canonical" href="%1/" />
 <!--}}}-->
 !Code
 ***/
