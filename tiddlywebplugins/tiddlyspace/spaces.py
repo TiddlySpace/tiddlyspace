@@ -161,7 +161,7 @@ def list_spaces(environ, start_response):
     if mine:
         spaces = []
         try:
-            recipe_names = store.storage.cached_store.storage.user_spaces(
+            recipe_names = store.storage.cached_storage.user_spaces(
                     current_user)
         except AttributeError:
             recipe_names = store.storage.user_spaces(current_user)
