@@ -113,7 +113,7 @@ var tsr = config.macros.TiddlySpaceRegister = {
 		if(validName && password && password === passwordConfirm) { // TODO: check password length?
 			tsr.register(username, password, form);
 		} else {
-			var msg = validName ? tsr.locale.passwordError : tsr.locale.charError;
+			var msg = validName ? admin.locale.passwordError : admin.locale.charError;
 			var options = { annotate: validName ? "[type=password]" : "[name=username]" };
 			formMaker.displayMessage(form, msg, true, options);
 		}
