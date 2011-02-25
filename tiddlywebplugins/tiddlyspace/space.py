@@ -8,7 +8,7 @@ based on the name provided when the space is created.
 
 import re
 
-SPACE_NAME_PATTERN = re.compile(r"^[a-z][0-9a-z\-]*[0-9a-z]$")
+SPACE_NAME_PATTERN = re.compile(r"^[0-9a-z][0-9a-z\-]*[0-9a-z]$")
 
 PUBLIC = '_public'
 PRIVATE = '_private'
