@@ -54,6 +54,7 @@ def init(config):
     import tiddlywebplugins.reflector
     import tiddlywebplugins.lazy
     import tiddlywebplugins.privateer
+    import tiddlywebplugins.relativetime
     import tiddlywebplugins.jsonp
 
     @make_command()

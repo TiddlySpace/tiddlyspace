@@ -45,6 +45,7 @@ setup(
         'tiddlywebplugins.sqlalchemy2>=1.0.0',
         'tiddlywebplugins.privateer',
         'tiddlywebplugins.lazy',
+        'tiddlywebplugins.relativetime',
         'tiddlywebplugins.jsonp>=0.4'
     ],
     include_package_data = True,
