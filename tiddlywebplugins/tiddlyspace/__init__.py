@@ -25,6 +25,7 @@ from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
         friendly_uri, get_identities)
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
+from tiddlywebplugins.tiddlyspace.profiles import add_profile_routes
 from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 
@@ -127,6 +128,7 @@ def init(config):
         replace_handler(config['selector'], '/', dict(GET=home))
         config['selector'].add('/_safe', GET=safe_mode, POST=safe_mode)
         add_spaces_routes(config['selector'])
+        add_profile_routes(config['selector'])
         config['selector'].add('/{tiddler_name:segment}', GET=friendly_uri)
         config['selector'].add('/users/{username}/identities',
                 GET=get_identities)
