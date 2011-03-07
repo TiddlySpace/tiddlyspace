@@ -38,7 +38,7 @@ setup(
         'tiddlywebplugins.oom',
         'tiddlywebplugins.prettyerror>=0.9.2',
         'tiddlywebplugins.pathinfohack>=0.8',
-        'tiddlywebplugins.form==dev',
+        'tiddlywebplugins.form',
         'tiddlywebplugins.reflector>=0.6',
         'tiddlywebplugins.atom>=1.2.2',
         'tiddlywebplugins.mysql2>=1.0.0',
