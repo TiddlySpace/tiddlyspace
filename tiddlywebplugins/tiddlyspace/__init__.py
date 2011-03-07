@@ -31,7 +31,7 @@ from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 import tiddlywebplugins.status
 
 
-__version__ = '0.9.80'
+__version__ = '0.9.81'
 
 
 def init(config):
