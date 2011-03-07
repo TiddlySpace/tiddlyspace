@@ -61,14 +61,15 @@ class Challenger(OpenID):
         cookie_header_string = make_cookie(cookie_name, usersign,
                 mac_key=secret, path=self._cookie_path(environ),
                 expires=cookie_age)
-        secondary_cookie_header_string = make_cookie(secondary_cookie_name, usersign,
+        secondary_cookie_header_string = make_cookie(
+                secondary_cookie_name, usersign,
                 mac_key=secret, path=self._cookie_path(environ),
                 expires=cookie_age, domain=self._domain_path(environ))
         headers = [('Location', uri.encode('utf-8')),
                     ('Content-Type', 'text/plain'),
                     ('Set-Cookie', secondary_cookie_header_string)]
         if not secondary_cookie_only:
-          headers.append(('Set-Cookie', cookie_header_string))
+            headers.append(('Set-Cookie', cookie_header_string))
 
         start_response('303 See Other', headers)
         return [uri]

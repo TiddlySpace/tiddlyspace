@@ -317,7 +317,7 @@ def _do_subscriptions(environ, subscriptions, public_recipe_list,
                 if [bag, filter_string] not in private_recipe_list:
                     private_recipe_list.insert(-2, (bag, filter_string))
         except NoRecipeError, exc:
-                raise HTTP409('Invalid content for subscription: %s' % exc)
+            raise HTTP409('Invalid content for subscription: %s' % exc)
 
 
 def _do_unsubscriptions(space_name, unsubscriptions, public_recipe_list,

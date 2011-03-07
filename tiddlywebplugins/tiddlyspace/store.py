@@ -21,7 +21,8 @@ class Store(MySQLStore):
             query = (self.session.query(sRecipe.name)
                     .join((recipe_policy_table,
                         sRecipe.id == recipe_policy_table.c.recipe_id))
-                    .join((sPolicy, recipe_policy_table.c.policy_id == sPolicy.id))
+                    .join((sPolicy,
+                        recipe_policy_table.c.policy_id == sPolicy.id))
                     .filter(sPolicy.principal_name == username)
                     .filter(sPolicy.constraint == 'manage')
                     .filter(sRecipe.name.like('%_public')))

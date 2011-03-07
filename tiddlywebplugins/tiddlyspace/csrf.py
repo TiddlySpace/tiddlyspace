@@ -14,6 +14,7 @@ from tiddlywebplugins.tiddlyspace.web import (determine_host,
 class InvalidNonceError(Exception):
     pass
 
+
 class CSRFProtector(object):
     """
     check for a nonce value if we are POSTing form data
@@ -23,6 +24,7 @@ class CSRFProtector(object):
         self.application = application
 
     def __call__(self, environ, start_response):
+
         def fake_start_response(status, headers, exc_info=None):
             """
             add a csrf_token header (if we need to)
@@ -49,9 +51,11 @@ class CSRFProtector(object):
                 set_cookie = 'csrf_token=%s' % nonce
                 headers.append(('Set-Cookie', set_cookie.encode()))
             start_response(status, headers, exc_info)
+
         def app():
             output = self.application(environ, fake_start_response)
             return output
+
         if environ['REQUEST_METHOD'] != 'POST':
             return app()
         if environ['tiddlyweb.usersign']['name'] == 'GUEST':
