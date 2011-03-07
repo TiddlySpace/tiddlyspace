@@ -40,38 +40,12 @@ def safe_mode(environ, start_response):
     store = environ['tiddlyweb.store']
 
     # Get the list of core plugins
-    try:
-        core_plugin_tiddler_titles = []
-        for bag in [recipe_bag for recipe_bag, _ in Space.CORE_RECIPE]:
-            bag = store.get(Bag(bag))
-            for tiddler in store.list_bag_tiddlers(bag):
-                if not tiddler.store:
-                    tiddler = store.get(tiddler)
-                if 'systemConfig' in tiddler.tags:
-                    core_plugin_tiddler_titles.append(tiddler.title)
-        core_plugin_tiddler_titles = set(core_plugin_tiddler_titles)
-    except NoBagError, exc:
-        raise HTTP404('core bag not found while trying safe mode: %s' % exc)
+    core_plugin_tiddler_titles = _get_core_plugins(store)
 
     # Delete those plugins in the space's recipes which
     # duplicate the core plugins
-    try:
-        recipe = store.get(Recipe(recipe_name))
-        template = control.recipe_template(environ)
-        recipe_list = recipe.get_recipe(template)
-        space_bags = [bag for bag, _ in recipe_list
-                if bag.startswith('%s_' % space_name)]
-        for title in core_plugin_tiddler_titles:
-            for bag in space_bags:
-                try:
-                    tiddler = Tiddler(title, bag)
-                    tiddler = store.get(tiddler)
-                except NoTiddlerError:
-                    continue
-                store.delete(tiddler)
-    except NoRecipeError, exc:
-        raise HTTP404(
-                'space recipe not found while trying safe mode: %s' % exc)
+    recipe = _delete_duplicates(environ, core_plugin_tiddler_titles, recipe_name,
+            space_name)
 
     # Process the recipe. For those tiddlers which do not have a bag
     # in CORE_RECIPE, remove the systemConfig tag.
@@ -95,6 +69,43 @@ def safe_mode(environ, start_response):
     if 'text/html' in mime_type or 'x-www-form' in environ['tiddlyweb.type']:
         environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return send_tiddlers(environ, start_response, tiddlers=tiddlers_to_send)
+
+
+def _delete_duplicates(environ, titles, recipe_name, space_name):
+    store = environ['tiddlyweb.store']
+    try:
+        recipe = store.get(Recipe(recipe_name))
+        template = control.recipe_template(environ)
+        recipe_list = recipe.get_recipe(template)
+        space_bags = [bag for bag, _ in recipe_list
+                if bag.startswith('%s_' % space_name)]
+        for title in titles:
+            for bag in space_bags:
+                try:
+                    tiddler = Tiddler(title, bag)
+                    tiddler = store.get(tiddler)
+                except NoTiddlerError:
+                    continue
+                store.delete(tiddler)
+    except NoRecipeError, exc:
+        raise HTTP404('space recipe not found while trying safe mode: %s' % exc)
+    return recipe
+
+
+def _get_core_plugins(store):
+    core_plugin_tiddler_titles = []
+    try:
+        for bag in [recipe_bag for recipe_bag, _ in Space.CORE_RECIPE]:
+            bag = store.get(Bag(bag))
+            for tiddler in store.list_bag_tiddlers(bag):
+                if not tiddler.store:
+                    tiddler = store.get(tiddler)
+                if 'systemConfig' in tiddler.tags:
+                    core_plugin_tiddler_titles.append(tiddler.title)
+        core_plugin_tiddler_titles = set(core_plugin_tiddler_titles)
+    except NoBagError, exc:
+        raise HTTP404('core bag not found while trying safe mode: %s' % exc)
+    return core_plugin_tiddler_titles
 
 
 def _send_safe_mode(environ, start_response):
