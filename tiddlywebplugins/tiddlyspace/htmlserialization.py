@@ -4,7 +4,7 @@ a single tiddler it includes a link to the tiddler in its space.
 """
 
 from tiddlyweb.wikitext import render_wikitext
-from tiddlyweb.serializations.html import Serialization as HTMLSerialization
+from tiddlywebplugins.atom.htmllinks import Serialization as HTMLSerialization
 from tiddlyweb.web.util import encode_name
 
 from tiddlywebplugins.tiddlyspace.space import Space
