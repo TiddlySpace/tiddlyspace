@@ -44,6 +44,7 @@ WEBFINGER_TEMPLATE = """<?xml version="1.0"?>
 
 PROFILE_TEMPLATE = """
 <div class="tiddler">
+<img style="float:right" src="%(server_host)s%(avatar_path)s" alt="avatar"></img>
 %(profile)s
 </div>
 %(tiddlers)s
@@ -58,6 +59,11 @@ def add_profile_routes(selector):
 
 
 def profile(environ, start_response):
+    http_host, host_url = determine_host(environ)
+    if http_host != host_url:
+        # Or should it be a 302?
+        raise HTTP404('No profiles at this host: %s' % http_host)
+
     username = environ['wsgiorg.routing_args'][1]['username']
     current_user = environ['tiddlyweb.usersign']
 
@@ -95,13 +101,17 @@ def profile(environ, start_response):
         tiddler_collection.add(tiddler)
     profile_tiddlers = serialization.list_tiddlers(tiddler_collection)
 
+    avatar_path = '/recipes/%s_public/tiddlers/SiteIcon' % username
+
     start_response('200 OK', [
         ('Content-Type', 'text/html; charset=UTF-8')])
 
     environ['tiddlyweb.title'] = 'Profile for %s' % username
     environ['QUERY_STRING'] = query_string_store
     return [PROFILE_TEMPLATE % {'username': username,
-        'profile': profile_text, 'tiddlers': profile_tiddlers}]
+        'avatar_path': avatar_path,
+        'profile': profile_text, 'tiddlers': profile_tiddlers,
+        'server_host': server_base_url(environ)}]
 
 
 def host_meta(environ, start_response):
