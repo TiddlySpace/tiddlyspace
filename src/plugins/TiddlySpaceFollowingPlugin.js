@@ -155,27 +155,33 @@ var followMacro = config.macros.followTiddlers = {
 		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
 		var blacklisted = store.getTiddlerText("FollowTiddlersBlackList").split("\n");
 		var btn = $('<div class="followButton" />').appendTo(place)[0];
+		var id = Math.random();
+		$(story.getTiddler(title)).data("followTiddlerQuery", id);
 		if(blacklisted.contains(title)) {
 			$(btn).remove();
 			return;
 		} else {
 			var options = {};
 			var user = params[1] || false; // allows a user to use the macro on another username
-			tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
-				followMacro.getFollowers(function(followers) {
-					if(!followers) {
-						$(btn).remove();
-					} else {
-						scanMacro.scan(null, { searchFields: "title", searchValues: [title],
-							spaceField: "bag", template: null, sort: "-modified",
-							showBags: followMacro._getFollowerBags(followers), hideBags: [tiddler.fields["server.bag"]],
-							callback: function(tiddlers) {
-								followMacro.constructInterface(btn, tiddlers);
+			window.setTimeout(function() { // prevent multiple calls due to refresh
+				if($(story.getTiddler(title)).data("followTiddlerQuery") === id) {
+					tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
+						followMacro.getFollowers(function(followers) {
+							if(!followers) {
+								$(btn).remove();
+							} else {
+								scanMacro.scan(null, { searchFields: "title", searchValues: [title],
+									spaceField: "bag", template: null, sort: "-modified",
+									showBags: followMacro._getFollowerBags(followers), hideBags: [tiddler.fields["server.bag"]],
+									callback: function(tiddlers) {
+										followMacro.constructInterface(btn, tiddlers);
+									}
+								});
 							}
-						});
-					}
-				}, user);
-			});
+						}, user);
+					});
+				}
+			}, 1000);
 		}
 	},
 	constructInterface: function(container, tiddlers) {
