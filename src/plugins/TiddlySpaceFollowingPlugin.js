@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.20|
+|''Version''|0.6.21|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -320,8 +320,9 @@ var scanMacro = config.macros.tsScan = {
 						};
 						scanMacro._scanCallback(place, tiddlers, options);
 					},
-					error: function() {
-						$("<span />").text(locale.error).appendTo(place);
+					error: function(xhr) {
+						$(place).empty();
+						$("<span />").addClass("annotation error").text(locale.error.format(xhr.status)).appendTo(place);
 					}
 				});
 			}
@@ -370,7 +371,7 @@ var followersMacro = config.macros.followers = {
 		loggedOut: "Please login to see the list of followers",
 		noSupport: "We were unable to retrieve followers as your browser does not support following.",
 		pleaseWait: "Please wait while we look this up...",
-		error: "Whoops something went wrong. I was unable to find the followers of this user.",
+		error: "Error %0 occurred whilst retrieving data from server",
 		noone: "None."
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
@@ -400,7 +401,7 @@ var followingMacro = config.macros.following = {
 		pleaseWait: followersMacro.locale.pleaseWait,
 		loggedOut: "Please login to see who you are following",
 		noSupport: followersMacro.locale.noSupport,
-		error: "Whoops something went wrong. I was unable to find who this user is following.",
+		error: followersMacro.locale.error,
 		noone: followersMacro.locale.noone
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
