@@ -6,7 +6,8 @@ import wsgi_intercept
 import httplib2
 import simplejson
 
-from tiddlywebplugins.tiddlyspace.profiles import WEBFINGER_TEMPLATE
+from tiddlywebplugins.tiddlyspace.profiles import (WEBFINGER_TEMPLATE,
+        HOST_META_TEMPLATE)
 from tiddlywebplugins.utils import get_store
 from tiddlyweb.config import config
 from tiddlyweb.model.tiddler import Tiddler
@@ -23,21 +24,11 @@ def setup_module(module):
     module.store.put(User('cdent'))
 
 
-HOST_META = """
-<?xml version="1.0" encoding="UTF-8"?>
-<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0" xmlns:hm="http://host-meta.net/xrd/1.0">
-<hm:Host xmlns="http://host-meta.net/xrd/1.0">0.0.0.0:8080</hm:Host>
-<Link rel="lrdd" template="http://0.0.0.0:8080/webfinger?q={uri}">
-<Title>Resource Descriptor</Title>
-</Link>
-</XRD>
-"""
-
-
 def test_for_meta():
     response, content = http.request('http://0.0.0.0:8080/.well-known/host-meta')
     assert response['status'] == '200'
-    assert content == HOST_META
+    assert content == HOST_META_TEMPLATE % {'host': '0.0.0.0:8080',
+            'server_host': 'http://0.0.0.0:8080'}
 
 
 def test_get_webfinger():
@@ -53,9 +44,9 @@ def test_get_webfinger():
 
 def test_get_profile():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent')
-    assert response['status'] == '200'
-
-    assert 'No Profile' in content
+    # the lack of a profile tiddler indicates you don't want to
+    # participate
+    assert response['status'] == '404'
 
     tiddler = Tiddler('profile', 'cdent_public')
     tiddler.text = '!Hello There'

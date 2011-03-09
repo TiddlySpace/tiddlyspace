@@ -89,8 +89,8 @@ def profile(environ, start_response):
     profile_tiddler = Tiddler('profile', '%s_public' % username)
     try:
         profile_tiddler = store.get(profile_tiddler)
-    except StoreError:
-        profile_tiddler.text = '!!No Profile'
+    except StoreError, exc:
+        raise HTTP404('No profile for %s: %s' % (username, exc))
 
     profile_text = render_wikitext(profile_tiddler, environ)
 
