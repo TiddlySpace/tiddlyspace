@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.8.5|
+|''Version''|0.8.6|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -146,17 +146,17 @@ var originMacro = config.macros.tiddlerOrigin = {
 	},
 	handler: function(place, macroName, params,wikifier, paramString, tiddler){
 		var adaptor = tiddler.getAdaptor();
-		var locale = originMacro.locale;
-		var type = "private";
-		if(tiddler && tiddler.fields["server.workspace"]) {
-			name = tiddler.fields["server.workspace"].replace("recipes/", "").
-				replace("bags/", "");
-		} else {
-			name = tiddler;
-		}
+		var btn = $("<div />").addClass("originButton").attr("params", paramString).
+			attr("refresh", "macro").attr("macroName", macroName).appendTo(place)[0];
+		$(btn).data("tiddler", tiddler);
+		originMacro.refresh(btn);
+	},
+	refresh: function(btn) {
+		$(btn).empty();
+		var paramString = $(btn).attr("params");
+		var tiddler = $(btn).data("tiddler");
 		var options = originMacro.getOptions(paramString);
-		var btn = $("<div />").addClass("originButton").appendTo(place)[0];
-		type = tiddlyspace.getTiddlerStatusType(tiddler);
+		var type = tiddlyspace.getTiddlerStatusType(tiddler);
 		originMacro.renderIcon(tiddler, type, btn, options);
 	},
 	getOptions: function(paramString) {
