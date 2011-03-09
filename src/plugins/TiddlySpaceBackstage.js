@@ -107,10 +107,12 @@ backstage.tiddlyspace = {
 			$("#backstage").removeClass("unsyncedChanges");
 		}
 		refreshElements($("#backstage")[0]);
-		var title = typeof(tiddler) === "string" ? tiddler : tiddler.title;
-		var el = story.getTiddler(title) || false;
-		if(el) {
-			refreshElements(el);
+		if(tiddler) {
+			var title = typeof(tiddler) === "string" ? tiddler : tiddler.title;
+			var el = story.getTiddler(title) || false;
+			if(el) {
+				refreshElements(el);
+			}
 		}
 	},
 	userButton: function(backstageArea, user) {
