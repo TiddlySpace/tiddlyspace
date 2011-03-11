@@ -76,6 +76,7 @@ clean:
 	rm -rf build || true
 	rm -rf *.egg-info || true
 	rm -rf tiddlywebplugins/tiddlyspace/resources || true
+	rm -f src/externals/* || true
 
 purge: clean
 	cat .gitignore | while read -r entry; do rm -r $$entry; done || true
