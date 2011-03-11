@@ -21,8 +21,9 @@ from tiddlywebplugins.tiddlyspace.instance import store_contents
 from tiddlywebplugins.tiddlyspace.config import config as space_config
 from tiddlywebplugins.tiddlyspace.controlview import (ControlView,
         DropPrivs, AllowOrigin)
-from tiddlywebplugins.tiddlyspace.handler import (home, safe_mode,
-        friendly_uri, get_identities)
+from tiddlywebplugins.tiddlyspace.handler import (home, friendly_uri,
+        get_identities)
+from tiddlywebplugins.tiddlyspace.safemode import safe_mode
 from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector
@@ -31,7 +32,7 @@ from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 import tiddlywebplugins.status
 
 
-__version__ = '0.9.80'
+__version__ = '0.9.83'
 
 
 def init(config):
@@ -116,7 +117,8 @@ def init(config):
 
     # XXX: The following is required to work around issues with twp.instancer.
     # Without this, config settings from tiddlywebwiki take precedence.
-    config['serializers']['text/x-tiddlywiki'] = space_config['serializers']['text/x-tiddlywiki']
+    config['serializers']['text/x-tiddlywiki'] = space_config[
+            'serializers']['text/x-tiddlywiki']
     # This only fixes 'twanager update', instance creation still does not have
     # the right information, thus requiring a twanager update after instance
     # creation. Presumably the instance script needs to do something similar.
@@ -170,7 +172,7 @@ def _status_gather_data(environ):
     except NoUserError:
         data['username'] = 'GUEST'
         if usersign != 'GUEST':
-          data['identity'] = usersign
+            data['identity'] = usersign
     return data
 
 

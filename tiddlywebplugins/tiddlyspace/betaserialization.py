@@ -8,6 +8,7 @@ activated via "twrelease=beta" URL parameter
 
 import logging
 
+from tiddlyweb.util import read_utf8_file
 from tiddlywebwiki.serialization import Serialization as WikiSerialization
 
 def build_config_var(alpha=False, beta=False, external=False):
@@ -50,12 +51,5 @@ class Serialization(WikiSerialization):
             file = self.environ.get('tiddlyweb.config', {}).get(config_var, '')
             if file:
                 logging.debug('using %s as base_tiddlywiki', file)
-                return _read_file(file)
+                return read_utf8_file(file)
         return WikiSerialization._get_wiki(self)
-
-
-def _read_file(path):
-    f = open(path)
-    contents = f.read()
-    f.close()
-    return unicode(contents, 'utf-8')
