@@ -15,11 +15,9 @@ except ImportError:
 
 
 PACKAGE_NAME = 'tiddlywebplugins.tiddlyspace'
-TIDDLYWIKI_BETA = resource_filename(PACKAGE_NAME, 'resources/beta.html')
 TIDDLYWIKI_ALPHA = resource_filename(PACKAGE_NAME, 'resources/alpha.html')
-TIDDLYWIKI_EXTERNAL_BETA = resource_filename(PACKAGE_NAME, 'resources/external_beta.html')
+TIDDLYWIKI_BETA = resource_filename(PACKAGE_NAME, 'resources/beta.html')
 TIDDLYWIKI_EXTERNAL_ALPHA = resource_filename(PACKAGE_NAME, 'resources/external_alpha.html')
-TIDDLYWIKI_EXTERNAL = resource_filename(PACKAGE_NAME, 'resources/external.html')
 
 config = {
     'instance_tiddlers': get_tiddler_locations(store_contents, PACKAGE_NAME),
@@ -39,9 +37,7 @@ config = {
     # TiddlyWiki external, alpha, beta serialization
     'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
     'base_tiddlywiki_alpha': TIDDLYWIKI_ALPHA,
-    'base_tiddlywiki_external_beta': TIDDLYWIKI_EXTERNAL_BETA,
-    'base_tiddlywiki_external_alpha': TIDDLYWIKI_EXTERNAL_BETA,
-    'base_tiddlywiki_external': TIDDLYWIKI_EXTERNAL,
+    'base_tiddlywiki_external_alpha': TIDDLYWIKI_EXTERNAL_ALPHA,
     'serializers': {
         'text/x-tiddlywiki': ['tiddlywebplugins.tiddlyspace.betaserialization',
             'text/html; charset=UTF-8']

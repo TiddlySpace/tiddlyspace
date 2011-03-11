@@ -4,12 +4,6 @@ tiddler: icons/defaultUserIcon.tid
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid
-tiddler: http://tiddlywiki.com/jquery.js
-tiddler: http://tiddlywiki.com/jQuery.twStylesheet.js
-tiddler: http://tiddlywiki.com/twcore.js
-tiddler: http://tiddlywiki.com/alpha/alpha_jquery.js
-tiddler: http://tiddlywiki.com/alpha/alpha_jQuery.twStylesheet.js
-tiddler: http://tiddlywiki.com/alpha/alpha_twcore.js
-tiddler: http://tiddlywiki.com/beta/beta_jquery.js
-tiddler: http://tiddlywiki.com/beta/beta_jQuery.twStylesheet.js
-tiddler: http://tiddlywiki.com/beta/beta_twcore.js
+tiddler: externals/alpha_jquery.js.js
+tiddler: externals/alpha_jQuery.twStylesheet.js.js
+tiddler: externals/alpha_twcore.js.js
