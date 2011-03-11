@@ -13,6 +13,17 @@ tiddlywiki:
 	mkdir tiddlywebplugins/tiddlyspace/resources || true
 	wget http://tiddlywiki.com/beta/empty.html \
 		-O tiddlywebplugins/tiddlyspace/resources/beta.html
+	wget http://tiddlywiki.com/alpha/empty.html \
+		-O tiddlywebplugins/tiddlyspace/resources/alpha.html
+	wget http://tiddlywiki.com/alpha/tiddlywiki_externaljs_tiddlyspace.html \
+		-O tiddlywebplugins/tiddlyspace/resources/external_alpha.html
+	wget http://tiddlywiki.com/alpha/jquery.js \
+		-O src/externals/alpha_jquery.js.js
+	wget http://tiddlywiki.com/alpha/jQuery.twStylesheet.js \
+		-O src/externals/alpha_jQuery.twStylesheet.js.js
+	wget http://tiddlywiki.com/alpha/twcore.js \
+		-O src/externals/alpha_twcore.js.js
+
 
 remotes: tiddlywiki jslib
 	./cacher
@@ -65,6 +76,7 @@ clean:
 	rm -rf build || true
 	rm -rf *.egg-info || true
 	rm -rf tiddlywebplugins/tiddlyspace/resources || true
+	rm -f src/externals/* || true
 
 purge: clean
 	cat .gitignore | while read -r entry; do rm -r $$entry; done || true
