@@ -9,7 +9,7 @@ from tiddlyweb.model.collections import Tiddlers
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.web.http import HTTP404, HTTP400
-from tiddlyweb.web.util import server_base_url
+from tiddlyweb.web.util import server_base_url, encode_name
 from tiddlywebplugins.tiddlyspace.web import determine_host
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
 from tiddlyweb.serializer import Serializer
@@ -47,7 +47,11 @@ PROFILE_TEMPLATE = """
 <img style="float:right" src="%(server_host)s%(avatar_path)s" alt="avatar"></img>
 %(profile)s
 </div>
+<div>
+<ul id="tiddlers" class="listing">
 %(tiddlers)s
+</div>
+</ul>
 """
 
 
@@ -72,19 +76,17 @@ def profile(environ, start_response):
     try:
         user = store.get(User(username))
     except NoUserError:
-        print 'profile not found for %s' % username
         raise HTTP404('Profile not found for %s' % username)
 
     query_string_store = environ['QUERY_STRING']
     environ['QUERY_STRING'] = 'q=modified:%s' % username
-    serialization = Serializer('html', environ)
 
     activity_feed = (space_uri(environ, username) +
             'search.atom?q=modifier:%s' % username)
 
-    environ['tiddlyweb.links'].append(
+    environ['tiddlyweb.links'] = [
            '<link rel="alternate" type="application/atom+xml" title="Atom activity feed" href="%s" />'
-           % activity_feed)
+           % activity_feed]
 
     profile_tiddler = Tiddler('profile', '%s_public' % username)
     try:
@@ -95,11 +97,12 @@ def profile(environ, start_response):
     profile_text = render_wikitext(profile_tiddler, environ)
 
     tiddlers = store.search('modifier:cdent')
-    tiddler_collection = Tiddlers(title='profile tiddlers')
-    tiddler_collection.is_search = True
+    tiddlers_list = []
     for tiddler in filter_tiddlers(tiddlers, 'sort=-modified;limit=20'):
-        tiddler_collection.add(tiddler)
-    profile_tiddlers = serialization.list_tiddlers(tiddler_collection)
+        tiddlers_list.append('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'
+                % (encode_name(tiddler.bag), encode_name(tiddler.title),
+                    tiddler.title))
+    profile_tiddlers = '\n'.join(tiddlers_list)
 
     avatar_path = '/recipes/%s_public/tiddlers/SiteIcon' % username
 

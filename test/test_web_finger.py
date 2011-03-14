@@ -53,9 +53,11 @@ def test_get_profile():
 
     tiddler = Tiddler('profile', 'cdent_public')
     tiddler.text = '!Hello There'
+    tiddler.modifier = 'cdent'
     store.put(tiddler)
 
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent')
     assert response['status'] == '200'
 
     assert 'Hello There' in content
+    assert '/cdent_public/tiddlers/profile' in content
