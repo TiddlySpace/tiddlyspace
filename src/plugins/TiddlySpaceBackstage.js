@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.6.6|
+|''Version''|0.6.7|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
 |''Contributors''|Jon Lister, Jon Robson, Colm Britton|
@@ -95,7 +95,7 @@ backstage.tiddlyspace = {
 		loggedout: "You are currently logged out of TiddlySpace.",
 		unplugged: "You are unplugged."
 	},
-	checkSyncStatus: function() {
+	checkSyncStatus: function(tiddler) {
 		var bs = backstage.tiddlyspace;
 		var t = store.filterTiddlers("[is[unsynced]]");
 		var unsyncedList = $("#backstage .tiddlyspaceMenu .unsyncedList");
@@ -106,7 +106,14 @@ backstage.tiddlyspace = {
 			bs.tweakMiddleButton();
 			$("#backstage").removeClass("unsyncedChanges");
 		}
-		story.refreshAllTiddlers();
+		refreshElements($("#backstage")[0]);
+		if(tiddler) {
+			var title = typeof(tiddler) === "string" ? tiddler : tiddler.title;
+			var el = story.getTiddler(title) || false;
+			if(el) {
+				refreshElements(el);
+			}
+		}
 	},
 	userButton: function(backstageArea, user) {
 		// override user button (logged in) to show username
@@ -274,8 +281,8 @@ $.extend(config.messages, {
 	syncListHeading: "Unsaved tiddlers listed below"});
 
 var _reportSuccess = config.extensions.ServerSideSavingPlugin.reportSuccess;
-config.extensions.ServerSideSavingPlugin.reportSuccess = function() {
-	backstage.tiddlyspace.checkSyncStatus();
+config.extensions.ServerSideSavingPlugin.reportSuccess = function(msg, tiddler) {
+	backstage.tiddlyspace.checkSyncStatus(tiddler);
 	_reportSuccess.apply(this, arguments);
 };
 

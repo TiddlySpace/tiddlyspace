@@ -5,6 +5,7 @@ var NOP = function() {};
 httpReq = NOP; // XXX: deprecated
 backstage = {};
 ajaxReq = NOP;
+refreshElements = NOP;
 refreshStyles = NOP;
 saveChanges = NOP;
 autoSaveChanges = NOP;

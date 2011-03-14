@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceSearcher|
-|''Version''|0.2.4|
+|''Version''|0.2.5|
 |''Requires''|TiddlySpaceConfig TiddlySpaceFollowingPlugin|
 ***/
 //{{{
@@ -65,7 +65,9 @@ var search = config.macros.tsSearch = {
 	constructSearchQuery: function(form) {
 		var data = [], select = [];
 		var query = $("[name=q]", form).val();
-		data.push("q=%0".format(query));
+		if(query) {
+			data.push("q=%0".format(query));
+		}
 
 		// add tags, fields etc..
 		$("[field]", form).each(function(i, el) {
@@ -82,7 +84,8 @@ var search = config.macros.tsSearch = {
 				if(negate) {
 					select.push("select=%0:%1".format(name,val));
 				} else {
-					data.push(' %0:"%1"'.format(name,val));
+					var prefix = data.length === 0 ? "q=" : "";
+					data.push('%0%1:"%2"'.format(prefix, name, val));
 				}
 			}
 		});
