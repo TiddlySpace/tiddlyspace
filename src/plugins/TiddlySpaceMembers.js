@@ -51,9 +51,9 @@ var macro = config.macros.TiddlySpaceMembers = {
 		} else {
 			var msg;
 			if(mode == "add") {
-				msg = this.locale.authAddError.format([this.space.name]);
+				msg = this.locale.authAddError.format(this.space.name);
 			} else {
-				msg = this.locale.authError.format([this.space.name]);
+				msg = this.locale.authError.format(this.space.name);
 			}
 			container = $("<div />").appendTo(place);
 			if(!hideErrors) {
@@ -68,7 +68,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 		};
 		var errback = function(xhr, error, exc) {
 			var msg = xhr.status == 403 ? "authError" : "listError";
-			msg = macro.locale[msg].format([macro.space.name, error]);
+			msg = macro.locale[msg].format(macro.space.name, error);
 			macro.notify(msg, container);
 		};
 		this.space.members().get(callback, errback);
@@ -116,7 +116,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 	onClick: function(ev) { // XXX: ambiguous; rename
 		var btn = $(this);
 		var username = btn.data("username");
-		var msg = macro.locale.delPrompt.format([username]);
+		var msg = macro.locale.delPrompt.format(username);
 		var callback = function(data, status, xhr) {
 			if(username == config.extensions.tiddlyweb.username) { // assumes getStatus has completed
 				readOnly = true;
@@ -127,7 +127,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 		};
 		var errback = function(xhr, error, exc) {
 			var msg = xhr.status == 403 ? "delAuthError" : "delSpaceError";
-			displayMessage(macro.locale[msg].format([username, macro.space.name]));
+			displayMessage(macro.locale[msg].format(username, macro.space.name));
 		};
 		if(confirm(msg)) {
 			macro.space.members().remove(username, callback, errback);
