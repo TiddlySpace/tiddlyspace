@@ -94,7 +94,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 	},
 	onSubmit: function(ev, form) {
 		var selector = "[name=username]";
-		var input = $(form).find(selector)
+		var input = $(form).find(selector);
 		var username = input.val();
 		var callback = function(data, status, xhr) {
 			$(".spaceMembersList").each(function(i, el) {
