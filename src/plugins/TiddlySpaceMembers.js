@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceMembers|
-|''Version''|0.6.0|
+|''Version''|0.6.1|
 |''Description''|provides a UI for managing space members|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceMembers.js|
