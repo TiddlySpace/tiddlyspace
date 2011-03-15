@@ -8,21 +8,6 @@
 !Usage
 <<TiddlySpaceMembers list>> provides list of members
 <<TiddlySpaceMembers add>> creates a form to add new members.
-!HTMLForm
-<div class='memberForm'>
-	<div class='messageArea'></div>
-	<form action="#">
-		<fieldset>
-			<legend />
-			<dl>
-				<dt>Username:</dt>
-				<dd><input type="text" name="username" /></dd>
-			</dl>
-			<p class="annotation" />
-			<input type="submit" />
-		</fieldset>
-	</form>
-</div>
 !Code
 ***/
 //{{{
@@ -31,7 +16,6 @@
 var admin = config.macros.TiddlySpaceAdmin;
 var formMaker = config.extensions.formMaker;
 var macro = config.macros.TiddlySpaceMembers = {
-	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
 		authAddError: "You must be a member to add members to this space.",
 		authError: "list of members is only visible to members of space <em>%0</em>",
