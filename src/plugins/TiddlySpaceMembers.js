@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceMembers|
-|''Version''|0.6.0|
+|''Version''|0.6.1|
 |''Description''|provides a UI for managing space members|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceMembers.js|
@@ -8,21 +8,6 @@
 !Usage
 <<TiddlySpaceMembers list>> provides list of members
 <<TiddlySpaceMembers add>> creates a form to add new members.
-!HTMLForm
-<div class='memberForm'>
-	<div class='messageArea'></div>
-	<form action="#">
-		<fieldset>
-			<legend />
-			<dl>
-				<dt>Username:</dt>
-				<dd><input type="text" name="username" /></dd>
-			</dl>
-			<p class="annotation" />
-			<input type="submit" />
-		</fieldset>
-	</form>
-</div>
 !Code
 ***/
 //{{{
@@ -31,7 +16,6 @@
 var admin = config.macros.TiddlySpaceAdmin;
 var formMaker = config.extensions.formMaker;
 var macro = config.macros.TiddlySpaceMembers = {
-	formTemplate: store.getTiddlerText(tiddler.title + "##HTMLForm"),
 	locale: {
 		authAddError: "You must be a member to add members to this space.",
 		authError: "list of members is only visible to members of space <em>%0</em>",
@@ -67,9 +51,9 @@ var macro = config.macros.TiddlySpaceMembers = {
 		} else {
 			var msg;
 			if(mode == "add") {
-				msg = this.locale.authAddError.format([this.space.name]);
+				msg = this.locale.authAddError.format(this.space.name);
 			} else {
-				msg = this.locale.authError.format([this.space.name]);
+				msg = this.locale.authError.format(this.space.name);
 			}
 			container = $("<div />").appendTo(place);
 			if(!hideErrors) {
@@ -84,7 +68,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 		};
 		var errback = function(xhr, error, exc) {
 			var msg = xhr.status == 403 ? "authError" : "listError";
-			msg = macro.locale[msg].format([macro.space.name, error]);
+			msg = macro.locale[msg].format(macro.space.name, error);
 			macro.notify(msg, container);
 		};
 		this.space.members().get(callback, errback);
@@ -110,7 +94,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 	},
 	onSubmit: function(ev, form) {
 		var selector = "[name=username]";
-		var input = $(form).find(selector)
+		var input = $(form).find(selector);
 		var username = input.val();
 		var callback = function(data, status, xhr) {
 			$(".spaceMembersList").each(function(i, el) {
@@ -132,7 +116,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 	onClick: function(ev) { // XXX: ambiguous; rename
 		var btn = $(this);
 		var username = btn.data("username");
-		var msg = macro.locale.delPrompt.format([username]);
+		var msg = macro.locale.delPrompt.format(username);
 		var callback = function(data, status, xhr) {
 			if(username == config.extensions.tiddlyweb.username) { // assumes getStatus has completed
 				readOnly = true;
@@ -143,7 +127,7 @@ var macro = config.macros.TiddlySpaceMembers = {
 		};
 		var errback = function(xhr, error, exc) {
 			var msg = xhr.status == 403 ? "delAuthError" : "delSpaceError";
-			displayMessage(macro.locale[msg].format([username, macro.space.name]));
+			displayMessage(macro.locale[msg].format(username, macro.space.name));
 		};
 		if(confirm(msg)) {
 			macro.space.members().remove(username, callback, errback);
