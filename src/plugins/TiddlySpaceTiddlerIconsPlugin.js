@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.8.6|
+|''Version''|0.8.7|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -69,9 +69,11 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 
 	tweb.getStatus(function(status) {
 		var link, noLabel;
-		if(!value) {
-			if(store.tiddlerExists("missingIcon")) {
-				imageMacro.renderImage(container, "missingIcon", options.imageOptions);
+		if(!value || value == config.views.wikified.defaultModifier ||
+			value == config.views.wikified.shadowModifier) {
+			var icon = config.views.wikified.shadowModifier == value ? "shadowIcon" : "missingIcon";
+			if(store.tiddlerExists(icon)) {
+				imageMacro.renderImage(container, icon, options.imageOptions);
 			} else {
 				noLabel = true;
 			}
