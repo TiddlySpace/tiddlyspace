@@ -7,7 +7,10 @@
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceViewTypes.js|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin|
 !Usage
-Provides replyLink view type.
+Provides replyLink, spaceLink and SiteIcon view types.
+!!SiteIcon view parameters
+* labelPrefix / labelSuffix : prefix or suffix the label with additional text. eg. labelPrefix:'modified by '
+* spaceLink: if set to "yes" will make any avatars link to the corresponding space. {{{<<originMacro spaceLink:yes>>}}}
 
 !Code
 ***/

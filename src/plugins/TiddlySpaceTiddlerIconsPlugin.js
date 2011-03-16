@@ -7,26 +7,14 @@
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceTiddlerIconsPlugin.js|
 |''Requires''|TiddlySpaceConfig BinaryTiddlersPlugin ImageMacroPlugin TiddlySpacePublishingCommands|
 !Notes
-Provides an additional SiteIcon view for use with view macro
-{{{<<view modifier SiteIcon>>}}}
-will show the SiteIcon located in the space with the same name as modifier.
-It also works if the attribute given ends with _private or _public (so {{{<<view server.bag SiteIcon>>}}} is usable).
-
 {{{<<tiddlerOrigin>>}}} shows the origin of the tiddler it is being run on.
 In TiddlySpace terms this means it will determine whether the tiddler is external, public or private.
 Where private it will analyse whether a public version exists and distinguish between the different scenarios.
 If a tiddler is external, the SiteIcon of that external space will be shown
 
-When a ViewTemplate contains an element with class concertina, clicking on the icon outputted by the tiddlerOrigin macro
-will reveal more detailed information on what the icon means.
 !Parameters
-both take the same parameters
 width / height : define a width or height of the outputted icon
 label: if label parameter is set to yes, a label will accompany the icon.
-
-!!additional view parameters
-* labelPrefix / labelSuffix : prefix or suffix the label with additional text. eg. labelPrefix:'modified by '
-* spaceLink: if set to "yes" will make any avatars link to the corresponding space. {{{<<originMacro spaceLink:yes>>}}}
 !Code
 ***/
 //{{{
