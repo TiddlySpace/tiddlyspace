@@ -15,6 +15,7 @@ Provides replyLink view type.
 (function($) {
 
 var tiddlyspace = config.extensions.tiddlyspace;
+var originMacro = config.macros.tiddlerOrigin;
 
 config.macros.view.replyLink = {
 	locale: {
@@ -85,6 +86,19 @@ config.macros.view.views.spaceLink = function(value, place, params, wikifier,
 				return false;
 			});
 		}
+};
+
+config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
+		paramString, tiddler) {
+	var options = originMacro.getOptions(paramString);
+	if(!tiddler || value == "None") { // some core tiddlers lack modifier
+		value = false;
+	}
+	var field = params[0];
+	if(field == "server.bag") {
+		options.notSpace = !originMacro._isSpace(value);
+	}
+	tiddlyspace.renderAvatar(place, value, options);
 };
 
 })(jQuery);

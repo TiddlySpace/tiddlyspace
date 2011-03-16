@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.8.7|
+|''Version''|0.8.8|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -110,19 +110,6 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 		var label = "%0%1%2".format([prefix, value, suffix]);
 		$(container).attr("title", label);
 	}
-};
-
-config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
-		paramString, tiddler) {
-	var options = originMacro.getOptions(paramString);
-	if(!tiddler || value == "None") { // some core tiddlers lack modifier
-		value = false;
-	}
-	var field = params[0];
-	if(field == "server.bag") {
-		options.notSpace = !originMacro._isSpace(value);
-	}
-	tiddlyspace.renderAvatar(place, value, options);
 };
 
 var originMacro = config.macros.tiddlerOrigin = {
