@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpacePublishingCommands|
-|''Version''|0.8.4|
+|''Version''|0.8.5|
 |''Status''|@@beta@@|
 |''Description''|toolbar commands for drafting and publishing|
 |''Author''|Jon Robson|
@@ -143,14 +143,13 @@ var cmd = config.commands.publishTiddler = {
 								callback(info);
 							}
 							store.setDirty(_dirty);
-							story.refreshTiddler(newTitle, null, true); // for drafts
 						});
 					} else {
 						if(callback) {
 							callback(info);
 						}
-						story.refreshTiddler(newTitle, null, true);
 					}
+					refreshDisplay();
 				}
 		});
 	}
