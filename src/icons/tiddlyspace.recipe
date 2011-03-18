@@ -3,7 +3,9 @@ tiddler: closeTiddler.tid
 tiddler: editTiddler.tid
 tiddler: editTiddlerReadOnly.tid
 tiddler: deleteTiddler.tid
+tiddler: missingIcon.tid
 tiddler: moreCommand.tid
 tiddler: saveDraft.tid
 tiddler: saveTiddler.tid
+tiddler: shadowIcon.tid
 tiddler: unsyncedIcon.tid
