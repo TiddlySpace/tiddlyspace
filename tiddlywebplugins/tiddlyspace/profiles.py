@@ -8,8 +8,10 @@ from tiddlyweb.store import StoreError, NoUserError
 from tiddlyweb.model.collections import Tiddlers
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
-from tiddlyweb.web.http import HTTP404, HTTP400
-from tiddlyweb.web.util import server_base_url, encode_name
+from tiddlyweb.web.handler.search import get as search
+from tiddlyweb.web.http import HTTP404, HTTP400, HTTP415
+from tiddlyweb.web.util import (server_host_url, server_base_url,
+        encode_name, get_serialize_type)
 from tiddlywebplugins.tiddlyspace.web import determine_host
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
 from tiddlyweb.serializer import Serializer
@@ -37,14 +39,14 @@ WEBFINGER_TEMPLATE = """<?xml version="1.0"?>
       href="%(server_host)s/profiles/%(username)s"
       type="text/html"/>
 <Link rel="http://schemas.google.com/g/2010#updates-from"
-      href="%(server_host)s/search.atom?q=modifier:%(username)s"
+      href="%(server_host)s/profiles/%(username)s"
       type="application/atom+xml"/>
 </XRD>
 """
 
 PROFILE_TEMPLATE = """
 <div class="tiddler">
-<img style="float:right" src="%(server_host)s%(avatar_path)s" alt="avatar"></img>
+<img style="float:right" src="%(avatar_path)s" alt="avatar"></img>
 %(profile)s
 </div>
 <div>
@@ -59,7 +61,7 @@ PROFILE_TEMPLATE = """
 def add_profile_routes(selector):
     selector.add('/.well-known/host-meta', GET=host_meta)
     selector.add('/webfinger', GET=webfinger)
-    selector.add('/profiles/{username}', GET=profile)
+    selector.add('/profiles/{username}[.{format}]', GET=profile)
 
 
 def profile(environ, start_response):
@@ -68,6 +70,22 @@ def profile(environ, start_response):
         # Or should it be a 302?
         raise HTTP404('No profiles at this host: %s' % http_host)
 
+    serialize_type, mime_type = get_serialize_type(environ)
+    if 'atom' in mime_type:
+        return atom_profile(environ, start_response)
+    elif 'html' in mime_type:
+        return html_profile(environ, start_response)
+    else:
+        raise HTTP415('Atom and HTML only')
+
+def atom_profile(environ, start_response):
+    # Cook up an environment that will get us proper search results
+    username = environ['wsgiorg.routing_args'][1]['username']
+    search_string = _search_string(username)
+    environ['tiddlyweb.query']['q'] = [search_string]
+    return search(environ, start_response)
+
+def html_profile(environ, start_response):
     username = environ['wsgiorg.routing_args'][1]['username']
     current_user = environ['tiddlyweb.usersign']
 
@@ -78,8 +96,8 @@ def profile(environ, start_response):
     except NoUserError:
         raise HTTP404('Profile not found for %s' % username)
 
-    activity_feed = (space_uri(environ, username) +
-            'search.atom?q=modifier:%s' % username)
+    activity_feed = (server_host_url(environ) +
+            '/profiles/%s.atom' % encode_name(username))
 
     environ['tiddlyweb.links'] = [
            '<link rel="alternate" type="application/atom+xml" title="Atom activity feed" href="%s" />'
@@ -93,7 +111,7 @@ def profile(environ, start_response):
 
     profile_text = render_wikitext(profile_tiddler, environ)
 
-    tiddlers = store.search('modifier:%s' % username)
+    tiddlers = store.search(_search_string(username))
     tiddlers_list = []
     for tiddler in filter_tiddlers(tiddlers, 'sort=-modified;limit=20'):
         tiddlers_list.append('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'
@@ -109,8 +127,7 @@ def profile(environ, start_response):
     environ['tiddlyweb.title'] = 'Profile for %s' % username
     return [PROFILE_TEMPLATE % {'username': username,
         'avatar_path': avatar_path,
-        'profile': profile_text, 'tiddlers': profile_tiddlers,
-        'server_host': server_base_url(environ)}]
+        'profile': profile_text, 'tiddlers': profile_tiddlers}]
 
 
 def host_meta(environ, start_response):
@@ -149,3 +166,6 @@ def webfinger(environ, start_response):
 
     return [WEBFINGER_TEMPLATE % {'username': username,
         'host': http_host, 'server_host': server_base_url(environ)}]
+
+def _search_string(username):
+    return 'modifier:%s' % username
