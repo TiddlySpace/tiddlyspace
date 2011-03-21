@@ -78,9 +78,6 @@ def profile(environ, start_response):
     except NoUserError:
         raise HTTP404('Profile not found for %s' % username)
 
-    query_string_store = environ['QUERY_STRING']
-    environ['QUERY_STRING'] = 'q=modified:%s' % username
-
     activity_feed = (space_uri(environ, username) +
             'search.atom?q=modifier:%s' % username)
 
@@ -96,7 +93,7 @@ def profile(environ, start_response):
 
     profile_text = render_wikitext(profile_tiddler, environ)
 
-    tiddlers = store.search('modifier:cdent')
+    tiddlers = store.search('modifier:%s' % username)
     tiddlers_list = []
     for tiddler in filter_tiddlers(tiddlers, 'sort=-modified;limit=20'):
         tiddlers_list.append('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'
@@ -110,7 +107,6 @@ def profile(environ, start_response):
         ('Content-Type', 'text/html; charset=UTF-8')])
 
     environ['tiddlyweb.title'] = 'Profile for %s' % username
-    environ['QUERY_STRING'] = query_string_store
     return [PROFILE_TEMPLATE % {'username': username,
         'avatar_path': avatar_path,
         'profile': profile_text, 'tiddlers': profile_tiddlers,
