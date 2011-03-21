@@ -1,32 +1,20 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.8.6|
+|''Version''|0.8.8|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceTiddlerIconsPlugin.js|
 |''Requires''|TiddlySpaceConfig BinaryTiddlersPlugin ImageMacroPlugin TiddlySpacePublishingCommands|
 !Notes
-Provides an additional SiteIcon view for use with view macro
-{{{<<view modifier SiteIcon>>}}}
-will show the SiteIcon located in the space with the same name as modifier.
-It also works if the attribute given ends with _private or _public (so {{{<<view server.bag SiteIcon>>}}} is usable).
-
 {{{<<tiddlerOrigin>>}}} shows the origin of the tiddler it is being run on.
 In TiddlySpace terms this means it will determine whether the tiddler is external, public or private.
 Where private it will analyse whether a public version exists and distinguish between the different scenarios.
 If a tiddler is external, the SiteIcon of that external space will be shown
 
-When a ViewTemplate contains an element with class concertina, clicking on the icon outputted by the tiddlerOrigin macro
-will reveal more detailed information on what the icon means.
 !Parameters
-both take the same parameters
 width / height : define a width or height of the outputted icon
 label: if label parameter is set to yes, a label will accompany the icon.
-
-!!additional view parameters
-* labelPrefix / labelSuffix : prefix or suffix the label with additional text. eg. labelPrefix:'modified by '
-* spaceLink: if set to "yes" will make any avatars link to the corresponding space. {{{<<originMacro spaceLink:yes>>}}}
 !Code
 ***/
 //{{{
@@ -69,9 +57,11 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 
 	tweb.getStatus(function(status) {
 		var link, noLabel;
-		if(!value) {
-			if(store.tiddlerExists("missingIcon")) {
-				imageMacro.renderImage(container, "missingIcon", options.imageOptions);
+		if(!value || value == config.views.wikified.defaultModifier ||
+			value == config.views.wikified.shadowModifier) {
+			var icon = config.views.wikified.shadowModifier == value ? "shadowIcon" : "missingIcon";
+			if(store.tiddlerExists(icon)) {
+				imageMacro.renderImage(container, icon, options.imageOptions);
 			} else {
 				noLabel = true;
 			}
@@ -108,19 +98,6 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 		var label = "%0%1%2".format([prefix, value, suffix]);
 		$(container).attr("title", label);
 	}
-};
-
-config.macros.view.views.SiteIcon = function(value, place, params, wikifier,
-		paramString, tiddler) {
-	var options = originMacro.getOptions(paramString);
-	if(!tiddler || value == "None") { // some core tiddlers lack modifier
-		value = false;
-	}
-	var field = params[0];
-	if(field == "server.bag") {
-		options.notSpace = !originMacro._isSpace(value);
-	}
-	tiddlyspace.renderAvatar(place, value, options);
 };
 
 var originMacro = config.macros.tiddlerOrigin = {
