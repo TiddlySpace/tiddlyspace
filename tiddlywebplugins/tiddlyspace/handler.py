@@ -29,14 +29,15 @@ def friendly_uri(environ, start_response):
     """
     http_host, host_url = determine_host(environ)
     if http_host == host_url:
-        raise HTTP404('No resource found')
+        space_name = "frontpage"
     else:
         space_name = determine_space(environ, http_host)
-        recipe_name = determine_space_recipe(environ, space_name)
-        # tiddler_name already in uri
-        environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
-            'UTF-8')
-        return get_tiddler(environ, start_response)
+
+    recipe_name = determine_space_recipe(environ, space_name)
+    # tiddler_name already in uri
+    environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
+        'UTF-8')
+    return get_tiddler(environ, start_response)
 
 
 @require_any_user()
