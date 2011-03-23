@@ -49,12 +49,7 @@ var cmd = config.commands.publishTiddler = {
 	errorMsg: "Error publishing %0: %1",
 
 	isEnabled: function(tiddler) {
-		var type = tiddlyspace.getTiddlerStatusType(tiddler);
-		if(!readOnly && type == "private") {
-			return true;
-		} else {
-			return false;
-		}
+		return !readOnly && config.filterHelpers.is["private"](tiddler);
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);
@@ -155,16 +150,11 @@ var cmd = config.commands.publishTiddler = {
 	}
 };
 
-config.commands.changeToPrivate = {
+var changeToPrivate = config.commands.changeToPrivate = {
 	text: "make private",
 	tooltip: "turn this public tiddler into a private tiddler",
 	isEnabled: function(tiddler) {
-		var type = tiddlyspace.getTiddlerStatusType(tiddler);
-		if(!readOnly && type == "public") {
-			return true;
-		} else {
-			return false;
-		}
+		return !readOnly && config.filterHelpers.is["public"](tiddler);
 	},
 	handler: function(event, src, title) {
 		var tiddler = store.getTiddler(title);
@@ -180,12 +170,7 @@ var saveDraftCmd = config.commands.saveDraft = {
 	text: "save draft",
 	tooltip: "Save as a private draft",
 	isEnabled: function(tiddler) {
-		var type = tiddlyspace.getTiddlerStatusType(tiddler);
-		if(!readOnly && type == "public") {
-			return true;
-		} else {
-			return false;
-		}
+		return changeToPrivate.isEnabled(tiddler);
 	},
 	getDraftTitle: function(title) {
 		var draftTitle;
