@@ -1,0 +1,6 @@
+type: text/plain
+tags: excludeLists excludeSearch
+
+User-agent: *
+Disallow: /bags/*/tiddlers.wiki
+Disallow: /recipes/*/tiddlers.wiki
