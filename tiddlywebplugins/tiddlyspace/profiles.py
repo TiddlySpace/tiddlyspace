@@ -11,6 +11,7 @@ from tiddlyweb.web.handler.search import get as search
 from tiddlyweb.web.http import HTTP404, HTTP400, HTTP415
 from tiddlyweb.web.util import (server_host_url, server_base_url,
         encode_name, get_serialize_type)
+from tiddlywebplugins.tiddlyspace.spaces import space_uri
 from tiddlywebplugins.tiddlyspace.web import determine_host
 from tiddlyweb.wikitext import render_wikitext
 
@@ -43,7 +44,7 @@ WEBFINGER_TEMPLATE = """<?xml version="1.0"?>
 
 PROFILE_TEMPLATE = """
 <div class="tiddler">
-<img style="float:right" src="%(avatar_path)s" alt="avatar"></img>
+<a href="%(space_uri)s" title="space link"><img style="float:right" src="%(avatar_path)s" alt="avatar"></img></a>
 %(profile)s
 </div>
 <div>
@@ -138,7 +139,7 @@ def html_profile(environ, start_response):
 
     environ['tiddlyweb.title'] = 'Profile for %s' % username
     return [PROFILE_TEMPLATE % {'username': username,
-        'avatar_path': avatar_path,
+        'avatar_path': avatar_path, 'space_uri': space_uri(environ, username),
         'profile': profile_text, 'tiddlers': profile_tiddlers}]
 
 
