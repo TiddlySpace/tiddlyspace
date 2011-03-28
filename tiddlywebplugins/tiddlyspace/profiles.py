@@ -5,7 +5,6 @@ user profiles, etc.
 
 from tiddlyweb.control import filter_tiddlers
 from tiddlyweb.store import StoreError, NoUserError
-from tiddlyweb.model.collections import Tiddlers
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.web.handler.search import get as search
@@ -13,8 +12,6 @@ from tiddlyweb.web.http import HTTP404, HTTP400, HTTP415
 from tiddlyweb.web.util import (server_host_url, server_base_url,
         encode_name, get_serialize_type)
 from tiddlywebplugins.tiddlyspace.web import determine_host
-from tiddlywebplugins.tiddlyspace.spaces import space_uri
-from tiddlyweb.serializer import Serializer
 from tiddlyweb.wikitext import render_wikitext
 
 
@@ -57,20 +54,25 @@ PROFILE_TEMPLATE = """
 """
 
 
-
 def add_profile_routes(selector):
+    """
+    Add the necessary routes for profiles and webfinger.
+    """
     selector.add('/.well-known/host-meta', GET=host_meta)
     selector.add('/webfinger', GET=webfinger)
     selector.add('/profiles/{username}[.{format}]', GET=profile)
 
 
 def profile(environ, start_response):
+    """
+    Choose between an atom or html profile.
+    """
     http_host, host_url = determine_host(environ)
     if http_host != host_url:
         # Or should it be a 302?
         raise HTTP404('No profiles at this host: %s' % http_host)
 
-    serialize_type, mime_type = get_serialize_type(environ)
+    _, mime_type = get_serialize_type(environ)
     if 'atom' in mime_type:
         return atom_profile(environ, start_response)
     elif 'html' in mime_type:
@@ -78,21 +80,30 @@ def profile(environ, start_response):
     else:
         raise HTTP415('Atom and HTML only')
 
+
 def atom_profile(environ, start_response):
-    # Cook up an environment that will get us proper search results
+    """
+    Send the atom profile, which is actually a search
+    for tiddlers modified by the user.
+    """
     username = environ['wsgiorg.routing_args'][1]['username']
     search_string = _search_string(username)
     environ['tiddlyweb.query']['q'] = [search_string]
     return search(environ, start_response)
 
+
 def html_profile(environ, start_response):
+    """
+    Send the HTML profile, made up for the user's SiteIcon,
+    their profile from their space, and their most recently
+    modified tiddlers.
+    """
     username = environ['wsgiorg.routing_args'][1]['username']
-    current_user = environ['tiddlyweb.usersign']
 
     store = environ['tiddlyweb.store']
 
     try:
-        user = store.get(User(username))
+        _ = store.get(User(username))
     except NoUserError:
         raise HTTP404('Profile not found for %s' % username)
 
@@ -100,7 +111,8 @@ def html_profile(environ, start_response):
             '/profiles/%s.atom' % encode_name(username))
 
     environ['tiddlyweb.links'] = [
-           '<link rel="alternate" type="application/atom+xml" title="Atom activity feed" href="%s" />'
+           '<link rel="alternate" type="application/atom+xml"'
+           'title="Atom activity feed" href="%s" />'
            % activity_feed]
 
     profile_tiddler = Tiddler('profile', '%s_public' % username)
@@ -131,23 +143,27 @@ def html_profile(environ, start_response):
 
 
 def host_meta(environ, start_response):
+    """
+    Send the host_meta information, so webfinger info can be found.
+    """
     http_host, host_url = determine_host(environ)
     if http_host != host_url:
         # Or should it be a 302?
         raise HTTP404('No host-meta at this host: %s' % http_host)
 
     start_response('200 OK', [
-        ('Content-Type', 'application/xrd+xml')
-        ])
+        ('Content-Type', 'application/xrd+xml')])
 
     return [HOST_META_TEMPLATE % {'host': http_host, 'server_host':
         server_base_url(environ)}]
 
 
 def webfinger(environ, start_response):
+    """
+    Display the webfinger information for a given user.
+    """
     http_host, host_url = determine_host(environ)
     if http_host != host_url:
-        # Or should it be a 302?
         raise HTTP404('No webfinger at this host: %s' % http_host)
 
     username = environ['tiddlyweb.query'].get('q', [None])[0]
@@ -155,17 +171,20 @@ def webfinger(environ, start_response):
     if not username:
         raise HTTP400('No account provided to webfinger query')
 
-    # XXX Do we validate user for existence at this stage of the game?
     if username.startswith('acct:'):
         username = username.split(':', 1)[1]
     username = username.split('@', 1)[0]
 
     start_response('200 OK', [
-        ('Content-Type', 'application/xrd+xml')
-        ])
+        ('Content-Type', 'application/xrd+xml')])
 
     return [WEBFINGER_TEMPLATE % {'username': username,
         'host': http_host, 'server_host': server_base_url(environ)}]
 
+
 def _search_string(username):
+    """
+    Construct the search string to be used for creating
+    the recent tiddlers for this username.
+    """
     return 'modifier:%s' % username
