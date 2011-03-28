@@ -37,7 +37,7 @@ WEBFINGER_TEMPLATE = """<?xml version="1.0"?>
       href="%(server_host)s/profiles/%(username)s"
       type="text/html"/>
 <Link rel="http://schemas.google.com/g/2010#updates-from"
-      href="%(server_host)s/profiles/%(username)s"
+      href="%(server_host)s/profiles/%(username)s.atom"
       type="application/atom+xml"/>
 </XRD>
 """
@@ -126,7 +126,8 @@ def html_profile(environ, start_response):
 
     tiddlers = store.search(_search_string(username))
     tiddlers_list = []
-    for tiddler in filter_tiddlers(tiddlers, 'sort=-modified;limit=20'):
+    for tiddler in filter_tiddlers(tiddlers, 'sort=-modified;limit=20',
+            environ=environ):
         tiddlers_list.append('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'
                 % (encode_name(tiddler.bag), encode_name(tiddler.title),
                     tiddler.title))
