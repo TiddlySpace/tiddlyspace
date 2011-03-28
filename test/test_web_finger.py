@@ -45,11 +45,11 @@ def test_get_webfinger():
     assert content == WEBFINGER_TEMPLATE % {'username': 'cdent',
             'host': '0.0.0.0:8080', 'server_host': 'http://0.0.0.0:8080'}
 
-def test_get_profile():
+def test_get_profile_html():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent')
     # the lack of a profile tiddler indicates you don't want to
     # participate
-    assert response['status'] == '404'
+    assert response['status'] == '404', content
 
     tiddler = Tiddler('profile', 'cdent_public')
     tiddler.text = '!Hello There'
@@ -61,3 +61,23 @@ def test_get_profile():
 
     assert 'Hello There' in content
     assert '/cdent_public/tiddlers/profile' in content
+
+def test_get_profile_atom():
+    response, content = http.request('http://0.0.0.0:8080/profiles/cdent',
+            headers={'Accept': 'application/atom+xml'})
+    assert response['status'] == '200'
+
+    assert 'Hello There' in content
+    assert 'href="http://0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
+
+def test_get_profile_atom_format():
+    response, content = http.request('http://0.0.0.0:8080/profiles/cdent.atom')
+    assert response['status'] == '200'
+
+    assert 'Hello There' in content
+    assert 'href="http://0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
+
+def test_get_profile_json():
+    response, content = http.request('http://0.0.0.0:8080/profiles/cdent',
+            headers={'Accept': 'application/json'})
+    assert response['status'] == '415', content
