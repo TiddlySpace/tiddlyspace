@@ -1,9 +1,11 @@
 /***
 |''Name''|TiddlySpaceErrorHandlers|
 |''Description''|Provides useful functionality for a given error message|
+|''Version''|0.1.0|
 ***/
 //{{{
 var errorhandler = {
+	homespace: "frontpage",
 	locale: {
 		errorCreateSpace: "error creating space.",
 		tiddlerSuggestionsHeader: "Were you looking for one of these tiddlers...?",
@@ -23,7 +25,7 @@ var errorhandler = {
 		404: function() {
 			var domain = window.location.host.split(".");
 			var path = window.location.pathname.substr(1, window.location.pathname.length); // remove first "/"
-			var space = domain[0];
+			var space = domain.length > 2 ? domain[0] : errorhandler.homespace;
 			var container = $(".spaceSuggestions")[0];
 			if(path) {
 				var segments = path.split("/");

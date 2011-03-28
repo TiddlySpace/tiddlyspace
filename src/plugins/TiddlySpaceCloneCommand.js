@@ -1,10 +1,10 @@
 /***
 |''Name''|TiddlySpaceCloneCommand|
-|''Version''|0.5.6|
+|''Version''|0.5.7|
 |''Description''|provides a toolbar command for cloning external tiddlers|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceCloneCommand.js|
-|''Requires''|TiddlySpaceConfig|
+|''Requires''|TiddlySpaceConfig TiddlySpaceFilters|
 !Code
 ***/
 //{{{
@@ -21,20 +21,7 @@ cmd.cloneTiddler = {
 	errorMsg: "Error publishing %0: %1",
 
 	isEnabled: function(tiddler) {
-		if(!store.tiddlerExists(tiddler.title)) {
-			var el = story.getTiddler(tiddler.title);
-			// disable if new tiddler already has (inherited) fields
-			return el ? !$(el).attr("tiddlyFields") : true;
-		}
-		var bag = tiddler.fields["server.bag"];
-		if(readOnly) {
-			return false;
-		} else if(tiddlyspace.coreBags.contains(bag)) {
-			return true;
-		} else {
-			var space = tiddlyspace.determineSpace(tiddler, false);
-			return space && space.name != tiddlyspace.currentSpace.name;
-		}
+		return !config.filterHelpers.is.local(tiddler) && !readOnly;
 	},
 	handler: function(ev, src, title) {
 		var tiddler = store.getTiddler(title);

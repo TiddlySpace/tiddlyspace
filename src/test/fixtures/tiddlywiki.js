@@ -7,6 +7,7 @@ backstage = {};
 ajaxReq = NOP;
 refreshElements = NOP;
 refreshStyles = NOP;
+refreshDisplay = NOP;
 saveChanges = NOP;
 autoSaveChanges = NOP;
 saveSystemSetting = NOP;
