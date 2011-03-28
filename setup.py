@@ -40,7 +40,7 @@ setup(
         'tiddlywebplugins.pathinfohack>=0.8',
         'tiddlywebplugins.form',
         'tiddlywebplugins.reflector>=0.6',
-        'tiddlywebplugins.atom>=1.2.2',
+        'tiddlywebplugins.atom>=1.3.6',
         'tiddlywebplugins.mysql2>=1.0.0',
         'tiddlywebplugins.sqlalchemy2>=1.0.0',
         'tiddlywebplugins.privateer',
