@@ -22,6 +22,7 @@ TIDDLYWIKI_EXTERNAL_ALPHA = resource_filename(PACKAGE_NAME, 'resources/external_
 config = {
     'instance_tiddlers': get_tiddler_locations(store_contents, PACKAGE_NAME),
     'atom.default_filter': 'select=tag:!excludeLists;sort=-modified;limit=20',
+    'atom.author_uri_map': '/profiles/%s',
     'auth_systems': ['cookie_form', 'tiddlywebplugins.tiddlyspace.openid'],
     'bag_create_policy': 'ANY',
     'recipe_create_policy': 'ANY',
