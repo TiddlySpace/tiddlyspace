@@ -3,6 +3,9 @@ Start at the infrastructure for OStatus, including webfinger,
 user profiles, etc.
 """
 
+import urllib
+import urllib2
+
 from tiddlyweb.store import StoreError, NoUserError
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
@@ -15,6 +18,8 @@ from tiddlyweb.web.util import (server_host_url, server_base_url,
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
 from tiddlywebplugins.tiddlyspace.web import determine_host
 from tiddlyweb.wikitext import render_wikitext
+from tiddlywebplugins.dispatcher.listener import Listener as BaseListener
+from tiddlywebplugins.utils import get_store
 
 
 HOST_META_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
@@ -110,8 +115,7 @@ def html_profile(environ, start_response):
     except NoUserError:
         raise HTTP404('Profile not found for %s' % username)
 
-    activity_feed = (server_host_url(environ) +
-            '/profiles/%s.atom' % encode_name(username))
+    activity_feed = profile_atom_url(environ, username)
 
     environ['tiddlyweb.links'] = [
            '<link rel="alternate" type="application/atom+xml"'
@@ -176,6 +180,11 @@ def host_meta(environ, start_response):
         server_base_url(environ)}]
 
 
+def profile_atom_url(environ, username):
+    return (server_host_url(environ) +
+            '/profiles/%s.atom' % encode_name(username))
+
+
 def webfinger(environ, start_response):
     """
     Display the webfinger information for a given user.
@@ -200,12 +209,62 @@ def webfinger(environ, start_response):
         'host': http_host, 'server_host': server_base_url(environ)}]
 
 
+class Listener(BaseListener):
+
+    TUBE = 'pushping'
+    STORE = None
+
+    def _act(self, job):
+        if not self.STORE:
+            self.STORE = get_store(self.config)
+        info = self._unpack(job)
+
+        tiddler = Tiddler(info['tiddler'], info['bag'])
+        try:
+            self.STORE.get(tiddler)
+        except StoreError:
+            return None #  Tiddler's not there, no need to notify
+        user = tiddler.modifier
+        if self._user_has_profile(user):
+            self._send_ping(user)
+
+    def _user_has_profile(self, user):
+        try:
+            tiddler = Tiddler('profile', '%s_public' % user)
+            self.STORE.get(tiddler)
+        except StoreError:
+            return False
+        return True
+
+    def _send_ping(self, user):
+        data = {
+                'hub.mode': 'publish',
+                'hub.url': profile_atom_url({'tiddlyweb.config': self.config},
+                    user),
+                }
+
+        try:
+            target = self.config['atom.hub']
+        except KeyError:
+            return None
+        encoded_data = urllib.urlencode(data)
+
+        try:
+            response = urllib2.urlopen(target, encoded_data)
+            status = response.getcode()
+            if status != '204':
+                logging.warn('non 204 response from hub: %s', status)
+        except urllib2.URLError, exc:
+            logging.warn('error when publishing to hub: %s', exc)
+
+
 def _search_string(username):
     """
     Construct the search string to be used for creating
     the recent tiddlers for this username.
     """
     return 'modifier:%s _limit:20' % username
+
 
 def _tiddler_in_list(tiddler):
     return ('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'

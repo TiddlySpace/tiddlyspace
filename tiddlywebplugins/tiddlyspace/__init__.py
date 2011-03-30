@@ -59,6 +59,12 @@ def init(config):
     import tiddlywebplugins.relativetime
     import tiddlywebplugins.jsonp
 
+    # Only load and run dispatcher if we are specifically configured
+    # to use it.
+    if config.get('use_dispatcher', False):
+        import tiddlywebplugins.dispatcher
+        import tiddlywebplugins.dispatcher.listener
+
     @make_command()
     def addmember(args):
         """Add a member to a space: <space name> <user name>"""
@@ -115,6 +121,10 @@ def init(config):
     tiddlywebplugins.lazy.init(config)
     tiddlywebplugins.privateer.init(config)
     tiddlywebplugins.jsonp.init(config)
+
+    if config.get('use_dispatcher', False):
+        tiddlywebplugins.dispatcher.init(config)
+        tiddlywebplugins.dispatcher.listener.init(config)
 
     # XXX: The following is required to work around issues with twp.instancer.
     # Without this, config settings from tiddlywebwiki take precedence.
