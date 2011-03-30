@@ -45,6 +45,7 @@ setup(
         'tiddlywebplugins.privateer',
         'tiddlywebplugins.lazy',
         'tiddlywebplugins.relativetime',
+        'tiddlywebplugins.dispatcher',
         'tiddlywebplugins.jsonp>=0.4'
     ],
     include_package_data = True,
