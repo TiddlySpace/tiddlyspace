@@ -126,8 +126,7 @@ def html_profile(environ, start_response):
 
     tiddlers = store.search(_search_string(username))
     tiddlers_list = []
-    for tiddler in filter_tiddlers(tiddlers, 'sort=-modified;limit=20',
-            environ=environ):
+    for tiddler in tiddlers:
         tiddlers_list.append('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'
                 % (encode_name(tiddler.bag), encode_name(tiddler.title),
                     tiddler.title))
@@ -189,4 +188,4 @@ def _search_string(username):
     Construct the search string to be used for creating
     the recent tiddlers for this username.
     """
-    return 'modifier:%s' % username
+    return 'modifier:%s _limit:20' % username
