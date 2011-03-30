@@ -24,7 +24,7 @@ config = {
     'atom.default_filter': 'select=tag:!excludeLists;sort=-modified;limit=20',
     'atom.author_uri_map': '/profiles/%s',
     'atom.hub': 'http://pubsubhubbub.appspot.com/publish',
-    'beanstalk.listeners': ['tiddlywebplugins.tiddlyspace.profiles'],
+    'beanstalk.listeners': ['tiddlywebplugins.dispatcher.listener', 'tiddlywebplugins.tiddlyspace.profiles'],
     'auth_systems': ['cookie_form', 'tiddlywebplugins.tiddlyspace.openid'],
     'bag_create_policy': 'ANY',
     'recipe_create_policy': 'ANY',

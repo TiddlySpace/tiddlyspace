@@ -3,6 +3,7 @@ Start at the infrastructure for OStatus, including webfinger,
 user profiles, etc.
 """
 
+import logging
 import urllib
 import urllib2
 
@@ -252,10 +253,18 @@ class Listener(BaseListener):
         try:
             response = urllib2.urlopen(target, encoded_data)
             status = response.getcode()
+            logging.warn('sent %s to %s got %s', encoded_data, target, status)
             if status != '204':
                 logging.warn('non 204 response from hub: %s', status)
+        except urllib2.HTTPError, exc:
+            if exc.code != 204:
+                logging.warn('urlopen errored with %s when publishing to hub',
+                        exc)
         except urllib2.URLError, exc:
-            logging.warn('error when publishing to hub: %s', exc)
+            logging,warn('urlopen errored with %s when publishing to hub', exc)
+        except Attribute, exc:
+            logging.warn('error when publishing to hub: %s, %s',
+                    exc, response.info())
 
 
 def _search_string(username):
