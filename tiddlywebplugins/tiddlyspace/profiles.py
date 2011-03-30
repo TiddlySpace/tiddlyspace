@@ -3,7 +3,6 @@ Start at the infrastructure for OStatus, including webfinger,
 user profiles, etc.
 """
 
-from tiddlyweb.control import filter_tiddlers
 from tiddlyweb.store import StoreError, NoUserError
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
