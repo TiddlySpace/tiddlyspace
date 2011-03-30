@@ -221,7 +221,6 @@ class Listener(BaseListener):
         info = self._unpack(job)
 
         tiddler = Tiddler(info['tiddler'], info['bag'])
-        print 'looking at', tiddler
         try:
             self.STORE.get(tiddler)
         except StoreError:
