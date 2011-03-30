@@ -57,7 +57,7 @@ def test_get_profile_html():
     store.put(tiddler)
 
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent')
-    assert response['status'] == '200'
+    assert response['status'] == '200', content
 
     assert 'Hello There' in content
     assert '/cdent_public/tiddlers/profile' in content

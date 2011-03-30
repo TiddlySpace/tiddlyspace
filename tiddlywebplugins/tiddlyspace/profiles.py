@@ -5,7 +5,9 @@ user profiles, etc.
 
 from tiddlyweb.control import filter_tiddlers
 from tiddlyweb.store import StoreError, NoUserError
+from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
+from tiddlyweb.model.policy import ForbiddenError, UserRequiredError
 from tiddlyweb.model.user import User
 from tiddlyweb.web.handler.search import get as search
 from tiddlyweb.web.http import HTTP404, HTTP400, HTTP415
@@ -100,6 +102,7 @@ def html_profile(environ, start_response):
     modified tiddlers.
     """
     username = environ['wsgiorg.routing_args'][1]['username']
+    usersign = environ['tiddlyweb.usersign']
 
     store = environ['tiddlyweb.store']
 
@@ -126,10 +129,25 @@ def html_profile(environ, start_response):
 
     tiddlers = store.search(_search_string(username))
     tiddlers_list = []
+
+    # XXX this bag_readable loop is copied from
+    # tiddlyweb.web.handler.search:get, it should be factored
+    # out of there for resue
+    bag_readable = {}
     for tiddler in tiddlers:
-        tiddlers_list.append('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'
-                % (encode_name(tiddler.bag), encode_name(tiddler.title),
-                    tiddler.title))
+        try:
+            if bag_readable[tiddler.bag]:
+                tiddlers_list.append(_tiddler_in_list(tiddler))
+        except KeyError:
+            bag = Bag(tiddler.bag)
+            bag = store.get(bag)
+            try:
+                bag.policy.allows(usersign, 'read')
+                tiddlers_list.append(_tiddler_in_list(tiddler))
+                bag_readable[tiddler.bag] = True
+            except(ForbiddenError, UserRequiredError):
+                bag_readable[tiddler.bag] = False
+
     profile_tiddlers = '\n'.join(tiddlers_list)
 
     avatar_path = '/recipes/%s_public/tiddlers/SiteIcon' % username
@@ -189,3 +207,8 @@ def _search_string(username):
     the recent tiddlers for this username.
     """
     return 'modifier:%s _limit:20' % username
+
+def _tiddler_in_list(tiddler):
+    return ('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'
+            % (encode_name(tiddler.bag), encode_name(tiddler.title),
+                tiddler.title))
