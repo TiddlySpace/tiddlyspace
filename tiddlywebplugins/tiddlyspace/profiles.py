@@ -19,7 +19,6 @@ from tiddlyweb.web.util import (server_host_url, server_base_url,
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
 from tiddlywebplugins.tiddlyspace.web import determine_host
 from tiddlyweb.wikitext import render_wikitext
-from tiddlywebplugins.dispatcher.listener import Listener as BaseListener
 from tiddlywebplugins.utils import get_store
 
 
@@ -210,61 +209,65 @@ def webfinger(environ, start_response):
         'host': http_host, 'server_host': server_base_url(environ)}]
 
 
-class Listener(BaseListener):
+try:
+    from tiddlywebplugins.dispatcher.listener import Listener as BaseListener
+    class Listener(BaseListener):
 
-    TUBE = 'pushping'
-    STORE = None
+        TUBE = 'pushping'
+        STORE = None
 
-    def _act(self, job):
-        if not self.STORE:
-            self.STORE = get_store(self.config)
-        info = self._unpack(job)
+        def _act(self, job):
+            if not self.STORE:
+                self.STORE = get_store(self.config)
+            info = self._unpack(job)
 
-        tiddler = Tiddler(info['tiddler'], info['bag'])
-        try:
-            self.STORE.get(tiddler)
-        except StoreError:
-            return None #  Tiddler's not there, no need to notify
-        user = tiddler.modifier
-        if self._user_has_profile(user):
-            self._send_ping(user)
+            tiddler = Tiddler(info['tiddler'], info['bag'])
+            try:
+                self.STORE.get(tiddler)
+            except StoreError:
+                return None #  Tiddler's not there, no need to notify
+            user = tiddler.modifier
+            if self._user_has_profile(user):
+                self._send_ping(user)
 
-    def _user_has_profile(self, user):
-        try:
-            tiddler = Tiddler('profile', '%s_public' % user)
-            self.STORE.get(tiddler)
-        except StoreError:
-            return False
-        return True
+        def _user_has_profile(self, user):
+            try:
+                tiddler = Tiddler('profile', '%s_public' % user)
+                self.STORE.get(tiddler)
+            except StoreError:
+                return False
+            return True
 
-    def _send_ping(self, user):
-        data = {
-                'hub.mode': 'publish',
-                'hub.url': profile_atom_url({'tiddlyweb.config': self.config},
-                    user),
-                }
+        def _send_ping(self, user):
+            data = {
+                    'hub.mode': 'publish',
+                    'hub.url': profile_atom_url({'tiddlyweb.config': self.config},
+                        user),
+                    }
 
-        try:
-            target = self.config['atom.hub']
-        except KeyError:
-            return None
-        encoded_data = urllib.urlencode(data)
+            try:
+                target = self.config['atom.hub']
+            except KeyError:
+                return None
+            encoded_data = urllib.urlencode(data)
 
-        try:
-            response = urllib2.urlopen(target, encoded_data)
-            status = response.getcode()
-            logging.warn('sent %s to %s got %s', encoded_data, target, status)
-            if status != '204':
-                logging.warn('non 204 response from hub: %s', status)
-        except urllib2.HTTPError, exc:
-            if exc.code != 204:
-                logging.warn('urlopen errored with %s when publishing to hub',
-                        exc)
-        except urllib2.URLError, exc:
-            logging,warn('urlopen errored with %s when publishing to hub', exc)
-        except Attribute, exc:
-            logging.warn('error when publishing to hub: %s, %s',
-                    exc, response.info())
+            try:
+                response = urllib2.urlopen(target, encoded_data)
+                status = response.getcode()
+                logging.warn('sent %s to %s got %s', encoded_data, target, status)
+                if status != '204':
+                    logging.warn('non 204 response from hub: %s', status)
+            except urllib2.HTTPError, exc:
+                if exc.code != 204:
+                    logging.warn('urlopen errored with %s when publishing to hub',
+                            exc)
+            except urllib2.URLError, exc:
+                logging,warn('urlopen errored with %s when publishing to hub', exc)
+            except Attribute, exc:
+                logging.warn('error when publishing to hub: %s, %s',
+                        exc, response.info())
+except ImportError:
+    pass
 
 
 def _search_string(username):
