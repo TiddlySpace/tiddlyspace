@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.21|
+|''Version''|0.6.3|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -274,7 +274,14 @@ var scanMacro = config.macros.tsScan = {
 			tiddlers = store.sortTiddlers(tiddlers, options.sort);
 		}
 		if(options.filter) {
-			tiddlers = store.filterTiddlers(options.filter, tiddlers); // note currently not supported in core.
+			var _store = new TiddlyWiki();
+			config.lastStore = _store;
+			for(var i = 0; i < tiddlers.length; i++) {
+				var clone = tiddlers[i];
+				clone.title = tiddlyspace.getLocalTitle(clone.title, clone.fields['server.workspace']);
+				_store.addTiddler(clone);
+			}
+			tiddlers = _store.filterTiddlers(options.filter);
 		}
 		if(place) {
 			$(place).empty();
