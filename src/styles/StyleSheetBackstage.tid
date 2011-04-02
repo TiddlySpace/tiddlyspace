@@ -83,9 +83,8 @@ modifier: osmosoft
 }
 
 #backstageShow .svgIcon {
-	left: 8px;
-	position: relative;
-	top: -5px;
+	width: 20px;
+	height: 20px;
 }
 
 #messageArea {
