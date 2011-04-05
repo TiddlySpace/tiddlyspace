@@ -232,7 +232,7 @@ def test_space_server_settings():
     assert response['status'] == '200'
     assert '/bags/common/tiddlers/alpha_jquery.js' not in content
 
-    tiddler = Tiddler('spaceServerSettings', 'foo_public')
+    tiddler = Tiddler('ServerSettings', 'foo_public')
     tiddler.text = 'external: True\ntwrelease:alpha'
     store.put(tiddler)
 
@@ -241,7 +241,7 @@ def test_space_server_settings():
     assert '/bags/common/tiddlers/alpha_jquery.js' in content
 
     # bad content
-    tiddler = Tiddler('spaceServerSettings', 'foo_public')
+    tiddler = Tiddler('ServerSettings', 'foo_public')
     tiddler.text = 'external: True\ntwrelease=alpha'
     store.put(tiddler)
 
@@ -250,7 +250,7 @@ def test_space_server_settings():
     assert '/bags/common/tiddlers/alpha_jquery.js' not in content
 
     # ignored blank line
-    tiddler = Tiddler('spaceServerSettings', 'foo_public')
+    tiddler = Tiddler('ServerSettings', 'foo_public')
     tiddler.text = 'external: True\n\ntwrelease:alpha'
     store.put(tiddler)
 

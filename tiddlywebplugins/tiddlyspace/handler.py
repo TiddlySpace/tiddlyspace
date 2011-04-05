@@ -23,7 +23,7 @@ from tiddlywebplugins.tiddlyspace.web import (determine_host,
 from tiddlywebplugins.tiddlyspace.space import Space
 
 
-SPACE_SERVER_SETTINGS = 'spaceServerSettings'
+SPACE_SERVER_SETTINGS = 'ServerSettings'
 
 
 def friendly_uri(environ, start_response):
