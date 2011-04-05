@@ -77,14 +77,16 @@ modifier: osmosoft
 	color: none;
 }
 
-#backstageShow {
-	margin-right: -3px;
-	margin-top: -3px;
+#backstageButton img,
+#backstageButton svg {
+	width: 24px;
+	height: 24px;
 }
 
 #backstageShow .svgIcon {
-	width: 20px;
-	height: 20px;
+	left: 8px;
+	position: relative;
+	top: -5px;
 }
 
 #messageArea {

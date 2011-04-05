@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.6.7|
+|''Version''|0.6.8|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
 |''Contributors''|Jon Lister, Jon Robson, Colm Britton|
@@ -136,7 +136,7 @@ backstage.tiddlyspace = {
 		var altText = $(showBtn).text();
 		$(showBtn).empty();
 		imageMacro.renderImage(showBtn, "backstage.svg",
-			{ altImage: commonUrl.format("backstage.png"), alt: altText, width: 60, height: 60 });
+			{ altImage: commonUrl.format("backstage.png"), alt: altText});
 	},
 	hideButton: function() {
 		var hideBtn = $("#backstageHide")[0];
