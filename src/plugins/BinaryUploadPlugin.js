@@ -140,7 +140,7 @@ var macro = config.macros.binaryUpload = {
 		// do not refactor following line of code to work in IE6.
 		var form = $('<form action="%0" method="POST" enctype="multipart/form-data" />'.
 					format(baseURL)).addClass("binaryUploadForm").
-			attr("method", "POST").attr("enctype", "multipart/form-data").appendTo(place)[0];
+			appendTo(place)[0];
 		macro.renderInputFields(form, options);
 		$(form).
 			append('<div class="binaryUploadFile"><input type="file" name="file" /></div>').
