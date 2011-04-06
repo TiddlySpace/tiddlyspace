@@ -224,3 +224,36 @@ def test_disable_ControlView():
 
     assert 'foo_public' in content, content
     assert 'bar_public' not in content, content
+
+
+def test_space_server_settings():
+    http = httplib2.Http()
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+    assert '/bags/common/tiddlers/alpha_jquery.js' not in content
+
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    tiddler.text = 'external: True\ntwrelease:alpha'
+    store.put(tiddler)
+
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+    assert '/bags/common/tiddlers/alpha_jquery.js' in content
+
+    # bad content
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    tiddler.text = 'external: True\ntwrelease=alpha'
+    store.put(tiddler)
+
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+    assert '/bags/common/tiddlers/alpha_jquery.js' not in content
+
+    # ignored blank line
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    tiddler.text = 'external: True\n\ntwrelease:alpha'
+    store.put(tiddler)
+
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+    assert '/bags/common/tiddlers/alpha_jquery.js' in content

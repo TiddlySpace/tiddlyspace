@@ -7,8 +7,9 @@ The extensions and modifications to the default TiddlyWeb routes.
 import simplejson
 
 from tiddlyweb.model.bag import Bag
+from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
-from tiddlyweb.store import NoBagError, NoUserError
+from tiddlyweb.store import NoBagError, NoUserError, StoreError
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
@@ -19,6 +20,10 @@ from tiddlywebplugins.utils import require_any_user
 
 from tiddlywebplugins.tiddlyspace.web import (determine_host,
         determine_space, determine_space_recipe)
+from tiddlywebplugins.tiddlyspace.space import Space
+
+
+SPACE_SERVER_SETTINGS = 'ServerSettings'
 
 
 def friendly_uri(environ, start_response):
@@ -116,4 +121,37 @@ def serve_space(environ, start_response, http_host):
     _, mime_type = get_serialize_type(environ)
     if 'text/html' in mime_type:
         environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
+        update_space_settings(environ, space_name)
     return get_tiddlers(environ, start_response)
+
+
+def update_space_settings(environ, name):
+    """
+    Read a tiddler named by SPACE_SERVER_SETTINGS in the current
+    space's public bag. Parse each line as a key:value pair which
+    is then injected tiddlyweb.query. The goal here is to allow
+    a space member to force incoming requests to use specific
+    settings, such as alpha or externalized.
+    """
+    store = environ['tiddlyweb.store']
+    space = Space(name)
+    bag_name = space.public_bag()
+    tiddler = Tiddler(SPACE_SERVER_SETTINGS, bag_name)
+    data_text = ''
+    try:
+        tiddler = store.get(tiddler)
+        data_text = tiddler.text
+    except StoreError:
+        pass
+
+    for line in data_text.split('\n'):
+        try:
+            key, value = line.split(':', 1)
+            key = key.rstrip().lstrip()
+            value = value.rstrip().lstrip()
+            try:
+                environ['tiddlyweb.query'][key].append(value)
+            except KeyError:
+                environ['tiddlyweb.query'][key] = [value]
+        except ValueError:
+            pass
