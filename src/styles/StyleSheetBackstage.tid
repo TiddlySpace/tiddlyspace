@@ -28,7 +28,6 @@ modifier: osmosoft
 
 .task_tiddlyspace .image,
 .task_tiddlyspace .svgIcon {
-	margin-top: -2px;
 	display: inline;
 }
 
@@ -81,12 +80,6 @@ modifier: osmosoft
 #backstageButton svg {
 	width: 24px;
 	height: 24px;
-}
-
-#backstageShow .svgIcon {
-	left: 8px;
-	position: relative;
-	top: -5px;
 }
 
 #messageArea {
