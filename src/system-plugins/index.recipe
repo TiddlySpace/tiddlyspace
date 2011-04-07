@@ -1,4 +1,4 @@
-tiddler: http://svn.tiddlywiki.org/Trunk/contributors/JonRobson/plugins/RandomColorPalettePlugin/plugins/RandomColorPalettePlugin.js
+tiddler: https://github.com/jdlrobson/TiddlyWikiPlugins/raw/master/plugins/RandomColorPalettePlugin/RandomColorPalettePlugin.js
 tiddler: http://svn.tiddlywiki.org/Trunk/contributors/PaulDowney/plugins/TiddlySpaceLinkPlugin/TiddlySpaceLinkPlugin.js
 tiddler: https://github.com/bengillies/tiddlyweb-client-plugins/raw/master/Importing/tiddlers/TiddlyFileImporter.js
 recipe: ../plugins/system-plugins.recipe
