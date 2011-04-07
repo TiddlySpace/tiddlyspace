@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.8.8|
+|''Version''|0.8.9|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
@@ -137,6 +137,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		originMacro.renderIcon(tiddler, type, btn, options);
 	},
 	getOptions: function(paramString) {
+		paramString = "%0 label:no width:48 height:48 spaceLink:yes preserveAspectRatio:yes".format(paramString);
 		var parsedParams = paramString.parseParams("name");
 		var params = parsedParams[0].name;
 		var options = {
