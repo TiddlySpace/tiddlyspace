@@ -6,6 +6,12 @@ The extensions and modifications to the default TiddlyWeb routes.
 
 import simplejson
 
+try:
+    from urlparse import parse_qs
+except ImportError:
+    from cgi import parse_qs
+
+from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
@@ -13,7 +19,7 @@ from tiddlyweb.store import NoBagError, NoUserError, StoreError
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
-from tiddlyweb.web.http import HTTP302, HTTP403, HTTP404
+from tiddlyweb.web.http import HTTP302, HTTP403
 from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
@@ -119,9 +125,13 @@ def serve_space(environ, start_response, http_host):
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
             'UTF-8')
     _, mime_type = get_serialize_type(environ)
+    index = update_space_settings(environ, space_name)
+    if index:
+        environ['wsgiorg.routing_args'][1]['tiddler_name'] = index.encode(
+                'UTF-8')
+        return get_tiddler(environ, start_response)
     if 'text/html' in mime_type:
         environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
-        update_space_settings(environ, space_name)
     return get_tiddlers(environ, start_response)
 
 
@@ -142,16 +152,29 @@ def update_space_settings(environ, name):
         tiddler = store.get(tiddler)
         data_text = tiddler.text
     except StoreError:
-        pass
+        return None
 
+    query_strings = []
+    index = ''
     for line in data_text.split('\n'):
         try:
             key, value = line.split(':', 1)
             key = key.rstrip().lstrip()
             value = value.rstrip().lstrip()
-            try:
-                environ['tiddlyweb.query'][key].append(value)
-            except KeyError:
-                environ['tiddlyweb.query'][key] = [value]
+            if key == 'index':
+                index = value
+            else:
+                query_strings.append('%s=%s' % (key, value))
         except ValueError:
             pass
+
+    query_string = ';'.join(query_strings)
+
+    filters, leftovers = parse_for_filters(query_string, environ)
+    environ['tiddlyweb.filters'].extend(filters)
+    query_data = parse_qs(leftovers, keep_blank_values=True)
+    environ['tiddlyweb.query'].update(dict(
+        [(key, [value for value in values])
+            for key, values in query_data.items()]))
+
+    return index

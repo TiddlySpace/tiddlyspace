@@ -226,7 +226,7 @@ def test_disable_ControlView():
     assert 'bar_public' not in content, content
 
 
-def test_space_server_settings():
+def test_space_server_settings_twrelease():
     http = httplib2.Http()
     response, content = http.request('http://foo.0.0.0.0:8080/')
     assert response['status'] == '200'
@@ -237,7 +237,7 @@ def test_space_server_settings():
     store.put(tiddler)
 
     response, content = http.request('http://foo.0.0.0.0:8080/')
-    assert response['status'] == '200'
+    assert response['status'] == '200', content
     assert '/bags/common/tiddlers/alpha_jquery.js' in content
 
     # bad content
@@ -257,3 +257,44 @@ def test_space_server_settings():
     response, content = http.request('http://foo.0.0.0.0:8080/')
     assert response['status'] == '200'
     assert '/bags/common/tiddlers/alpha_jquery.js' in content
+
+def test_space_server_settings_filter():
+    http = httplib2.Http()
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+    assert 'tags="excludeLists ' in content
+
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    tiddler.text = 'twrelease:alpha\nselect: tag:!excludeLists\n'
+    store.put(tiddler)
+
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+    assert 'tags="excludeLists ' not in content
+
+def test_space_server_settings_index():
+    http = httplib2.Http()
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+    assert 'TiddlyWiki' in content
+
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    tiddler.text = 'index: MySPA\n'
+    store.put(tiddler)
+
+    http = httplib2.Http()
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '404'
+
+    tiddler = Tiddler('MySPA', 'foo_public')
+    tiddler.text = '<html><h1>Hello!</h1></html>'
+    tiddler.type = 'text/html'
+    store.put(tiddler)
+
+    http = httplib2.Http()
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+
+    assert '<h1>Hello!</h1>' in content
+    assert 'TiddlyWiki' not in content
+    assert 'TiddlyWeb' not in content
