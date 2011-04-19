@@ -95,7 +95,7 @@ tiddlyspace.renderAvatar = function(place, value, options) {
 	if(value) {
 		var prefix = options.labelOptions.prefix || "";
 		var suffix = options.labelOptions.suffix || "";
-		var label = "%0%1%2".format([prefix, value, suffix]);
+		var label = "%0%1%2".format(prefix, value, suffix);
 		$(container).attr("title", label);
 	}
 };
@@ -192,7 +192,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 		// .. the private tiddler to determine whether this is a draft
 		// use of hashes would be useful here.
 		$(button).empty();
-		var icon = "%0Icon".format([privacyType]);
+		var icon = "%0Icon".format(privacyType);
 		if(privacyType.indexOf("unsynced") === 0 && !store.tiddlerExists(icon)) {
 			icon = "unsyncedIcon";
 		}
@@ -279,7 +279,7 @@ var originMacro = config.macros.tiddlerOrigin = {
 				var locale = originMacro.locale;
 				var adaptor = tiddler.getAdaptor();
 				var publishTo = tiddler.fields["publish.name"] || tiddler.title;
-				var workspace = "bags/%0".format([tiddler.fields["server.bag"]]);
+				var workspace = "bags/%0".format(tiddler.fields["server.bag"]);
 				tiddler.fields["server.workspace"] = workspace;
 				var publicBag = cmd.toggleBag(tiddler, "public");
 				var msg;
