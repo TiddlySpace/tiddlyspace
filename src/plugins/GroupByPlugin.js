@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.5.7|
+|''Version''|0.6.0|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
@@ -78,12 +78,11 @@ var macro = config.macros.groupBy = {
 		var popup = $(Popup.create(target)).addClass("taggedTiddlerList")[0];
 		var value = $(target).attr("value");
 		var openAll = createTiddlyButton($("<li />").appendTo(popup)[0],
-			locale.openAllText.format(value), locale.openAllTooltip,
-			function(ev) {
-				for(i = 0; i < tiddlers.length; i++) {
-					story.displayTiddler(ev.target, tiddlers[i].title);
-				}
-			});
+			locale.openAllText.format(value), locale.openAllTooltip);
+		$(openAll).click(function(ev) {
+			story.displayTiddlers(ev.target, tiddlers);
+			return false;
+		});
 		var listBreak = $("<li />").addClass("listBreak").html("<div />").appendTo(popup);
 		for(i = 0; i < tiddlers.length; i++) {
 			var item = $("<li />").appendTo(popup)[0];
