@@ -80,9 +80,7 @@ var macro = config.macros.groupBy = {
 		var openAll = createTiddlyButton($("<li />").appendTo(popup)[0],
 			locale.openAllText.format(value), locale.openAllTooltip);
 		$(openAll).click(function(ev) {
-			for(i = 0; i < tiddlers.length; i++) {
-				story.displayTiddler(ev.target, tiddlers[i].title);
-			}
+			story.displayTiddlers(ev.target, tiddlers);
 			return false;
 		});
 		var listBreak = $("<li />").addClass("listBreak").html("<div />").appendTo(popup);
