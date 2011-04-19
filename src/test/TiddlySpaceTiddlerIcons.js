@@ -9,8 +9,17 @@ var mockRenderImage = function(place, src, options) {
 		attr("tiddlyLink", tiddlyLink).appendTo(place);
 };
 
+var _format;
 module("TiddlySpaceTiddlerIcons", {
 	setup: function() {
+		_format = String.prototype.format;
+		String.prototype.format = function(str) {
+			if(typeof(str) !== "string") {
+				return str;
+			} else {
+				return _format.apply(this, arguments);
+			}
+		}
 		var popup = $("<div />").attr("id", "test_ttt_popup").appendTo(document.body);
 		Popup = {
 			create: function(place) {
@@ -56,6 +65,7 @@ module("TiddlySpaceTiddlerIcons", {
 		};
 	},
 	teardown: function() {
+		String.prototype.format = _format;
 		config.macros.image.getArguments = _getArguments;
 		store.removeTiddler("foo");
 		store.removeTiddler("foo2");
