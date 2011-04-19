@@ -125,13 +125,16 @@ def serve_space(environ, start_response, http_host):
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
             'UTF-8')
     _, mime_type = get_serialize_type(environ)
-    index = update_space_settings(environ, space_name)
+    index, lazy = update_space_settings(environ, space_name)
     if index:
         environ['wsgiorg.routing_args'][1]['tiddler_name'] = index.encode(
                 'UTF-8')
         return get_tiddler(environ, start_response)
     if 'text/html' in mime_type:
-        environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
+        if lazy:
+            environ['tiddlyweb.type'] = 'text/x-ltiddlywiki'
+        else:
+            environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return get_tiddlers(environ, start_response)
 
 
@@ -152,10 +155,11 @@ def update_space_settings(environ, name):
         tiddler = store.get(tiddler)
         data_text = tiddler.text
     except StoreError:
-        return None
+        return None, False
 
     query_strings = []
     index = ''
+    lazy = False
     for line in data_text.split('\n'):
         try:
             key, value = line.split(':', 1)
@@ -163,6 +167,9 @@ def update_space_settings(environ, name):
             value = value.rstrip().lstrip()
             if key == 'index':
                 index = value
+            elif key == 'lazy':
+                if value.lower() == 'true':
+                    lazy = True
             else:
                 query_strings.append('%s=%s' % (key, value))
         except ValueError:
@@ -177,4 +184,4 @@ def update_space_settings(environ, name):
         [(key, [value for value in values])
             for key, values in query_data.items()]))
 
-    return index
+    return index, lazy
