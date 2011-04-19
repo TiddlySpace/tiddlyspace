@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceTiddlerIconsPlugin|
-|''Version''|0.8.9|
+|''Version''|0.8.10|
 |''Status''|@@beta@@|
 |''Author''|Jon Robson|
 |''Description''|Provides ability to render SiteIcons and icons that correspond to the home location of given tiddlers|
