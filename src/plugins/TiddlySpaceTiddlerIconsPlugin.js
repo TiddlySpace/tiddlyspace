@@ -147,7 +147,8 @@ var originMacro = config.macros.tiddlerOrigin = {
 				parsedParams[0].interactive[0] == "no" ? true : false
 		};
 		if(!options.noclick) {
-			options.spaceLink = parsedParams[0].spaceLink ? true : false;
+			var spaceLink = parsedParams[0].spaceLink;
+			options.spaceLink = spaceLink && spaceLink[0] == "no" ? false : true;
 		} else {
 			options.spaceLink = false;
 		}
