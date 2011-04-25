@@ -50,7 +50,10 @@ WEBFINGER_TEMPLATE = """<?xml version="1.0"?>
 
 PROFILE_TEMPLATE = """
 <div class="tiddler">
-<a href="%(space_uri)s" title="space link"><img style="float:right" src="%(avatar_path)s" alt="avatar"></img></a>
+<div id="hcard-%(username)s" class="vcard" style="float:right">
+<div class="fn"><a href="%(space_uri)s" class="url">%(username)s</a></div>
+<a href="%(space_uri)s" title="space link"><img style="float:right" src="%(avatar_path)s" alt="avatar" class="photo"></img></a>
+</div>
 %(profile)s
 </div>
 <div>
