@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ tiddler.title }}</title>
+        <link rel="stylesheet" href="{{ css }}" type="text/css" />
+        <link rel="alternate" type="application/atom+xml"
+        title="Atom {{tiddler.title|e}}" href="{{ tiddler_url }}.atom" />
+    </head>
+    <body>
+        <header>
+        {% if space_link %}
+        <a href="{{ space_link }}">{{ tiddler.title }}</a>
+        {% else %}
+        {{tiddler.title}}
+        {% endif %}
+        </header>
+        <article>
+        <section id="links">
+        <div class="tiddlerslink"><a href="{{ list_link }}">{{
+                list_title }}</a></div>
+        </section>
+        <section id="tiddlertext">
+            <div class="tiddler"
+                title="{{tiddler.title|e}}"
+                server.bag="{{tiddler.bag|e}}"
+                {% if tiddler.recipe %}server.recipe="{{tiddler.recipe|e}}"{% endif %}
+                server.page.revision="{{tiddler.revision}}"
+                modifier="{{tiddler.modifier|e}}"
+                creator="{{tiddler.creator|e}}"
+                modified="{{tiddler.modified}}"
+                modified="{{tiddler.created}}"
+                tags="{{tags}}"
+                {{fields}}>
+            {{ html }}
+            </div>
+        </section>
+        </article>
+        <footer>
+        Brought to you by <a href="{{ server_host
+            }}">TiddlySpace</a>.
+        </footer>
+    </body>
+</html>

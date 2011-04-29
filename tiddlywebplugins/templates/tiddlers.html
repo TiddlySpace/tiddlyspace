@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="{{ css }}" type="text/css" />
+        <link rel="alternate" type="application/atom+xml"
+        title="Atom feed for {{title|e}}" href="{{ tiddlers_url
+        }}.atom{{ query_string}}" />
+    </head>
+    <body>
+        <header>
+        {{ title }}
+        </header>
+        <article>
+        <section id="links">
+        <p>This list of tiddlers as:
+        {% for type in links %}
+        <a
+            href="{{tiddlers_url}}.{{type}}{{query_string}}">{{type}}</a>
+        {% endfor %}</p>
+        {% if container_url %}
+        <p><a href="{{container_url}}">{{container_name}}</a></p>
+        {% endif %}
+        </section>
+        <section id="tiddlers">
+        <ul id="tiddlers" class="listing">
+        {% if revisions %}
+            {% for tiddler in tiddlers %}
+            <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
+                tiddler.title|uri }}/revisions/{{ tiddler.revision
+                }}">{{ tiddler.title }}:{{ tiddler.revision
+                }}</a></li>
+            {% endfor %}
+        {% else %}
+            {% for tiddler in tiddlers %}
+            <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
+                tiddler.title|uri }}">{{ tiddler.title }}</a></li>
+            {% endfor %}
+        {% endif %}
+        </ul>
+        </section>
+        </article>
+        <footer>
+        Brought to you by <a href="{{ server_host
+            }}">TiddlySpace</a>.
+        </footer>
+    </body>
+</html>

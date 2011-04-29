@@ -11,7 +11,7 @@ def send_template(environ, template_name, template_data=None):
     template = get_template(environ, template_name)
 
     template_defaults = {
-            'css': '/bags/common/tiddlers/tiddlyweb.css',
+            'css': '/bags/common/tiddlers/profile.css',
             'server_host': server_base_url(environ),
             }
     template_defaults.update(template_data)

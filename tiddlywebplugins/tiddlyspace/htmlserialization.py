@@ -3,19 +3,75 @@ Enhance the default HTML serialization so that when we display
 a single tiddler it includes a link to the tiddler in its space.
 """
 
+import urllib
+
 from tiddlyweb.wikitext import render_wikitext
 from tiddlywebplugins.atom.htmllinks import Serialization as HTMLSerialization
-from tiddlyweb.web.util import encode_name
+from tiddlyweb.web.util import encode_name, tiddler_url
 
 from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
+from tiddlywebplugins.tiddlyspace.template import send_template
 
 
 class Serialization(HTMLSerialization):
     """
     Subclass of the Atom HTML serialization that adds a "space link"
-    linking to the tiddler in the wiki.
+    linking to the tiddler in the wiki. Uses templates instead of
+    HTMLPresenter.
     """
+
+    def __init__(self, environ=None):
+        HTMLSerialization.__init__(self, environ)
+        del self.environ['tiddlyweb.title']  # turn off HTMLPresenter
+
+
+    def list_tiddlers(self, tiddlers):
+        """
+        List the tiddlers from a container.
+        """
+        title = tiddlers.title
+        revisions = tiddlers.is_revisions
+        routing_args = self.environ.get('wsgiorg.routing_args', ([], {}))[1]
+        tiddlers_url = ''
+        container_url = ''
+        if routing_args and not tiddlers.is_search:
+            if 'recipe_name' in routing_args:
+                name = routing_args['recipe_name']
+                container_name = 'Recipe %s' % urllib.unquote(
+                        name).decode('utf-8')
+                container_url = '/recipes/%s' % name
+            elif 'bag_name' in routing_args:
+                name = routing_args['bag_name']
+                container_name = 'Bag %s' % urllib.unquote(
+                        name).decode('utf-8')
+                container_url = '/bags/%s' % name
+            tiddlers_url = container_url + '/tiddlers'
+            if revisions:
+                container_url = ''
+                tiddlers_url += '/revisions'
+
+        if tiddlers.is_search:
+            tiddlers_url = '/search'
+
+        query_string = self.environ.get('QUERY_STRING', '')
+
+        links = self.environ.get('tiddlyweb.config',
+                {}).get('extension_types', {}).keys()
+
+        if query_string:
+            query_string = '?%s' % query_string
+
+        return send_template(self.environ, 'tiddlers.html', {
+            'title': title,
+            'revisions': revisions,
+            'tiddlers_url': tiddlers_url,
+            'query_string': query_string,
+            'container_name': container_name,
+            'container_url': container_url,
+            'links': links,
+            'tiddlers': tiddlers})
+
 
     def tiddler_as(self, tiddler):
         """
@@ -30,14 +86,17 @@ class Serialization(HTMLSerialization):
         else:
             list_link = 'bags/%s/tiddlers' % encode_name(tiddler.bag)
             list_title = 'Tiddlers in Bag %s' % tiddler.bag
-        list_html = ('<div class="tiddlerslink"><a href="%s/%s" ' %
-                (self._server_prefix(), list_link) +
-                'title="tiddler list">%s</a></div>' % list_title)
         space_link = self._space_link(tiddler)
         html = render_wikitext(tiddler, self.environ)
-        self.environ['tiddlyweb.title'] = tiddler.title
-        tiddler_info = self._tiddler_div(tiddler)
-        return list_html + space_link + tiddler_info + html + '</div>'
+        return send_template(self.environ, 'tiddler.html', {
+            'tags': self.tags_as(tiddler.tags),
+            'fields': self._tiddler_fields(tiddler.fields),
+            'html': html,
+            'list_link': list_link,
+            'list_title': list_title,
+            'space_link': space_link,
+            'tiddler': tiddler,
+            'tiddler_url': tiddler_url(self.environ, tiddler)})
 
     def _space_link(self, tiddler):
         """
@@ -54,12 +113,7 @@ class Serialization(HTMLSerialization):
         else:
             return ''
 
-        space_link = """
-<div class="tiddlerslink">
-<a href="%s%s" title="space link">%s in space</a>
-</div>
-""" % (self._server_prefix(), link, tiddler.title)
-        return space_link
+        return '%s%s' % (self._server_prefix(), link)
 
 
 def _space_bag(bag_name):
