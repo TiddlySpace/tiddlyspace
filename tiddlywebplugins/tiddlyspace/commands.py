@@ -1,4 +1,6 @@
-
+"""
+Establish the twanager commands made for TiddlySpace.
+"""
 from tiddlyweb.manage import make_command
 from tiddlywebplugins.utils import get_store
 
@@ -6,6 +8,9 @@ from tiddlywebplugins.tiddlyspace.spaces import change_space_member
 
 
 def establish_commands(config):
+    """
+    Establish the twanager commands made for TiddlySpace.
+    """
 
     @make_command()
     def addmember(args):
