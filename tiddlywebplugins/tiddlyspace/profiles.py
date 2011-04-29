@@ -20,48 +20,7 @@ from tiddlywebplugins.tiddlyspace.spaces import space_uri
 from tiddlywebplugins.tiddlyspace.web import determine_host
 from tiddlyweb.wikitext import render_wikitext
 from tiddlywebplugins.utils import get_store
-
-
-HOST_META_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
-<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0" xmlns:hm="http://host-meta.net/xrd/1.0">
-<hm:Host xmlns="http://host-meta.net/xrd/1.0">%(host)s</hm:Host>
-<Link rel="lrdd" template="%(server_host)s/webfinger?q={uri}">
-<Title>Resource Descriptor</Title>
-</Link>
-</XRD>
-"""
-
-
-WEBFINGER_TEMPLATE = """<?xml version="1.0"?>
-<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
-<Subject>acct:%(username)s@%(host)s</Subject>
-<Alias>%(server_host)s/profiles/%(username)s</Alias>
-<Link rel="http://webfinger.net/rel/profile-page"
-      href="%(server_host)s/profiles/%(username)s"
-      type="text/html"/>
-<Link rel="describedby"
-      href="%(server_host)s/profiles/%(username)s"
-      type="text/html"/>
-<Link rel="http://schemas.google.com/g/2010#updates-from"
-      href="%(server_host)s/profiles/%(username)s.atom"
-      type="application/atom+xml"/>
-</XRD>
-"""
-
-PROFILE_TEMPLATE = """
-<div class="tiddler">
-<div id="hcard-%(username)s" class="vcard" style="float:right">
-<div class="fn"><a href="%(space_uri)s" class="url">%(username)s</a></div>
-<a href="%(space_uri)s" title="space link"><img style="float:right" src="%(avatar_path)s" alt="avatar" class="photo"></img></a>
-</div>
-%(profile)s
-</div>
-<div>
-<ul id="tiddlers" class="listing">
-%(tiddlers)s
-</div>
-</ul>
-"""
+from tiddlywebplugins.tiddlyspace.template import send_template
 
 
 def add_profile_routes(selector):
@@ -120,11 +79,6 @@ def html_profile(environ, start_response):
 
     activity_feed = profile_atom_url(environ, username)
 
-    environ['tiddlyweb.links'] = [
-           '<link rel="alternate" type="application/atom+xml"'
-           'title="Atom activity feed" href="%s" />'
-           % activity_feed]
-
     profile_tiddler = Tiddler('profile', '%s_public' % username)
     try:
         profile_tiddler = store.get(profile_tiddler)
@@ -135,17 +89,20 @@ def html_profile(environ, start_response):
 
     tiddlers = store.search(_search_string(username))
     tiddlers_list = _choose_readable_tiddlers(store, tiddlers, usersign)
-    profile_tiddlers = '\n'.join(tiddlers_list)
 
     avatar_path = '/recipes/%s_public/tiddlers/SiteIcon' % username
 
     start_response('200 OK', [
         ('Content-Type', 'text/html; charset=UTF-8')])
 
-    environ['tiddlyweb.title'] = 'Profile for %s' % username
-    return [PROFILE_TEMPLATE % {'username': username,
-        'avatar_path': avatar_path, 'space_uri': space_uri(environ, username),
-        'profile': profile_text, 'tiddlers': profile_tiddlers}]
+    return send_template(environ, 'tsprofile.html', {
+        'css': '/bags/common/tiddlers/profile.css',
+        'username': username,
+        'activity_feed': activity_feed,
+        'avatar_path': avatar_path,
+        'space_uri': space_uri(environ, username),
+        'profile': profile_text,
+        'tiddlers': tiddlers_list})
 
 
 def host_meta(environ, start_response):
@@ -160,8 +117,7 @@ def host_meta(environ, start_response):
     start_response('200 OK', [
         ('Content-Type', 'application/xrd+xml')])
 
-    return [HOST_META_TEMPLATE % {'host': http_host, 'server_host':
-        server_base_url(environ)}]
+    return send_template(environ, 'hostmeta.xml', {'host': http_host})
 
 
 def profile_atom_url(environ, username):
@@ -192,8 +148,9 @@ def webfinger(environ, start_response):
     start_response('200 OK', [
         ('Content-Type', 'application/xrd+xml')])
 
-    return [WEBFINGER_TEMPLATE % {'username': username,
-        'host': http_host, 'server_host': server_base_url(environ)}]
+    return send_template(environ, 'webfinger.xml', {
+        'username': username,
+        'host': http_host})
 
 
 try:
@@ -287,13 +244,13 @@ def _choose_readable_tiddlers(store, tiddlers, usersign):
     for tiddler in tiddlers:
         try:
             if bag_readable[tiddler.bag]:
-                tiddlers_list.append(_tiddler_in_list(tiddler))
+                tiddlers_list.append(tiddler)
         except KeyError:
             bag = Bag(tiddler.bag)
             bag = store.get(bag)
             try:
                 bag.policy.allows(usersign, 'read')
-                tiddlers_list.append(_tiddler_in_list(tiddler))
+                tiddlers_list.append(tiddler)
                 bag_readable[tiddler.bag] = True
             except(ForbiddenError, UserRequiredError):
                 bag_readable[tiddler.bag] = False
@@ -306,12 +263,3 @@ def _search_string(username):
     the recent tiddlers for this username.
     """
     return 'modifier:%s _limit:20' % username
-
-
-def _tiddler_in_list(tiddler):
-    """
-    Make an HTML list entry linking to this tiddler's page.
-    """
-    return ('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'
-            % (encode_name(tiddler.bag), encode_name(tiddler.title),
-                tiddler.title))

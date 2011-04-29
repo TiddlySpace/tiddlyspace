@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="{{ css }}" type="text/css" />
+        <link rel="alternate" type="application/atom+xml"
+        title="Atom activity feed" href="{{ activity_feed }}" />
+    </head>
+    <body>
+        <header>
+        <div id="hcard-{{ username }}" class="vcard">
+            <div class="fn"><a href="{{ space_uri }}" class="url">{{ username }}</a></div>
+            <a href="{{ space_uri }}" title="space link">
+                <img src="{{ avatar_path }}" alt="avatar" class="photo">
+            </a>
+        </div>
+        Profile for {{ username }}
+        </header>
+        <article>
+        <section id="profile">
+        {{ profile }}
+        </section>
+        <section id="activity">
+        <ul id="tiddlers" class="listing">
+        {% for tiddler in tiddlers %}
+        <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
+            tiddler.title|uri }}">{{ tiddler.title }}</a></li>
+        {% endfor %}
+        </ul>
+        </section>
+        </article>
+        <footer>
+        Brought to you by <a href="{{ server_host
+            }}">TiddlySpace</a>.
+        </footer>
+    </body>
+</html>

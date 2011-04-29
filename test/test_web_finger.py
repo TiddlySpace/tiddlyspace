@@ -6,8 +6,6 @@ import wsgi_intercept
 import httplib2
 import simplejson
 
-from tiddlywebplugins.tiddlyspace.profiles import (WEBFINGER_TEMPLATE,
-        HOST_META_TEMPLATE)
 from tiddlywebplugins.utils import get_store
 from tiddlyweb.config import config
 from tiddlyweb.model.tiddler import Tiddler
@@ -30,9 +28,7 @@ def teardown_module(module):
 def test_for_meta():
     response, content = http.request('http://0.0.0.0:8080/.well-known/host-meta')
     assert response['status'] == '200'
-    assert content == HOST_META_TEMPLATE % {'host': '0.0.0.0:8080',
-            'server_host': 'http://0.0.0.0:8080'}
-
+    assert 'rel="lrdd" template="http://0.0.0.0:8080/webfinger?q={uri}"' in content
 
 def test_get_webfinger():
     response, content = http.request('http://0.0.0.0:8080/webfinger?q=cdent@0.0.0.0:8080')
@@ -42,8 +38,9 @@ def test_get_webfinger():
     assert content == content2
 
     assert response['status'] == '200'
-    assert content == WEBFINGER_TEMPLATE % {'username': 'cdent',
-            'host': '0.0.0.0:8080', 'server_host': 'http://0.0.0.0:8080'}
+    assert '<Alias>http://0.0.0.0:8080/profiles/cdent</Alias>' in content
+    assert 'href="http://0.0.0.0:8080/profiles/cdent"' in content
+    assert 'href="http://0.0.0.0:8080/profiles/cdent.atom"' in content
 
 def test_get_profile_html():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent')

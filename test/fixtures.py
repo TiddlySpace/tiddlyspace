@@ -58,6 +58,7 @@ def make_test_env(module):
     if sys.path[0] != os.getcwd():
         sys.path.insert(0, os.getcwd())
     spawn('test_instance', init_config, instance_module)
+    os.symlink('../tiddlywebplugins/templates', 'templates')
 
     from tiddlyweb.web import serve
     module.store = get_store(config)
