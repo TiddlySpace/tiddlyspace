@@ -12,6 +12,10 @@ from tiddlywebplugins.tiddlyspace.spaces import space_uri
 
 
 class Serialization(HTMLSerialization):
+    """
+    Subclass of the Atom HTML serialization that adds a "space link"
+    linking to the tiddler in the wiki.
+    """
 
     def tiddler_as(self, tiddler):
         """
@@ -41,11 +45,11 @@ class Serialization(HTMLSerialization):
         """
 
         if tiddler.recipe:
-            link = self._encode_space_link(tiddler)
-        elif self._space_bag(tiddler.bag):
+            link = _encode_space_link(tiddler)
+        elif _space_bag(tiddler.bag):
             space_name = tiddler.bag.split('_', 1)[0]
             space_link_uri = space_uri(self.environ, space_name).rstrip('/')
-            link = self._encode_space_link(tiddler)
+            link = _encode_space_link(tiddler)
             link = '%s%s' % (space_link_uri, link)
         else:
             return ''
@@ -57,8 +61,17 @@ class Serialization(HTMLSerialization):
 """ % (self._server_prefix(), link, tiddler.title)
         return space_link
 
-    def _space_bag(self, bag_name):
-        return Space.bag_is_public(bag_name) or Space.bag_is_private(bag_name)
 
-    def _encode_space_link(self, tiddler):
-        return '/#%%5B%%5B%s%%5D%%5D' % encode_name(tiddler.title)
+def _space_bag(bag_name):
+    """
+    Return true if the bag is a standard space bag. If it is
+    there will be a space link.
+    """
+    return Space.bag_is_public(bag_name) or Space.bag_is_private(bag_name)
+
+
+def _encode_space_link(tiddler):
+    """
+    Make the space link form: #[[tiddler.title]]
+    """
+    return '/#%%5B%%5B%s%%5D%%5D' % encode_name(tiddler.title)
