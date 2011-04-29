@@ -134,26 +134,7 @@ def html_profile(environ, start_response):
     profile_text = render_wikitext(profile_tiddler, environ)
 
     tiddlers = store.search(_search_string(username))
-    tiddlers_list = []
-
-    # XXX this bag_readable loop is copied from
-    # tiddlyweb.web.handler.search:get, it should be factored
-    # out of there for resue
-    bag_readable = {}
-    for tiddler in tiddlers:
-        try:
-            if bag_readable[tiddler.bag]:
-                tiddlers_list.append(_tiddler_in_list(tiddler))
-        except KeyError:
-            bag = Bag(tiddler.bag)
-            bag = store.get(bag)
-            try:
-                bag.policy.allows(usersign, 'read')
-                tiddlers_list.append(_tiddler_in_list(tiddler))
-                bag_readable[tiddler.bag] = True
-            except(ForbiddenError, UserRequiredError):
-                bag_readable[tiddler.bag] = False
-
+    tiddlers_list = _choose_readable_tiddlers(store, tiddlers, usersign)
     profile_tiddlers = '\n'.join(tiddlers_list)
 
     avatar_path = '/recipes/%s_public/tiddlers/SiteIcon' % username
@@ -184,6 +165,9 @@ def host_meta(environ, start_response):
 
 
 def profile_atom_url(environ, username):
+    """
+    The atom url of a profile, given a username.
+    """
     return (server_host_url(environ) +
             '/profiles/%s.atom' % encode_name(username))
 
@@ -216,11 +200,18 @@ try:
     from tiddlywebplugins.dispatcher.listener import Listener as BaseListener
 
     class Listener(BaseListener):
+        """
+        Define a dispatcher listener that sends a PuSH ping.
+        """
 
         TUBE = 'pushping'
         STORE = None
 
         def _act(self, job):
+            """
+            Do the action of sending the ping when a job (a tiddler) 
+            is received from the queue.
+            """
             if not self.STORE:
                 self.STORE = get_store(self.config)
             info = self._unpack(job)
@@ -235,6 +226,10 @@ try:
                 self._send_ping(user)
 
         def _user_has_profile(self, user):
+            """
+            True if the user has opted in for profiles by creating
+            a profile tiddler in their public bag.
+            """
             try:
                 tiddler = Tiddler('profile', '%s_public' % user)
                 self.STORE.get(tiddler)
@@ -243,6 +238,9 @@ try:
             return True
 
         def _send_ping(self, user):
+            """
+            Formulate and send the PuSH ping.
+            """
             data = {
                     'hub.mode': 'publish',
                     'hub.url': profile_atom_url(
@@ -270,11 +268,36 @@ try:
             except urllib2.URLError, exc:
                 logging.warn(
                         'urlopen errored with %s when publishing to hub', exc)
-            except Attribute, exc:
+            except AttributeError, exc:
                 logging.warn('error when publishing to hub: %s, %s',
                         exc, response.info())
 except ImportError:
     pass
+
+
+def _choose_readable_tiddlers(store, tiddlers, usersign):
+    """
+    Select those tiddlers which are readable bu the current user.
+    """
+    # XXX this bag_readable loop is copied from
+    # tiddlyweb.web.handler.search:get, it should be factored
+    # out of there for resue
+    tiddlers_list = []
+    bag_readable = {}
+    for tiddler in tiddlers:
+        try:
+            if bag_readable[tiddler.bag]:
+                tiddlers_list.append(_tiddler_in_list(tiddler))
+        except KeyError:
+            bag = Bag(tiddler.bag)
+            bag = store.get(bag)
+            try:
+                bag.policy.allows(usersign, 'read')
+                tiddlers_list.append(_tiddler_in_list(tiddler))
+                bag_readable[tiddler.bag] = True
+            except(ForbiddenError, UserRequiredError):
+                bag_readable[tiddler.bag] = False
+    return tiddlers_list
 
 
 def _search_string(username):
@@ -286,6 +309,9 @@ def _search_string(username):
 
 
 def _tiddler_in_list(tiddler):
+    """
+    Make an HTML list entry linking to this tiddler's page.
+    """
     return ('<li><a href="/bags/%s/tiddlers/%s">%s</a></li>'
             % (encode_name(tiddler.bag), encode_name(tiddler.title),
                 tiddler.title))
