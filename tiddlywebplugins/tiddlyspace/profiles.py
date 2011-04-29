@@ -214,6 +214,7 @@ def webfinger(environ, start_response):
 
 try:
     from tiddlywebplugins.dispatcher.listener import Listener as BaseListener
+
     class Listener(BaseListener):
 
         TUBE = 'pushping'
@@ -228,7 +229,7 @@ try:
             try:
                 self.STORE.get(tiddler)
             except StoreError:
-                return None #  Tiddler's not there, no need to notify
+                return None  # Tiddler's not there, no need to notify
             user = tiddler.modifier
             if self._user_has_profile(user):
                 self._send_ping(user)
@@ -244,8 +245,8 @@ try:
         def _send_ping(self, user):
             data = {
                     'hub.mode': 'publish',
-                    'hub.url': profile_atom_url({'tiddlyweb.config': self.config},
-                        user),
+                    'hub.url': profile_atom_url(
+                        {'tiddlyweb.config': self.config}, user),
                     }
 
             try:
@@ -257,15 +258,18 @@ try:
             try:
                 response = urllib2.urlopen(target, encoded_data)
                 status = response.getcode()
-                logging.warn('sent %s to %s got %s', encoded_data, target, status)
+                logging.warn('sent %s to %s got %s',
+                        encoded_data, target, status)
                 if status != '204':
                     logging.warn('non 204 response from hub: %s', status)
             except urllib2.HTTPError, exc:
                 if exc.code != 204:
-                    logging.warn('urlopen errored with %s when publishing to hub',
+                    logging.warn(
+                            'urlopen errored with %s when publishing to hub',
                             exc)
             except urllib2.URLError, exc:
-                logging,warn('urlopen errored with %s when publishing to hub', exc)
+                logging.warn(
+                        'urlopen errored with %s when publishing to hub', exc)
             except Attribute, exc:
                 logging.warn('error when publishing to hub: %s, %s',
                         exc, response.info())

@@ -8,12 +8,11 @@ repository: http://github.com/TiddlySpace/tiddlyspace
 
 from tiddlyweb.web.extractor import UserExtract
 from tiddlyweb.web.http import HTTPExceptor
-from tiddlyweb.manage import make_command
 from tiddlyweb.util import merge_config
 from tiddlyweb.model.user import User
 from tiddlyweb.store import NoUserError
 
-from tiddlywebplugins.utils import replace_handler, get_store
+from tiddlywebplugins.utils import replace_handler
 
 from tiddlywebplugins.instancer.util import get_tiddler_locations
 from tiddlywebplugins.tiddlyspace.instance import store_contents
@@ -24,10 +23,10 @@ from tiddlywebplugins.tiddlyspace.controlview import (ControlView,
 from tiddlywebplugins.tiddlyspace.handler import (home, friendly_uri,
         get_identities)
 from tiddlywebplugins.tiddlyspace.safemode import safe_mode
-from tiddlywebplugins.tiddlyspace.spaces import (
-        add_spaces_routes, change_space_member)
+from tiddlywebplugins.tiddlyspace.spaces import add_spaces_routes
 from tiddlywebplugins.tiddlyspace.profiles import add_profile_routes
 from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector
+from tiddlywebplugins.tiddlyspace.commands import establish_commands
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 
 import tiddlywebplugins.status
@@ -65,44 +64,7 @@ def init(config):
         import tiddlywebplugins.dispatcher
         import tiddlywebplugins.dispatcher.listener
 
-    @make_command()
-    def addmember(args):
-        """Add a member to a space: <space name> <user name>"""
-        store = get_store(config)
-        space_name, username = args
-        change_space_member(store, space_name, add=username)
-        return True
-
-    @make_command()
-    def delmember(args):
-        """Delete a member from a space: <space name> <user name>"""
-        store = get_store(config)
-        space_name, username = args
-        change_space_member(store, space_name, remove=username)
-        return True
-
-    @make_command()
-    def deltiddler(args):
-        """Delete a tiddler from a bag: <bag> <title>"""
-        from tiddlyweb.model.tiddler import Tiddler
-        from tiddlyweb.store import NoTiddlerError
-        from tiddlyweb.util import std_error_message
-        bag, title = args
-        prompt = 'deleting tiddler %s from bag %s - enter "yes" to confirm' % (
-                title, bag)
-        if raw_input('%s\n' % prompt) == 'yes':
-            store = get_store(config)
-            tiddler = Tiddler(title, bag)
-            try:
-                store.delete(tiddler)
-            except NoTiddlerError:
-                std_error_message(
-                        'error deleting tiddler %s from bag %s: %s' % (
-                            title, bag, 'no such tiddler'))
-            return True
-        else:
-            std_error_message('aborted')
-            return False
+    establish_commands(config)
 
     merge_config(config, space_config)
 
