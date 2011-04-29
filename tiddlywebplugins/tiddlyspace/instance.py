@@ -25,8 +25,6 @@ store_contents['_errors'] = ['src/errors/index.recipe']
 instance_config['system_plugins'] = ['tiddlywebplugins.tiddlyspace']
 instance_config['twanager_plugins'] = ['tiddlywebplugins.tiddlyspace']
 
-store_contents['system'].append(
-        'http://github.com/cdent/lazytiddlers/raw/master/LazyTiddlersPlugin.js')
 store_contents['common'] = ['src/common.recipe']
 store_contents['tiddlyspace'] = ['src/tiddlyspace.recipe']
 store_contents['system-info_public'] = ['src/system-info/index.recipe']

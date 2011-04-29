@@ -32,7 +32,7 @@ from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 import tiddlywebplugins.status
 
 
-__version__ = '0.9.99'
+__version__ = '1.0.0'
 
 
 def init(config):
@@ -53,7 +53,6 @@ def init(config):
     import tiddlywebplugins.hashmaker
     import tiddlywebplugins.form
     import tiddlywebplugins.reflector
-    import tiddlywebplugins.lazy
     import tiddlywebplugins.privateer
     import tiddlywebplugins.relativetime
     import tiddlywebplugins.jsonp
@@ -80,7 +79,6 @@ def init(config):
     tiddlywebplugins.hashmaker.init(config)
     tiddlywebplugins.form.init(config)
     tiddlywebplugins.reflector.init(config)
-    tiddlywebplugins.lazy.init(config)
     tiddlywebplugins.privateer.init(config)
     tiddlywebplugins.jsonp.init(config)
 
@@ -97,6 +95,12 @@ def init(config):
     # creation. Presumably the instance script needs to do something similar.
     config['instance_tiddlers'] = get_tiddler_locations(store_contents,
             'tiddlywebplugins.tiddlyspace')
+
+    # inject lazy serialization information
+    config['extension_types'].update({'lwiki': 'text/x-ltiddlywiki'})
+    config['serializers'].update({'text/x-ltiddlywiki':
+        ['tiddlywebplugins.tiddlyspace.betalazyserialization',
+            'text/html; charset=UTF-8']})
 
     if 'selector' in config:  # system plugin
         replace_handler(config['selector'], '/', dict(GET=home))
