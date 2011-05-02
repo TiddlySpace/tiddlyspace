@@ -5,8 +5,11 @@ a single tiddler it includes a link to the tiddler in its space.
 
 import urllib
 
+from tiddlyweb.model.bag import Bag
+from tiddlyweb.model.policy import PermissionsError
+from tiddlyweb.model.recipe import Recipe
+from tiddlyweb.serializations.html import Serialization as HTMLSerialization
 from tiddlyweb.wikitext import render_wikitext
-from tiddlywebplugins.atom.htmllinks import Serialization as HTMLSerialization
 from tiddlyweb.web.util import encode_name, tiddler_url
 
 from tiddlywebplugins.tiddlyspace.space import Space
@@ -16,40 +19,77 @@ from tiddlywebplugins.tiddlyspace.template import send_template
 
 class Serialization(HTMLSerialization):
     """
-    Subclass of the Atom HTML serialization that adds a "space link"
+    Subclass of the HTML serialization that adds a "space link"
     linking to the tiddler in the wiki. Uses templates instead of
     HTMLPresenter.
     """
 
     def __init__(self, environ=None):
+        """
+        Initialize the serialization. Delete tiddlyweb.title to
+        turn off HTMLPresenter.
+        """
         HTMLSerialization.__init__(self, environ)
-        del self.environ['tiddlyweb.title']  # turn off HTMLPresenter
+        del self.environ['tiddlyweb.title']
 
+    def list_recipes(self, recipes):
+        """
+        Send recipes out recipes.html template.
+        """
+        return send_template(self.environ, 'recipes.html', {
+            'recipes': recipes,
+            'title': 'Recipes'})
+
+    def list_bags(self, bags):
+        """
+        Send bags out bags.html template.
+        """
+        return send_template(self.environ, 'bags.html', {
+            'bags': bags,
+            'title': 'Bags'})
 
     def list_tiddlers(self, tiddlers):
         """
-        List the tiddlers from a container.
+        List the tiddlers from a container. Include a link
+        to the container if it can be viewed by the current
+        user. List the available serializations for the tiddlers.
         """
         title = tiddlers.title
         revisions = tiddlers.is_revisions
         routing_args = self.environ.get('wsgiorg.routing_args', ([], {}))[1]
         tiddlers_url = ''
         container_url = ''
+        container_policy = False
+        store = self.environ['tiddlyweb.store']
+        user = self.environ['tiddlyweb.usersign']
         if routing_args and not tiddlers.is_search:
             if 'recipe_name' in routing_args:
                 name = routing_args['recipe_name']
                 container_name = 'Recipe %s' % urllib.unquote(
                         name).decode('utf-8')
                 container_url = '/recipes/%s' % name
+                try:
+                    store.get(Recipe(name)).policy.allows(user, 'read')
+                    container_policy = True
+                except PermissionsError:
+                    pass
             elif 'bag_name' in routing_args:
                 name = routing_args['bag_name']
                 container_name = 'Bag %s' % urllib.unquote(
                         name).decode('utf-8')
                 container_url = '/bags/%s' % name
+                try:
+                    store.get(Bag(name)).policy.allows(user, 'manage')
+                    container_policy = True
+                except PermissionsError:
+                    pass
+
             tiddlers_url = container_url + '/tiddlers'
+
             if revisions:
                 container_url = ''
                 tiddlers_url += '/revisions'
+                container_policy = True
 
         if tiddlers.is_search:
             tiddlers_url = '/search'
@@ -69,22 +109,48 @@ class Serialization(HTMLSerialization):
             'query_string': query_string,
             'container_name': container_name,
             'container_url': container_url,
+            'container_policy': container_policy,
             'links': links,
             'tiddlers': tiddlers})
 
+    def recipe_as(self, recipe):
+        """
+        Send a recipe out the recipe.html template.
+        """
+        return send_template(self.environ, 'recipe.html', {
+            'recipe': recipe,
+            'title': 'Recipe %s' % recipe.name})
+
+    def bag_as(self, bag):
+        """
+        Send a bag out as HTML via the bag.html template.
+        Report on the permissions and policy for this bag
+        for the viewing user.
+        """
+        user = self.environ['tiddlyweb.usersign']
+        policy = bag.policy
+        policy.owner = [policy.owner]
+        user_perms = bag.policy.user_perms(user)
+
+        return send_template(self.environ, 'bag.html', {
+            'policy': policy,
+            'user_perms': user_perms,
+            'bag': bag,
+            'title': 'Bag %s' % bag.name})
 
     def tiddler_as(self, tiddler):
         """
         Transform the provided tiddler into an HTML
         representation of the tiddler packaged in a
         DIV. Render the content using the render_wikitext
-        subsystem.
+        subsystem. Links to the tiddler in the wiki are
+        provided.
         """
         if tiddler.recipe:
-            list_link = 'recipes/%s/tiddlers' % encode_name(tiddler.recipe)
+            list_link = '/recipes/%s/tiddlers' % encode_name(tiddler.recipe)
             list_title = 'Tiddlers in Recipe %s' % tiddler.recipe
         else:
-            list_link = 'bags/%s/tiddlers' % encode_name(tiddler.bag)
+            list_link = '/bags/%s/tiddlers' % encode_name(tiddler.bag)
             list_title = 'Tiddlers in Bag %s' % tiddler.bag
         space_link = self._space_link(tiddler)
         html = render_wikitext(tiddler, self.environ)
@@ -102,7 +168,6 @@ class Serialization(HTMLSerialization):
         """
         Create a link back to this tiddler in its space.
         """
-
         if tiddler.recipe:
             link = _encode_space_link(tiddler)
         elif _space_bag(tiddler.bag):
