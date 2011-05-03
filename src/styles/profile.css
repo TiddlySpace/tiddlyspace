@@ -38,3 +38,11 @@ section {
     padding: 1em;
     border-top: thin solid black;
 }
+
+.wikkly-code-block, .wikkly-code-inline {
+    font-family: monospace
+}
+
+.wikkly-strike {
+    text-decoration: line-through;
+}

@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{{ title }}</title>
-        <link rel="stylesheet" href="{{ css }}" type="text/css" />
-    </head>
-    <body>
-        <header>
-        {{ title }}
-        </header>
-        <article>
+{% extends 'base.html' %}
+{% block content %}
         <section id="bag">
         <p><a href="/bags/{{ bag.name|uri }}/tiddlers">Tiddlers in
             this bag</a></p>
@@ -17,28 +8,22 @@
         <section id="permissions">
         <p>You have the following permissions on this bag:</p>
         <ul>
-        {% for perm in user_perms %}
-        <li><strong>{{ perm }}</strong></li>
-        {% endfor %}
+        {%- for perm in user_perms -%}
+        <li>{{ perm }}</li>
+        {%- endfor -%}
         </ul>
         <p>The policy on this bag is:</p>
-        <dl>
-            {% for constraint in policy.attributes %}
+        <dl id="policy">
+            {%- for constraint in policy.attributes -%}
             <dt>{{ constraint }}</dt>
-            <dl><ul>
-                {% for name in policy.__getattribute__(constraint) %}
+            <dd><ul>
+                {%- for name in policy.__getattribute__(constraint) -%}
                 <li>{{ name }}</li>
-                {% else %}
+                {%- else -%}
                 <li>Open to anyone.</li>
-                {% endfor %}
-            </ul></dl>
-            {% endfor %}
+                {%- endfor -%}
+            </ul></dd>
+            {%- endfor -%}
         </dl>
         </section>
-        </article>
-        <footer>
-        Brought to you by <a href="{{ server_host
-            }}">TiddlySpace</a>.
-        </footer>
-    </body>
-</html>
+{% endblock %}

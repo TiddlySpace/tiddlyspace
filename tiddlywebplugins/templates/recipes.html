@@ -1,25 +1,10 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{{ title }}</title>
-        <link rel="stylesheet" href="{{ css }}" type="text/css" />
-    </head>
-    <body>
-        <header>
-        {{ title }}
-        </header>
-        <article>
+{% extends 'base.html' %}
+{% block content %}
         <section id="recipes">
         <ul class="listing">
-        {% for recipe in recipes %}
+        {%- for recipe in recipes -%}
         <li><a href="/recipes/{{ recipe.name|uri }}">{{ recipe.name }}</a></li>
-        {% endfor %}
+        {%- endfor -%}
         </ul>
         </section>
-        </article>
-        <footer>
-        Brought to you by <a href="{{ server_host
-            }}">TiddlySpace</a>.
-        </footer>
-    </body>
-</html>
+{% endblock %}

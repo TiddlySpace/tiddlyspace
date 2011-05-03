@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{{ title }}</title>
-        <link rel="stylesheet" href="{{ css }}" type="text/css" />
+{% extends 'base.html' %}
+{% block links %}
         <link rel="alternate" type="application/atom+xml"
         title="Atom activity feed" href="{{ activity_feed }}" />
-    </head>
-    <body>
-        <header>
+{% endblock %}
+{% block title %}
         <div id="hcard-{{ username }}" class="vcard">
             <div class="fn"><a href="{{ space_uri }}" class="url">{{ username }}</a></div>
             <a href="{{ space_uri }}" title="space link">
@@ -15,8 +11,8 @@
             </a>
         </div>
         Profile for {{ username }}
-        </header>
-        <article>
+{% endblock %}
+{% block content %}
         <section id="profile">
         {{ profile }}
         </section>
@@ -28,10 +24,4 @@
         {% endfor %}
         </ul>
         </section>
-        </article>
-        <footer>
-        Brought to you by <a href="{{ server_host
-            }}">TiddlySpace</a>.
-        </footer>
-    </body>
-</html>
+{% endblock %}
