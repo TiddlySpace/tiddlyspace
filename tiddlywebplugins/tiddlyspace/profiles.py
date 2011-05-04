@@ -7,6 +7,7 @@ import logging
 import urllib
 import urllib2
 
+from tiddlyweb.control import readable_tiddlers_by_bag
 from tiddlyweb.store import StoreError, NoUserError
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
@@ -88,7 +89,7 @@ def html_profile(environ, start_response):
     profile_text = render_wikitext(profile_tiddler, environ)
 
     tiddlers = store.search(_search_string(username))
-    tiddlers_list = _choose_readable_tiddlers(store, tiddlers, usersign)
+    tiddlers_list = readable_tiddlers_by_bag(store, tiddlers, usersign)
 
     avatar_path = '/recipes/%s_public/tiddlers/SiteIcon' % username
 
@@ -230,31 +231,6 @@ try:
                         exc, response.info())
 except ImportError:
     pass
-
-
-def _choose_readable_tiddlers(store, tiddlers, usersign):
-    """
-    Select those tiddlers which are readable bu the current user.
-    """
-    # XXX this bag_readable loop is copied from
-    # tiddlyweb.web.handler.search:get, it should be factored
-    # out of there for resue
-    tiddlers_list = []
-    bag_readable = {}
-    for tiddler in tiddlers:
-        try:
-            if bag_readable[tiddler.bag]:
-                tiddlers_list.append(tiddler)
-        except KeyError:
-            bag = Bag(tiddler.bag)
-            bag = store.get(bag)
-            try:
-                bag.policy.allows(usersign, 'read')
-                tiddlers_list.append(tiddler)
-                bag_readable[tiddler.bag] = True
-            except(ForbiddenError, UserRequiredError):
-                bag_readable[tiddler.bag] = False
-    return tiddlers_list
 
 
 def _search_string(username):
