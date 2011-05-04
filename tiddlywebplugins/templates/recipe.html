@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
         <div class="section" id="recipe">
+        <p><a href="/recipes/{{ recipe.name|uri }}/tiddlers">Tiddlers in
+            this recipe</a></p>
         <p>{{ recipe.desc }}</p>
+        </div>
+        <div class="section" id="recipelist">
         <ul class="listing">
         {% for bag, filter in recipe.get_recipe() %}
             {% if filter %}
