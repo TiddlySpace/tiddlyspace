@@ -223,7 +223,7 @@ def space_uri(environ, space_name):
             else:
                 uri = '%s://%s/' % (scheme, host)
         else:
-            uri = '%s://%s/' % (scheme, space_name)  # XXX This is a stub
+            uri = '%s://%s/' % (scheme, space_name)
     return uri
 
 
