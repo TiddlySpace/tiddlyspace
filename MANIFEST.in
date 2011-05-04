@@ -1,3 +1,4 @@
 include README Makefile
 recursive-include test *
+include tiddlywebplugins/templates/*.html
 recursive-include tiddlywebplugins/tiddlyspace/resources *
