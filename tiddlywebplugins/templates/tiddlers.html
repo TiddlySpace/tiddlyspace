@@ -5,7 +5,7 @@
         }}.atom{{ query_string}}" />
 {% endblock %}
 {% block content %}
-        <section id="links">
+        <div class="section" id="links">
         <p>This list of tiddlers as:
         {%- for type in links -%}
         &nbsp;<a
@@ -14,8 +14,8 @@
         {% if container_url and container_policy %}
         <p><a href="{{container_url}}">{{container_name}}</a></p>
         {% endif %}
-        </section>
-        <section id="tiddlers">
+        </div>
+        <div class="section" id="tiddlers">
         <ul id="tiddlers" class="listing">
         {% if revisions %}
             {%- for tiddler in tiddlers -%}
@@ -31,5 +31,5 @@
             {%- endfor -%}
         {% endif %}
         </ul>
-        </section>
+        </div>
 {% endblock %}

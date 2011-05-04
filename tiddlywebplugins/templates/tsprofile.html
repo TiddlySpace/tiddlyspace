@@ -13,15 +13,15 @@
         Profile for {{ username }}
 {% endblock %}
 {% block content %}
-        <section id="profile">
+        <div class="section" id="profile">
         {{ profile }}
-        </section>
-        <section id="activity">
+        </div>
+        <div class="section" id="activity">
         <ul id="tiddlers" class="listing">
         {% for tiddler in tiddlers %}
         <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
             tiddler.title|uri }}">{{ tiddler.title }}</a></li>
         {% endfor %}
         </ul>
-        </section>
+        </div>
 {% endblock %}

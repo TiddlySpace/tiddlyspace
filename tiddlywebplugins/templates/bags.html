@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-        <section id="bags">
+        <div class="section" id="bags">
         <ul class="listing">
         {%- for bag in bags -%}
         <li><a href="/bags/{{ bag.name|uri }}/tiddlers">{{ bag.name }}</a></li>
         {%- endfor -%}
         </ul>
-        </section>
+        </div>
 {% endblock %}

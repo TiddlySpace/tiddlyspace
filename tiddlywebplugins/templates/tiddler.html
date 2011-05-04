@@ -11,11 +11,11 @@
         {% endif %}
 {% endblock %}
 {% block content %}
-        <section id="links">
+        <div class="section" id="links">
         <div class="tiddlerslink"><a href="{{ list_link }}">{{
                 list_title }}</a></div>
-        </section>
-        <section id="tiddlertext">
+        </div>
+        <div class="section" id="tiddlertext">
             <div class="tiddler"
                 title="{{tiddler.title|e}}"
                 server.bag="{{tiddler.bag|e}}"
@@ -29,5 +29,5 @@
                 {{fields}}>
             {{ html }}
             </div>
-        </section>
+        </div>
 {% endblock %}

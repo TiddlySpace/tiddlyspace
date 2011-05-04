@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-        <section id="recipe">
+        <div class="section" id="recipe">
         <p>{{ recipe.desc }}</p>
         <ul class="listing">
         {% for bag, filter in recipe.get_recipe() %}
@@ -12,5 +12,5 @@
             {% endif %}
         {% endfor %}
         </ul>
-        </section>
+        </div>
 {% endblock %}

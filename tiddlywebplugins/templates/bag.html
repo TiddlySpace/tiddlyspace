@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-        <section id="bag">
+        <div class="section" id="bag">
         <p><a href="/bags/{{ bag.name|uri }}/tiddlers">Tiddlers in
             this bag</a></p>
         <p>{{ bag.desc }}</p>
-        </section>
-        <section id="permissions">
+        </div>
+        <div class="section" id="permissions">
         <p>You have the following permissions on this bag:</p>
         <ul>
         {%- for perm in user_perms -%}
@@ -25,5 +25,5 @@
             </ul></dd>
             {%- endfor -%}
         </dl>
-        </section>
+        </div>
 {% endblock %}

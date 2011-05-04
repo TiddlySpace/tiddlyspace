@@ -13,7 +13,7 @@ body {
     width: 75%;
 }
 
-header img {
+#header img {
     max-width: 100;
     max-height: 100;
 }
@@ -22,19 +22,19 @@ header img {
     float: right;
 }
 
-header, footer {
+#header, #footer {
     padding: 1em;
 }
 
-footer {
+#footer {
     text-align: right;
 }
 
-article {
+#article {
     padding: 1em;
 }
 
-section {
+.section {
     padding: 1em;
     border-top: thin solid black;
 }

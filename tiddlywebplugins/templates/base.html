@@ -7,17 +7,17 @@
         {% endblock %}
     </head>
     <body>
-        <header>
+        <div id="header">
         {% block title %}
         {{ title }}
         {% endblock %}
-        </header>
-        <article>
+        </div>
+        <div id="article">
         {% block content %}
         {% endblock %}
-        </article>
-        <footer>
+        </div>
+        <div id="footer">
         Brought to you by <a href="{{ server_host }}">TiddlySpace</a>.
-        </footer>
+        </div>
     </body>
 </html>
