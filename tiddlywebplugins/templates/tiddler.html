@@ -33,15 +33,15 @@
                       <dt>{{i}}</dt><dd>{{fields[i]}}</dd>
                     {%- endif -%}
                   {%- endfor -%}
+                  {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
                   <dt>location</dt>
                   <dd>
-                  {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
                   <a class='geo' href="http://www.openstreetmap.org/?lat={{tiddler.fields['geo.lat']|e}}&lon={{tiddler.fields['geo.long']|e}}&zoom=14">
                     latitude <span class='latitude' title="{{tiddler.fields['geo.lat']|e}}">{{tiddler.fields['geo.lat']}}</span>
                     longitude <span class='longitude' title="{{tiddler.fields['geo.long']|e}}">{{tiddler.fields['geo.long']}}</span>
                   </a>
-                  {%- endif -%}
                   </dd>
+                  {%- endif -%}
               </dl>
               <div id='tags'>
                 tagged with: {% for i in tags %} <a rel="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a> {% endfor %}
