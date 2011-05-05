@@ -23,12 +23,14 @@
                 server.bag="{{tiddler.bag|e}}"
                 {% if tiddler.recipe %}server.recipe="{{tiddler.recipe|e}}"{% endif %}
                 server.page.revision="{{tiddler.revision}}"
-                modifier="{{tiddler.modifier|e}}"
-                creator="{{tiddler.creator|e}}"
-                modified="{{tiddler.modified}}"
-                created="{{tiddler.created}}"
                 tags="{{tags}}"
                 {{fields}}>
+            <dl>
+                <dt>created</dt><dd>{{tiddler.created}}</dd>
+                <dt>creator</dt><dd>{{tiddler.creator|e}}</dd>
+                <dt>modified</dt><dd>{{tiddler.modified}}</dd>
+                <dt>modifier</dt><dd>{{tiddler.modifier|e}}</dd>
+            </dl>
             {{ html }}
             </div>
         </div>
