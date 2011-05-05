@@ -4,11 +4,13 @@
         title="Atom {{tiddler.title|e}}" href="{{ tiddler_url }}.atom" />
 {% endblock %}
 {% block title %}
+        <h1>
         {% if space_link %}
         <a href="{{ space_link }}">{{ tiddler.title }}</a>
         {% else %}
         {{tiddler.title}}
         {% endif %}
+        </h1>
 {% endblock %}
 {% block content %}
         <div class="section" id="links">
