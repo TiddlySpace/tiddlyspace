@@ -20,6 +20,7 @@
         </div>
 {% endblock %}
 {% block content %}
+        {%- set reserved_fields = ['geo.lat', 'geo.long'] -%}
         <div class="section" id="tiddlertext">
             <div class="tiddler">
               <dl class='meta'>
@@ -28,8 +29,16 @@
                   <dt>modified</dt><dd>{{tiddler.modified}}</dd>
                   <dt>modifier</dt><dd><a>{{tiddler.modifier|e}}</a></dd>
                   {%- for i in fields -%}
-                  <dt>{{i}}</dt><dd>{{fields[i]}}</dd>
+                    {%- if i not in reserved_fields -%}
+                      <dt>{{i}}</dt><dd>{{fields[i]}}</dd>
+                    {%- endif -%}
                   {%- endfor -%}
+                  {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
+                  <a class='geo' href="http://www.openstreetmap.org/?lat={{tiddler.fields['geo.lat']|e}}&lon={{tiddler.fields['geo.long']|e}}&zoom=14">
+                    latitude <span class='latitude' title="{{tiddler.fields['geo.lat']|e}}">{{tiddler.fields['geo.lat']}}</span>
+                    longitude <span class='longitude' title="{{tiddler.fields['geo.long']|e}}">{{tiddler.fields['geo.long']}}</span>
+                  </a>
+                  {%- endif -%}
               </dl>
               <div>
                 tagged with: {% for i in tags %} <a rel="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a> {% endfor %}
