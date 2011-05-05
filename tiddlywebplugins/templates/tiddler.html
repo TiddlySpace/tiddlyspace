@@ -15,8 +15,8 @@
           revision 
           <a class='revision' href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions/{{tiddler.revision}}">
             {{tiddler.revision}}</a>
-          in bag <a class='bag' href='/bags/{{tiddler.bag|e}}'>{{tiddler.bag|e}}</a>
-          {% if tiddler.recipe %}and recipe <a class='recipe' href='/recipes/{{tiddler.recipe}}'>{{tiddler.recipe|e}}</a>{% endif %}
+          in bag <a class='bag' href='/bags/{{tiddler.bag|e}}'>{{tiddler.bag}}</a>
+          {% if tiddler.recipe %}and recipe <a class='recipe' href='/recipes/{{tiddler.recipe}}'>{{tiddler.recipe}}</a>{% endif %}
         </div>
 {% endblock %}
 {% block content %}
@@ -25,9 +25,9 @@
             <div class="tiddler">
               <dl class='meta'>
                   <dt>created</dt><dd>{{tiddler.created}}</dd>
-                  <dt>creator</dt><dd><a>{{tiddler.creator|e}}</a></dd>
+                  <dt>creator</dt><dd><a>{{tiddler.creator}}</a></dd>
                   <dt>modified</dt><dd>{{tiddler.modified}}</dd>
-                  <dt>modifier</dt><dd><a>{{tiddler.modifier|e}}</a></dd>
+                  <dt>modifier</dt><dd><a>{{tiddler.modifier}}</a></dd>
                   {%- for i in fields -%}
                     {%- if i not in reserved_fields -%}
                       <dt>{{i}}</dt><dd>{{fields[i]}}</dd>
