@@ -24,7 +24,6 @@
 {% block content %}
         <div class="section" id="tiddlertext">
             <div class="tiddler"
-                tags="{{tags}}"
                 {{fields}}>
             <dl>
                 <dt>created</dt><dd>{{tiddler.created}}</dd>
@@ -32,6 +31,9 @@
                 <dt>modified</dt><dd>{{tiddler.modified}}</dd>
                 <dt>modifier</dt><dd>{{tiddler.modifier|e}}</dd>
             </dl>
+            <div>
+              tagged with: {% for i in tags %} <a rel="tag">{{ i }}</a> {% endfor %}
+            </div>
             {{ html }}
             </div>
         </div>
