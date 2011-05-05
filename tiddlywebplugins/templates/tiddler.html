@@ -15,14 +15,16 @@
         {{tiddler.title}}
         {% endif %}
         </h1>
+        <div>
+          revision <span class='revision'>{{tiddler.revision}}</span>
+          in bag <span class='bag'>{{tiddler.bag|e}}</span>
+          {% if tiddler.recipe %}and recipe <span class='recipe'>{{tiddler.recipe|e}}</span>{% endif %}
+        </div>
 {% endblock %}
 {% block content %}
         <div class="section" id="tiddlertext">
             <div class="tiddler"
                 title="{{tiddler.title|e}}"
-                server.bag="{{tiddler.bag|e}}"
-                {% if tiddler.recipe %}server.recipe="{{tiddler.recipe|e}}"{% endif %}
-                server.page.revision="{{tiddler.revision}}"
                 tags="{{tags}}"
                 {{fields}}>
             <dl>
