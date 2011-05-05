@@ -6,7 +6,8 @@ module("TiddlySpaceForms plugin", {
 		_ajaxSuccess = false;
 		_ajaxReq = ajaxReq;
 		ajaxReq = function(options) {
-			if(_ajaxMode == 1 && options.url == "/challenge/cookie_form") {
+			if(_ajaxMode == 1 && options.url ==
+					"/challenge/tiddlywebplugins.tiddlyspace.cookie_form") {
 				_ajaxSuccess = true;
 			} else if(_ajaxMode == 2 && options.url == "/challenge/custom") {
 				_ajaxSuccess = true;
