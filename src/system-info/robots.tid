@@ -5,3 +5,4 @@ User-agent: *
 Disallow: /bags/*/tiddlers.wiki
 Disallow: /recipes/*/tiddlers.wiki
 Disallow: /bags/confusedofcalcutta_public/*
+Disallow: /bags/gb-geonames_public/*
