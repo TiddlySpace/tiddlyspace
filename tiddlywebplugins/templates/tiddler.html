@@ -17,6 +17,7 @@
             {{tiddler.revision}}</a>
           in bag <a class='bag' href='/bags/{{tiddler.bag|e}}'>{{tiddler.bag}}</a>
           {% if tiddler.recipe %}and recipe <a class='recipe' href='/recipes/{{tiddler.recipe}}'>{{tiddler.recipe}}</a>{% endif %}
+          in <a href="{{ list_link }}">this collection of tiddlers</a>
         </div>
 {% endblock %}
 {% block content %}
