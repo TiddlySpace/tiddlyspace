@@ -10,7 +10,7 @@
         </div>
         <h1>
         {% if space_link %}
-        <a href="{{ space_link }}">{{ tiddler.title }}</a>
+        <a href="{{ space_link }}" id='title'>{{ tiddler.title }}</a>
         {% else %}
         {{tiddler.title}}
         {% endif %}
@@ -24,7 +24,6 @@
 {% block content %}
         <div class="section" id="tiddlertext">
             <div class="tiddler"
-                title="{{tiddler.title|e}}"
                 tags="{{tags}}"
                 {{fields}}>
             <dl>
