@@ -23,9 +23,9 @@
                 {{fields}}>
             <dl>
                 <dt>created</dt><dd>{{tiddler.created}}</dd>
-                <dt>creator</dt><dd>{{tiddler.creator|e}}</dd>
+                <dt>creator</dt><dd><a>{{tiddler.creator|e}}</a></dd>
                 <dt>modified</dt><dd>{{tiddler.modified}}</dd>
-                <dt>modifier</dt><dd>{{tiddler.modifier|e}}</dd>
+                <dt>modifier</dt><dd><a>{{tiddler.modifier|e}}</a></dd>
             </dl>
             <div>
               tagged with: {% for i in tags %} <a rel="tag">{{ i }}</a> {% endfor %}
