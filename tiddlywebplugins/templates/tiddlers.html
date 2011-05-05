@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block links %}
+        <link rel="alternate" type="application/atom+xml"
+        title="Atom feed for {{title|e}}" href="{{ tiddlers_url
+        }}.atom{{ query_string}}" />
+{% endblock %}
+{% block content %}
+        <div class="section" id="links">
+        <p>This list of tiddlers as:
+        {%- for type in links -%}
+        &nbsp;<a
+            href="{{tiddlers_url}}.{{type}}{{query_string}}">{{type}}</a>
+        {%- endfor -%}</p>
+        {% if container_url and container_policy %}
+        <p><a href="{{container_url}}">{{container_name}}</a></p>
+        {% endif %}
+        </div>
+        <div class="section" id="tiddlers">
+        <ul id="tiddlers" class="listing">
+        {% if revisions %}
+            {%- for tiddler in tiddlers -%}
+            <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
+                tiddler.title|uri }}/revisions/{{ tiddler.revision
+                }}">{{ tiddler.title }}:{{ tiddler.revision
+                }}</a></li>
+            {%- endfor -%}
+        {% else %}
+            {%- for tiddler in tiddlers -%}
+            <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
+                tiddler.title|uri }}">{{ tiddler.title }}</a></li>
+            {%- endfor -%}
+        {% endif %}
+        </ul>
+        </div>
+{% endblock %}

@@ -11,6 +11,7 @@ import logging
 from tiddlyweb.util import read_utf8_file
 from tiddlywebwiki.serialization import Serialization as WikiSerialization
 
+
 def build_config_var(alpha=False, beta=False, external=False):
     base = 'base_tiddlywiki'
     if external:
@@ -20,6 +21,7 @@ def build_config_var(alpha=False, beta=False, external=False):
     elif alpha:
         base += '_alpha'
     return base
+
 
 class Serialization(WikiSerialization):
 

@@ -10,6 +10,10 @@ from tiddlywebplugins.hashmaker import hash_tiddler
 
 
 class Store(MySQLStore):
+    """
+    Override the default MySQL store to a) put a hash on each
+    saved tiddler, b) get a list of user's spaces.
+    """
 
     def user_spaces(self, username):
         """

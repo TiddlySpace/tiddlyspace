@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block links %}
+        <link rel="alternate" type="application/atom+xml"
+        title="Atom {{tiddler.title|e}}" href="{{ tiddler_url }}.atom" />
+{% endblock %}
+{% block title %}
+        {% if space_link %}
+        <a href="{{ space_link }}">{{ tiddler.title }}</a>
+        {% else %}
+        {{tiddler.title}}
+        {% endif %}
+{% endblock %}
+{% block content %}
+        <div class="section" id="links">
+        <div class="tiddlerslink"><a href="{{ list_link }}">{{
+                list_title }}</a></div>
+        </div>
+        <div class="section" id="tiddlertext">
+            <div class="tiddler"
+                title="{{tiddler.title|e}}"
+                server.bag="{{tiddler.bag|e}}"
+                {% if tiddler.recipe %}server.recipe="{{tiddler.recipe|e}}"{% endif %}
+                server.page.revision="{{tiddler.revision}}"
+                modifier="{{tiddler.modifier|e}}"
+                creator="{{tiddler.creator|e}}"
+                modified="{{tiddler.modified}}"
+                created="{{tiddler.created}}"
+                tags="{{tags}}"
+                {{fields}}>
+            {{ html }}
+            </div>
+        </div>
+{% endblock %}

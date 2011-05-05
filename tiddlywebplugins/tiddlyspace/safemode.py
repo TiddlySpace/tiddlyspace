@@ -44,8 +44,8 @@ def safe_mode(environ, start_response):
 
     # Delete those plugins in the space's recipes which
     # duplicate the core plugins
-    recipe = _delete_duplicates(environ, core_plugin_tiddler_titles, recipe_name,
-            space_name)
+    recipe = _delete_duplicates(environ, core_plugin_tiddler_titles,
+            recipe_name, space_name)
 
     # Process the recipe. For those tiddlers which do not have a bag
     # in CORE_RECIPE, remove the systemConfig tag.
@@ -88,7 +88,8 @@ def _delete_duplicates(environ, titles, recipe_name, space_name):
                     continue
                 store.delete(tiddler)
     except NoRecipeError, exc:
-        raise HTTP404('space recipe not found while trying safe mode: %s' % exc)
+        raise HTTP404('space recipe not found while trying safe mode: %s'
+                % exc)
     return recipe
 
 

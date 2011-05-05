@@ -17,15 +17,18 @@ except ImportError:
 PACKAGE_NAME = 'tiddlywebplugins.tiddlyspace'
 TIDDLYWIKI_ALPHA = resource_filename(PACKAGE_NAME, 'resources/alpha.html')
 TIDDLYWIKI_BETA = resource_filename(PACKAGE_NAME, 'resources/beta.html')
-TIDDLYWIKI_EXTERNAL_ALPHA = resource_filename(PACKAGE_NAME, 'resources/external_alpha.html')
+TIDDLYWIKI_EXTERNAL_ALPHA = resource_filename(PACKAGE_NAME,
+        'resources/external_alpha.html')
 
 config = {
     'instance_tiddlers': get_tiddler_locations(store_contents, PACKAGE_NAME),
     'atom.default_filter': 'select=tag:!excludeLists;sort=-modified;limit=20',
     'atom.author_uri_map': '/profiles/%s',
     'atom.hub': 'http://pubsubhubbub.appspot.com/',
-    'beanstalk.listeners': ['tiddlywebplugins.dispatcher.listener', 'tiddlywebplugins.tiddlyspace.profiles'],
-    'auth_systems': ['tiddlywebplugins.tiddlyspace.cookie_form', 'tiddlywebplugins.tiddlyspace.openid'],
+    'auth_systems': ['tiddlywebplugins.tiddlyspace.cookie_form',
+        'tiddlywebplugins.tiddlyspace.openid'],
+    'beanstalk.listeners': ['tiddlywebplugins.dispatcher.listener',
+        'tiddlywebplugins.tiddlyspace.profiles'],
     'bag_create_policy': 'ANY',
     'recipe_create_policy': 'ANY',
     'css_uri': '/bags/common/tiddlers/tiddlyweb.css',
@@ -43,6 +46,4 @@ config = {
     'base_tiddlywiki_external_alpha': TIDDLYWIKI_EXTERNAL_ALPHA,
     'serializers': {
         'text/x-tiddlywiki': ['tiddlywebplugins.tiddlyspace.betaserialization',
-            'text/html; charset=UTF-8']
-    }
-}
+            'text/html; charset=UTF-8']}}

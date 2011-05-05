@@ -65,7 +65,8 @@ dev_local:
 	( cd dev_instance && \
 		ln -s ../devconfig.py && \
 		ln -s ../mangler.py && \
-		ln -s ../tiddlywebplugins )
+		ln -s ../tiddlywebplugins && \
+		ln -s ../tiddlywebplugins/templates )
 	@echo "from devconfig import update_config; update_config(config)" \
 		>> dev_instance/tiddlywebconfig.py
 	@echo "INFO development instance created in dev_instance"

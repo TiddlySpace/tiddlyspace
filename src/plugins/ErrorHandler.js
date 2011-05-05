@@ -1,6 +1,6 @@
 /***
 |''Name''|ErrorHandlerPlugin|
-|''Version''|0.4.2|
+|''Version''|0.4.3|
 |''Author''|Jon Robson|
 |''Description''|Localised tiddler save errors including edit conflict resolution.|
 |''CoreVersion''|2.6.1|
@@ -134,7 +134,7 @@ var plugin = config.extensions.errorHandler = {
 		ajaxReq({
 			type: "get",
 			dataType: "text",
-			url: "/diff?rev1=%0/%1/%2&rev2=%0/%1".format(workspace, title, latestRevision),
+			url: "/diff?format=unified&rev1=%0/%1/%2&rev2=%0/%1".format(workspace, title, latestRevision),
 			success: callback,
 			error: function() {
 				displayMessage(msgs.reviewDiffError);

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+        <div class="section" id="bag">
+        <p><a href="/bags/{{ bag.name|uri }}/tiddlers">Tiddlers in
+            this bag</a></p>
+        <p>{{ bag.desc }}</p>
+        </div>
+        <div class="section" id="permissions">
+        <p>You have the following permissions on this bag:</p>
+        <ul>
+        {%- for perm in user_perms -%}
+        <li>{{ perm }}</li>
+        {%- endfor -%}
+        </ul>
+        <p>The policy on this bag is:</p>
+        <dl id="policy">
+            {%- for constraint in policy.attributes -%}
+            <dt>{{ constraint }}</dt>
+            <dd><ul>
+                {%- for name in policy.__getattribute__(constraint) -%}
+                <li>{{ name }}</li>
+                {%- else -%}
+                <li>Open to anyone.</li>
+                {%- endfor -%}
+            </ul></dd>
+            {%- endfor -%}
+        </dl>
+        </div>
+{% endblock %}

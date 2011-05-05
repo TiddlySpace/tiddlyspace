@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block links %}
+        <link rel="alternate" type="application/atom+xml"
+        title="Atom activity feed" href="{{ activity_feed }}" />
+{% endblock %}
+{% block title %}
+        <div id="hcard-{{ username }}" class="vcard">
+            <div class="fn"><a href="{{ space_uri }}" class="url">{{ username }}</a></div>
+            <a href="{{ space_uri }}" title="space link">
+                <img src="{{ avatar_path }}" alt="avatar" class="photo">
+            </a>
+        </div>
+        Profile for {{ username }}
+{% endblock %}
+{% block content %}
+        <div class="section" id="profile">
+        {{ profile }}
+        </div>
+        <div class="section" id="activity">
+        <ul id="tiddlers" class="listing">
+        {% for tiddler in tiddlers %}
+        <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
+            tiddler.title|uri }}">{{ tiddler.title }}</a></li>
+        {% endfor %}
+        </ul>
+        </div>
+{% endblock %}
