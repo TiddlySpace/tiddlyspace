@@ -25,7 +25,7 @@ config = {
     'atom.author_uri_map': '/profiles/%s',
     'atom.hub': 'http://pubsubhubbub.appspot.com/',
     'beanstalk.listeners': ['tiddlywebplugins.dispatcher.listener', 'tiddlywebplugins.tiddlyspace.profiles'],
-    'auth_systems': ['cookie_form', 'tiddlywebplugins.tiddlyspace.openid'],
+    'auth_systems': ['tiddlywebplugins.tiddlyspace.cookie_form', 'tiddlywebplugins.tiddlyspace.openid'],
     'bag_create_policy': 'ANY',
     'recipe_create_policy': 'ANY',
     'css_uri': '/bags/common/tiddlers/tiddlyweb.css',
