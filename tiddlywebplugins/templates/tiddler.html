@@ -4,10 +4,6 @@
         title="Atom {{tiddler.title|e}}" href="{{ tiddler_url }}.atom" />
 {% endblock %}
 {% block title %}
-        <div class="section" id="links">
-                <div class="tiddlerslink"><a href="{{ list_link }}">{{
-                list_title }}</a></div>
-        </div>
         <h1>
         {% if space_link %}
         <a href="{{ space_link }}" id='title'>{{ tiddler.title }}</a>
@@ -16,9 +12,9 @@
         {% endif %}
         </h1>
         <div>
-          revision <span class='revision'>{{tiddler.revision}}</span>
-          in bag <span class='bag'>{{tiddler.bag|e}}</span>
-          {% if tiddler.recipe %}and recipe <span class='recipe'>{{tiddler.recipe|e}}</span>{% endif %}
+          revision <a class='revision'>{{tiddler.revision}}</a>
+          in bag <a class='bag'>{{tiddler.bag|e}}</a>
+          {% if tiddler.recipe %}and recipe <a class='recipe'>{{tiddler.recipe|e}}</a>{% endif %}
         </div>
 {% endblock %}
 {% block content %}
