@@ -59,6 +59,7 @@ class Serialization(HTMLSerialization):
         routing_args = self.environ.get('wsgiorg.routing_args', ([], {}))[1]
         tiddlers_url = ''
         container_url = ''
+        container_name = ''
         container_policy = False
         store = self.environ['tiddlyweb.store']
         user = self.environ['tiddlyweb.usersign']
