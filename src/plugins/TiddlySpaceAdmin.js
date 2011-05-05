@@ -55,7 +55,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		});
 	},
 	basicLogin: function(form, challenger) {
-		challenger = challenger ? challenger : "cookie_form";
+		challenger = challenger ? challenger : "tiddlywebplugins.tiddlyspace.cookie_form";
 		var username = $(form).find("[name=username]").val();
 		var password = $(form).find("[name=password]").val();
 		this.login(username, password, tsl.redirect, function(xhr, error, exc) { // TODO: DRY (cf. displayMembers)
@@ -65,7 +65,7 @@ var tsl = config.macros.TiddlySpaceLogin = {
 		return false;
 	},
 	login: function(username, password, callback, errback, challenger) {
-		challenger = challenger ? challenger : "cookie_form";
+		challenger = challenger ? challenger : "tiddlywebplugins.tiddlyspace.cookie_form";
 		var uri = "%0/challenge/%1".format([tweb.host, challenger]);
 		ajaxReq({ url: uri, type: "POST", success: callback,
 			data: {
