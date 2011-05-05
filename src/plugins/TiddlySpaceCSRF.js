@@ -1,4 +1,5 @@
-window.getCSRFToken = function() {
+(function() {
+var getCSRFToken = function(window) {
 	// XXX: should not use RegEx - cf.
 	// http://www.quirksmode.org/js/cookies.html
 	// https://github.com/TiddlySpace/tiddlyspace/commit/5f4adbe009ed4bda3ce39058a3fb07de1420358d
@@ -14,5 +15,8 @@ window.getCSRFToken = function() {
 
 if (config && config.extensions && config.extensions.tiddlyspace &&
 		config.extensions.tiddlyspace.getCSRFToken === null) {
-	config.extensions.tiddlyspace.getCSRFToken = window.getCSRFToken;
+	config.extensions.tiddlyspace.getCSRFToken = getCSRFToken;
+} else {
+	window.getCSRFToken = getCSRFToken;
 }
+})(window);
