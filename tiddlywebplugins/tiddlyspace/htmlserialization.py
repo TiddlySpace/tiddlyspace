@@ -155,8 +155,8 @@ class Serialization(HTMLSerialization):
         space_link = self._space_link(tiddler)
         html = render_wikitext(tiddler, self.environ)
         return send_template(self.environ, 'tiddler.html', {
-            'tags': self.tags_as(tiddler.tags),
-            'fields': self._tiddler_fields(tiddler.fields),
+            'tags': tiddler.tags,
+            'fields': tiddler.fields,
             'html': html,
             'list_link': list_link,
             'list_title': list_title,
