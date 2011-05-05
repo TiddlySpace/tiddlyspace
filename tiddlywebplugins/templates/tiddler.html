@@ -32,7 +32,7 @@
                   {%- endfor -%}
               </dl>
               <div>
-                tagged with: {% for i in tags %} <a rel="tag">{{ i }}</a> {% endfor %}
+                tagged with: {% for i in tags %} <a rel="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a> {% endfor %}
               </div>
               <div id='text-html'>{{ html }}</div>
             </div>
