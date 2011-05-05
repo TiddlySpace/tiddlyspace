@@ -43,10 +43,9 @@
                   </a>
                   </dd>
                   {%- endif -%}
+                  <dt>tags</dt>
+                  {% for i in tags %} <dd><a rel="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a></dd>{% endfor %}
               </dl>
-              <div id='tags'>
-                tagged with: {% for i in tags %} <a rel="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a> {% endfor %}
-              </div>
               <div id='text-html'>{{ html }}</div>
             </div>
         </div>
