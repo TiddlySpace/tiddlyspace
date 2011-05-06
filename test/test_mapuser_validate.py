@@ -60,7 +60,7 @@ def test_create_map_uses_user():
     global AUTH_COOKIE
     http = httplib2.Http()
     response, content = http.request(
-            'http://0.0.0.0:8080/challenge/cookie_form',
+            'http://0.0.0.0:8080/challenge/tiddlywebplugins.tiddlyspace.cookie_form',
             body='user=cdent&password=cow',
             method='POST',
             headers={'Content-Type': 'application/x-www-form-urlencoded'})

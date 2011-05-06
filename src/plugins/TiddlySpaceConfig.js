@@ -156,19 +156,7 @@ var plugin = config.extensions.tiddlyspace = {
 		var tabIdentifier = match ? match[1] : tabTitle;
 		return disabledTabs.contains(tabIdentifier);
 	},
-	getCSRFToken: function() {
-		// XXX: should not use RegEx - cf.
-		// http://www.quirksmode.org/js/cookies.html
-		// https://github.com/TiddlySpace/tiddlyspace/commit/5f4adbe009ed4bda3ce39058a3fb07de1420358d
-		var regex = /^(?:.*; )?csrf_token=([^(;|$)]*)(?:;|$)/;
-		var match = regex.exec(document.cookie);
-		var csrf_token = null;
-		if (match && (match.length === 2)) {
-			csrf_token = match[1];
-		}
-
-		return csrf_token;
-	}
+	getCSRFToken: window.getCSRFToken || null // this may not have been processed yet
 };
 
 currentSpace = plugin.currentSpace.name;

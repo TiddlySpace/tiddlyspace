@@ -51,7 +51,7 @@ def test_safe_403():
 def test_safe_exists():
     global AUTH_COOKIE
     response, content = http.request(
-            'http://0.0.0.0:8080/challenge/cookie_form',
+            'http://0.0.0.0:8080/challenge/tiddlywebplugins.tiddlyspace.cookie_form',
             body='user=cdent&password=cow',
             method='POST',
             headers={'Content-Type': 'application/x-www-form-urlencoded'})

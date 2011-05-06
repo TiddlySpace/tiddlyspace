@@ -21,7 +21,7 @@ SESSION_COUNT = 1
 def get_auth(username, password):
     http = httplib2.Http()
     response, _ = http.request(
-            'http://0.0.0.0:8080/challenge/cookie_form',
+            'http://0.0.0.0:8080/challenge/tiddlywebplugins.tiddlyspace.cookie_form',
             body='user=%s&password=%s' % (username, password),
             method='POST',
             headers={'Content-Type': 'application/x-www-form-urlencoded'})

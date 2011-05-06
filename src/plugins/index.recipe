@@ -10,3 +10,4 @@ tiddler: TiddlySpaceInclusion.js
 tiddler: TiddlySpaceCloneCommand.js
 tiddler: TiddlySpaceChangePassword.js
 tiddler: ErrorHandler.js
+tiddler: TiddlySpaceCSRF.js
