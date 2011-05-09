@@ -1,7 +1,7 @@
 /***
 |''Name''|GroupByPlugin|
 |''Description''|Mimics allTags macro to provide ways of creating lists grouping tiddlers by any field|
-|''Version''|0.6.0|
+|''Version''|0.6.1|
 |''Author''|Jon Robson|
 |''Status''|beta|
 !Usage
@@ -148,7 +148,7 @@ var macro = config.macros.groupBy = {
 		var paramString = container.attr("paramString");
 		var args = paramString.parseParams("name", null, true, false, true)[0];
 		var options = { field: container.attr("fieldName"), dateFormat: container.attr("dateFormat"), exclude: args.exclude || [],
-			template: args.template ? args.template[0] : false, groupTemplate: args.groupTemplate ? args.groupTemplate[0] : false };
+			template: args.template ? args.template[0] : false, groupTemplate: args.groupTemplate ? args.groupTemplate[0] : "" };
 		var tiddlers = args.filter ? store.filterTiddlers(args.filter[0]) : store.getTiddlers("title");
 		macro._refresh(container, tiddlers, options);
 	},
