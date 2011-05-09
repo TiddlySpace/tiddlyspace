@@ -30,11 +30,8 @@
                   <dt>creator</dt><dd><a>{{tiddler.creator}}</a></dd>
                   <dt>modified</dt><dd>{{tiddler.modified}}</dd>
                   <dt>modifier</dt><dd><a>{{tiddler.modifier}}</a></dd>
-                  {%- for i in fields -%}
-                    {%- if i not in reserved_fields -%}
-                      <dt>{{i}}</dt><dd>{{fields[i]}}</dd>
-                    {%- endif -%}
-                  {%- endfor -%}
+                  <dt>tags</dt>
+                  {% for i in tags %} <dd><a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a></dd>{% endfor %}
                   {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
                   <dt>location</dt>
                   <dd>
@@ -44,8 +41,11 @@
                   </a>
                   </dd>
                   {%- endif -%}
-                  <dt>tags</dt>
-                  {% for i in tags %} <dd><a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a></dd>{% endfor %}
+                  {%- for i in fields -%}
+                    {%- if i not in reserved_fields -%}
+                      <dt>{{i}}</dt><dd>{{fields[i]}}</dd>
+                    {%- endif -%}
+                  {%- endfor -%}
               </dl>
             </div>
         </div>
