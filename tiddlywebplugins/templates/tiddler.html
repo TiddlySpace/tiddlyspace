@@ -4,30 +4,49 @@
         title="Atom {{tiddler.title|e}}" href="{{ tiddler_url }}.atom" />
 {% endblock %}
 {% block title %}
+        <h1>
         {% if space_link %}
-        <a href="{{ space_link }}">{{ tiddler.title }}</a>
+        <a href="{{ space_link }}" id='title'>{{ tiddler.title }}</a>
         {% else %}
-        {{tiddler.title}}
+        <span id="title">{{tiddler.title}}</span>
         {% endif %}
+        </h1>
+        <div>
+          revision 
+          <a class="revision" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions/{{tiddler.revision}}">
+            {{tiddler.revision}}</a>
+          in bag <a class="bag" href="/bags/{{tiddler.bag|e}}">{{tiddler.bag}}</a>
+          {% if tiddler.recipe %}and recipe <a class="recipe" href="/recipes/{{tiddler.recipe}}">{{tiddler.recipe}}</a>{% endif %}
+          in <a href="{{ list_link }}">this collection of tiddlers</a>
+        </div>
 {% endblock %}
 {% block content %}
-        <div class="section" id="links">
-        <div class="tiddlerslink"><a href="{{ list_link }}">{{
-                list_title }}</a></div>
-        </div>
-        <div class="section" id="tiddlertext">
-            <div class="tiddler"
-                title="{{tiddler.title|e}}"
-                server.bag="{{tiddler.bag|e}}"
-                {% if tiddler.recipe %}server.recipe="{{tiddler.recipe|e}}"{% endif %}
-                server.page.revision="{{tiddler.revision}}"
-                modifier="{{tiddler.modifier|e}}"
-                creator="{{tiddler.creator|e}}"
-                modified="{{tiddler.modified}}"
-                created="{{tiddler.created}}"
-                tags="{{tags}}"
-                {{fields}}>
-            {{ html }}
+        {%- set reserved_fields = ['geo.lat', 'geo.long'] -%}
+        <div id="tiddlertext">
+            <div class="tiddler">
+              <div id="text-html" class="section">{{ html }}</div>
+              <dl class="meta section">
+                  <dt>created</dt><dd>{{tiddler.created}}</dd>
+                  <dt>creator</dt><dd><a>{{tiddler.creator}}</a></dd>
+                  <dt>modified</dt><dd>{{tiddler.modified}}</dd>
+                  <dt>modifier</dt><dd><a>{{tiddler.modifier}}</a></dd>
+                  <dt>tags</dt>
+                  {% for i in tags %} <dd><a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a></dd>{% endfor %}
+                  {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
+                  <dt>location</dt>
+                  <dd>
+                  <a class="geo" href="http://www.openstreetmap.org/?lat={{tiddler.fields['geo.lat']|e}}&lon={{tiddler.fields['geo.long']|e}}&zoom=14">
+                    latitude <span class="latitude" title="{{tiddler.fields['geo.lat']|e}}">{{tiddler.fields['geo.lat']}}</span>
+                    longitude <span class="longitude" title="{{tiddler.fields['geo.long']|e}}">{{tiddler.fields['geo.long']}}</span>
+                  </a>
+                  </dd>
+                  {%- endif -%}
+                  {%- for i in fields -%}
+                    {%- if i not in reserved_fields -%}
+                      <dt>{{i}}</dt><dd>{{fields[i]}}</dd>
+                    {%- endif -%}
+                  {%- endfor -%}
+              </dl>
             </div>
         </div>
 {% endblock %}
