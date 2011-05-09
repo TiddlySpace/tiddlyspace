@@ -13,7 +13,8 @@ var getCSRFToken = function(window) {
 	return csrf_token;
 };
 
-if (config && config.extensions && config.extensions.tiddlyspace &&
+if (typeof config !== 'undefined' && config.extensions &&
+		config.extensions.tiddlyspace &&
 		config.extensions.tiddlyspace.getCSRFToken === null) {
 	config.extensions.tiddlyspace.getCSRFToken = getCSRFToken;
 } else {
