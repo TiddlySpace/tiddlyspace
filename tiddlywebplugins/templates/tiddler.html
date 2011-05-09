@@ -22,10 +22,10 @@
 {% endblock %}
 {% block content %}
         {%- set reserved_fields = ['geo.lat', 'geo.long'] -%}
-        <div class="section" id="tiddlertext">
+        <div id="tiddlertext">
             <div class="tiddler">
-              <div id='text-html'>{{ html }}</div>
-              <dl class='meta'>
+              <div id='text-html' class='section'>{{ html }}</div>
+              <dl class='meta section'>
                   <dt>created</dt><dd>{{tiddler.created}}</dd>
                   <dt>creator</dt><dd><a>{{tiddler.creator}}</a></dd>
                   <dt>modified</dt><dd>{{tiddler.modified}}</dd>
