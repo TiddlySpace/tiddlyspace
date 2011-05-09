@@ -8,15 +8,15 @@
         {% if space_link %}
         <a href="{{ space_link }}" id='title'>{{ tiddler.title }}</a>
         {% else %}
-        <span id='title'>{{tiddler.title}}</span>
+        <span id="title">{{tiddler.title}}</span>
         {% endif %}
         </h1>
         <div>
           revision 
-          <a class='revision' href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions/{{tiddler.revision}}">
+          <a class="revision" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions/{{tiddler.revision}}">
             {{tiddler.revision}}</a>
-          in bag <a class='bag' href='/bags/{{tiddler.bag|e}}'>{{tiddler.bag}}</a>
-          {% if tiddler.recipe %}and recipe <a class='recipe' href='/recipes/{{tiddler.recipe}}'>{{tiddler.recipe}}</a>{% endif %}
+          in bag <a class="bag" href="/bags/{{tiddler.bag|e}}">{{tiddler.bag}}</a>
+          {% if tiddler.recipe %}and recipe <a class="recipe" href="/recipes/{{tiddler.recipe}}">{{tiddler.recipe}}</a>{% endif %}
           in <a href="{{ list_link }}">this collection of tiddlers</a>
         </div>
 {% endblock %}
@@ -24,8 +24,8 @@
         {%- set reserved_fields = ['geo.lat', 'geo.long'] -%}
         <div id="tiddlertext">
             <div class="tiddler">
-              <div id='text-html' class='section'>{{ html }}</div>
-              <dl class='meta section'>
+              <div id="text-html" class="section">{{ html }}</div>
+              <dl class="meta section">
                   <dt>created</dt><dd>{{tiddler.created}}</dd>
                   <dt>creator</dt><dd><a>{{tiddler.creator}}</a></dd>
                   <dt>modified</dt><dd>{{tiddler.modified}}</dd>
@@ -38,9 +38,9 @@
                   {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
                   <dt>location</dt>
                   <dd>
-                  <a class='geo' href="http://www.openstreetmap.org/?lat={{tiddler.fields['geo.lat']|e}}&lon={{tiddler.fields['geo.long']|e}}&zoom=14">
-                    latitude <span class='latitude' title="{{tiddler.fields['geo.lat']|e}}">{{tiddler.fields['geo.lat']}}</span>
-                    longitude <span class='longitude' title="{{tiddler.fields['geo.long']|e}}">{{tiddler.fields['geo.long']}}</span>
+                  <a class="geo" href="http://www.openstreetmap.org/?lat={{tiddler.fields['geo.lat']|e}}&lon={{tiddler.fields['geo.long']|e}}&zoom=14">
+                    latitude <span class="latitude" title="{{tiddler.fields['geo.lat']|e}}">{{tiddler.fields['geo.lat']}}</span>
+                    longitude <span class="longitude" title="{{tiddler.fields['geo.long']|e}}">{{tiddler.fields['geo.long']}}</span>
                   </a>
                   </dd>
                   {%- endif -%}
