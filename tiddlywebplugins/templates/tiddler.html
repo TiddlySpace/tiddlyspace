@@ -30,8 +30,10 @@
                   <dt>creator</dt><dd><a>{{tiddler.creator}}</a></dd>
                   <dt>modified</dt><dd>{{tiddler.modified}}</dd>
                   <dt>modifier</dt><dd><a>{{tiddler.modifier}}</a></dd>
+                  {%- if tiddler.tags|length > 0 -%}
                   <dt>tags</dt>
                   {% for i in tags %} <dd><a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a></dd>{% endfor %}
+                  {%- endif -%}
                   {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
                   <dt>location</dt>
                   <dd>
