@@ -11,8 +11,8 @@
         <span id="title">{{tiddler.title}}</span>
         {% endif %}
         </h1>
-        <div>
-          revision 
+        <div id='links'>
+          <a class="revisions" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions">revision</a> 
           <a class="revision" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions/{{tiddler.revision}}">
             {{tiddler.revision}}</a>
           in bag <a class="bag" href="/bags/{{tiddler.bag|e}}">{{tiddler.bag}}</a>
@@ -30,8 +30,10 @@
                   <dt>creator</dt><dd><a>{{tiddler.creator}}</a></dd>
                   <dt>modified</dt><dd>{{tiddler.modified}}</dd>
                   <dt>modifier</dt><dd><a>{{tiddler.modifier}}</a></dd>
+                  {%- if tiddler.tags|length > 0 -%}
                   <dt>tags</dt>
                   {% for i in tags %} <dd><a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a></dd>{% endfor %}
+                  {%- endif -%}
                   {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
                   <dt>location</dt>
                   <dd>
@@ -43,7 +45,7 @@
                   {%- endif -%}
                   {%- for i in fields -%}
                     {%- if i not in reserved_fields -%}
-                      <dt>{{i}}</dt><dd>{{fields[i]}}</dd>
+                      {%- if fields[i] -%}<dt>{{i}}</dt><dd>{{fields[i]}}</dd>{%- endif -%}
                     {%- endif -%}
                   {%- endfor -%}
               </dl>
