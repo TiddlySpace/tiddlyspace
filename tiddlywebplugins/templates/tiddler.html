@@ -12,7 +12,7 @@
         {% endif %}
         </h1>
         <div id='links'>
-          revision 
+          <a class="revisions" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions">revision</a> 
           <a class="revision" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions/{{tiddler.revision}}">
             {{tiddler.revision}}</a>
           in bag <a class="bag" href="/bags/{{tiddler.bag|e}}">{{tiddler.bag}}</a>
