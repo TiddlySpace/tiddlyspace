@@ -45,7 +45,7 @@
                   {%- endif -%}
                   {%- for i in fields -%}
                     {%- if i not in reserved_fields -%}
-                      <dt>{{i}}</dt><dd>{{fields[i]}}</dd>
+                      {%- if fields[i] -%}<dt>{{i}}</dt><dd>{{fields[i]}}</dd>{%- endif -%}
                     {%- endif -%}
                   {%- endfor -%}
               </dl>
