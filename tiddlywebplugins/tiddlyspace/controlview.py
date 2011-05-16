@@ -70,8 +70,6 @@ class ControlView(object):
         """
         http_host, host_url = determine_host(environ)
 
-        request_method = environ['REQUEST_METHOD']
-
         disable_ControlView = environ.get('HTTP_X_CONTROLVIEW') == 'false'
         if http_host != host_url and not disable_ControlView:
             space_name = determine_space(environ, http_host)
