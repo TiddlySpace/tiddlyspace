@@ -10,7 +10,7 @@ from tiddlyweb.model.policy import PermissionsError
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializations.html import Serialization as HTMLSerialization
 from tiddlyweb.wikitext import render_wikitext
-from tiddlyweb.web.util import encode_name, tiddler_url
+from tiddlyweb.web.util import encode_name, tiddler_url, get_route_value
 
 from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
@@ -65,9 +65,8 @@ class Serialization(HTMLSerialization):
         user = self.environ['tiddlyweb.usersign']
         if routing_args and not tiddlers.is_search:
             if 'recipe_name' in routing_args:
-                name = routing_args['recipe_name']
-                container_name = 'Recipe %s' % urllib.unquote(
-                        name).decode('utf-8')
+                name = get_route_value(self.environ, 'recipe_name')
+                container_name = 'Recipe %s' % name
                 container_url = '/recipes/%s' % name
                 try:
                     store.get(Recipe(name)).policy.allows(user, 'read')
@@ -75,9 +74,8 @@ class Serialization(HTMLSerialization):
                 except PermissionsError:
                     pass
             elif 'bag_name' in routing_args:
-                name = routing_args['bag_name']
-                container_name = 'Bag %s' % urllib.unquote(
-                        name).decode('utf-8')
+                name = get_route_value(self.environ, 'bag_name')
+                container_name = 'Bag %s' % name
                 container_url = '/bags/%s' % name
                 try:
                     store.get(Bag(name)).policy.allows(user, 'manage')
@@ -95,7 +93,10 @@ class Serialization(HTMLSerialization):
         if tiddlers.is_search:
             tiddlers_url = '/search'
 
-        query_string = self.environ.get('QUERY_STRING', '')
+        try:
+            query_string = self.environ.get('QUERY_STRING', '').decode('utf-8')
+        except UnicodeDecodeError:
+            query_string = u'invalid+query+string+encoding'
 
         links = self.environ.get('tiddlyweb.config',
                 {}).get('extension_types', {}).keys()
