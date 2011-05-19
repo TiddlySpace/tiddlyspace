@@ -26,8 +26,13 @@
             {%- endfor -%}
         {% else %}
             {%- for tiddler in tiddlers -%}
+            {%- if tiddler.fields._canonical_uri -%}
+            <li><a href="{{ tiddler.fields._canonical_uri }}">{{
+                tiddler.title }}</a></li>
+            {%- else -%}
             <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
                 tiddler.title|uri }}">{{ tiddler.title }}</a></li>
+            {%- endif -%}
             {%- endfor -%}
         {% endif %}
         </ul>
