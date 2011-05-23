@@ -52,8 +52,8 @@ var macro = config.macros.setPrivacy = {
 		}
 	},
 	updateEditFields: function(tiddlerEl, bag) {
-		var saveBagField = $("[edit=server.bag]", tiddlerEl);
-		var saveWorkspaceField = $("[edit=server.workspace]", tiddlerEl);
+		var saveBagField = $('[edit="server.bag"]', tiddlerEl);
+		var saveWorkspaceField = $('[edit="server.workspace"]', tiddlerEl);
 		var input = $("<input />").attr("type", "hidden");
 		if(saveBagField.length === 0) {
 			input.clone().attr("edit", "server.bag").val(bag).appendTo(tiddlerEl);
