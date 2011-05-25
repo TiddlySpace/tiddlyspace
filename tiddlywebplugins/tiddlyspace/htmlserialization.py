@@ -101,7 +101,7 @@ class Serialization(HTMLSerialization):
         return send_template(self.environ, 'tiddlers.html', {
             'title': title,
             'revisions': revisions,
-            'tiddlers_url': tiddlers_url,
+            'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
             'query_string': query_string,
             'container_name': container_name,
             'container_url': container_url,
