@@ -3,7 +3,7 @@
         <div class="section" id="bag">
         <p><a href="/bags/{{ bag.name|uri }}/tiddlers">Tiddlers in
             this bag</a></p>
-        <p>{{ bag.desc }}</p>
+        <p>{{ bag.desc|e }}</p>
         </div>
         <div class="section" id="permissions">
         <p>You have the following permissions on this bag:</p>
