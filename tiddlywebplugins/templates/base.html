@@ -9,7 +9,7 @@
     <body>
         <div id="header">
         {% block title %}
-        <h1>{{ title }}</h1>
+        <h1>{{ title|e }}</h1>
         {% endblock %}
         </div>
         <div id="article">
