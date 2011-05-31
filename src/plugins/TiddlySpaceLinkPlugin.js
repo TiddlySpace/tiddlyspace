@@ -4,7 +4,7 @@
 |''Author:''|PaulDowney (psd (at) osmosoft (dot) com) |
 |''Source:''|http://whatfettle.com/2008/07/TiddlySpaceLinkPlugin/ |
 |''CodeRepository:''|http://svn.tiddlywiki.org/Trunk/contributors/PaulDowney/plugins/TiddlySpaceLinkPlugin/ |
-|''Version:''|1.3|
+|''Version:''|1.3.1|
 |''License:''|[[BSD License|http://www.opensource.org/licenses/bsd-license.php]] |
 |''Comments:''|Please make comments at http://groups.google.co.uk/group/TiddlyWikiDev |
 |''~CoreVersion:''|2.4|
@@ -79,7 +79,6 @@ function createSpaceLink(place, spaceName, title, alt, isBag) {
 }
 
 (function ($) {
-	version.extensions.TiddlySpaceLinkPlugin = {installed: true};
 
 	config.textPrimitives.spaceName = "[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]";
 	config.textPrimitives.spaceNameStrict = "[a-z][a-z0-9-]*";
