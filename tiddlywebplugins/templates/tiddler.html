@@ -6,17 +6,17 @@
 {% block title %}
         <h1>
         {% if space_link %}
-        <a href="{{ space_link }}" id='title'>{{ tiddler.title }}</a>
+        <a href="{{ space_link }}" id='title'>{{ tiddler.title|e }}</a>
         {% else %}
-        <span id="title">{{tiddler.title}}</span>
+        <span id="title">{{tiddler.title|e}}</span>
         {% endif %}
         </h1>
         <div id='links'>
           <a class="revisions" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions">revision</a> 
-          <a class="revision" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions/{{tiddler.revision}}">
-            {{tiddler.revision}}</a>
-          in bag <a class="bag" href="/bags/{{tiddler.bag|e}}">{{tiddler.bag}}</a>
-          {% if tiddler.recipe %}and recipe <a class="recipe" href="/recipes/{{tiddler.recipe}}">{{tiddler.recipe}}</a>{% endif %}
+          <a class="revision" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions/{{tiddler.revision|e}}">
+            {{tiddler.revision|e}}</a>
+          in bag <a class="bag" href="/bags/{{tiddler.bag|e}}">{{tiddler.bag|e}}</a>
+          {% if tiddler.recipe %}and recipe <a class="recipe" href="/recipes/{{tiddler.recipe}}">{{tiddler.recipe|e}}</a>{% endif %}
           in <a href="{{ list_link }}">this collection of tiddlers</a>
         </div>
 {% endblock %}
@@ -26,26 +26,26 @@
             <div class="tiddler">
               <div id="text-html" class="section">{{ html }}</div>
               <dl class="meta section">
-                  <dt>created</dt><dd>{{tiddler.created}}</dd>
-                  <dt>creator</dt><dd><a>{{tiddler.creator}}</a></dd>
-                  <dt>modified</dt><dd>{{tiddler.modified}}</dd>
-                  <dt>modifier</dt><dd><a>{{tiddler.modifier}}</a></dd>
+                  <dt>created</dt><dd>{{tiddler.created|e}}</dd>
+                  <dt>creator</dt><dd><a>{{tiddler.creator|e}}</a></dd>
+                  <dt>modified</dt><dd>{{tiddler.modified|e}}</dd>
+                  <dt>modifier</dt><dd><a>{{tiddler.modifier|e}}</a></dd>
                   {%- if tiddler.tags|length > 0 -%}
                   <dt>tags</dt>
-                  {% for i in tags %} <dd><a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i }}</a></dd>{% endfor %}
+                  {% for i in tags %} <dd><a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i|e }}</a></dd>{% endfor %}
                   {%- endif -%}
                   {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
                   <dt>location</dt>
                   <dd>
                   <a class="geo" href="http://www.openstreetmap.org/?lat={{tiddler.fields['geo.lat']|e}}&lon={{tiddler.fields['geo.long']|e}}&zoom=14">
-                    latitude <span class="latitude" title="{{tiddler.fields['geo.lat']|e}}">{{tiddler.fields['geo.lat']}}</span>
-                    longitude <span class="longitude" title="{{tiddler.fields['geo.long']|e}}">{{tiddler.fields['geo.long']}}</span>
+                    latitude <span class="latitude" title="{{tiddler.fields['geo.lat']|e}}">{{tiddler.fields['geo.lat']|e}}</span>
+                    longitude <span class="longitude" title="{{tiddler.fields['geo.long']|e}}">{{tiddler.fields['geo.long']|e}}</span>
                   </a>
                   </dd>
                   {%- endif -%}
                   {%- for i in fields -%}
                     {%- if i not in reserved_fields -%}
-                      {%- if fields[i] -%}<dt>{{i}}</dt><dd>{{fields[i]}}</dd>{%- endif -%}
+                      {%- if fields[i] -%}<dt>{{i}}</dt><dd>{{fields[i]|e}}</dd>{%- endif -%}
                     {%- endif -%}
                   {%- endfor -%}
               </dl>
