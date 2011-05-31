@@ -10,6 +10,7 @@ test:
 	py.test -x test
 
 tiddlywiki:
+	mkdir src/externals || true
 	mkdir tiddlywebplugins/tiddlyspace/resources || true
 	wget http://tiddlywiki.com/beta/empty.html \
 		-O tiddlywebplugins/tiddlyspace/resources/beta.html
