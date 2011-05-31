@@ -2,8 +2,7 @@
 |''Name:''|TiddlySpaceLinkPlugin|
 |''Description:''|Formatter to reference other spaces from wikitext |
 |''Author:''|PaulDowney (psd (at) osmosoft (dot) com) |
-|''Source:''|http://whatfettle.com/2008/07/TiddlySpaceLinkPlugin/ |
-|''CodeRepository:''|http://svn.tiddlywiki.org/Trunk/contributors/PaulDowney/plugins/TiddlySpaceLinkPlugin/ |
+|''Source:''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceLinkPlugin.js|
 |''Version:''|1.3.1|
 |''License:''|[[BSD License|http://www.opensource.org/licenses/bsd-license.php]] |
 |''Comments:''|Please make comments at http://groups.google.co.uk/group/TiddlyWikiDev |
