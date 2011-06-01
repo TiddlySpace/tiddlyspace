@@ -20,12 +20,12 @@ Development Instance
 
 * install dependencies
 ** components listed in setup.py's install_requires
-** httplib2, yaml (required for testing)
+** httplib2, tiddlywebplugins.yaml (required for testing)
 
 * Set up mysql on your machine. See MYSQL.
 
 * extend hosts file (e.g. /etc/hosts) to include one or more subdomains, e.g.:
-     127.0.1.1 tiddlyspace.org foo.tiddlyspace.org bar.tiddlyspace.org
+     127.0.0.1 tiddlyspace.org foo.tiddlyspace.org bar.tiddlyspace.org
 
 * create development instance:
      $ make dev
