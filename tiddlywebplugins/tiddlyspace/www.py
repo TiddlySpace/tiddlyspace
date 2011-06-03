@@ -25,9 +25,10 @@ def establish_www(config):
     config['selector'].add('/_safe', GET=safe_mode, POST=safe_mode)
     add_spaces_routes(config['selector'])
     add_profile_routes(config['selector'])
-    config['selector'].add('/{tiddler_name:segment}', GET=friendly_uri)
     config['selector'].add('/users/{username}/identities',
             GET=get_identities)
+    config['selector'].add('/{tiddler_name:segment}[/{tiddler_extra:any}]',
+            GET=friendly_uri)
 
     if ControlView not in config['server_request_filters']:
         config['server_request_filters'].insert(
