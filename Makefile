@@ -1,6 +1,6 @@
 .PHONY: test remotes jslib qunit dist release deploy pypi dev clean purge
 
-wrap_jslib = curl -s $(2) | \
+wrap_jslib = curl -L -s $(2) | \
 	{ \
 		echo "/***"; echo $(2); echo "***/"; \
 		echo "//{{{"; cat -; echo "//}}}"; \
@@ -38,13 +38,13 @@ jslib: qunit
 qunit:
 	mkdir -p src/test/qunit
 	mkdir -p src/test/lib
-	curl -o src/test/qunit/qunit.js \
+	curl -Lo src/test/qunit/qunit.js \
 		https://github.com/jquery/qunit/raw/master/qunit/qunit.js
-	curl -o src/test/qunit/qunit.css \
+	curl -Lo src/test/qunit/qunit.css \
 		https://github.com/jquery/qunit/raw/master/qunit/qunit.css
-	curl -o src/test/lib/jquery.js \
+	curl -Lo src/test/lib/jquery.js \
 		http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js
-	curl -o src/test/lib/jquery-json.js \
+	curl -Lo src/test/lib/jquery-json.js \
 		http://jquery-json.googlecode.com/files/jquery.json-2.2.js
 
 dist: clean remotes test
