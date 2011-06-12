@@ -38,6 +38,8 @@ def determine_space(environ, http_host):
     """
     Calculate the space associated with a subdomain.
     """
+    # XXX: This is broken for spaces which are not a subdomain
+    # of the main tiddlyspace domain.
     server_host = environ['tiddlyweb.config']['server_host']['host']
     if '.%s' % server_host in http_host:
         return http_host.rsplit('.', server_host.count('.') + 1)[0]
