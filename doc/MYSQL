@@ -21,6 +21,11 @@ This is required for the fulltext index to work correctly.
 
 my.cnf is often in /etc/mysql/my.cnf or /etc/my.cnf
 
+Ensure MySQL's default storage engine is set to MyISAM. You may
+need to add the following global to the [mysqld] section of my.cnf:
+
+   default_storage_engine = MYISAM
+
 You will need to create two databases:
 
 * 'tiddlyspace' for the dev instance
