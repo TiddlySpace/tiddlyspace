@@ -24,6 +24,8 @@ copyright holders; it's more about protecting groups and individuals
 from defamation and fraud.
 """
 
+import urllib
+
 from tiddlyweb.control import recipe_template
 from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.recipe import Recipe
@@ -107,14 +109,17 @@ class ControlView(object):
                 filter_parts = bags
                 filter_string += ','.join(filter_parts)
             else:
-                entity_name = req_uri.split('/')[2]
+                entity_name = urllib.unquote(req_uri.split('/')[2]
+                        ).decode('utf-8')
                 if '/recipes/' in req_uri:
                     valid_recipes = space.list_recipes()
                     if entity_name not in valid_recipes:
-                        raise HTTP404('recipe %s not found' % entity_name)
+                        raise HTTP404('recipe %s not found due to ControlView'
+                                % entity_name)
                 else:
                     if entity_name not in bags:
-                        raise HTTP404('bag %s not found' % entity_name)
+                        raise HTTP404('bag %s not found due to ControlView'
+                                % entity_name)
 
             if filter_string:
                 filters, _ = parse_for_filters(filter_string)

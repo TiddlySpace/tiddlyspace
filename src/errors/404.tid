@@ -19,6 +19,10 @@ type: text/html
 	<p>There is nothing at this address. <span class='claim-space'></span></p>
 	<div class='spaceSuggestions'></div>
 	<p>This error page was brought to you by <a href="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/">tiddlyspace</a>.</p>
+        <p>The original error message was:</p>
+<pre id="message">
+$message
+</pre>
 </div>
 <script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/_errors/tiddlers/errorHandling"></script>
 <script type="text/javascript">
