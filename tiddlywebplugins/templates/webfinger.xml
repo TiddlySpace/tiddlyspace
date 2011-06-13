@@ -11,4 +11,7 @@
     <Link rel="http://schemas.google.com/g/2010#updates-from"
         href="{{ server_host }}/profiles/{{ username }}.atom"
         type="application/atom+xml"/>
+    <Link rel="http://microformats.org/profile/hcard"
+        href="{{ server_host }}/profiles/{{ username }}"
+        type="text/html" />
 </XRD>

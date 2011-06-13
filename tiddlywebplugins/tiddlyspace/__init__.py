@@ -22,7 +22,7 @@ from tiddlywebplugins.tiddlyspace.instance import store_contents
 from tiddlywebplugins.tiddlyspace.www import establish_www
 
 
-__version__ = '1.0.11'
+__version__ = '1.0.15'
 
 
 def init(config):

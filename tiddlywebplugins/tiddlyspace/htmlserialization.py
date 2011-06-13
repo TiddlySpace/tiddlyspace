@@ -54,12 +54,13 @@ class Serialization(HTMLSerialization):
         to the container if it can be viewed by the current
         user. List the available serializations for the tiddlers.
         """
+        tiddlers_url = (self.environ.get('SCRIPT_NAME', '')
+                + self.environ.get('PATH_INFO', ''))
         title = tiddlers.title
         revisions = tiddlers.is_revisions
         routing_args = self.environ.get('wsgiorg.routing_args', ([], {}))[1]
-        tiddlers_url = ''
-        container_url = ''
         container_name = ''
+        container_url = ''
         container_policy = False
         store = self.environ['tiddlyweb.store']
         user = self.environ['tiddlyweb.usersign']
@@ -67,31 +68,24 @@ class Serialization(HTMLSerialization):
             if 'recipe_name' in routing_args:
                 name = get_route_value(self.environ, 'recipe_name')
                 container_name = 'Recipe %s' % name
-                container_url = '/recipes/%s' % name
                 try:
                     store.get(Recipe(name)).policy.allows(user, 'read')
+                    container_url = '/recipes/%s' % name
                     container_policy = True
                 except PermissionsError:
                     pass
             elif 'bag_name' in routing_args:
                 name = get_route_value(self.environ, 'bag_name')
-                container_name = 'Bag %s' % name
                 container_url = '/bags/%s' % name
+                container_name = 'Bag %s' % name
                 try:
                     store.get(Bag(name)).policy.allows(user, 'manage')
                     container_policy = True
                 except PermissionsError:
                     pass
 
-            tiddlers_url = container_url + '/tiddlers'
-
             if revisions:
-                container_url = ''
-                tiddlers_url += '/revisions'
                 container_policy = True
-
-        if tiddlers.is_search:
-            tiddlers_url = '/search'
 
         try:
             query_string = self.environ.get('QUERY_STRING', '').decode('utf-8')
@@ -107,7 +101,7 @@ class Serialization(HTMLSerialization):
         return send_template(self.environ, 'tiddlers.html', {
             'title': title,
             'revisions': revisions,
-            'tiddlers_url': tiddlers_url,
+            'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
             'query_string': query_string,
             'container_name': container_name,
             'container_url': container_url,
@@ -157,6 +151,7 @@ class Serialization(HTMLSerialization):
         space_link = self._space_link(tiddler)
         html = render_wikitext(tiddler, self.environ)
         return send_template(self.environ, 'tiddler.html', {
+            'title': '%s' % tiddler.title,
             'tags': tiddler.tags,
             'fields': tiddler.fields,
             'html': html,

@@ -3,7 +3,7 @@
         <div class="section" id="bags">
         <ul class="listing">
         {%- for bag in bags -%}
-        <li><a href="/bags/{{ bag.name|uri }}/tiddlers">{{ bag.name }}</a></li>
+        <li><a href="/bags/{{ bag.name|uri }}/tiddlers">{{ bag.name|e }}</a></li>
         {%- endfor -%}
         </ul>
         </div>

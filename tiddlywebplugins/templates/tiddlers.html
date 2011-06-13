@@ -21,13 +21,18 @@
             {%- for tiddler in tiddlers -%}
             <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
                 tiddler.title|uri }}/revisions/{{ tiddler.revision
-                }}">{{ tiddler.title }}:{{ tiddler.revision
+                }}">{{ tiddler.title|e }}:{{ tiddler.revision
                 }}</a></li>
             {%- endfor -%}
         {% else %}
             {%- for tiddler in tiddlers -%}
+            {%- if tiddler.fields._canonical_uri -%}
+            <li><a href="{{ tiddler.fields._canonical_uri }}">{{
+                tiddler.title|e }}</a></li>
+            {%- else -%}
             <li><a href="/bags/{{ tiddler.bag|uri }}/tiddlers/{{
-                tiddler.title|uri }}">{{ tiddler.title }}</a></li>
+                tiddler.title|uri }}">{{ tiddler.title|e }}</a></li>
+            {%- endif -%}
             {%- endfor -%}
         {% endif %}
         </ul>
