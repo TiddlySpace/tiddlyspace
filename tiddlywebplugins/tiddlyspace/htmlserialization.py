@@ -142,12 +142,19 @@ class Serialization(HTMLSerialization):
         subsystem. Links to the tiddler in the wiki are
         provided.
         """
+        user = self.environ['tiddlyweb.usersign']
+        store = self.environ['tiddlyweb.store']
         if tiddler.recipe:
             list_link = '/recipes/%s/tiddlers' % encode_name(tiddler.recipe)
             list_title = 'Tiddlers in Recipe %s' % tiddler.recipe
         else:
             list_link = '/bags/%s/tiddlers' % encode_name(tiddler.bag)
             list_title = 'Tiddlers in Bag %s' % tiddler.bag
+        try:
+            store.get(Bag(tiddler.bag)).policy.allows(user, 'manage')
+            container_policy = True
+        except PermissionsError:
+            container_policy = False
         space_link = self._space_link(tiddler)
         html = render_wikitext(tiddler, self.environ)
         return send_template(self.environ, 'tiddler.html', {
@@ -159,6 +166,7 @@ class Serialization(HTMLSerialization):
             'list_title': list_title,
             'space_link': space_link,
             'tiddler': tiddler,
+            'container_policy': container_policy,
             'tiddler_url': tiddler_url(self.environ, tiddler)})
 
     def _space_link(self, tiddler):

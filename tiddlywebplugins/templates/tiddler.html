@@ -12,11 +12,16 @@
         {% endif %}
         </h1>
         <div id='links'>
-          <a class="revisions" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions">revision</a> 
-          <a class="revision" href="/bags/{{tiddler.bag|e}}/tiddlers/{{tiddler.title|e}}/revisions/{{tiddler.revision|e}}">
+          <a class="revisions"
+              href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions">revision</a> 
+          <a class="revision"
+              href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions/{{tiddler.revision}}">
             {{tiddler.revision|e}}</a>
-          in bag <a class="bag" href="/bags/{{tiddler.bag|e}}">{{tiddler.bag|e}}</a>
-          {% if tiddler.recipe %}and recipe <a class="recipe" href="/recipes/{{tiddler.recipe}}">{{tiddler.recipe|e}}</a>{% endif %}
+        {% if container_policy %}
+          in bag <a class="bag" href="/bags/{{tiddler.bag|uri}}">{{tiddler.bag|e}}</a>
+          {% if tiddler.recipe %} and recipe <a class="recipe"
+              href="/recipes/{{tiddler.recipe|uri}}">{{tiddler.recipe|e}}</a>{% endif %}
+          {% endif %}
           in <a href="{{ list_link }}">this collection of tiddlers</a>
         </div>
 {% endblock %}
