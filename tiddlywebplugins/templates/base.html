@@ -10,17 +10,19 @@
         {% endblock %}
     </head>
     <body>
-        <div id="header">
-        {% block title %}
-        <h1>{{ title|e }}</h1>
-        {% endblock %}
-        </div>
-        <div id="article">
-        {% block content %}
-        {% endblock %}
-        </div>
-        <div id="footer">
-        Brought to you by <a href="{{ server_host }}">TiddlySpace</a>.
+        <div id="container">
+          <div id="header">
+          {% block title %}
+          <h1>{{ title|e }}</h1>
+          {% endblock %}
+          </div>
+          <div id="article">
+          {% block content %}
+          {% endblock %}
+          </div>
+          <div id="footer">
+          Brought to you by <a href="{{ server_host }}">TiddlySpace</a>.
+          </div>
         </div>
     </body>
 </html>
