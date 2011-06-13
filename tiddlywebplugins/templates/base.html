@@ -3,24 +3,26 @@
     <head>
         <title>{{ title }}</title>
         <link rel="stylesheet" href="{{ css }}" type="text/css" />
-        {% if js %}
-        <script type="text/javascript" src="{{ js }}"/></script>
-        {% endif %}
         {% block links %}
         {% endblock %}
     </head>
     <body>
-        <div id="header">
-        {% block title %}
-        <h1>{{ title|e }}</h1>
-        {% endblock %}
+        <div id="container">
+          <div id="header">
+          {% block title %}
+          <h1>{{ title|e }}</h1>
+          {% endblock %}
+          </div>
+          <div id="article">
+          {% block content %}
+          {% endblock %}
+          </div>
+          <div id="footer">
+          Brought to you by <a href="{{ server_host }}">TiddlySpace</a>.
+          </div>
         </div>
-        <div id="article">
-        {% block content %}
-        {% endblock %}
-        </div>
-        <div id="footer">
-        Brought to you by <a href="{{ server_host }}">TiddlySpace</a>.
-        </div>
+        {% if js %}
+        <script type="text/javascript" src="{{ js }}"/></script>
+        {% endif %}
     </body>
 </html>
