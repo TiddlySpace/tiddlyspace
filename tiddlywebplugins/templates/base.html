@@ -2,7 +2,9 @@
 <html>
     <head>
         <title>{{ title }}</title>
-        <link rel="stylesheet" href="{{ css }}" type="text/css" />
+        {%- for link in css -%}
+        <link rel="stylesheet" href="{{ link }}" type="text/css" />
+        {%- endfor -%}
         {% block links %}
         {% endblock %}
     </head>
@@ -21,8 +23,8 @@
           Brought to you by <a href="{{ server_host }}">TiddlySpace</a>.
           </div>
         </div>
-        {% if js %}
-        <script type="text/javascript" src="{{ js }}"/></script>
-        {% endif %}
+        {%- for link in js -%}
+        <script type="text/javascript" src="{{ link }}"></script>
+        {%- endfor -%}
     </body>
 </html>

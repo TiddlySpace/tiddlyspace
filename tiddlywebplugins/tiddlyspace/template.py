@@ -24,8 +24,8 @@ def send_template(environ, template_name, template_data=None):
     store = environ['tiddlyweb.store']
 
     linked_resources = {
-            'HtmlCss': '/bags/common/tiddlers/profile.css',
-            'HtmlJavascript': None}
+            'HtmlCss': ['/bags/common/tiddlers/profile.css'],
+            'HtmlJavascript': []}
 
     # Load CSS and JavaScript overrides.
     current_space = determine_space(environ, determine_host(environ)[0])
@@ -33,7 +33,7 @@ def send_template(environ, template_name, template_data=None):
         recipe_name = determine_space_recipe(environ, current_space)
         try:
             recipe = store.get(Recipe(recipe_name))
-            for title in ['HtmlCss', 'HtmlJavascript']:
+            for title in linked_resources:
                 try:
                     tiddler = Tiddler(title)
                     bag = control.determine_bag_from_recipe(recipe,
@@ -41,9 +41,13 @@ def send_template(environ, template_name, template_data=None):
                     tiddler.bag = bag.name
                     try:
                         tiddler = store.get(tiddler)
-                        url = '/bags/%s/tiddlers/%s' % (encode_name(
-                            tiddler.bag), title)
-                        linked_resources[title] = url
+                        if 'Javascript' in title:
+                            urls = tiddler.text.strip().rstrip().split('\n')
+                            linked_resources[title] = urls
+                        else:
+                            url = '/bags/%s/tiddlers/%s' % (encode_name(
+                                tiddler.bag), title)
+                            linked_resources[title] = [url]
                     except StoreError:
                         continue
                 except StoreError:
