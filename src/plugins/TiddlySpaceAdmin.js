@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceAdmin|
-|''Version''|0.5.8|
+|''Version''|0.5.9|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/|
 |''Requires''|TiddlySpaceConfig TiddlySpaceFormsPlugin|
@@ -170,17 +170,18 @@ var admin = config.macros.TiddlySpaceAdmin = {
 	},
 	elements: {
 		openid: function() {
-			return { name: "openid" };
+			return { name: "openid", placeholder: "openid" };
 		},
 		password: function(repeated) {
 			var name = typeof(repeated) === "string" ? repeated : false;
 			if(!name) {
 				name = repeated ? "password_confirm" : "password";
 			}
-			return { type: "password", name: name };
+			var placeholder = repeated ? "password (again)" : "password";
+			return { type: "password", name: name, placeholder: placeholder };
 		},
 		username: function() {
-			return { name: "username" };
+			return { name: "username", placeholder: "username" };
 		},
 		redirect: function() {
 			return { type: "hidden", name: "tiddlyweb_redirect", value: tweb.serverPrefix || "/" };
