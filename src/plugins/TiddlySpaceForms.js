@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFormsPlugin|
-|''Version''|0.2.6|
+|''Version''|0.2.7|
 |''Requires''|TiddlySpaceConfig|
 !Code
 ***/
@@ -93,7 +93,9 @@ var ext = config.extensions.formMaker = {
 					name = "input" + inputs;
 					inputs += 1;
 				}
+				var placeholder = el.placeholder ? el.placeholder : "";
 				var input = $('<%0 %1/>'.format(el.type, el._typeAttr)).addClass("form-" + el.type).
+					attr("placeholder", placeholder).
 					attr("name", name).appendTo(container)[0];
 				if(el.type == "select") {
 					$(el.values).each(function(i, def) {
