@@ -125,7 +125,7 @@ var ext = config.extensions.formMaker = {
 			handler(ev, form);
 		};
 		$(form).submit(submitHandler);
-		$("<input />").attr("type", "submit").val(ext.localise("submit", locale)).click(submitHandler).appendTo(inputArea);
+		$("<input />").attr("type", "submit").addClass("button").val(ext.localise("submit", locale)).click(submitHandler).appendTo(inputArea);
 		return form;
 	}
 };
