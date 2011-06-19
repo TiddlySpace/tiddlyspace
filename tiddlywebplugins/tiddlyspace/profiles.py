@@ -97,7 +97,7 @@ def html_profile(environ, start_response):
         ('Content-Type', 'text/html; charset=UTF-8')])
 
     return send_template(environ, 'tsprofile.html', {
-        'css': '/bags/common/tiddlers/profile.css',
+        'css': ['/bags/common/tiddlers/profile.css'],
         'username': username,
         'activity_feed': activity_feed,
         'avatar_path': avatar_path,
