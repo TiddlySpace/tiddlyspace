@@ -2,7 +2,7 @@
 Set up the routes and WSGI Middleware used by TiddlySpace.
 """
 
-from tiddlyweb.web.extractor import UserExtract
+from tiddlyweb.web.negotiate import Negotiate
 
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 from tiddlywebplugins.utils import replace_handler
@@ -33,7 +33,7 @@ def establish_www(config):
     if ControlView not in config['server_request_filters']:
         config['server_request_filters'].insert(
                 config['server_request_filters'].
-                index(UserExtract) + 1, ControlView)
+                index(Negotiate) + 1, ControlView)
 
     if DropPrivs not in config['server_request_filters']:
         config['server_request_filters'].insert(

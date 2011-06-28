@@ -81,14 +81,17 @@ def make_fake_space(store, name):
     private_recipe = Recipe('%s_private' % name)
     public_bag = Bag('%s_public' % name)
     private_bag = Bag('%s_private' % name)
+    archive_bag = Bag('%s_archive' % name)
     set_policy(public_recipe.policy)
     set_policy(private_recipe.policy, private=True)
     set_policy(public_bag.policy)
     set_policy(private_bag.policy, private=True)
+    set_policy(archive_bag.policy, private=True)
     public_recipe.set_recipe([('system', ''), ('tiddlyspace', ''), ('%s_public' % name, '')])
     private_recipe.set_recipe([('system', ''), ('tiddlyspace', ''), ('%s_public' % name, ''),
         ('%s_private' % name, '')])
-    for entity in [public_recipe, private_recipe, public_bag, private_bag]:
+    for entity in [public_recipe, private_recipe, public_bag,
+            private_bag, archive_bag]:
         store.put(entity)
 
 

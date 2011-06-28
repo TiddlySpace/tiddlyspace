@@ -28,9 +28,13 @@ import urllib
 
 from tiddlyweb.control import recipe_template
 from tiddlyweb.filters import parse_for_filters
+from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
+from tiddlyweb.serializer import Serializer
 from tiddlyweb.store import NoRecipeError
 from tiddlyweb.web.http import HTTP404
+from tiddlyweb.web.listentities import list_entities
+from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.web import (determine_host,
@@ -57,12 +61,15 @@ class ControlView(object):
         if (req_uri.startswith('/bags')
                 or req_uri.startswith('/search')
                 or req_uri.startswith('/recipes')):
-            self._handle_core_request(environ, req_uri)
+            response = self._handle_core_request(environ, req_uri,
+                    start_response)
+            if response:
+                return response
 
         return self.application(environ, start_response)
 
     # XXX too long!
-    def _handle_core_request(self, environ, req_uri):
+    def _handle_core_request(self, environ, req_uri, start_response):
         """
         Override a core request, adding filters or sending 404s where
         necessary to limit the view of entities.
@@ -76,7 +83,7 @@ class ControlView(object):
         if http_host != host_url and not disable_ControlView:
             space_name = determine_space(environ, http_host)
             if space_name == None:
-                return
+                return None
             recipe_name = determine_space_recipe(environ, space_name)
             store = environ['tiddlyweb.store']
             try:
@@ -86,6 +93,9 @@ class ControlView(object):
 
             space = Space(space_name)
 
+            serialize_type, mime_type = get_serialize_type(environ)
+            serializer = Serializer(serialize_type, environ)
+
             template = recipe_template(environ)
             bags = space.extra_bags()
             for bag, _ in recipe.get_recipe(template):
@@ -94,23 +104,28 @@ class ControlView(object):
 
             filter_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
-                filter_string = 'oom=name:'
                 if recipe_name == space.private_recipe():
-                    filter_parts = space.list_recipes()
+                    recipes = space.list_recipes()
                 else:
-                    filter_parts = [space.public_recipe()]
-                filter_string += ','.join(filter_parts)
+                    recipes = [space.public_recipe()]
+                def lister():
+                    for recipe in recipes:
+                        yield Recipe(recipe)
+                return list_entities(environ, start_response, mime_type,
+                    lister, serializer.list_recipes)
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
-                filter_string = 'oom=name:'
-                filter_parts = bags
-                filter_string += ','.join(filter_parts)
+                def lister():
+                    for bag in bags:
+                        yield Bag(bag)
+                return list_entities(environ, start_response, mime_type,
+                        lister, serializer.list_bags)
             elif req_uri.startswith('/search') and req_uri.count('/') == 1:
                 filter_string = 'oom=bag:'
                 filter_parts = bags
                 filter_string += ','.join(filter_parts)
             else:
-                entity_name = urllib.unquote(req_uri.split('/')[2]
-                        ).decode('utf-8')
+                entity_name = urllib.unquote(
+                        req_uri.split('/')[2]).decode('utf-8')
                 if '/recipes/' in req_uri:
                     valid_recipes = space.list_recipes()
                     if entity_name not in valid_recipes:

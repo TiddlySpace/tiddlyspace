@@ -54,7 +54,7 @@ def test_space_has_limited_view():
     response, content = http.request('http://thing.0.0.0.0:8080/recipes',
             method='GET')
 
-    assert response['status'] == '200'
+    assert response['status'] == '200', content
     assert 'other_' not in content, content
     assert 'thing_' in content, content
 

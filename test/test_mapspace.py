@@ -101,7 +101,7 @@ def test_mapspace_twice():
 def test_mapspace_maps():
     response, content = http.request('http://cdent.0.0.0.0:8080/bags.json')
 
-    assert response['status'] == '200'
+    assert response['status'] == '200', content
     info = simplejson.loads(content)
     assert 'cdent_public' in info
 
