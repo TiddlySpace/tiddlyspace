@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.7.6|
+|''Version''|0.7.7|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -274,13 +274,13 @@ if(fImport) {
 		var select = $('<select name="mode" />').appendTo(container)[0];
 		$('<option value="private" selected>private</a>').appendTo(select);
 		$('<option value="public">public</a>').appendTo(select);
-		wizard.setValue("mode", select);
+		wizard.setValue("importmode", select);
 		_createForm.apply(this, [place, wizard, iframeName]);
 	};
 
 	var _onGet = config.macros.importTiddlers.onGetTiddler;
 	config.macros.importTiddlers.onGetTiddler = function(context, wizard) {
-		var type = $(wizard.getValue("mode")).val();
+		var type = $(wizard.getValue("importmode")).val();
 		var ws =  plugin.getCurrentWorkspace(type);
 		wizard.setValue("workspace", ws);
 		_onGet.apply(this, [context, wizard]);
