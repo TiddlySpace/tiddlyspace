@@ -93,9 +93,6 @@ class ControlView(object):
 
             space = Space(space_name)
 
-            serialize_type, mime_type = get_serialize_type(environ)
-            serializer = Serializer(serialize_type, environ)
-
             template = recipe_template(environ)
             bags = space.extra_bags()
             for bag, _ in recipe.get_recipe(template):
@@ -104,6 +101,9 @@ class ControlView(object):
 
             filter_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
+                serialize_type, mime_type = get_serialize_type(environ)
+                serializer = Serializer(serialize_type, environ)
+
                 if recipe_name == space.private_recipe():
                     recipes = space.list_recipes()
                 else:
@@ -117,6 +117,8 @@ class ControlView(object):
                     lister, serializer.list_recipes)
 
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
+                serialize_type, mime_type = get_serialize_type(environ)
+                serializer = Serializer(serialize_type, environ)
 
                 def lister():
                     for bag in bags:
