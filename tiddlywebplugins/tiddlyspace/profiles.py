@@ -9,14 +9,12 @@ import urllib2
 
 from tiddlyweb.control import readable_tiddlers_by_bag
 from tiddlyweb.store import StoreError, NoUserError
-from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
-from tiddlyweb.model.policy import ForbiddenError, UserRequiredError
 from tiddlyweb.model.user import User
 from tiddlyweb.web.handler.search import get as search
 from tiddlyweb.web.http import HTTP404, HTTP400, HTTP415
-from tiddlyweb.web.util import (server_host_url, server_base_url,
-        encode_name, get_serialize_type)
+from tiddlyweb.web.util import (server_host_url, encode_name,
+        get_serialize_type)
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
 from tiddlywebplugins.tiddlyspace.web import determine_host
 from tiddlyweb.wikitext import render_wikitext
@@ -167,7 +165,7 @@ try:
 
         def _act(self, job):
             """
-            Do the action of sending the ping when a job (a tiddler) 
+            Do the action of sending the ping when a job (a tiddler)
             is received from the queue.
             """
             if not self.STORE:

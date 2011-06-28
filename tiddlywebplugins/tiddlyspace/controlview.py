@@ -108,21 +108,28 @@ class ControlView(object):
                     recipes = space.list_recipes()
                 else:
                     recipes = [space.public_recipe()]
+
                 def lister():
                     for recipe in recipes:
                         yield Recipe(recipe)
+
                 return list_entities(environ, start_response, mime_type,
                     lister, serializer.list_recipes)
+
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
+
                 def lister():
                     for bag in bags:
                         yield Bag(bag)
+
                 return list_entities(environ, start_response, mime_type,
                         lister, serializer.list_bags)
+
             elif req_uri.startswith('/search') and req_uri.count('/') == 1:
                 filter_string = 'oom=bag:'
                 filter_parts = bags
                 filter_string += ','.join(filter_parts)
+
             else:
                 entity_name = urllib.unquote(
                         req_uri.split('/')[2]).decode('utf-8')

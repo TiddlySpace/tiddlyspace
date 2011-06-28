@@ -74,11 +74,12 @@ class Challenger(OpenID):
         start_response('303 See Other', headers)
         return [uri]
 
-    def _render_form(self, environ, start_response, openid='', message='', form=''):
+    def _render_form(self, environ, start_response, openid='',
+            message='', form=''):
         redirect = environ['tiddlyweb.query'].get(
             'tiddlyweb_redirect', ['/'])[0]
-        start_response('200 OK' , [
-            ('Content-Type', 'text/html')])
+        start_response('200 OK', [(
+            'Content-Type', 'text/html')])
         environ['tiddlyweb.title'] = 'OpenID Login'
         return ["""
 <div id='content'>
@@ -90,7 +91,8 @@ class Challenger(OpenID):
     <input type="hidden" id="csrf_token" name="csrf_token" />
     <input type="submit" value="submit" />
     </form>
-    <script type="text/javascript" src="%s/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF"></script>
+    <script type="text/javascript"
+            src="%s/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF"></script>
     <script type="text/javascript">
         var csrfToken = window.getCSRFToken(),
             el = null;
@@ -101,4 +103,5 @@ class Challenger(OpenID):
         }
     </script>
     </pre>
-</div>""" % (message, openid, redirect, environ['tiddlyweb.config']['server_prefix'])]
+</div>""" % (message, openid, redirect,
+    environ['tiddlyweb.config']['server_prefix'])]

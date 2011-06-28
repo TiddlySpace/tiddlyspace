@@ -3,6 +3,7 @@ subclass the cookie_form challenger to add csrf-awareness
 """
 from tiddlyweb.web.challengers import cookie_form
 
+
 class Challenger(cookie_form.Challenger):
     def _send_cookie_form(self, environ, start_response, redirect,
             status='401 Unauthorized', message=''):
@@ -23,7 +24,8 @@ Password <input type="password" name="password" size="40" />
 <input type="hidden" id="csrf_token" name="csrf_token" />
 <input type="submit" value="submit" />
 </form>
-<script type="text/javascript" src="%s/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF"></script>
+<script type="text/javascript"
+        src="%s/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF"></script>
 <script type="text/javascript">
     var csrfToken = window.getCSRFToken(),
         el = null;
