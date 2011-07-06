@@ -14,12 +14,11 @@ except ImportError:
 from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
-from tiddlyweb.model.user import User
-from tiddlyweb.store import NoBagError, NoUserError, StoreError
+from tiddlyweb.store import NoBagError, StoreError
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
-from tiddlyweb.web.http import HTTP302, HTTP403
+from tiddlyweb.web.http import HTTP403
 from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
@@ -84,24 +83,13 @@ def get_identities(environ, start_response):
 def home(environ, start_response):
     """
     handles requests at /, serving either the front page or a space (public or
-    private) based on whether a subdomain is used and whether a user is auth'd
+    private) based on whether a subdomain is used.
 
     relies on tiddlywebplugins.virtualhosting
     """
     http_host, host_url = determine_host(environ)
     if http_host == host_url:
-        usersign = environ['tiddlyweb.usersign']['name']
-        try:
-            store = environ['tiddlyweb.store']
-            store.get(User(usersign))
-        except NoUserError:
-            usersign = 'GUEST'
-        if usersign == 'GUEST':
-            return serve_frontpage(environ, start_response)
-        else:  # authenticated user
-            scheme = environ['tiddlyweb.config']['server_host']['scheme']
-            uri = '%s://%s.%s' % (scheme, usersign, host_url)
-            raise HTTP302(uri)
+        return serve_frontpage(environ, start_response)
     else:  # subdomain
         return serve_space(environ, start_response, http_host)
 
