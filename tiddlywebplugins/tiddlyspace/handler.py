@@ -89,18 +89,8 @@ def home(environ, start_response):
     """
     http_host, host_url = determine_host(environ)
     if http_host == host_url:
-        return serve_frontpage(environ, start_response)
-    else:  # subdomain
-        return serve_space(environ, start_response, http_host)
-
-
-def serve_frontpage(environ, start_response):
-    """
-    Serve TiddlySpace front page from the special frontpage_public recipe.
-    """
-    environ['wsgiorg.routing_args'][1]['recipe_name'] = 'frontpage_public'
-    environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
-    return get_tiddlers(environ, start_response)
+        http_host = 'frontpage.' + http_host
+    return serve_space(environ, start_response, http_host)
 
 
 def serve_space(environ, start_response, http_host):
