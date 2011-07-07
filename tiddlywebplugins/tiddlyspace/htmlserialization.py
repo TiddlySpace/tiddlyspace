@@ -98,6 +98,9 @@ class Serialization(HTMLSerialization):
         if query_string:
             query_string = '?%s' % query_string
 
+        # chop off the possible trailing .html
+        tiddlers_url = tiddlers_url.rsplit('.html')[0] 
+
         return send_template(self.environ, 'tiddlers.html', {
             'title': title,
             'revisions': revisions,
