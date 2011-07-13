@@ -47,8 +47,8 @@ var replaceFunctions = {
 		var lookaheadMatch = this.lookaheadRegExp.exec(w.source);
 		if(lookaheadMatch && lookaheadMatch.index == w.matchStart) {
 			sanitizedHTML = $.sanitize(lookaheadMatch[1]);
-			spanEl = createTiddlyElement(w.output, 'span', null, 'sanitized')
-				.innerHTML = sanitizedHTML;
+			spanEl = createTiddlyElement(w.output, 'span', null, 'sanitized');
+			spanEl.innerHTML = sanitizedHTML;
 			spanEl.setAttribute('title', cleanedTitle);
 			w.nextMatch = this.lookaheadRegExp.lastIndex;
 		}
