@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.5|
+|''Version''|0.6.6|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -479,6 +479,22 @@ var followingMacro = config.macros.following = {
 		return !username ? followingCallback({ name: currentSpace }) : followingCallback({ name: username });
 	}
 };
+
+var linkedMacro = config.macros.linkedTiddlers = {
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		var args = paramString.parseParams("anon")[0];
+		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
+		var tid = store.getTiddler(title);
+		var blacklisted = store.getTiddlerText("FollowTiddlersBlackList").split("\n");
+		if(tid) {
+			followMacro.makeButton(place, {
+				url: "/bags/%0/tiddlers/%1/backlinks".format(tid.fields['server.bag'],
+					encodeURIComponent(tid.title)),
+				blacklisted: blacklisted, title: title, user: params[1] || false,
+				consultFollowRelationship: args.follow ? true : false });
+		}
+	}
+}
 
 })(jQuery);
 //}}}
