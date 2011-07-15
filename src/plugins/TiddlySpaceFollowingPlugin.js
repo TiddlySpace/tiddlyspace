@@ -153,8 +153,22 @@ var followMacro = config.macros.followTiddlers = {
 		});
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		var args = paramString.parseParams("anon")[0];
 		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
+		var tid = store.getTiddler(title);
+		var user = params[1] || false;
 		var blacklisted = store.getTiddlerText("FollowTiddlersBlackList").split("\n");
+		if(tid) {
+			followMacro.makeButton(place, {
+				url: "/search?q=title:%0".format(encodeURIComponent(title)),
+				blacklisted: blacklisted, title: title, user: user,
+				consultFollowRelationship: args.follow ? true : false });
+		}
+	},
+	makeButton: function(place, options) { // this is essentially the same code in TiddlySpaceFollowingPlugin
+		var title = options.title;
+		var blacklisted = options.blacklisted;
+		var tiddler = store.getTiddler(title);
 		var btn = $('<div class="followButton" />').appendTo(place)[0];
 		var id = Math.random();
 		$(story.getTiddler(title)).data("followTiddlerQuery", id);
@@ -162,24 +176,32 @@ var followMacro = config.macros.followTiddlers = {
 			$(btn).remove();
 			return;
 		} else {
-			var options = {};
-			var user = params[1] || false; // allows a user to use the macro on another username
+			var user = options.user;
 			window.setTimeout(function() { // prevent multiple calls due to refresh
 				if($(story.getTiddler(title)).data("followTiddlerQuery") === id) {
 					tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
-						followMacro.getFollowers(function(followers) {
-							if(!followers) {
+						var mkButton = function(followers, ignore) {
+							if(!followers && !ignore) {
 								$(btn).remove();
 							} else {
-								scanMacro.scan(null, { searchFields: "title", searchValues: [title],
+								var scanOptions = { url: options.url,
 									spaceField: "bag", template: null, sort: "-modified",
-									showBags: followMacro._getFollowerBags(followers), hideBags: [tiddler.fields["server.bag"]],
 									callback: function(tiddlers) {
 										followMacro.constructInterface(btn, tiddlers);
 									}
-								});
+								};
+								if(!ignore) {
+									scanOptions.showBags = followMacro._getFollowerBags(followers);
+								}
+								scanOptions.hideBags = [tiddler.fields["server.bag"]];
+								scanMacro.scan(null, scanOptions, user);
 							}
-						}, user);
+						};
+						if(options.consultFollowRelationship) {
+							followMacro.getFollowers(mkButton);
+						} else {
+							mkButton([], true);
+						}
 					});
 				}
 			}, 1000);
