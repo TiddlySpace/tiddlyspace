@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.6|
+|''Version''|0.6.5|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -494,6 +494,11 @@ var linkedMacro = config.macros.linkedTiddlers = {
 				consultFollowRelationship: args.follow ? true : false });
 		}
 	}
+}
+
+if(config.options.chkFollowTiddlersIsLinkedTiddlers) {
+	merge(config.macros.followTiddlers, config.macros.linkedTiddlers);
+	config.shadowTiddlers.FollowTiddlersHeading = "These are the other tiddlers that link to this tiddler.";
 }
 
 })(jQuery);
