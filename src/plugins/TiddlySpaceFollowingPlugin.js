@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.4|
+|''Version''|0.6.5|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -45,6 +45,7 @@ If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default 
 ***/
 //{{{
 (function($) {
+var LIMIT_FOLLOWING = 100;
 
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
@@ -224,8 +225,9 @@ var followMacro = config.macros.followTiddlers = {
 		// returns a list of spaces being followed by the existing space
 		var followersCallback = function(user) {
 			if(!user.anon) {
-				scanMacro.scan(null, { searchField: "bag", searchValues: ["%0_public".format(user.name)],
-					spaceField: "title", template: null, tag: "follow", cache: true,
+				scanMacro.scan(null, { 
+					url: "/search?q=bag:%0_public tag:%1 _limit:%2".format(user.name, followMacro.followTag, LIMIT_FOLLOWING),
+					spaceField: "title", template: null, cache: true,
 					callback: function(tiddlers) {
 						var followers = [];
 						for(var i = 0; i < tiddlers.length; i++) {
@@ -411,8 +413,10 @@ var followersMacro = config.macros.followers = {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
 				var options = scanMacro.getOptions(paramString);
-				$.extend(options, { searchValues: [user.name, "@%0".format(user.name)],
-					spaceField: "bag", tag: followMacro.followTag,
+				$.extend(options, {
+					url: "/search?q=title:@%0 OR title:%0 tag:%1 _limit:%2".
+						format(user.name, followMacro.followTag, LIMIT_FOLLOWING),
+					spaceField: "bag",
 					template: options.template ? options.template : "FollowersTemplate"
 				});
 				scanMacro.scan(container, options);
@@ -442,8 +446,9 @@ var followingMacro = config.macros.following = {
 				$("<span />").text(locale.loggedOut).appendTo(container);
 			} else {
 				var options = scanMacro.getOptions(paramString);
-				$.extend(options, { searchValues: ["%0_public".format(user.name)],
-					tag: followMacro.followTag, searchField: "bag", spaceField: "title",
+				$.extend(options, {
+					url: "/search?q=bag:%0 tag:%1 _limit:%2".format(user.name, followMacro.followTag, LIMIT_FOLLOWING),
+					spaceField: "title",
 					template: options.template ? options.template : "FollowingTemplate"
 				});
 				scanMacro.scan(container, options);
