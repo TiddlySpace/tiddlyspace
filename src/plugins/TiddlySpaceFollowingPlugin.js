@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.5|
+|''Version''|0.6.6|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -11,6 +11,8 @@ Using the {{{<<followTiddlers X>>}}}
 will reveal the number of tiddlers with name X in the set of spaces the *current* user viewing your space follows.
 {{{<<following jon>>}}} will list all the users following Jon.
 {{{<<followers jon>>}}} will list all the followers of jon.
+{{{<linkedTiddlers>>}}} will list all tiddlers across TiddlySpace linked to the current tiddler
+{{{<linkedTiddlers follow:yes>>}}} will list all tiddlers across TiddlySpace that come from your list of followers
 adds spaceLink view type {{{<<view server.bag spaceLink>>}}} creates a link to the space described in server.bag
 {{{<<view server.bag spaceLink title>>}}} makes a link to the tiddler with title expressed in the field title in space server.bag
 If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default the current user.
@@ -152,36 +154,56 @@ var followMacro = config.macros.followTiddlers = {
 			callback(tweb.host, tiddlyspace.getHost(status.server_host, "%0"));
 		});
 	},
+	getBlacklist: function() {
+		return store.getTiddlerText("FollowTiddlersBlackList").split("\n");
+	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		var args = paramString.parseParams("anon")[0];
 		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
-		var blacklisted = store.getTiddlerText("FollowTiddlersBlackList").split("\n");
+		var tid = store.getTiddler(title);
+		var user = params[1] || false;
+		if(tid) {
+			followMacro.makeButton(place, {
+				url: "/search?q=title:%0".format(encodeURIComponent(title)),
+				blacklisted: followMacro.getBlacklist(), title: title, user: user,
+				consultFollowRelationship: args.follow ? true : false });
+		}
+	},
+	makeButton: function(place, options) { // this is essentially the same code in TiddlySpaceFollowingPlugin
+		var title = options.title;
+		var blacklisted = options.blacklisted;
+		var tiddler = store.getTiddler(title);
 		var btn = $('<div class="followButton" />').appendTo(place)[0];
-		var id = Math.random();
-		$(story.getTiddler(title)).data("followTiddlerQuery", id);
 		if(blacklisted.contains(title)) {
 			$(btn).remove();
 			return;
 		} else {
-			var options = {};
-			var user = params[1] || false; // allows a user to use the macro on another username
+			var user = options.user;
 			window.setTimeout(function() { // prevent multiple calls due to refresh
-				if($(story.getTiddler(title)).data("followTiddlerQuery") === id) {
-					tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
-						followMacro.getFollowers(function(followers) {
-							if(!followers) {
-								$(btn).remove();
-							} else {
-								scanMacro.scan(null, { searchFields: "title", searchValues: [title],
-									spaceField: "bag", template: null, sort: "-modified",
-									showBags: followMacro._getFollowerBags(followers), hideBags: [tiddler.fields["server.bag"]],
-									callback: function(tiddlers) {
-										followMacro.constructInterface(btn, tiddlers);
-									}
-								});
+				tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
+					var mkButton = function(followers, ignore) {
+						if(!followers && !ignore) {
+							$(btn).remove();
+						} else {
+							var scanOptions = { url: options.url,
+								spaceField: "bag", template: null, sort: "-modified",
+								callback: function(tiddlers) {
+									followMacro.constructInterface(btn, tiddlers);
+								}
+							};
+							if(!ignore) {
+								scanOptions.showBags = followMacro._getFollowerBags(followers);
 							}
-						}, user);
-					});
-				}
+							scanOptions.hideBags = [tiddler.fields["server.bag"]];
+							scanMacro.scan(null, scanOptions, user);
+						}
+					};
+					if(options.consultFollowRelationship) {
+						followMacro.getFollowers(mkButton);
+					} else {
+						mkButton([], true);
+					}
+				});
 			}, 1000);
 		}
 	},
@@ -457,6 +479,26 @@ var followingMacro = config.macros.following = {
 		return !username ? followingCallback({ name: currentSpace }) : followingCallback({ name: username });
 	}
 };
+
+var linkedMacro = config.macros.linkedTiddlers = {
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+		var args = paramString.parseParams("anon")[0];
+		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
+		var tid = store.getTiddler(title);
+		if(tid) {
+			followMacro.makeButton(place, {
+				url: "/bags/%0/tiddlers/%1/backlinks".format(tid.fields['server.bag'],
+					encodeURIComponent(tid.title)),
+				blacklisted: followMacro.getBlacklist(), title: title, user: params[1] || false,
+				consultFollowRelationship: args.follow ? true : false });
+		}
+	}
+}
+
+if(config.options.chkFollowTiddlersIsLinkedTiddlers) {
+	merge(config.macros.followTiddlers, config.macros.linkedTiddlers);
+	config.shadowTiddlers.FollowTiddlersHeading = "These are the other tiddlers that link to this tiddler.";
+}
 
 })(jQuery);
 //}}}
