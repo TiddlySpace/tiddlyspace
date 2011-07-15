@@ -2,7 +2,7 @@
 |''Name''|TiddlySpaceToolbar|
 |''Description''|augments tiddler toolbar commands with SVG icons|
 |''Author''|Osmosoft|
-|''Version''|0.6.5|
+|''Version''|0.6.6|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceToolbar.js|
 |''CodeRepository''|http://github.com/TiddlySpace/tiddlyspace|
@@ -98,7 +98,7 @@ macro.onClickMorePopUp = function(ev) {
 	if(sibling) {
 		var commands = sibling.childNodes;
 		var popup = Popup.create(this);
-		addClass(popup, "taggedTiddlerList");
+		$(popup).addClass("taggedTiddlerList");
 		for(var i = 0; i < commands.length; i++) {
 			var li = createTiddlyElement(popup, "li", null);
 			var oldCommand = commands[i];
