@@ -11,6 +11,8 @@ Using the {{{<<followTiddlers X>>}}}
 will reveal the number of tiddlers with name X in the set of spaces the *current* user viewing your space follows.
 {{{<<following jon>>}}} will list all the users following Jon.
 {{{<<followers jon>>}}} will list all the followers of jon.
+{{{<linkedTiddlers>>}}} will list all tiddlers across TiddlySpace linked to the current tiddler
+{{{<linkedTiddlers follow:yes>>}}} will list all tiddlers across TiddlySpace that come from your list of followers
 adds spaceLink view type {{{<<view server.bag spaceLink>>}}} creates a link to the space described in server.bag
 {{{<<view server.bag spaceLink title>>}}} makes a link to the tiddler with title expressed in the field title in space server.bag
 If no name is given eg. {{{<<following>>}}} or {{{<<follow>>}}} it will default the current user.
