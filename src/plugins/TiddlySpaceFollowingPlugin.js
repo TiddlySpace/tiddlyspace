@@ -172,40 +172,36 @@ var followMacro = config.macros.followTiddlers = {
 		var blacklisted = options.blacklisted;
 		var tiddler = store.getTiddler(title);
 		var btn = $('<div class="followButton" />').appendTo(place)[0];
-		var id = Math.random();
-		$(story.getTiddler(title)).data("followTiddlerQuery", id);
 		if(blacklisted.contains(title)) {
 			$(btn).remove();
 			return;
 		} else {
 			var user = options.user;
 			window.setTimeout(function() { // prevent multiple calls due to refresh
-				if($(story.getTiddler(title)).data("followTiddlerQuery") === id) {
-					tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
-						var mkButton = function(followers, ignore) {
-							if(!followers && !ignore) {
-								$(btn).remove();
-							} else {
-								var scanOptions = { url: options.url,
-									spaceField: "bag", template: null, sort: "-modified",
-									callback: function(tiddlers) {
-										followMacro.constructInterface(btn, tiddlers);
-									}
-								};
-								if(!ignore) {
-									scanOptions.showBags = followMacro._getFollowerBags(followers);
-								}
-								scanOptions.hideBags = [tiddler.fields["server.bag"]];
-								scanMacro.scan(null, scanOptions, user);
-							}
-						};
-						if(options.consultFollowRelationship) {
-							followMacro.getFollowers(mkButton);
+				tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
+					var mkButton = function(followers, ignore) {
+						if(!followers && !ignore) {
+							$(btn).remove();
 						} else {
-							mkButton([], true);
+							var scanOptions = { url: options.url,
+								spaceField: "bag", template: null, sort: "-modified",
+								callback: function(tiddlers) {
+									followMacro.constructInterface(btn, tiddlers);
+								}
+							};
+							if(!ignore) {
+								scanOptions.showBags = followMacro._getFollowerBags(followers);
+							}
+							scanOptions.hideBags = [tiddler.fields["server.bag"]];
+							scanMacro.scan(null, scanOptions, user);
 						}
-					});
-				}
+					};
+					if(options.consultFollowRelationship) {
+						followMacro.getFollowers(mkButton);
+					} else {
+						mkButton([], true);
+					}
+				});
 			}, 1000);
 		}
 	},
