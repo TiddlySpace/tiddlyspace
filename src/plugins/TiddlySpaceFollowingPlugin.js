@@ -152,16 +152,18 @@ var followMacro = config.macros.followTiddlers = {
 			callback(tweb.host, tiddlyspace.getHost(status.server_host, "%0"));
 		});
 	},
+	getBlacklist: function() {
+		return store.getTiddlerText("FollowTiddlersBlackList").split("\n");
+	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var args = paramString.parseParams("anon")[0];
 		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
 		var tid = store.getTiddler(title);
 		var user = params[1] || false;
-		var blacklisted = store.getTiddlerText("FollowTiddlersBlackList").split("\n");
 		if(tid) {
 			followMacro.makeButton(place, {
 				url: "/search?q=title:%0".format(encodeURIComponent(title)),
-				blacklisted: blacklisted, title: title, user: user,
+				blacklisted: followMacro.getBlacklist(), title: title, user: user,
 				consultFollowRelationship: args.follow ? true : false });
 		}
 	},
@@ -485,12 +487,11 @@ var linkedMacro = config.macros.linkedTiddlers = {
 		var args = paramString.parseParams("anon")[0];
 		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
 		var tid = store.getTiddler(title);
-		var blacklisted = store.getTiddlerText("FollowTiddlersBlackList").split("\n");
 		if(tid) {
 			followMacro.makeButton(place, {
 				url: "/bags/%0/tiddlers/%1/backlinks".format(tid.fields['server.bag'],
 					encodeURIComponent(tid.title)),
-				blacklisted: blacklisted, title: title, user: params[1] || false,
+				blacklisted: followMacro.getBlacklist(), title: title, user: params[1] || false,
 				consultFollowRelationship: args.follow ? true : false });
 		}
 	}
