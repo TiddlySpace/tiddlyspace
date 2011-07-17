@@ -61,3 +61,18 @@ def test_friendly_encoded():
     assert response['status'] == '200', content_friendly
     assert 'text/html' in response['content-type']
     assert 'href="/#%5B%5BHouse%20Hold%5D%5D"' in content_friendly
+
+def test_root_tiddlers():
+    http = httplib2.Http()
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/tiddlers.wiki',
+            method='GET')
+    assert response['status'] == '200', content
+    assert 'Jeremy Ruston' in content
+
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/tiddlers',
+            method='GET')
+    assert response['status'] == '200', content
+    assert '/bags/cdent_public/tiddlers/HouseHold">HouseHold' in content
+    assert '/bags/system/tiddlers/BinaryTiddlersPlugin">BinaryTiddlersPlugin' in content

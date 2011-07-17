@@ -37,16 +37,7 @@ def friendly_uri(environ, start_response):
     into a request for a tiddler in the public or private recipe
     of the current space.
     """
-    http_host, host_url = determine_host(environ)
-    if http_host == host_url:
-        space_name = "frontpage"
-    else:
-        space_name = determine_space(environ, http_host)
-
-    recipe_name = determine_space_recipe(environ, space_name)
-    # tiddler_name already in uri
-    environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
-        'UTF-8')
+    _setup_friendly_environ(environ)
     return get_tiddler(environ, start_response)
 
 
@@ -78,6 +69,16 @@ def get_identities(environ, start_response):
     start_response('200 OK', [
         ('Content-Type', 'application/json; charset=UTF-8')])
     return [simplejson.dumps(identities)]
+
+
+def get_space_tiddlers(environ, start_response):
+    """
+    Get the tiddlers that make up the current space in
+    whatever the reqeusted representation is. Choose recipe
+    based on membership status.
+    """
+    _setup_friendly_environ(environ)
+    return get_tiddlers(environ, start_response)
 
 
 def home(environ, start_response):
@@ -163,3 +164,20 @@ def update_space_settings(environ, name):
             for key, values in query_data.items()]))
 
     return index, lazy
+
+
+def _setup_friendly_environ(environ):
+    """
+    Manipulate the environ so that we appear to be in the context of the
+    recipe appropriate for this current space and the current membership
+    status.
+    """
+    http_host, host_url = determine_host(environ)
+    if http_host == host_url:
+        space_name = "frontpage"
+    else:
+        space_name = determine_space(environ, http_host)
+
+    recipe_name = determine_space_recipe(environ, space_name)
+    environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
+        'UTF-8')

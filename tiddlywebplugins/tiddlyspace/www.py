@@ -11,7 +11,7 @@ from tiddlywebplugins.tiddlyspace.controlview import (ControlView,
         DropPrivs, AllowOrigin)
 from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector
 from tiddlywebplugins.tiddlyspace.handler import (home, friendly_uri,
-        get_identities)
+        get_identities, get_space_tiddlers)
 from tiddlywebplugins.tiddlyspace.profiles import add_profile_routes
 from tiddlywebplugins.tiddlyspace.safemode import safe_mode
 from tiddlywebplugins.tiddlyspace.spaces import add_spaces_routes
@@ -27,6 +27,7 @@ def establish_www(config):
     add_profile_routes(config['selector'])
     config['selector'].add('/users/{username}/identities',
             GET=get_identities)
+    config['selector'].add('/tiddlers[.{format}]', GET=get_space_tiddlers)
     config['selector'].add('/{tiddler_name:segment}[/{tiddler_extra:any}]',
             GET=friendly_uri)
 
