@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.6|
+|''Version''|0.6.7|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -173,7 +173,7 @@ var followMacro = config.macros.followTiddlers = {
 		var title = options.title;
 		var blacklisted = options.blacklisted;
 		var tiddler = store.getTiddler(title);
-		var btn = $('<div class="followButton" />').appendTo(place)[0];
+		var btn = $('<div class="followButton" />').addClass("notLoaded").appendTo(place)[0];
 		if(blacklisted.contains(title)) {
 			$(btn).remove();
 			return;
@@ -185,9 +185,11 @@ var followMacro = config.macros.followTiddlers = {
 						if(!followers && !ignore) {
 							$(btn).remove();
 						} else {
+							$("<a />").appendTo(btn);
 							var scanOptions = { url: options.url,
 								spaceField: "bag", template: null, sort: "-modified",
 								callback: function(tiddlers) {
+									$(btn).removeClass("notLoaded");
 									followMacro.constructInterface(btn, tiddlers);
 								}
 							};
