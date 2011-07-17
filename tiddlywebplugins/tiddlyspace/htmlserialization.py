@@ -3,8 +3,6 @@ Enhance the default HTML serialization so that when we display
 a single tiddler it includes a link to the tiddler in its space.
 """
 
-import urllib
-
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.policy import PermissionsError
 from tiddlyweb.model.recipe import Recipe
@@ -99,7 +97,7 @@ class Serialization(HTMLSerialization):
             query_string = '?%s' % query_string
 
         # chop off the possible trailing .html
-        tiddlers_url = tiddlers_url.rsplit('.html')[0] 
+        tiddlers_url = tiddlers_url.rsplit('.html')[0]
 
         return send_template(self.environ, 'tiddlers.html', {
             'title': title,
