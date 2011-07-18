@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.8|
+|''Version''|0.6.9|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -60,9 +60,9 @@ shadows.FollowersTemplate = "<<view server.bag SiteIcon width:24 height:24 space
 shadows.FollowingTemplate = "<<view title SiteIcon width:24 height:24 spaceLink:yes label:no>> <<view title spaceLink>>";
 shadows.FollowTiddlersBlackList = "";
 shadows.FollowTiddlersHeading = "There are tiddlers in spaces you follow using the follow tag which use the title <<view title text>>";
-shadows.FollowTiddlersTemplate = ["* <<view server.bag SiteIcon width:24 height:24 spaceLink:yes label:no>> ",
-	"<<view server.bag spaceLink title external:no>> modified by <<view modifier spaceLink>> ",
-	"in the <<view server.bag spaceLink>> space (<<view modified date>> @ <<view modified date 0hh:0mm>>).\n"].join("");
+shadows.FollowTiddlersTemplate = ["* <<view server.space SiteIcon width:24 height:24 spaceLink:yes label:no>> ",
+	"<<view server.space spaceLink title external:no>> modified by <<view modifier spaceLink>> ",
+	"in the <<view server.space spaceLink>> space (<<view modified date>> @ <<view modified date 0hh:0mm>>).\n"].join("");
 
 var name = "StyleSheetFollowing";
 shadows[name] = "/*{{{*/\n%0\n/*}}}*/".
@@ -187,7 +187,7 @@ var followMacro = config.macros.followTiddlers = {
 						} else {
 							$("<a />").appendTo(btn);
 							var scanOptions = { url: options.url,
-								spaceField: "bag", template: null, sort: "-modified",
+								spaceField: options.spaceField || "bag", template: null, sort: "-modified",
 								callback: function(tiddlers) {
 									$(btn).removeClass("notLoaded");
 									followMacro.constructInterface(btn, tiddlers);
@@ -489,6 +489,7 @@ var linkedMacro = config.macros.linkedTiddlers = {
 		var tid = store.getTiddler(title);
 		if(tid) {
 			followMacro.makeButton(place, {
+				spaceField: "recipe",
 				url: "/bags/%0/tiddlers/%1/backlinks".format(tid.fields['server.bag'],
 					encodeURIComponent(tid.title)),
 				blacklisted: followMacro.getBlacklist(), title: title, user: params[1] || false,
