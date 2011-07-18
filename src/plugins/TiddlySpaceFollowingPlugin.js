@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.7|
+|''Version''|0.6.8|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -471,7 +471,7 @@ var followingMacro = config.macros.following = {
 			} else {
 				var options = scanMacro.getOptions(paramString);
 				$.extend(options, {
-					url: "/search?q=bag:%0 tag:%1 _limit:%2".format(user.name, followMacro.followTag, LIMIT_FOLLOWING),
+					url: "/search?q=bag:%0_public tag:%1 _limit:%2".format(user.name, followMacro.followTag, LIMIT_FOLLOWING),
 					spaceField: "title",
 					template: options.template ? options.template : "FollowingTemplate"
 				});
