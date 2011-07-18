@@ -36,6 +36,7 @@ def setup_module(module):
     config['blacklisted_spaces'] = ['scrappy']
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('cdent.0.0.0.0', 8080, app_fn)
+    wsgi_intercept.add_wsgi_intercept('extra.0.0.0.0', 8080, app_fn)
     make_fake_space(module.store, 'cdent')
     user = User('cdent')
     user.set_password('cow')
@@ -261,10 +262,20 @@ def test_add_a_member():
     response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/fnd',
             method='PUT',
             )
+    assert response['status'] == '403', content
+
+    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/fnd',
+            method='PUT',
+            )
+    assert response['status'] == '403', content
+
+    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/fnd',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='PUT',
+            )
     assert response['status'] == '403'
 
-    http = httplib2.Http()
-    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/fnd',
+    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/fnd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='PUT',
             )
@@ -313,14 +324,14 @@ def test_add_a_member():
     assert response['status'] == '403'
 
     cookie = get_auth('fnd', 'bird')
-    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/psd',
+    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/psd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='PUT',
             )
     assert response['status'] == '204'
 
     cookie = get_auth('fnd', 'bird')
-    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/mary',
+    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/mary',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='PUT',
             )
@@ -335,14 +346,25 @@ def test_delete_member():
             )
     assert response['status'] == '403'
 
+    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/psd',
+            method='DELETE',
+            )
+    assert response['status'] == '403'
+
     response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/psd',
+            headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
+            method='DELETE',
+            )
+    assert response['status'] == '403'
+
+    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/psd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='DELETE',
             )
     assert response['status'] == '204'
 
     # delete self
-    response, content = http.request('http://0.0.0.0:8080/spaces/extra/members/fnd',
+    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/fnd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='DELETE',
             )

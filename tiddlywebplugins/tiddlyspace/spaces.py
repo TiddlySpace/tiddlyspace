@@ -16,6 +16,7 @@ from tiddlyweb.web.http import HTTP403, HTTP404, HTTP409
 from tiddlywebplugins.utils import require_any_user
 
 from tiddlywebplugins.tiddlyspace.space import Space
+from tiddlywebplugins.tiddlyspace.web import determine_space, determine_host
 
 
 try:
@@ -53,6 +54,8 @@ def add_space_member(environ, start_response):
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     user_name = environ['wsgiorg.routing_args'][1]['user_name']
     current_user = environ['tiddlyweb.usersign']
+
+    _same_space_required(environ, space_name)
 
     try:
         change_space_member(store, space_name, add=user_name,
@@ -135,6 +138,8 @@ def delete_space_member(environ, start_response):
     space_name = environ['wsgiorg.routing_args'][1]['space_name']
     user_name = environ['wsgiorg.routing_args'][1]['user_name']
     current_user = environ['tiddlyweb.usersign']
+
+    _same_space_required(environ, space_name)
 
     try:
         change_space_member(store, space_name, remove=user_name,
@@ -410,6 +415,16 @@ def _make_space(environ, space_name):
     public_recipe.policy.read = []
     store.put(public_recipe)
     store.put(private_recipe)
+
+
+def _same_space_required(environ, space_name):
+    """
+    Raise 403 unless the current space (http_host) is the same as the
+    target space.
+    """
+    current_space = determine_space(environ, determine_host(environ)[0])
+    if current_space != space_name:
+        raise HTTP403('space membership changes only allowed from space')
 
 
 def _validate_space_name(environ, name):
