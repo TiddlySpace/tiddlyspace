@@ -28,8 +28,7 @@ def establish_www(config):
     config['selector'].add('/users/{username}/identities',
             GET=get_identities)
     config['selector'].add('/tiddlers[.{format}]', GET=get_space_tiddlers)
-    config['selector'].add('/{tiddler_name:segment}[/{tiddler_extra:any}]',
-            GET=friendly_uri)
+    config['selector'].add('/{tiddler_name:segment}', GET=friendly_uri)
 
     if ControlView not in config['server_request_filters']:
         config['server_request_filters'].insert(
