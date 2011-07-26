@@ -168,14 +168,9 @@ class Serialization(HTMLSerialization):
             container_policy = False
         space_link = self._space_link(tiddler)
         html = render_wikitext(tiddler, self.environ)
-        try:
-            description = tiddler.fields["summary"]
-        except KeyError:
-            description = 'A tiddler on TiddlySpace'
-
         return send_template(self.environ, 'tiddler.html', {
             'meta_keywords': ', '.join(tiddler.tags),
-            'meta_description': description,
+            'meta_description': tiddler.title,
             'title': '%s' % tiddler.title,
             'tags': tiddler.tags,
             'fields': tiddler.fields,
