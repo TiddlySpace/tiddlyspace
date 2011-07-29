@@ -33,9 +33,9 @@
               <dl class="meta section">
                   <dt>bag</dt>
                     <dd>
-                      {%- if container_policy -%}<a class="bag" href="/bags/{{tiddler.bag|uri}}">
-                      {%- else -%}<span class="bag">{%- endif %}
-                      {{tiddler.bag|e}}
+                      {%- if container_policy -%}<a class="bag" href="/bags/{{tiddler.bag|uri}}"
+                      {%- else -%}<span class="bag"{%- endif -%}
+                      >{{tiddler.bag|e}}
                       {%- if container_policy -%}</a>
                       {%- else -%}</span>{%- endif %}
                     </dd>
