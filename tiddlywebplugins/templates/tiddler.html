@@ -61,7 +61,7 @@
                   </dd>
                   {%- endif -%}
                   {%- for i in fields -%}
-                    {%- if i[0:1] == "_" %}
+                    {%- if i[0] == "_" %}
                     {%- set fieldClass = "hidden" -%}
                     {%- else -%}
                     {%- set fieldClass = "" -%}
