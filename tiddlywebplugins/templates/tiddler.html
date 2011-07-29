@@ -40,9 +40,9 @@
                       {%- else -%}</span>{%- endif %}
                     </dd>
                   <dt>created</dt><dd>{{tiddler.created|e}}</dd>
-                  <dt>creator</dt><dd><a>{{tiddler.creator|e}}</a></dd>
+                  <dt>creator</dt><dd><a href="{{ creator_link }}">{{tiddler.creator|e}}</a></dd>
                   <dt>modified</dt><dd>{{tiddler.modified|e}}</dd>
-                  <dt>modifier</dt><dd><a>{{tiddler.modifier|e}}</a></dd>
+                  <dt>modifier</dt><dd><a href="{{ modifier_link }}">{{tiddler.modifier|e}}</a></dd>
                   {%- if tiddler.tags|length > 0 -%}
                   <dt>tags</dt>
                   {%- for i in tags -%}
