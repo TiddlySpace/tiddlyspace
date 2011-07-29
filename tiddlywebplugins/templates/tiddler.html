@@ -31,6 +31,14 @@
             <div class="tiddler">
               <div id="text-html" class="section">{{ html }}</div>
               <dl class="meta section">
+                  <dt>bag</dt>
+                    <dd>
+                      {%- if container_policy -%}<a class="bag" href="/bags/{{tiddler.bag|uri}}">
+                      {%- else -%}<span class="bag">{%- endif %}
+                      {{tiddler.bag|e}}
+                      {%- if container_policy -%}</a>
+                      {%- else -%}</span>{%- endif %}
+                    </dd>
                   <dt>created</dt><dd>{{tiddler.created|e}}</dd>
                   <dt>creator</dt><dd><a>{{tiddler.creator|e}}</a></dd>
                   <dt>modified</dt><dd>{{tiddler.modified|e}}</dd>
