@@ -13,6 +13,10 @@ body {
     width: 75%;
 }
 
+.meta .hidden {
+	display: none;
+}
+
 #header img {
     max-width: 100;
     max-height: 100;

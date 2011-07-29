@@ -157,10 +157,21 @@ class Serialization(HTMLSerialization):
         except PermissionsError:
             container_policy = False
         space_link = self._space_link(tiddler)
+        try:
+            modifier_link = space_uri(self.environ, tiddler.modifier)
+        except AttributeError:
+            modifier_link = ""
+        try:
+            creator_link = space_uri(self.environ, tiddler.creator)
+        except AttributeError:
+            creator_link = ""
+
         html = render_wikitext(tiddler, self.environ)
         return send_template(self.environ, 'tiddler.html', {
             'title': '%s' % tiddler.title,
             'tags': tiddler.tags,
+            'modifier_link': modifier_link,
+            'creator_link': creator_link,
             'fields': tiddler.fields,
             'html': html,
             'list_link': list_link,
