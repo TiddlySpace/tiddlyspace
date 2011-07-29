@@ -61,8 +61,16 @@
                   </dd>
                   {%- endif -%}
                   {%- for i in fields -%}
+                    {%- if i[0:1] == "_" %}
+                    {%- set fieldClass = "hidden" -%}
+                    {%- else -%}
+                    {%- set fieldClass = "" -%}
+                    {%- endif -%}
                     {%- if i not in reserved_fields -%}
-                      {%- if fields[i] -%}<dt>{{i}}</dt><dd>{{fields[i]|e}}</dd>{%- endif -%}
+                      {%- if fields[i] -%}
+                      <dt class="{{fieldClass}}">{{i}}</dt>
+                      <dd class="{{fieldClass}}">{{fields[i]|e}}</dd>
+                      {%- endif -%}
                     {%- endif -%}
                   {%- endfor -%}
               </dl>
