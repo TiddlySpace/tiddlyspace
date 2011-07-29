@@ -45,7 +45,11 @@
                   <dt>modifier</dt><dd><a>{{tiddler.modifier|e}}</a></dd>
                   {%- if tiddler.tags|length > 0 -%}
                   <dt>tags</dt>
-                  {% for i in tags %} <dd><a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i|e }}</a></dd>{% endfor %}
+                  {%- for i in tags -%}
+                  <dd class="meta-tag">
+                    <a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i|e }}</a>
+                  </dd>
+                  {%- endfor -%}
                   {%- endif -%}
                   {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
                   <dt>location</dt>
