@@ -7,6 +7,12 @@
         {%- endfor -%}
         {% block links %}
         {% endblock %}
+        <link rel="icon" href="/favicon.ico">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta name="title" content="{{ title|e }}" /> 
+        <meta name="image" content="/SiteIcon" /> 
+        <meta name="description" content="{{ meta_description|e }}"> 
+        <meta name="keywords" content="{{ meta_keywords|e }}"> 
     </head>
     <body>
         <div id="container">
