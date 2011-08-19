@@ -35,6 +35,8 @@ class Serialization(HTMLSerialization):
         Send recipes out recipes.html template.
         """
         return send_template(self.environ, 'recipes.html', {
+            'meta_keywords': 'recipes, tiddlyspace',
+            'meta_description': 'A list of recipes on TiddlySpace',
             'recipes': recipes,
             'title': 'Recipes'})
 
@@ -43,6 +45,8 @@ class Serialization(HTMLSerialization):
         Send bags out bags.html template.
         """
         return send_template(self.environ, 'bags.html', {
+            'meta_keywords': 'bags, tiddlyspace',
+            'meta_description': 'A list of bags on TiddlySpace',
             'bags': bags,
             'title': 'Bags'})
 
@@ -100,6 +104,8 @@ class Serialization(HTMLSerialization):
         tiddlers_url = tiddlers_url.rsplit('.html')[0]
 
         return send_template(self.environ, 'tiddlers.html', {
+            'meta_keywords': 'tiddlers, tiddlyspace',
+            'meta_description': 'A list of tiddlers on TiddlySpace',
             'title': title,
             'revisions': revisions,
             'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
@@ -115,6 +121,8 @@ class Serialization(HTMLSerialization):
         Send a recipe out the recipe.html template.
         """
         return send_template(self.environ, 'recipe.html', {
+            'meta_keywords': 'recipe, tiddlyspace',
+            'meta_description': 'A recipe on TiddlySpace',
             'recipe': recipe,
             'title': 'Recipe %s' % recipe.name})
 
@@ -130,6 +138,8 @@ class Serialization(HTMLSerialization):
         user_perms = bag.policy.user_perms(user)
 
         return send_template(self.environ, 'bag.html', {
+            'meta_keywords': 'bag, tiddlyspace',
+            'meta_description': 'A bag on TiddlySpace',
             'policy': policy,
             'user_perms': user_perms,
             'bag': bag,
@@ -168,6 +178,8 @@ class Serialization(HTMLSerialization):
 
         html = render_wikitext(tiddler, self.environ)
         return send_template(self.environ, 'tiddler.html', {
+            'meta_keywords': ', '.join(tiddler.tags),
+            'meta_description': tiddler.title,
             'title': '%s' % tiddler.title,
             'tags': tiddler.tags,
             'modifier_link': modifier_link,
