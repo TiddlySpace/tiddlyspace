@@ -280,10 +280,11 @@ $.extend(config.messages, {
 	syncExplanation: "You are currently viewing an offline version of this TiddlySpace. From here you can sync your offline copy with the online version.",
 	syncListHeading: "Unsaved tiddlers listed below"});
 
-var _reportSuccess = config.extensions.ServerSideSavingPlugin.reportSuccess;
 config.extensions.ServerSideSavingPlugin.reportSuccess = function(msg, tiddler) {
 	backstage.tiddlyspace.checkSyncStatus(tiddler);
-	_reportSuccess.apply(this, arguments);
+	msg = config.extensions.ServerSideSavingPlugin.locale[msg];
+	var link = "/" + encodeURIComponent(tiddler.title);
+	displayMessage(msg.format([tiddler.title]), link);
 };
 
 })(jQuery);
