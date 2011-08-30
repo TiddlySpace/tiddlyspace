@@ -5,6 +5,10 @@ TiddlySpace instantiation script
 """
 
 import sys
+try:
+    import mangler
+except ImportError:
+    pass
 
 from tiddlyweb.util import std_error_message
 
