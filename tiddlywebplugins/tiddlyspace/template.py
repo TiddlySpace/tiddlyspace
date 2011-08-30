@@ -2,6 +2,7 @@
 Send a template with some default data.
 """
 
+from tiddlywebplugins.virtualhosting import original_server_host_url
 from tiddlyweb import control
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.recipe import Recipe
@@ -56,6 +57,7 @@ def send_template(environ, template_name, template_data=None):
             pass
 
     template_defaults = {
+            'original_server_host': original_server_host_url(environ),
             'css': linked_resources['HtmlCss'],
             'js': linked_resources['HtmlJavascript'],
             'server_host': server_base_url(environ),
