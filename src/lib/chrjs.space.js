@@ -62,7 +62,7 @@ $.extend(IncludesCollection.prototype, {
 		var self = this;
 		var recipe = new tiddlyweb.Recipe(this.name + "_public", this.host);
 		recipe.get(function(recipe, status, xhr) {
-			var inclusions = $.map(recipe.recipe, function(item, i) { // TODO: refactor to canonicalize; move to TiddlySpaceConfig!?
+			var inclusions = $.map(recipe.recipe, function(item, i) {
 				var arr = item[0].split("_public");
 				return (arr[0] != self.name && arr[1] === "") ? arr[0] : null;
 			});
