@@ -103,5 +103,6 @@ $.extend(IncludesCollection.prototype, {
 		});
 	}
 });
+
 })(jQuery);
 //}}}
