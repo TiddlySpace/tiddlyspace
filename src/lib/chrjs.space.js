@@ -54,7 +54,6 @@ var IncludesCollection = function(space) {
 	tiddlyweb.Collection.apply(this, ["space", space.host, {
 		name: space.name
 	}]);
-	this.inclusions = [];
 };
 IncludesCollection.prototype = new tiddlyweb.Collection();
 $.extend(IncludesCollection.prototype, {
@@ -66,7 +65,6 @@ $.extend(IncludesCollection.prototype, {
 				var arr = item[0].split("_public");
 				return (arr[0] != self.name && arr[1] === "") ? arr[0] : null;
 			});
-			self.inclusions = inclusions;
 			callback(inclusions, status, xhr);
 		}, function(xhr, error, exc) {
 			errback(xhr, error, exc, self);
