@@ -8,6 +8,7 @@ tiddlyweb.routes.spaces = "{host}/spaces";
 tiddlyweb.routes.space = "{host}/spaces/{name}";
 tiddlyweb.routes.members = "{host}/spaces/{name}/members";
 tiddlyweb.routes.member = "{host}/spaces/{name}/members/{username}";
+tiddlyweb.routes.includes = "{host}/spaces/{name}";
 
 tiddlyweb.Space = function(name, host) {
 	tiddlyweb.Resource.apply(this, ["space", host]);
@@ -20,6 +21,9 @@ $.extend(tiddlyweb.Space.prototype, {
 	},
 	members: function() {
 		return new MemberCollection(this);
+	},
+	includes: function() {
+		return new IncludesCollection(this);
 	}
 });
 
@@ -47,5 +51,60 @@ $.extend(MemberCollection.prototype, {
 	}
 });
 
+var IncludesCollection = function(space) {
+	tiddlyweb.Collection.apply(this, ["includes", space.host, {
+		name: space.name
+	}]);
+	this.inclusions = [];
+};
+IncludesCollection.prototype = new tiddlyweb.Collection();
+$.extend(IncludesCollection.prototype, {
+	get: function(callback, errback) {
+		var self = this;
+		var recipe = new tiddlyweb.Recipe(this.name + "_public", this.host);
+		recipe.get(function(recipe, status, xhr) {
+			var inclusions = $.map(recipe.recipe, function(item, i) { // TODO: refactor to canonicalize; move to TiddlySpaceConfig!?
+				var arr = item[0].split("_public");
+				return (arr[0] != self.name && arr[1] === "") ? arr[0] : null;
+			});
+			self.inclusions = inclusions;
+			callback(inclusions, status, xhr);
+		}, function(xhr, error, exc) {
+			errback(xhr, error, exc, self);
+		});
+	},
+	add: function(name, callback, errback) {
+		var self = this;
+		var names = typeof(name) === "string" ? [ name ] : name;
+		$.ajax({
+			type: "post",
+			url: this.route(),
+			contentType: "json",
+			data: $.toJSON({ "subscriptions": names }),
+			success: function(response, status, xhr) {
+				callback(self, status, xhr);
+			},
+			errback: function(xhr, error, exc) {
+				errback(xhr, error, exc, self);
+			}
+		});
+	},
+	remove: function(name, callback, errback) {
+		var self = this;
+		var names = typeof(name) === "string" ? [ name ] : name;
+		$.ajax({
+			type: "post",
+			contentType: "json",
+			url: this.route(),
+			data: $.toJSON({ "unsubscription": names }),
+			success: function(response, status, xhr) {
+				callback(self, status, xhr);
+			},
+			errback: function(xhr, error, exc) {
+				errback(xhr, error, exc, self);
+			}
+		});
+	}
+});
 })(jQuery);
 //}}}
