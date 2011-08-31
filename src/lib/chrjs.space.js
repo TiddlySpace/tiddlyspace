@@ -8,7 +8,6 @@ tiddlyweb.routes.spaces = "{host}/spaces";
 tiddlyweb.routes.space = "{host}/spaces/{name}";
 tiddlyweb.routes.members = "{host}/spaces/{name}/members";
 tiddlyweb.routes.member = "{host}/spaces/{name}/members/{username}";
-tiddlyweb.routes.includes = "{host}/spaces/{name}";
 
 tiddlyweb.Space = function(name, host) {
 	tiddlyweb.Resource.apply(this, ["space", host]);
@@ -52,7 +51,7 @@ $.extend(MemberCollection.prototype, {
 });
 
 var IncludesCollection = function(space) {
-	tiddlyweb.Collection.apply(this, ["includes", space.host, {
+	tiddlyweb.Collection.apply(this, ["space", space.host, {
 		name: space.name
 	}]);
 	this.inclusions = [];
