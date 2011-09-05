@@ -93,7 +93,7 @@ $.extend(IncludesCollection.prototype, {
 			type: "post",
 			contentType: "json",
 			url: this.route(),
-			data: $.toJSON({ "unsubscription": names }),
+			data: $.toJSON({ "unsubscriptions": names }),
 			success: function(response, status, xhr) {
 				callback(self, status, xhr);
 			},
