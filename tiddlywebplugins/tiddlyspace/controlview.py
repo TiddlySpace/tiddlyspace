@@ -100,6 +100,7 @@ class ControlView(object):
             bags.extend(ADMIN_BAGS)
 
             filter_string = None
+            search_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
                 serialize_type, mime_type = get_serialize_type(environ)
                 serializer = Serializer(serialize_type, environ)
@@ -128,10 +129,9 @@ class ControlView(object):
                         lister, serializer.list_bags)
 
             elif req_uri.startswith('/search') and req_uri.count('/') == 1:
-                filter_string = 'oom=bag:'
-                filter_parts = bags
-                filter_string += ','.join(filter_parts)
-
+                search_string = ' OR '.join(['bag:%s' % bag
+                    for bag in bags])
+                print search_string
             else:
                 entity_name = urllib.unquote(
                         req_uri.split('/')[2]).decode('utf-8')
@@ -149,6 +149,16 @@ class ControlView(object):
                 filters, _ = parse_for_filters(filter_string)
                 for single_filter in filters:
                     environ['tiddlyweb.filters'].insert(0, single_filter)
+            if search_string:
+                search_query = environ['tiddlyweb.query']['q'][0]
+                if search_query:
+                    search_query = '%s AND (%s)' % (search_query, search_string)
+                    print search_query
+                    environ['tiddlyweb.query']['q'][0] = search_query
+                else:
+                    search_query = '(%s)' % search_string
+                    environ['tiddlyweb.query']['q'] = [search_query]
+
 
 
 class DropPrivs(object):
