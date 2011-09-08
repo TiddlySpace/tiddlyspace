@@ -48,7 +48,7 @@ window.addEventListener("load", function() {
 
 	link.addEventListener("mousedown", function(ev) {
 		ev.preventDefault();
-	});
+	}, false);
 
 	var bubbleOpen = false;
 	link.addEventListener("click", function(ev) {
@@ -58,6 +58,6 @@ window.addEventListener("load", function() {
 			fade(bubble, true);
 		}
 		bubbleOpen = !bubbleOpen;
-	});
-});
+	}, false);
+}, false);
 })();
