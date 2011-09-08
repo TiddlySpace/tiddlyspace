@@ -46,7 +46,7 @@ a.app-picker:hover {
 	border: solid 2px rgb(255, 255, 255);
 	border-radius: 8px 8px;
 	-webkit-box-shadow: #F4C4E0 0px 0px 8px; /*rgba(0, 0, 0, 0.699219)*/
-	background-color: #C3E8FD;
+	background-color: rgb(220, 231, 241);
 }
 
 .bubble .tail:before {
@@ -61,7 +61,7 @@ a.app-picker:hover {
 	left:auto;
 	opacity: 0.5;
 	border-width:0 20px 20px;
-	border-color:rgba(244, 196, 224, 0.6) transparent;
+	border-color: rgba(220, 231, 241, 0.6) transparent;
 }
 
 .bubble .tail:after {
