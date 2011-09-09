@@ -13,7 +13,7 @@ window.addEventListener("load", function() {
 	body.appendChild(link);
 	var html = [
 	'<div class="bubble">',
-	    '<iframe src="/bags/apps/tiddlers/app-picker" width="auto" style="border:none;"></iframe>',
+	    '<iframe src="/bags/common/tiddlers/backstage" width="auto" style="border:none;"></iframe>',
 	    '<div class="tail"></div>',
 	'</div>'].join("");
 	var bubble = document.createElement("div");
@@ -26,7 +26,7 @@ window.addEventListener("load", function() {
 	var head = document.getElementsByTagName("HEAD")[0];
 	var el = document.createElement("link");
 	el.setAttribute("rel", "stylesheet");
-	el.setAttribute("href", "/bags/apps/tiddlers/ts-application.css");
+	el.setAttribute("href", "/bags/common/tiddlers/backstage.css");
 	el.setAttribute("type", "text/css");
 	head.appendChild(el);
 
