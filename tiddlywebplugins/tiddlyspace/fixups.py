@@ -21,6 +21,9 @@ def web_tiddler_url(environ, tiddler, container='bags', full=True):
     Do this all the time, so that we get the right URIs even
     when working around ControlView.
     """
+    if '_canonical_uri' in tiddler.fields:
+        return tiddler.fields['_canonical_uri']
+
     saved_host = environ.get('HTTP_HOST', '')
     try:
         if container == 'recipes':
