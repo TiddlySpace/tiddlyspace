@@ -1,5 +1,6 @@
 body {
 	font-size: 8px;
+	font-family: 'Helvetica Neue', Helvetica, sans-serif;
 }
 
 .ts-loggedin .login {
@@ -66,6 +67,8 @@ body {
 	position: relative;
 	top: 0.2125em;
 	margin: 0 1em;
+	height: 1.25em;
+	width: 1.25em;
 }
 
 #app-list li a span.comingsoon {

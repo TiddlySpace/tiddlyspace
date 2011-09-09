@@ -45,7 +45,11 @@ a.app-picker:hover {
 	padding: 20px 20px 20px 10px;
 	border: solid 2px rgb(255, 255, 255);
 	border-radius: 8px 8px;
-	-webkit-box-shadow: #F4C4E0 0px 0px 8px; /*rgba(0, 0, 0, 0.699219)*/
+	-webkit-box-shadow: #F4C4E0 0px 0px 8px;
+	-moz-box-shadow: #F4C4E0 0px 0px 8px;
+	-o-box-shadow: #F4C4E0 0px 0px 8px;
+	-ms-box-shadow: #F4C4E0 0px 0px 8px;
+	box-shadow: #F4C4E0 0px 0px 8px;
 	background-color: rgb(220, 231, 241);
 }
 
