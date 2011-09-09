@@ -25,7 +25,6 @@ store_contents['_errors'] = ['src/errors/index.recipe']
 instance_config['system_plugins'] = ['tiddlywebplugins.tiddlyspace']
 instance_config['twanager_plugins'] = ['tiddlywebplugins.tiddlyspace']
 
-store_contents['apps'] = ['src/apps/apps.recipe']
 store_contents['common'] = ['src/common.recipe']
 store_contents['tiddlyspace'] = ['src/tiddlyspace.recipe']
 store_contents['system-info_public'] = ['src/system-info/index.recipe']
@@ -38,11 +37,6 @@ store_structure['bags']['common']['policy'] = \
     store_structure['bags']['system']['policy']
 
 store_structure['bags']['tiddlyspace'] = {
-    'desc': 'TiddlySpace client',
-    'policy': store_structure['bags']['system']['policy'],
-}
-
-store_structure['bags']['apps'] = {
     'desc': 'TiddlySpace client',
     'policy': store_structure['bags']['system']['policy'],
 }

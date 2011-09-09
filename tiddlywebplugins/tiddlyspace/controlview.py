@@ -41,7 +41,7 @@ from tiddlywebplugins.tiddlyspace.web import (determine_host,
         determine_space, determine_space_recipe)
 
 
-ADMIN_BAGS = ['common', 'apps', 'MAPUSER', 'MAPSPACE']
+ADMIN_BAGS = ['common', 'MAPUSER', 'MAPSPACE']
 
 
 class ControlView(object):
