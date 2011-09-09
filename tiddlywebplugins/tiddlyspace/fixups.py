@@ -2,37 +2,10 @@
 Override behaviors from other modules.
 """
 
-import tiddlywebplugins.status
 import tiddlyweb.web.util
 
-from tiddlyweb.model.user import User
-from tiddlyweb.store import NoUserError
 from tiddlywebplugins.tiddlyspace.space import Space
 
-original_gather_data = tiddlywebplugins.status._gather_data
-
-
-def _status_gather_data(environ):
-    """
-    Monkey patch twp.status to add additional information
-    specific to TiddlySpace.
-    """
-    data = original_gather_data(environ)
-    data['server_host'] = environ['tiddlyweb.config']['server_host']
-    data['tiddlyspace_version'] = __version__
-    # ensure user is known
-    usersign = environ['tiddlyweb.usersign']['name']
-    store = environ['tiddlyweb.store']
-    try:
-        store.get(User(usersign))
-    except NoUserError:
-        data['username'] = 'GUEST'
-        if usersign != 'GUEST':
-            data['identity'] = usersign
-    return data
-
-
-tiddlywebplugins.status._gather_data = _status_gather_data
 
 
 original_tiddler_url = tiddlyweb.web.util.tiddler_url
