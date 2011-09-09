@@ -65,14 +65,14 @@ def test_get_profile_atom():
     assert response['status'] == '200'
 
     assert 'Hello There' in content
-    assert 'href="http://0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
+    assert 'href="http://cdent.0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
 
 def test_get_profile_atom_format():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent.atom')
     assert response['status'] == '200'
 
     assert 'Hello There' in content
-    assert 'href="http://0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
+    assert 'href="http://cdent.0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
 
 def test_get_profile_json():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent',
