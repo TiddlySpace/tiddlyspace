@@ -10,4 +10,5 @@ tiddler: externals/alpha_jquery.js.js
 tiddler: externals/alpha_jQuery.twStylesheet.js.js
 tiddler: externals/alpha_twcore.js.js
 tiddler: styles/profile.css
+tiddler: styles/HtmlBackground.tid
 recipe: apps/apps.recipe
