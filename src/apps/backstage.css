@@ -65,7 +65,7 @@ a.app-picker:hover {
 	left:auto;
 	opacity: 0.5;
 	border-width:0 20px 20px;
-	border-color: rgba(220, 231, 241, 0.6) transparent;
+	border-color: rgba(244, 196, 224, 0.6) transparent;
 }
 
 .bubble .tail:after {
@@ -79,5 +79,5 @@ a.app-picker:hover {
 	bottom:auto;
 	left:auto;
 	border-width:0 15px 15px;
-	border-color:#C3E8FD transparent;
+	border-color: #DCE7F1 transparent;
 }
