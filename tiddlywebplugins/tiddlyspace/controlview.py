@@ -131,7 +131,6 @@ class ControlView(object):
             elif req_uri.startswith('/search') and req_uri.count('/') == 1:
                 search_string = ' OR '.join(['bag:%s' % bag
                     for bag in bags])
-                print search_string
             else:
                 entity_name = urllib.unquote(
                         req_uri.split('/')[2]).decode('utf-8')
@@ -151,9 +150,9 @@ class ControlView(object):
                     environ['tiddlyweb.filters'].insert(0, single_filter)
             if search_string:
                 search_query = environ['tiddlyweb.query']['q'][0]
+                environ['tiddlyweb.query.original'] = search_query
                 if search_query:
                     search_query = '%s AND (%s)' % (search_query, search_string)
-                    print search_query
                     environ['tiddlyweb.query']['q'][0] = search_query
                 else:
                     search_query = '(%s)' % search_string

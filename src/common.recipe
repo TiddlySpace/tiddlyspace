@@ -1,6 +1,8 @@
 tiddler: http://github.com/tiddlyweb/tiddlyweb.com/raw/master/tiddlyweb.css
 tiddler: icons/defaultSiteIcon.tid
 tiddler: icons/defaultUserIcon.tid
+tiddler: lib/ts.js.js
+tiddler: lib/jquery.js.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid
@@ -9,3 +11,4 @@ tiddler: externals/alpha_jQuery.twStylesheet.js.js
 tiddler: externals/alpha_twcore.js.js
 tiddler: styles/profile.css
 tiddler: styles/HtmlBackground.tid
+recipe: apps/apps.recipe

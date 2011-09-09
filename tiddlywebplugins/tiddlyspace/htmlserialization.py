@@ -58,7 +58,10 @@ class Serialization(HTMLSerialization):
         """
         tiddlers_url = (self.environ.get('SCRIPT_NAME', '')
                 + self.environ.get('PATH_INFO', ''))
-        title = tiddlers.title
+        if tiddlers.is_search and 'tiddlyweb.query.original' in self.environ:
+            title = 'Search for %s' % self.environ['tiddlyweb.query.original']
+        else:
+            title = tiddlers.title
         revisions = tiddlers.is_revisions
         routing_args = self.environ.get('wsgiorg.routing_args', ([], {}))[1]
         container_name = ''
