@@ -31,6 +31,7 @@ store_contents['system-info_public'] = ['src/system-info/index.recipe']
 store_contents['system-plugins_public'] = ['src/system-plugins/index.recipe']
 store_contents['system-theme_public'] = ['src/system-theme/index.recipe']
 store_contents['system-images_public'] = ['src/system-images/index.recipe']
+store_contents['system-applications_public'] = ['src/system-applications/index.recipe']
 store_contents['frontpage_public'] = ['src/frontpage/index.recipe']
 
 store_structure['bags']['common']['policy'] = \
@@ -83,6 +84,7 @@ spaces = {
     'system-info': 'TiddlySpace default information tiddlers',
     'system-plugins': 'TiddlySpace system plugins',
     'system-images': 'TiddlySpace default images and icons',
+    'system-applications': 'TiddlySpace default applications'
 }
 
 #  setup system space public bags and recipes
