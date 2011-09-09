@@ -3,6 +3,7 @@ tiddler: icons/defaultSiteIcon.tid
 tiddler: icons/defaultUserIcon.tid
 tiddler: lib/ts.js.js
 tiddler: lib/jquery.js.js
+tiddler: lib/chrjs-store.js.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid
