@@ -11,9 +11,11 @@
         <span id="title">{{tiddler.title|e}}</span>
         {% endif %}
         </h1>
-        <div id='links'>
+{% endblock %}
+{% block content %}
+        <div class="meta" id='links'>
           <a class="revisions"
-              href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions">revision</a> 
+              href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions">revision</a>
           <a class="revision"
               href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions/{{tiddler.revision}}">
             {{tiddler.revision|e}}</a>
@@ -24,12 +26,10 @@
           {% endif %}
           in <a href="{{ list_link }}">this collection of tiddlers</a>
         </div>
-{% endblock %}
-{% block content %}
         {%- set reserved_fields = ['geo.lat', 'geo.long'] -%}
         <div id="tiddlertext">
             <div class="tiddler">
-              <div id="text-html" class="section">{{ html }}</div>
+              <div id="text-html" class="main section">{{ html }}</div>
               <dl class="meta section">
                   <dt>bag</dt>
                     <dd>
@@ -39,9 +39,9 @@
                       {%- if container_policy -%}</a>
                       {%- else -%}</span>{%- endif %}
                     </dd>
-                  <dt>created</dt><dd class="meta-created">{{tiddler.created|e}}</dd>
+                  <dt>created</dt><dd class="dtstart meta-created" data-timestamp="{{tiddler.created|e}}">{{tiddler.created|format_modified|e}}</dd>
                   <dt>creator</dt><dd><a class="meta-creator" href="{{ creator_link }}">{{tiddler.creator|e}}</a></dd>
-                  <dt>modified</dt><dd class="meta-modified">{{tiddler.modified|e}}</dd>
+                  <dt>modified</dt><dd class="meta-modified" data-timestamp="{{tiddler.modified|e}}">{{tiddler.modified|format_modified|e}}</dd>
                   <dt>modifier</dt><dd><a href="{{ modifier_link }}" class="meta-modifier">{{tiddler.modifier|e}}</a></dd>
                   {%- if tiddler.tags|length > 0 -%}
                   <dt>tags</dt>
