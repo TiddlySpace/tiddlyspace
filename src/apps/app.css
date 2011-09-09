@@ -7,6 +7,18 @@ body {
 	display: none;
 }
 
+form input {
+	width: 90px;
+	border: solid 1px #CCC;
+	height: 24px;
+}
+
+form input[type=submit] {
+	border: solid 1px #CCC;
+	width: auto;
+	background-color: white;
+}
+
 .logout {
 	font-size: 16px;
 }
