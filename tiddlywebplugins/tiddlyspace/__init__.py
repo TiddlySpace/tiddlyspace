@@ -24,7 +24,7 @@ from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.www import establish_www
 
 
-__version__ = '1.0.37'
+__version__ = '1.0.38'
 
 
 def init(config):
@@ -149,7 +149,7 @@ def web_tiddler_url(environ, tiddler, container='bags', full=True):
             space_name = Space.name_from_recipe(tiddler.recipe)
         else:
             space_name = Space.name_from_bag(tiddler.bag)
-            
+
         host = environ['tiddlyweb.config']['server_host']['host']
         port = environ['tiddlyweb.config']['server_host']['port']
         if port is '443' or port is '80':
@@ -163,7 +163,7 @@ def web_tiddler_url(environ, tiddler, container='bags', full=True):
     url = original_tiddler_url(environ, tiddler, container, full)
     if saved_host:
         environ['HTTP_HOST'] = saved_host
-    elif HTTP_HOST in environ:
+    elif 'HTTP_HOST' in environ:
         del environ['HTTP_HOST']
     return url
 
