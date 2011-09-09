@@ -1,0 +1,133 @@
+type: text/html
+modifier: hugheth
+
+<!doctype html>
+<html>
+	<head>
+		<title>TiddlyApp Share</title>
+
+		<link rel="stylesheet" href="/bags/common/tiddlers/profile.css" type="text/css"/>
+		<script src="/bags/common/tiddlers/jquery.js" type="text/javascript"></script>
+		<script src="/bags/tiddlyspace/tiddlers/chrjs" type="text/javascript"></script>
+		<script src="/bags/common/tiddlers/chrjs-store.js" type="text/javascript"></script>
+		<script src="/bags/tiddlyspace/tiddlers/chrjs.users" type="text/javascript"></script>
+		<script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
+		<script>
+			// The templates of the links to display on the page
+			var links = [
+				{
+					title: "Tiddlers",
+					info: "Show a list of all the tiddlers in this space that a visitor currently has access to.",
+					href: "{host}/tiddlers"
+				}, {
+					title: "Public Tiddlers",
+					info: "Show a list of all the public tiddlers in this space in alphabetical order.",
+					href: "{host}/bags/{subdomain}_public/select=tag:!excludeLists;sort=title"
+				}, {
+					title: "RSS Feed",
+					info: "Get the RSS feed of the most recently changed tiddlers.",
+					href: "{host}/tiddlers.atom?select=tag:!excludeLists;sort=-modified;limit=20"
+				}, {
+					title: "Specific Tiddler",
+					info: "Show a specific tiddler in your space (GettingStarted in this example) as HTML, JSON or just plain text.",
+					href: ["{host}/GettingStarted", "{host}/GettingStarted.json", "{host}/GettingStarted.txt"],
+					more: "http://tiddlyweb.peermore.com/wiki/"
+				}, {
+					title: "Search for text",
+					info: "Search tiddlers for some text contained inside a tiddler.",
+					href: "{host}/search?q={subdomain}"
+				}, {
+					title: "List tiddlers with a tag",
+					info: "Display all the tiddlers that have the tag specified (here the tag is systemConfig).",
+					href: "{host}/tiddlers?select=tag:excludeLists"
+				}
+			];
+
+			$(function() {
+
+				var subdomain = document.location.host.split(".")[0];
+
+				// Filter curly braces to display information
+				for (var i in links) {
+					var href = links[i].href;
+
+					if (typeof href === "string")
+						href = [href];
+
+					for (var j in href) {
+
+						href[j] =  href[j].replace("{host}", (document.protocol || "http:") + "//" + document.location.host);
+						href[j] =  href[j].replace("{subdomain}", subdomain);
+					}
+
+					links[i].href = href;
+				}
+
+				// Display links to user
+				var insertInto = $('#share_links');
+
+				for (var i in links) {
+
+					var linkBody = $('<div class="share_link"></div>');
+
+					var linkDisplay = $('<div class="link_display"></div>');
+
+					for (var j in links[i].href) {
+
+						var a = $('<a class="link_href" target="_blank"/>');
+						a.html(links[i].href[j]);
+						a.attr('href', links[i].href[j]);
+
+						linkDisplay.append(a);
+						linkDisplay.append("<br/>");
+					}
+					
+					var linkTitle = $('<b class="link_title"/>');
+					linkTitle.html(links[i].title);
+
+					var linkInfo = $('<div class="link_info"/>');
+					linkInfo.html(links[i].info);
+
+					linkBody.append(linkTitle);
+					linkBody.append('<br/>');
+					linkBody.append(linkInfo);
+					linkBody.append(linkDisplay);
+
+					if (links[i].more) {
+						var linkMore = $('<a class="link_more">Learn more</a>');
+						linkMore.attr('href', links[i].more);
+						linkBody.append(linkMore);
+					}
+
+					insertInto.append(linkBody);
+				}
+			});
+		</script>
+		<style type="text/css">
+			.link_display {
+				display: block;
+				background: #f2f2f2;
+				border: 1px solid #aaa;
+				padding: 10px;
+				margin-top: 4px;
+				word-wrap: break-word;
+			}
+			.link_more {
+				display: block;
+				text-align: right;
+			}
+			.share_link {
+				margin-bottom: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="header">
+				<h1>Share Space</h1>
+			</div>
+			<p>Here are a number of methods that you can use to share this Space and its content in different ways.</p>
+			<span id="share_links"></span>
+		</div>
+	</body>
+</html>
