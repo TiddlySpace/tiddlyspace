@@ -1,0 +1,74 @@
+body {
+	font-size: 8px;
+}
+
+.ts-loggedin .login {
+	display: none;
+}
+
+.logout {
+	font-size: 16px;
+}
+
+.logout form {
+	display: inline;
+	margin-left: 20px;
+	font-size: 16px;
+}
+
+#app-list {
+	background: #F0F4F8;
+}
+
+#app-list li {
+	height: 4.25em;
+	line-height: 3.125em;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #C3D3DD;
+	background: url(/bags/common/tiddlers/double_angle_lightblue_42x42.png) no-repeat 90% #F0F4F8;
+	-webkit-transition: background 0.4s linear;
+	-moz-transition: background 0.4s linear;
+	-o-transition: background 0.4s linear;
+	-ms-transition: background 0.4s linear;
+	transition: background 0.4s linear;
+}
+
+#app-list li:hover {
+	border-top: 1px solid #F0F4F8;
+	line-height: 3.25em;
+	cursor: pointer;
+	background: url(/bags/common/tiddlers/double_angle_darkpink_bevel_42x42.png) no-repeat 90% #F3F9FF;
+}
+
+#app-list li:hover:last-child {
+	line-height: 3.125em;
+}
+
+#app-list li a {
+	display: block;
+	height: 100%;
+	font-size: 2.5em;
+	text-decoration: none;
+	color: #BC4378;
+	width: 100%;
+	-webkit-transition: color 0.4s linear;
+	-moz-transition: color 0.4s linear;
+	-o-transition: color 0.4s linear;
+	-ms-transition: color 0.4s linear;
+	transition: color 0.4s linear;
+}
+
+#app-list li:hover a {
+	color: #E56AA0;
+}
+
+#app-list li a img {
+	position: relative;
+	top: 0.2125em;
+	margin: 0 1em;
+}
+
+#app-list li a span.comingsoon {
+	font-size: 0.5em;
+	color: #B8B6BD;
+}
