@@ -74,5 +74,5 @@ def test_root_tiddlers():
             'http://cdent.0.0.0.0:8080/tiddlers',
             method='GET')
     assert response['status'] == '200', content
-    assert '/bags/cdent_public/tiddlers/HouseHold">HouseHold' in content
-    assert '/bags/system/tiddlers/BinaryTiddlersPlugin">BinaryTiddlersPlugin' in content
+    assert '/recipes/cdent_public/tiddlers/HouseHold">HouseHold' in content, content
+    assert '/recipes/cdent_public/tiddlers/BinaryTiddlersPlugin">BinaryTiddlersPlugin' in content

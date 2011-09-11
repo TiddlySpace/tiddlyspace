@@ -58,13 +58,14 @@ class Serialization(HTMLSerialization):
         """
         tiddlers_url = (self.environ.get('SCRIPT_NAME', '')
                 + self.environ.get('PATH_INFO', ''))
-        if tiddlers.is_search:
+        if tiddlers.is_search and 'tiddlyweb.query.original' in self.environ:
             title = 'Search for %s' % self.environ['tiddlyweb.query.original']
         else:
             title = tiddlers.title
         revisions = tiddlers.is_revisions
         routing_args = self.environ.get('wsgiorg.routing_args', ([], {}))[1]
         container_name = ''
+        container_type = 'bags'
         container_url = ''
         container_policy = False
         store = self.environ['tiddlyweb.store']
@@ -73,6 +74,7 @@ class Serialization(HTMLSerialization):
             if 'recipe_name' in routing_args:
                 name = get_route_value(self.environ, 'recipe_name')
                 container_name = 'Recipe %s' % name
+                container_type = 'recipes'
                 try:
                     store.get(Recipe(name)).policy.allows(user, 'read')
                     container_url = '/recipes/%s' % name
@@ -110,9 +112,12 @@ class Serialization(HTMLSerialization):
             'meta_keywords': 'tiddlers, tiddlyspace',
             'meta_description': 'A list of tiddlers on TiddlySpace',
             'title': title,
+            'tiddler_url': tiddler_url,
+            'environ': self.environ,
             'revisions': revisions,
             'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
             'query_string': query_string,
+            'container_type': container_type,
             'container_name': container_name,
             'container_url': container_url,
             'container_policy': container_policy,

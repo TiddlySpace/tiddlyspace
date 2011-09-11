@@ -6,11 +6,12 @@ website: http://tiddlyspace.com
 repository: http://github.com/TiddlySpace/tiddlyspace
 """
 
-
+import tiddlywebplugins.tiddlyspace.fixups
 import tiddlywebplugins.status
 
 from tiddlyweb.model.user import User
 from tiddlyweb.store import NoUserError
+
 from tiddlyweb.util import merge_config
 from tiddlyweb.web.http import HTTPExceptor
 
@@ -22,7 +23,7 @@ from tiddlywebplugins.tiddlyspace.instance import store_contents
 from tiddlywebplugins.tiddlyspace.www import establish_www
 
 
-__version__ = '1.0.37'
+__version__ = '1.0.40'
 
 
 def init(config):

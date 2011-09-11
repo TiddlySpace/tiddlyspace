@@ -14,7 +14,7 @@ from tiddlyweb.model.user import User
 from tiddlyweb.web.handler.search import get as search
 from tiddlyweb.web.http import HTTP404, HTTP400, HTTP415
 from tiddlyweb.web.util import (server_host_url, encode_name,
-        get_serialize_type)
+        get_serialize_type, tiddler_url)
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
 from tiddlywebplugins.tiddlyspace.web import determine_host
 from tiddlyweb.wikitext import render_wikitext
@@ -101,6 +101,8 @@ def html_profile(environ, start_response):
         'avatar_path': avatar_path,
         'space_uri': space_uri(environ, username),
         'profile': profile_text,
+        'tiddler_url': tiddler_url,
+        'environ': environ,
         'tiddlers': tiddlers_list})
 
 

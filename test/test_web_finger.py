@@ -65,14 +65,14 @@ def test_get_profile_atom():
     assert response['status'] == '200'
 
     assert 'Hello There' in content
-    assert 'href="http://0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
+    assert 'href="http://cdent.0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
 
 def test_get_profile_atom_format():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent.atom')
     assert response['status'] == '200'
 
     assert 'Hello There' in content
-    assert 'href="http://0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
+    assert 'href="http://cdent.0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
 
 def test_get_profile_json():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent',
@@ -83,8 +83,8 @@ def test_vcard():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent')
     assert response['status'] == '200'
 
-    assert '<div id="hcard-cdent" class="vcard"' in content
+    assert '<h1 id="hcard-cdent" class="vcard"' in content
     assert 'src="/recipes/cdent_public/tiddlers/SiteIcon" alt="avatar" class="photo"' in content
-    assert '<div class="fn"><a href="http://cdent.0.0.0.0:8080/" class="url">cdent</a></div>' in content
+    assert '<a href="http://cdent.0.0.0.0:8080/" class="fn url">cdent</a>' in content
 
 

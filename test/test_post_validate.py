@@ -296,13 +296,13 @@ def test_cookie_set():
 
     user_cookie = get_auth('foo', 'foobar')
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+    response, content = http.request('http://foo.0.0.0.0:8080/status',
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie
         })
 
-    assert response['status'] == '200'
+    assert response['status'] == '200', content
 
     time = datetime.now().strftime('%Y%m%d%H')
     cookie = 'csrf_token=%s:%s:%s' % (time, user.usersign,

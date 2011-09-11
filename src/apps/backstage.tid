@@ -1,0 +1,56 @@
+type: text/html
+tags: excludeLists
+
+<html>
+<head>
+<link rel="stylesheet" href="/bags/common/tiddlers/reset.css" />
+<link rel="stylesheet" href="/bags/common/tiddlers/app.css" />
+</head>
+<body>
+<form class="login" action="" autocomplete="off">
+	<input type="text" name="username" placeholder="username" />
+	<input type="password" name="password" placeholder="password" /> 
+	<input type="hidden" name="redirect" value="/app_picker" />
+	<input type="submit" value="Log In" />
+</form>
+<div class="logout"></div>
+<hr />
+<ul id="app-list">
+	<li class="write">
+		<a href="/takenote" target="_parent">
+			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			WRITE
+		</a>
+	</li>
+	<li class="htmlserialisation">
+		<a href="/tiddlers.html" target="_parent">
+			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			BROWSE
+		</a>
+	</li>
+	<li class="links">
+		<a href="/links" target="_parent">
+			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			SHARE
+		</a>
+	</li>
+	<li class="tiddlywiki">
+		<a href="/tiddlers.wiki" target="_parent">
+			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			TIDDLYWIKI
+		</a>
+	</li>
+	<li class="preso">
+		<a href=""  target="_parent">
+			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			PRESO
+		</a>
+	</li>
+</ul>
+<script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
+<script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
+<script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs.users"></script>
+<script type="text/javascript" src="/bags/common/tiddlers/ts.js"></script>
+<script type="text/javascript">ts.init(null, { space: false });</script>
+</body>
+</html>

@@ -34,6 +34,12 @@ jslib: qunit
 		https://github.com/tiddlyweb/chrjs/raw/master/main.js)
 	$(call wrap_jslib, src/lib/chrjs.users.js, \
 		https://github.com/tiddlyweb/chrjs/raw/master/users.js)
+	$(call wrap_jslib, src/lib/jquery.js.js, \
+		http://code.jquery.com/jquery-1.6.3.min.js)
+	$(call wrap_jslib, src/lib/ts.js.js, \
+		https://raw.github.com/jdlrobson/ts.js/master/src/ts.js)
+	$(call wrap_jslib, src/lib/chrjs-store.js.js, \
+		https://raw.github.com/bengillies/chrjs.store/master/dist/chrjs-store-latest.js)
 
 qunit:
 	mkdir -p src/test/qunit

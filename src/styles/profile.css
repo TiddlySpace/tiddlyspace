@@ -1,52 +1,231 @@
-html {
-    background: black;
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
+body {
+	font: 14px/1.4 "Helvetica Neue", "Lucida Grande", "Arial";
+	margin: 0;
+	background-image: url(/bags/common/tiddlers/HtmlBackground);
 }
 
-body {
-    margin-left: auto;
-    margin-right: auto;
-    min-width: 750px;
-    background: white;
-    width: 75%;
+.gradient {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: transparent;
+	background-image: -webkit-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
+	background-image: -moz-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
+	background-image: -o-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
+	background-image: -ms-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
+	background-image: radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
+}
+
+blockquote {
+	quotes: "\201C" "\201D";
+	margin-bottom: 50px;
+}
+
+blockquote:before {
+	content: open-quote;
+	font-size: 3em;
+	font-weight: bold;
+	color: #CCC;
+}
+
+blockquote:after {
+	font-size: 3em;
+	content: close-quote;
+	font-weight: bold;
+	float: right;
+	color: #999;
+}
+
+pre {
+	margin-left: 50px;
+	border: dotted 1px #ccc;
+	padding: 10px;
+	word-wrap: break-word;
+}
+
+#container {
+	position: relative;
+	width: 520px;
+	background-color: #E0E0E0;
+	background-color: rgba(255, 255, 255, 0.7);
+	padding: 10px;
+	margin: auto;
+	padding: 10px;
+	margin-top: 10px;
+}
+
+a {
+	color: royalBlue;
+}
+
+#header {
+	width: 556px;
+	margin-left: -18px;
+	-webkit-box-shadow: 0px 1px 1px #606A73;
+	position: relative;
+	background-color: #DCE7F1;
+}
+
+#links {
+	text-align: center;
+}
+
+#header h1 {
+	margin: auto;
+	font-family: Georgia;
+	text-align: center;
+	font-size: 3em;
+}
+
+#header h1,
+#header h1 a {
+	color: #4C4A54;
+	text-decoration: none;
+	text-shadow: 0px 1px 1px white;
+}
+
+#header::before {
+	content: "";
+	position: absolute;
+	bottom: -8px;
+	left: 0px;
+	border-width: 0px 8px 8px 0px;
+	border-style: solid;
+	border-color: transparent #3A4955 transparent #3A4955;
+	background: transparent;
+	display: block;
+	width: 0;
+}
+
+#header::after {
+	content: "";
+	position: absolute;
+	bottom: -8px;
+	right: 0px;
+	border-width: 8px 8px 0px 0px;
+	border-style: solid;
+	border-color: #3A4955 transparent transparent #3A4955;
+	background: transparent;
+	display: block;
+	width: 0;
+}
+
+.main {
+	color: #1A1F1E;
+	font-family: Georgia;
+	font-size: 1.3em;
+	padding: 16px;
+	position: relative;
+	border: 1px solid gray;
+	background: #FFFFFF;
+	background: rgba(255, 255, 255, 0.7);
+	margin-top: 18px;
+	padding: 16px;
+	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5), -1px -1px 2px rgba(0, 0, 0, 0.5);
+	word-wrap: break-word;
+}
+
+.meta {
+	padding: 10px;
+	border: solid 1px #F0F4F8;
+	color: #4D4D4D;
+	font-size: .9em;
+}
+
+
+.meta ul {
+	list-style-type: none;
 }
 
 .meta .hidden {
 	display: none;
 }
 
-#header img {
-    max-width: 100;
-    max-height: 100;
-}
-
-.vcard {
-    float: right;
-}
-
-#header, #footer {
-    padding: 1em;
-}
-
 #footer {
-    text-align: right;
+	text-align: center;
+	font-style: italic;
+	font-size: .8em;
+	color: gray;
+	font-weight: bold;
+	border-top: solid 1px #CCC;
 }
 
-#article {
-    padding: 1em;
+dt, dd {
+	line-height: 24px;
 }
 
-.section {
-    padding: 1em;
-    border-top: thin solid black;
+dt {
+	margin-right: 8px;
+	float: left;
+	clear: both;
+	font-weight: bold;
 }
 
-.wikkly-code-block, .wikkly-code-inline {
-    font-family: monospace
+dd {
+	margin: 0px;
+	margin-right: 10px;
+	display: block;
 }
 
-.wikkly-strike {
-    text-decoration: line-through;
+dd.meta-tag {
+	display: inline-block;
+	margin-right: 8px;
+}
+
+#editLink {
+	position: absolute;
+	right: 0px;
+	top: 10px;
+	z-index: 5;
+	color: #787878;
+	font-size: 0.8em;
+}
+
+/* TODO: avoid repetition - this css also lives in notabene.css */
+#backstage {
+	width: 100%;
+	padding: 0px;
+	background-color: black;
+	margin: 0px 0px 0px 0px;
+	height: 32px;
+	text-align: center;
+	background: -moz-linear-gradient(center bottom,#222 0%, #333 50%, #555 100%);
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #222),color-stop(0.5, #333),color-stop(1, #555));
+	background: -moz-linear-gradient(center bottom,#222 0%, #333 50%, #555 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#F5555, endColorstr=#F2222);
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#F5555, endColorstr=#F2222)";
+}
+
+#backstage a {
+	color: white;
+	padding: 4px;
+	display: block;
+	text-decoration: none;
+}
+
+#backstage li:first-child {
+	border-right: solid 1px #777;
+}
+
+#backstage li:nth-child(2) {
+	border-left: solid 1px #555;
+}
+
+#backstage a:hover {
+	background-color: #FFA500;
+}
+
+#backstage li {
+	display: inline-block;
+	line-height: 18px;
+	margin-top: 2px;
+	padding: 0px 10px;
+}
+
+@media screen and (orientation:portrait) and (max-width: 320px) {
+	#backstage {
+		font-size: 0.8em;
+	}
 }
