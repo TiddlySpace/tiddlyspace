@@ -149,7 +149,7 @@ class ControlView(object):
                 for single_filter in filters:
                     environ['tiddlyweb.filters'].insert(0, single_filter)
             if search_string:
-                search_query = environ['tiddlyweb.query']['q'][0]
+                search_query = environ['tiddlyweb.query'].get('q', [''])[0]
                 environ['tiddlyweb.query.original'] = search_query
                 if search_query:
                     search_query = '%s AND (%s)' % (search_query, search_string)
