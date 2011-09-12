@@ -6,7 +6,7 @@ modifier: colmbritton
 <head>
 	<meta charset="utf-8"/>
 	<title>TiddlySpace Apps</title>
-	<link rel="stylesheet" href="reset.css" />
+	<link rel="stylesheet" href="http://tiddlyspace.com/bags/common/tiddlers/reset.css" />
 	<link rel="stylesheet" href="appspage.css" />
 </head>
 <body>
