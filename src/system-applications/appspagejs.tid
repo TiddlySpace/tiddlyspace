@@ -1,0 +1,45 @@
+title: appspage.js
+type: text/javascript
+modifier: colmbritton
+
+(function($){
+	
+	$(function(){
+		
+		$('#app-list li').mouseover(function() {
+		  	var me = $(this),
+				appname = me.attr("class"),
+				descEl = '.' + appname + 'desc';
+			$(descEl).addClass("highlightdesc");
+		}).mouseout(function() {
+		  	var me = $(this),
+			appname = me.attr("class"),
+			descEl = '.' + appname + 'desc';
+			$(descEl).removeClass("highlightdesc");
+		});
+		
+		$(".inactive").click(function() {
+			var me = $(this),
+				oldtext = me.text();
+			me.text("coming soon").animate({'color':'#fff'}, 400, function() {
+				setTimeout(function(){
+					me.text(oldtext);
+				}, 2000);
+			});
+			return false;
+		});
+		
+		$(".soon").click(function() {
+			var me = $(this),
+				comingsoon = $('.comingsoon', me);
+			comingsoon.addClass("highlight");
+			// won't work until jquery ui is included
+			comingsoon.animate({'color':'#BC4378'}, 600, function() {
+				comingsoon.animate({'color':'#B8B6BD'}, 600);
+			});
+			return false;
+		});
+		
+	});
+	
+})(jQuery);
