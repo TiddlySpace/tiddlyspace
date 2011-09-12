@@ -52,7 +52,7 @@ window.addEventListener("load", function() {
 
 	var bubbleOpen = false;
 	var toggleBubble = function(ev) {
-		ev.stopPropagation();c
+		ev.stopPropagation();
 		if(bubbleOpen) {
 			fade(bubble, false);
 		} else {
