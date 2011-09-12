@@ -1,0 +1,274 @@
+title: appspage.css
+type: text/css
+modifier: colmbritton
+
+body {
+	font-family: "helvetica neue";
+	font-size: 16px;
+}
+
+#TSbar {
+	background: #000;
+	background: -moz-linear-gradient(center bottom,#222 0%, #333 50%, #555 100%);
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #222),color-stop(0.5, #333),color-stop(1, #555));
+	border-bottom: 1px solid black;
+	height: 24px;
+}
+
+#main-content {
+	margin: 0 auto;
+	padding-top: 2em;
+	width: 960px;
+}
+
+#space-details {
+	height: 100px;
+	margin: 0 0 5em;
+}
+
+#space-details img {
+	border-radius: 2px;
+	float: left;
+	margin-right: 2em;
+}
+
+#title-subtitle {
+	color: #79757A;
+}
+
+.spaceaddress {
+	height: 62px;
+	line-height: 62px;
+}
+
+#title-subtitle p {
+	font-size: 1.3em;
+	line-height: 38px;
+}
+
+.managespaces {
+	background: #D0D5D6;
+	color: #F0F4F8;
+	border-radius: 4px;
+	float: right;
+	padding: 0 0.7em;
+	text-decoration: none;
+	-webkit-transition: all 0.4s ease-in-out;
+	-moz-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	-ms-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
+}
+
+#space-details:hover .managespaces {
+	background: #ADD1DD;
+}
+
+#space-details .managespaces:hover {
+	background: #0082AF;
+}
+
+h1 {
+	color: #B8B6BD;
+	font-size: 2em;
+}
+
+h1 span {
+	color: #0059AF;
+	color: #0082AF;
+	font-size: 1.5em;
+}
+
+#holder {
+	background: #DCE7F1;
+	border-radius: 2px;
+	border: 1px solid #ADD1DD;
+	box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.25);
+}
+
+#appswitcher {
+	background: #F0F4F8;
+	border-radius: 2px;
+	box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.25), -1px 0px 3px 0px rgba(0,0,0,0.25);
+	margin-top: -40px;
+	margin-right: 10px;
+	margin-bottom: -10px;
+	float: right;
+	width: 60%;
+}
+
+#appswitcher h2 {
+	color: #4C4A54;
+	color: #8C9DA7;
+	font-size: 2em;
+	font-weight: 500;
+	line-height: 1.8em;
+	text-shadow: 0 1px 0 #fff;
+	margin-left: 1em;
+}
+
+#app-list {
+	background: #F0F4F8;
+}
+
+#app-list li {
+	background: url('http://colmjude.tiddlyspace.com/double_angle_lightblue_42x42.png') no-repeat 88% #F0F4F8;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #C3D3DD;
+	height: 4.25em;
+	line-height: 3.125em;
+	-webkit-transition: background 0.4s linear;
+	-moz-transition: background 0.4s linear;
+	-o-transition: background 0.4s linear;
+	-ms-transition: background 0.4s linear;
+	transition: background 0.4s linear;
+}
+
+#app-list li:hover {
+	background: url('http://colmjude.tiddlyspace.com/double_angle_darkpink_bevel_42x42.png') no-repeat 90% #F3F9FF;
+	border-top: 1px solid #F0F4F8;
+	cursor: pointer;
+	line-height: 3.25em;
+}
+
+#app-list li:hover:last-child {
+	line-height: 3.125em;
+}
+
+#app-list li a {
+	display: block;
+	color: #BC4378;
+	font-size: 2.5em;
+	text-decoration: none;
+	height: 100%;
+	width: 100%;
+	-webkit-transition: color 0.4s linear;
+	-moz-transition: color 0.4s linear;
+	-o-transition: color 0.4s linear;
+	-ms-transition: color 0.4s linear;
+	transition: color 0.4s linear;
+}
+
+#app-list li:hover a {
+	color: #E56AA0;
+}
+
+#app-list li a img {
+	position: relative;
+	top: 0.2125em;
+	margin: 0 1em;
+	height: 1.25em;
+	width: 1.25em;
+}
+
+#app-list li a span.comingsoon {
+	color: #B8B6BD;
+	font-size: 0.5em;
+}
+
+#app-list li a span.comingsoon.highlight {
+	color: #BC4378;
+}
+
+#app-desc {
+	float: left;
+	width: 35%;
+}
+
+#app-desc ul {
+	/* use as faded color ? */
+	color: #C3D3DD;
+	color: #8C9DA7;
+	font-size: 0.9em;
+	font-style: italic;
+	margin-top: 18px;
+	margin-right: -1em;
+	text-align: right;
+}
+
+#app-desc ul li {
+	display: table;
+	border-bottom: 1px dashed #F0F4F8;
+	height: 70px;
+	padding-left: 1em;
+	-webkit-transition: color 0.4s linear;
+	-moz-transition: color 0.4s linear;
+	-o-transition: color 0.4s linear;
+	-ms-transition: color 0.4s linear;
+	transition: color 0.4s linear;
+}
+
+#app-desc ul li.highlightdesc {
+	color: #D65C8C;
+}
+
+#app-desc ul li:first-of-type {
+	border-top: 1px dashed #F0F4F8;
+}
+
+#app-desc ul li p {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#addapp {
+	margin: 1.5em 0 1em;
+	padding: 10px;
+	text-align: center;
+}
+
+#addapp button {
+	background: #E7DFE3;
+	background: rgba(206,199,203, 0.8);
+	color: #F0F4F8;
+	border: none;
+	border-radius: 4px;
+	font-size: 2em;
+	padding: 16px 24px 12px;
+	-webkit-transition: all 0.4s ease-in-out;
+	-moz-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	-ms-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
+}
+
+#addapp:hover button {
+	background: #BC4378;
+}
+
+#addapp button:hover {
+	cursor: pointer;
+}
+
+#footer {
+	background: #1A1F1E;
+	margin-top: 3em;
+	padding: 0.3em 0;
+	clear: both;
+}
+
+#footer-content {
+	color: #B2AAA4;
+	font-size: 0.8em;
+	line-height: 1.3em;
+	margin: 0 auto;
+	width: 960px;
+}
+
+#footer .links {
+	float: right;
+}
+
+#footer .links a {
+	margin-left: 10px;
+}
+
+#footer-content a {
+	color: #B2AAA4;
+	text-decoration: none;
+}
+
+#footer-content a:hover {
+	color: #80a7c1;
+	text-decoration: underline;
+}
