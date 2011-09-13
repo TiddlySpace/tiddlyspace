@@ -1,0 +1,94 @@
+type: text/html
+modifier: colmbritton
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<title>TiddlySpace Apps</title>
+	<link rel="stylesheet" href="http://tiddlyspace.com/bags/common/tiddlers/reset.css" />
+	<link rel="stylesheet" href="appspage.css" />
+</head>
+<body>
+	
+	<div id="wrapper">
+		<div id="TSbar"></div>
+		<div id="main-content">
+			<div id="space-details">
+				<img class="siteicon" src="http://placehold.it/100x100">
+				<div id="title-subtitle">
+					<h1 class="spaceaddress">
+						<span>SPACENAME</span>.tiddlyspace.com
+					</h1>
+					<p class="tagline">your space's tagline... <a class="managespaces inactive" href="/ManageSpaces">manage space</a></p>
+				</div>
+			</div>
+			<div id="holder">
+				<div id="appswitcher-wrapper">
+					<div id="appswitcher">
+						<h2>Your Apps</h2>
+						<ul id="app-list">
+							<li class="write"><a href="/takenote">
+								<img src="http://placehold.it/50x50" alt="" class="app-img" />
+								WRITE
+								</a>
+							</li>
+							<li class="htmlserialisation">
+								<a href="/tiddlers.html">
+									<img src="http://placehold.it/50x50" alt="" class="app-img" />
+									BROWSE
+								</a>
+							</li>
+							<li class="links">
+								<a href="/links">
+									<img src="http://placehold.it/50x50" alt="" class="app-img" />
+									SHARE
+								</a>
+							</li>
+							<li class="tiddlywiki">
+								<a href="/tiddlers.wiki">
+									<img src="http://placehold.it/50x50" alt="" class="app-img" />
+									TIDDLYWIKI
+								</a>
+							</li>
+							<li class="preso">
+								<a class="soon" href="">
+									<img src="http://placehold.it/50x50" alt="" class="app-img" />
+									PRESO <span class="comingsoon">(coming soon...)</span>
+								</a>
+							</li>
+						</ul>
+						<div id="addapp">
+							<button class="inactive">Add More!</button>
+						</div>
+					</div>
+					<aside id="app-desc">
+						<ul>
+							<li class="writedesc"><p>write your notes on the web.  Link them, tag them, share them.  Your notes are available everywhere, on and offline.</p></li>
+							<li class="htmlserialisationdesc"><p>an easy to understand HTML representation of your content.</p></li>
+							<li class="linksdesc"><p>share direct links to your content. The share app provides you with quick and easy access to the key links within your TiddlySpace.</p></li>
+							<li class="tiddlywikidesc"><p>use TiddlyWiki to create, edit and organise your content.</p></li>
+							<li class="presodesc"><p>an interactive pan-able, zoom-able, shareable representation of your content.  Think PowerPoint but on the web. And better.</p></li>
+						</ul>
+					</aside>
+					<br style="clear:both">
+				</div>
+			</div>
+		</div>
+		<div id="footer"><!-- ie doesn't support footer tag -->
+			<div id="footer-content">
+				<div class="links">
+					<a href="http://blog.tiddlyspace.com">blog</a>
+					<a href="http://featured.tiddlyspace.com">featured</a>
+					<a href="http://docs.tiddlyspace.com">documentation</a>
+					<a href="https://github.com/TiddlySpace/tiddlyspace">source</a>
+				</div>
+				<p>TiddlySpace 2011, created by <a href="http://osmosoft.com">Osmosoft</a></p>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script type="text/javascript" src="appspage.js"></script>
+</body>
+</html>
