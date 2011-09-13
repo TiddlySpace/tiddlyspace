@@ -1,8 +1,12 @@
 tiddler: http://github.com/tiddlyweb/tiddlyweb.com/raw/master/tiddlyweb.css
 tiddler: icons/defaultSiteIcon.tid
 tiddler: icons/defaultUserIcon.tid
+tiddler: lib/bookmark_bubble.js.js
 tiddler: lib/ts.js.js
 tiddler: lib/jquery.js.js
+tiddler: lib/jquery-json.js.js
+tiddler: lib/jquery-ui.custom.js.js
+tiddler: lib/jquery-ui.custom.css
 tiddler: lib/chrjs-store.js.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
