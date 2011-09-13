@@ -40,6 +40,10 @@ jslib: qunit
 		https://raw.github.com/jdlrobson/ts.js/master/src/ts.js)
 	$(call wrap_jslib, src/lib/chrjs-store.js.js, \
 		https://raw.github.com/bengillies/chrjs.store/master/dist/chrjs-store-latest.js)
+	$(call wrap_jslib, src/lib/bookmark_bubble.js.js, \
+		http://mobile-bookmark-bubble.googlecode.com/hg/bookmark_bubble.js)
+	$(call wrap_jslib, src/lib/jquery-json.js.js, \
+		http://jquery-json.googlecode.com/svn/trunk/jquery.json.min.js)
 
 qunit:
 	mkdir -p src/test/qunit
