@@ -232,6 +232,17 @@ def test_space_server_settings_twrelease():
     assert response['status'] == '200'
     assert '/bags/common/tiddlers/alpha_jquery.js' not in content
 
+    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers.wiki')
+    assert response['status'] == '200'
+    assert '/bags/common/tiddlers/alpha_jquery.js' not in content
+    assert 'TiddlyWiki created by Jeremy Ruston' in content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers',
+            headers={'Accept': 'text/x-tiddlywiki'})
+    assert response['status'] == '200'
+    assert '/bags/common/tiddlers/alpha_jquery.js' not in content
+    assert 'TiddlyWiki created by Jeremy Ruston' in content
+
     tiddler = Tiddler('ServerSettings', 'foo_public')
     tiddler.text = 'external: True\ntwrelease:alpha'
     store.put(tiddler)
@@ -239,6 +250,17 @@ def test_space_server_settings_twrelease():
     response, content = http.request('http://foo.0.0.0.0:8080/')
     assert response['status'] == '200', content
     assert '/bags/common/tiddlers/alpha_jquery.js' in content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers.lwiki')
+    assert response['status'] == '200', content
+    assert '/bags/common/tiddlers/alpha_jquery.js' in content
+    assert 'TiddlyWiki created by Jeremy Ruston' in content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers',
+            headers={'Accept': 'text/x-tiddlywiki'})
+    assert response['status'] == '200'
+    assert '/bags/common/tiddlers/alpha_jquery.js' in content
+    assert 'TiddlyWiki created by Jeremy Ruston' in content
 
     # bad content
     tiddler = Tiddler('ServerSettings', 'foo_public')
