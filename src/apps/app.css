@@ -7,7 +7,7 @@ a {
 	color: #BC4378;
 }
 
-.ts-loggedin .login {
+.ts-loggedin .ts-login {
 	display: none;
 }
 
@@ -23,11 +23,11 @@ form input[type=submit] {
 	background-color: white;
 }
 
-.logout {
+.ts-logout {
 	font-size: 16px;
 }
 
-.logout form {
+.ts-logout form {
 	display: inline;
 	margin-left: 20px;
 	font-size: 16px;

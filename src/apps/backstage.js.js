@@ -51,13 +51,27 @@ window.addEventListener("load", function() {
 	}, false);
 
 	var bubbleOpen = false;
-	link.addEventListener("click", function(ev) {
+	var toggleBubble = function(ev) {
+		ev.stopPropagation();
 		if(bubbleOpen) {
 			fade(bubble, false);
 		} else {
 			fade(bubble, true);
-		}
+		};
 		bubbleOpen = !bubbleOpen;
+	}
+
+	link.addEventListener("click", toggleBubble, false);
+
+	window.addEventListener("click",
+		function(ev) {
+			if(bubbleOpen) {
+				toggleBubble(ev);
+			}
+		}, false);
+
+	bubble.addEventListener("click", function(ev) {
+		ev.stopPropagation();
 	}, false);
 }, false);
 })();
