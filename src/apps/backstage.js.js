@@ -33,6 +33,7 @@ var loadEvent = function() {
 	bubble.innerHTML = html;
 	body.appendChild(bubble);
 
+	// TODO: adding a stylesheet in this manner does not work on older browsers
 	var head = document.getElementsByTagName("HEAD")[0];
 	var el = document.createElement("link");
 	el.setAttribute("rel", "stylesheet");
@@ -47,6 +48,7 @@ var loadEvent = function() {
 			clearInterval(bubbleFadeInterval);
 		}
 		bubbleFadeInterval = setInterval(function() {
+			// TODO: IE does not support opacity
 			el.style.cssText = "opacity:" + opacity;
 			opacity = fadeIn ? opacity + 0.1 : opacity - 0.1;
 			if(opacity < 0 || opacity > 1) {
@@ -92,5 +94,8 @@ var loadEvent = function() {
 		}
 	});
 };
+// TODO: support ie < 9
+if(window.addEventListener) {
 addEventListener(window, "load", loadEvent);
+}
 })();
