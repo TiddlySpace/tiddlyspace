@@ -41,7 +41,7 @@ tags: excludeLists
 		</a>
 	</li>
 	<li class="preso">
-		<a href=""  target="_parent">
+		<a href="/present"  target="_parent">
 			<img src="http://placehold.it/50x50" alt="" class="app-img" />
 			PRESO
 		</a>
