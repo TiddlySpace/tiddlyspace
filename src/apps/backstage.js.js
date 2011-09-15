@@ -3,7 +3,17 @@ Adds the app switcher to a TiddlySpace app.
 ***/
 (function() {
 
-window.addEventListener("load", function() {
+function addEventListener(node, event, handler) {
+	if (node.addEventListener){  
+		node.addEventListener(event, handler, false);   
+	} else if (node.attachEvent){  
+		event = event == "click" ? "onclick" : event;
+		event = event == "load" ? "onload" : event;
+		node.attachEvent(event, handler);  
+	}
+};
+
+var loadEvent = function() {
 	var link = document.createElement("a");
 	link.setAttribute("id", "app-picker");
 	link.setAttribute("class", "app-picker");
@@ -46,7 +56,7 @@ window.addEventListener("load", function() {
 		}, 50);
 	}
 
-	link.addEventListener("mousedown", function(ev) {
+	addEventListener(link, "mousedown", function(ev) {
 		ev.preventDefault();
 	}, false);
 
@@ -61,17 +71,18 @@ window.addEventListener("load", function() {
 		bubbleOpen = !bubbleOpen;
 	}
 
-	link.addEventListener("click", toggleBubble, false);
+	addEventListener(link, "click", toggleBubble);
 
-	window.addEventListener("click",
+	addEventListener(window, "click",
 		function(ev) {
 			if(bubbleOpen) {
 				toggleBubble(ev);
 			}
 		}, false);
 
-	bubble.addEventListener("click", function(ev) {
+	addEventListener(bubble, "click", function(ev) {
 		ev.stopPropagation();
-	}, false);
-}, false);
+	});
+};
+addEventListener(window, "load", loadEvent);
 })();
