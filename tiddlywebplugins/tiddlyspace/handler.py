@@ -77,7 +77,14 @@ def get_space_tiddlers(environ, start_response):
     whatever the reqeusted representation is. Choose recipe
     based on membership status.
     """
-    _setup_friendly_environ(environ)
+    space_name = _setup_friendly_environ(environ)
+    serializer, _ = get_serialize_type(environ)
+    # If we are a wiki read ServerSettings, but ignore index
+    if ('betaserialization' in serializer
+            or 'betalazyserialization' in serializer):
+        _, lazy = update_space_settings(environ, space_name)
+        if lazy:
+            environ['tiddlyweb.type'] = 'text/x-ltiddlywiki'
     return get_tiddlers(environ, start_response)
 
 
@@ -170,7 +177,7 @@ def _setup_friendly_environ(environ):
     """
     Manipulate the environ so that we appear to be in the context of the
     recipe appropriate for this current space and the current membership
-    status.
+    status. Return space_name to caller.
     """
     http_host, host_url = determine_host(environ)
     if http_host == host_url:
@@ -181,3 +188,4 @@ def _setup_friendly_environ(environ):
     recipe_name = determine_space_recipe(environ, space_name)
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
         'UTF-8')
+    return space_name
