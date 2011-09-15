@@ -62,7 +62,11 @@ var loadEvent = function() {
 
 	var bubbleOpen = false;
 	var toggleBubble = function(ev) {
-		ev.stopPropagation();
+		if(ev.stopPropagation) {
+			ev.stopPropagation();
+		} else {
+			ev.cancelBubble = false;
+		}
 		if(bubbleOpen) {
 			fade(bubble, false);
 		} else {
@@ -81,7 +85,11 @@ var loadEvent = function() {
 		}, false);
 
 	addEventListener(bubble, "click", function(ev) {
-		ev.stopPropagation();
+		if(ev.stopPropagation) {
+			ev.stopPropagation();
+		} else {
+			ev.cancelBubble = false;
+		}
 	});
 };
 addEventListener(window, "load", loadEvent);
