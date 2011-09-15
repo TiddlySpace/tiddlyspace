@@ -10,7 +10,7 @@ tags: excludeLists
 <form class="ts-login login" action="" autocomplete="off">
 	<input type="text" name="username" placeholder="username" />
 	<input type="password" name="password" placeholder="password" /> 
-	<input type="hidden" name="redirect" value="/app_picker" />
+	<input type="hidden" name="redirect" value="/bags/common/tiddlers/backstage" />
 	<input type="submit" value="Log In" />
 </form>
 <div class="ts-logout logout"></div>
