@@ -1,5 +1,6 @@
 title: appspage.css
 type: text/css
+tags: excludeLists excludeSearch
 modifier: colmbritton
 
 body {

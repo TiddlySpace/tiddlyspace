@@ -1,5 +1,6 @@
 type: text/html
 modifier: colmbritton
+tags: excludeLists excludeSearch
 
 <!DOCTYPE html>
 <html lang="en">

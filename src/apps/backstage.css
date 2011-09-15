@@ -5,7 +5,7 @@ iframe {
 
 a.app-picker {
 	position: absolute;
-	right: 44px;
+	right: 24px;
 	top: 0px;
 	width: 24px;
 	height: 24px;
@@ -60,7 +60,7 @@ a.app-picker:hover {
 	display:block; 
 	width:0;
 	top:-24px;
-	right:25px;
+	right:5px;
 	bottom:auto;
 	left:auto;
 	opacity: 0.5;
@@ -75,7 +75,7 @@ a.app-picker:hover {
 	display:block; 
 	width:0;
 	top:-15px;
-	right:30px;
+	right:10px;
 	bottom:auto;
 	left:auto;
 	border-width:0 15px 15px;

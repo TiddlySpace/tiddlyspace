@@ -185,6 +185,8 @@ dd.meta-tag {
 
 /* TODO: avoid repetition - this css also lives in notabene.css */
 #backstage {
+	position: relative;
+	z-index: 2;
 	width: 100%;
 	padding: 0px;
 	background-color: black;
