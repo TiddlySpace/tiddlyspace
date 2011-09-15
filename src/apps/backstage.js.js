@@ -3,7 +3,17 @@ Adds the app switcher to a TiddlySpace app.
 ***/
 (function() {
 
-window.addEventListener("load", function() {
+function addEventListener(node, event, handler) {
+	if (node.addEventListener){  
+		node.addEventListener(event, handler, false);   
+	} else if (node.attachEvent){  
+		event = event == "click" ? "onclick" : event;
+		event = event == "load" ? "onload" : event;
+		node.attachEvent(event, handler);  
+	}
+};
+
+var loadEvent = function() {
 	var link = document.createElement("a");
 	link.setAttribute("id", "app-picker");
 	link.setAttribute("class", "app-picker");
@@ -23,6 +33,7 @@ window.addEventListener("load", function() {
 	bubble.innerHTML = html;
 	body.appendChild(bubble);
 
+	// TODO: adding a stylesheet in this manner does not work on older browsers
 	var head = document.getElementsByTagName("HEAD")[0];
 	var el = document.createElement("link");
 	el.setAttribute("rel", "stylesheet");
@@ -37,6 +48,7 @@ window.addEventListener("load", function() {
 			clearInterval(bubbleFadeInterval);
 		}
 		bubbleFadeInterval = setInterval(function() {
+			// TODO: IE does not support opacity
 			el.style.cssText = "opacity:" + opacity;
 			opacity = fadeIn ? opacity + 0.1 : opacity - 0.1;
 			if(opacity < 0 || opacity > 1) {
@@ -46,13 +58,17 @@ window.addEventListener("load", function() {
 		}, 50);
 	}
 
-	link.addEventListener("mousedown", function(ev) {
+	addEventListener(link, "mousedown", function(ev) {
 		ev.preventDefault();
 	}, false);
 
 	var bubbleOpen = false;
 	var toggleBubble = function(ev) {
-		ev.stopPropagation();
+		if(ev.stopPropagation) {
+			ev.stopPropagation();
+		} else {
+			ev.cancelBubble = false;
+		}
 		if(bubbleOpen) {
 			fade(bubble, false);
 		} else {
@@ -61,17 +77,25 @@ window.addEventListener("load", function() {
 		bubbleOpen = !bubbleOpen;
 	}
 
-	link.addEventListener("click", toggleBubble, false);
+	addEventListener(link, "click", toggleBubble);
 
-	window.addEventListener("click",
+	addEventListener(window, "click",
 		function(ev) {
 			if(bubbleOpen) {
 				toggleBubble(ev);
 			}
 		}, false);
 
-	bubble.addEventListener("click", function(ev) {
-		ev.stopPropagation();
-	}, false);
-}, false);
+	addEventListener(bubble, "click", function(ev) {
+		if(ev.stopPropagation) {
+			ev.stopPropagation();
+		} else {
+			ev.cancelBubble = false;
+		}
+	});
+};
+// TODO: support ie < 9
+if(window.addEventListener) {
+addEventListener(window, "load", loadEvent);
+}
 })();
