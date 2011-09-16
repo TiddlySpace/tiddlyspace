@@ -1,5 +1,6 @@
 /***
 TiddlySpace extensions for [[chrjs]]
+|''Requires''|chrjs.users|
 ***/
 //{{{
 (function($) {
