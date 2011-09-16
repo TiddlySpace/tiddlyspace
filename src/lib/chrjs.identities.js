@@ -19,7 +19,7 @@ jQuery.extend(IdentitiesCollection.prototype, {
 	},
 	get: function(callback, errback) {
 		var uri = this.route();
-		jQuery.ajax({
+		$.ajax({
 			type: "get",
 			dataType: "json",
 			url: uri,
@@ -37,5 +37,5 @@ tiddlyweb.User.prototype.identities = function() {
 	return new IdentitiesCollection(this);
 };
 
-});
+})(jQuery);
 //}}}
