@@ -13,6 +13,7 @@ import simplejson
 import Cookie
 
 from tiddlyweb.model.user import User
+from tiddlyweb.model.tiddler import Tiddler
 
 AUTH_COOKIE = None
 
@@ -84,6 +85,8 @@ def test_safe_exists():
 
     assert ('TiddlyWebAdaptor', 'system') in tiddlers_info
 
+    tiddler = Tiddler('cdentSetupFlag', 'cdent_private')
+    store.put(tiddler)
     response, content = http.request('http://cdent.0.0.0.0:8080/',
             method='GET',
             headers={'Accept': 'application/json',
@@ -93,7 +96,7 @@ def test_safe_exists():
     tiddlers = simplejson.loads(content)
     tiddlers_info = [(tiddler['title'], tiddler['bag']) for tiddler in tiddlers]
     bags = set(bag for title, bag in tiddlers_info)
-    assert sorted(list(bags)) == ['system', 'tiddlyspace']
+    assert sorted(list(bags)) == ['cdent_private', 'system', 'tiddlyspace']
 
     assert ('TiddlyWebAdaptor', 'system') in tiddlers_info
 
