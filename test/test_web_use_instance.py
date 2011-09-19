@@ -247,6 +247,9 @@ def test_space_server_settings_twrelease():
     tiddler.text = 'external: True\ntwrelease:alpha'
     store.put(tiddler)
 
+    tiddler2 = Tiddler('fooSetupFlag', 'foo_public')
+    store.put(tiddler2)
+
     response, content = http.request('http://foo.0.0.0.0:8080/')
     assert response['status'] == '200', content
     assert '/bags/common/tiddlers/alpha_jquery.js' in content
@@ -320,3 +323,16 @@ def test_space_server_settings_index():
     assert '<h1>Hello!</h1>' in content
     assert 'TiddlyWiki' not in content
     assert 'TiddlyWeb' not in content
+
+def test_new_space_loads_apps():
+    http = httplib2.Http()
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    store.delete(tiddler)
+    tiddler = Tiddler('fooSetupFlag', 'foo_public')
+    store.delete(tiddler)
+    response, defaultContent = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+
+    response, appsContent = http.request('http://foo.0.0.0.0:8080/apps')
+    assert response['status'] == '200'
+    assert appsContent == defaultContent

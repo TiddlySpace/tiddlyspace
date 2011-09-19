@@ -14,7 +14,7 @@ except ImportError:
 from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
-from tiddlyweb.store import NoBagError, StoreError
+from tiddlyweb.store import NoBagError, StoreError, NoTiddlerError
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
@@ -29,6 +29,7 @@ from tiddlywebplugins.tiddlyspace.space import Space
 
 
 SPACE_SERVER_SETTINGS = 'ServerSettings'
+DEFAULT_NEWUSER_APP = 'apps'
 
 
 def friendly_uri(environ, start_response):
@@ -124,6 +125,28 @@ def serve_space(environ, start_response, http_host):
     return get_tiddlers(environ, start_response)
 
 
+def _figure_default_index(environ, bag_name, space, index=None):
+    """
+    if an app hasn't been specified, check whether the space is new or old.
+    old users should get the old default: TiddlyWiki, new users should get
+    the new default: the app switcher. The presence of a spaceSetupFlag
+    tiddler is the test for this.
+    """
+    store = environ['tiddlyweb.store']
+    if not index and space.name != 'frontpage':
+        setupFlag = Tiddler('%sSetupFlag' % space.name, bag_name)
+        try:
+            setupFlag = store.get(setupFlag)
+        except NoTiddlerError:
+            setupFlag.bag = space.private_bag()
+            try:
+                setupFlag = store.get(setupFlag)
+            except NoTiddlerError:
+                index = DEFAULT_NEWUSER_APP
+
+    return index
+
+
 def update_space_settings(environ, name):
     """
     Read a tiddler named by SPACE_SERVER_SETTINGS in the current
@@ -141,7 +164,7 @@ def update_space_settings(environ, name):
         tiddler = store.get(tiddler)
         data_text = tiddler.text
     except StoreError:
-        return None, False
+        return _figure_default_index(environ, bag_name, space), False
 
     query_strings = []
     index = ''
@@ -160,6 +183,8 @@ def update_space_settings(environ, name):
                 query_strings.append('%s=%s' % (key, value))
         except ValueError:
             pass
+
+    index = _figure_default_index(environ, bag_name, space, index)
 
     query_string = ';'.join(query_strings)
 
