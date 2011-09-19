@@ -52,9 +52,9 @@ modifier: colmbritton
 								</a>
 							</li>
 							<li class="preso">
-								<a class="soon" href="">
+								<a href="/present">
 									<img src="http://tiddlyspace.com/bags/icons_public/tiddlers/preso_blue.png" alt="Icon for Preso" class="app-img" />
-									PRESO <span class="comingsoon">(coming soon...)</span>
+									PRESO
 								</a>
 							</li>
 						</ul>
