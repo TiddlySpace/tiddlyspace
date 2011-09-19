@@ -54,4 +54,10 @@ class Serialization(WikiSerialization):
             if file:
                 logging.debug('using %s as base_tiddlywiki', file)
                 return read_utf8_file(file)
-        return WikiSerialization._get_wiki(self)
+        wiki = WikiSerialization._get_wiki(self)
+        tag = "<!--POST-SCRIPT-END-->"
+        wiki = wiki.replace(tag, '''
+          <script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
+          %s
+          '''%tag)
+        return wiki
