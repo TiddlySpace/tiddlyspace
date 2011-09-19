@@ -1,0 +1,126 @@
+type: text/html
+tags: excludeLists
+
+<html>
+<head>
+	<title>This Space</title>
+	<script type='text/javascript' src='/bags/common/tiddlers/backstage.js'></script>
+	<link href="/bags/common/tiddlers/profile.css" type='text/css' rel='stylesheet' >
+	<style type="text/css">
+		.ts-member .ts-membership {
+			display: none;
+		}
+	
+		#header h2 {
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+<div id="container">
+	<div id="header">
+		<h1 id='siteTitle'>This Space</h1>
+		<h2 id='siteUrl' class="meta"></h2>
+	</div>
+	<div id="text-html" class="main section">
+		<h2>About this space</h2>
+		<div id="siteinfo"></div>
+		<h2>Vital Statistics</h2>
+		<div id="info">please wait while information is loaded about this space...</div>
+		<div class="ts-membership">
+			<h2>Members</h2>
+			Your space currently has the following members...
+			<ul class="ts-members"></ul>
+			<p>Add a new member to your space by entering their name below. Enter a space to add all existing members of that space.</p>
+			<form class="ts-members">
+				<input type="text" name="username">
+				<input type="submit" value="Add Member" />
+			</form>
+		</div>
+		<div>
+			<h2>Included Spaces</h2>
+			<ul class="ts-includes"></ul>
+			<form class="ts-includes">
+				<input type="text" name="spacename">
+				<input type="submit" value="Include Space" />
+			</form>
+		</div>
+	</div>
+</div>
+<script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
+<script type='text/javascript' src='/bags/common/tiddlers/jquery-json.js'></script>
+<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs'></script>
+<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs.space'></script>
+<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs.users'></script>
+<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs.identities'></script>
+<script type='text/javascript' src="/bags/common/tiddlers/ts.js"></script>
+<script type="text/javascript">
+	ts.init(function(ts) {
+		if(!ts.currentSpace) {
+			return;
+		}
+		var address = window.location.hostname.split(".");
+		var spaceName = address[0];
+		var publicBag = spaceName + "_public";
+		$("#siteUrl").text(window.location.hostname);
+
+		function countTiddlers(members) {
+			var numMembers = members ? members.length : false;
+			var publicBagUrl = "/bags/" + spaceName + "_public/tiddlers";
+			var url = members ? "/bags/" + spaceName + "_private/tiddlers" :
+				publicBagUrl;
+			$.ajax({ url: url, dataType: "text",
+				success: function(tiddlers) {
+					var numTiddlers = $.trim(tiddlers).split("\n").length;
+					var html = "";
+					function printFullInfo(numPublicTiddlers) {
+						var totalTiddlers = numPublicTiddlers + numTiddlers;
+						html += ['This space has ', numMembers,
+							' members, <a href="/tiddlers">', totalTiddlers,
+							' local tiddlers</a>, <a href="' + url + '">',
+							numTiddlers, ' are private</a> and <a href="',
+							publicBagUrl, '">',
+							numPublicTiddlers, ' public</a>.'].join("");
+						$("#info").html(html);
+					}
+					if(numMembers) {
+						$.ajax({
+							url: publicBagUrl,
+							dataType: "text",
+							success: function(tiddlers) {
+								printFullInfo($.trim(tiddlers).split("\n").length);
+							}
+						});
+					} else {
+						html += 'This space has <a href="' + url + '">' + numTiddlers + " public tiddlers</a>";
+						$("#info").html(html);
+					}
+				}
+			});
+		}
+		var space = new tiddlyweb.Space(spaceName, "/");
+		space.members().get(function(members) {
+			countTiddlers(members);
+		}, function() {
+			countTiddlers();
+		});
+
+		new tiddlyweb.Tiddler("SiteInfo", new tiddlyweb.Bag(publicBag, "/")).get(
+			function(tid) {
+				$("#siteinfo").html(tid.render || tid.text);
+			},
+			function() {
+				$("#siteinfo").text("This space has not published any information about itself.");
+			}, "render=1");
+
+		new tiddlyweb.Tiddler("SiteTitle", new tiddlyweb.Bag(publicBag, "/")).get(
+			function(tid) {
+				$("#siteTitle").text(tid.text);
+			}, 
+			function() {
+				$("#siteTitle").text(window.location.hostname);
+			});
+	});
+</script>
+</body>
+</html>
