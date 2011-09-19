@@ -18,31 +18,31 @@ tags: excludeLists
 <ul id="app-list">
 	<li class="write">
 		<a href="/takenote" target="_parent">
-			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			<img src="http://tiddlyspace.com/bags/icons_public/tiddlers/pencil_blue.png" alt="Icon for Takenote" class="app-img" />
 			WRITE
 		</a>
 	</li>
 	<li class="htmlserialisation">
 		<a href="/tiddlers.html" target="_parent">
-			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			<img src="http://tiddlyspace.com/bags/icons_public/tiddlers/browse_read_blue.png" alt="Icon for the HTML Serialisation" class="app-img" />
 			BROWSE
 		</a>
 	</li>
 	<li class="links">
 		<a href="/links" target="_parent">
-			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			<img src="http://tiddlyspace.com/bags/icons_public/tiddlers/share_blue.png" alt="Icon for the Links App" class="app-img" />
 			SHARE
 		</a>
 	</li>
 	<li class="tiddlywiki">
 		<a href="/tiddlers.wiki" target="_parent">
-			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			<img src="http://tiddlyspace.com/bags/icons_public/tiddlers/tiddlywiki2_blue.png" alt="Icon for TiddlyWiki" class="app-img" />
 			TIDDLYWIKI
 		</a>
 	</li>
 	<li class="preso">
 		<a href=""  target="_parent">
-			<img src="http://placehold.it/50x50" alt="" class="app-img" />
+			<img src="http://tiddlyspace.com/bags/icons_public/tiddlers/preso_blue.png" alt="Icon for Preso" class="app-img" />
 			PRESO
 		</a>
 	</li>
