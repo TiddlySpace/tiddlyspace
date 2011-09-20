@@ -43,7 +43,7 @@ jslib: qunit
 	$(call wrap_jslib, src/lib/bookmark_bubble.js.js, \
 		http://mobile-bookmark-bubble.googlecode.com/hg/bookmark_bubble.js)
 	$(call wrap_jslib, src/lib/jquery-json.js.js, \
-		http://jquery-json.googlecode.com/svn/trunk/jquery.json.min.js)
+		http://jquery-json.googlecode.com/files/jquery.json-2.3.min.js)
 
 qunit:
 	mkdir -p src/test/qunit

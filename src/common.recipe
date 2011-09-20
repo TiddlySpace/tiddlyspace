@@ -17,3 +17,10 @@ tiddler: externals/alpha_twcore.js.js
 tiddler: styles/profile.css
 tiddler: styles/HtmlBackground.tid
 recipe: apps/apps.recipe
+
+# Icons used by the appswitcher
+tiddler: icons/browse_read_blue.png.tid
+tiddler: icons/pencil_blue.png.tid
+tiddler: icons/preso_blue.png.tid
+tiddler: icons/share_blue.png.tid
+tiddler: icons/tiddlywiki2_blue.png.tid
