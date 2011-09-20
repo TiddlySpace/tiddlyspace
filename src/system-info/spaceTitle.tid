@@ -1,0 +1,8 @@
+modifier: osmosoft
+type: None
+tags: excludeLists excludeSearch
+
+You can change the title and subtitle of your space, this will be visible to people visiting your space as well as being what is shown the browser tabs.  The content these are stored in two tiddlers, clicking on the links below will open up these tiddlers which you can edit to make changes.
+* [[SiteTitle]]
+* [[SiteSubtitle]]
+<html><hr><html>

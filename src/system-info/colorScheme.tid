@@ -1,0 +1,8 @@
+modifier: osmosoft
+type: None
+tags: excludeLists excludeSearch
+
+Unless you're delighted with the default scheme you can make some quick changes by generating a new random color palette, hit this button to cycle through some alternatives.
+
+<<RandomColorPaletteButton>>
+<html><hr><html>

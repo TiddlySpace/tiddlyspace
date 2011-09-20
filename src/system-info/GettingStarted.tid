@@ -2,13 +2,22 @@ type: None
 tags: excludeSearch excludeLists excludeMissing
 modifier: osmosoft
 
-Welcome to your brand new [[TiddlySpace]]@glossary.
+Welcome to your brand new [[TiddlySpace]]@glossary. If you're a first time ~TiddlySpace user then there are a few things we should tell you to help get you started.  If you're already familiar with the application, or have used [[TiddlyWiki|http://tiddlywiki.org]] then you'll probably want to dive right in.
+!The basics
+* Documentation for ~TiddlySpace is constantly evolving and you can find ~FAQs, guidelines and a glossary in the @docs space
+* If you can't find the answer you're looking for in the @docs space then the community hanging out in [[Google Groups|https://groups.google.com/group/tiddlywiki?hl=en]] are likely to be able to help
+* You can edit, view and manipulate your content using a variety of ~TiddlySpace apps. You can vist the [[apps switcher|/apps]] to find out more
+* To get an idea of how others are using ~TiddlySpace you can take a look through the @featured space
+!Making your ~TiddlySpace your own
+At the moment your ~TiddlySpace is empty so there are a couple of things you should do to make it your own.
 
-To get started with this blank [[TiddlySpace]]@glossary, you'll need to modify the following [[tiddlers|Tiddler]]@glossary:
-* If you don't like the color scheme click <<RandomColorPaletteButton>> to generate a new random color scheme.
-* Upload a [[SiteIcon|SiteIcon tiddler]]@glossary. [[Your SiteIcon|SiteIcon]] gives your space an identity to make it recognisable to others. A good site icon will be square and at least 48*48 pixels size.
-<<binaryUploadPublic title:SiteIcon>>
-* [[SiteTitle]] & [[SiteSubtitle]]: The title and subtitle of the site, as shown above (after saving, they will also appear in the browser title bar)
-* [[MainMenu]]: The menu (usually on the left)
-* [[DefaultTiddlers]]: Contains the names of the tiddlers that you want to appear when the ~TiddlySpace is opened
-* Many features of ~TiddlySpace are accessed via the backstage bar located at the top of the page. You can toggle it on or off using the button in the top right corner of the screen.
+<<slider chkColorScheme [[colorScheme]] "Changing the color scheme »" "Changing the color scheme">>
+
+<<slider chkSiteIcon [[spaceIcon]] "Giving your space an icon »" "Giving your space an icon">>
+
+<<slider chkSpaceTitle [[spaceTitle]] "Giving your space a title »" "Giving your space a title">>
+
+<<slider chkDefaultTiddlers [[setDefaultTiddlers]] "Setting default tiddlers »" "Setting default tiddlers">>
+!Some advanced stuff
+If you want to find out about some of the more advanced features, such as customising the [[CSS|http://docs.tiddlyspace.com/#%5B%5BStyleSheet%20shadow%20tiddlers%5D%5D]], [[including plugins|http://docs.tiddlyspace.com/#%5B%5BPluginManager%20shadow%20tiddlers%5D%5D]], [[developer resources|http://docs.tiddlyspace.com/#%5B%5BDeveloper%20Resources%5D%5D]] etc visit the @docs space.
+

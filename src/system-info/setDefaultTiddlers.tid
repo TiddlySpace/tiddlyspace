@@ -1,0 +1,6 @@
+modifier: osmosoft
+type: None
+tags: excludeLists excludeSearch
+
+Once you have some content then you may choose to determine a tiddler, or set of tiddlers to display each time you load ~TiddlySpace. This is determined by the [[DefaultTiddlers]].
+<html><hr><html>
