@@ -16,12 +16,12 @@ tags: excludeLists excludeSearch
 		<div id="TSbar"></div>
 		<div id="main-content">
 			<div id="space-details">
-				<img class="siteicon" src="http://placehold.it/100x100">
+				<img class="siteicon">
 				<div id="title-subtitle">
 					<h1 class="spaceaddress">
-						<span>SPACENAME</span>.tiddlyspace.com
+						<span class="spaceName"></span><span class="hostName"></span>
 					</h1>
-					<p class="tagline">your space's tagline... <a class="managespaces inactive" href="/ManageSpaces">manage space</a></p>
+					<p class="tagline"><span class="subTitle"></span><a class="managespaces inactive" href="/ManageSpaces">manage space</a></p>
 				</div>
 			</div>
 			<div id="holder">
@@ -89,7 +89,12 @@ tags: excludeLists excludeSearch
 		</div>
 	</div>
 	
+	<script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
+	<script type="text/javascript" src="/bags/common/tiddlers/bookmark_bubble.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
+	<script type="text/javascript" src="/bags/common/tiddlers/chrjs-store.js"></script>
+	<script type="text/javascript" src="/bags/common/tiddlers/jquery-json.js"></script>
 	<script type="text/javascript" src="appspage.js"></script>
 </body>
 </html>
