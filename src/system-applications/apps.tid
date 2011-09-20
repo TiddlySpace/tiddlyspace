@@ -90,7 +90,6 @@ tags: excludeLists excludeSearch
 	</div>
 	
 	<script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
-	<script type="text/javascript" src="/bags/common/tiddlers/bookmark_bubble.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 	<script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
 	<script type="text/javascript" src="/bags/common/tiddlers/chrjs-store.js"></script>
