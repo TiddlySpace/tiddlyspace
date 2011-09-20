@@ -9,7 +9,6 @@ tags: excludeLists excludeSearch
 	<title>TiddlySpace Apps</title>
 	<link rel="stylesheet" href="http://tiddlyspace.com/bags/common/tiddlers/reset.css" />
 	<link rel="stylesheet" href="appspage.css" />
-	<link rel="stylesheet" href="/bags/common/tiddlers/backstage.css" />
 </head>
 <body>
 	
@@ -20,7 +19,7 @@ tags: excludeLists excludeSearch
 				<img class="siteicon">
 				<div id="title-subtitle">
 					<h1 class="spaceaddress">
-						<span class="spaceName"></span>.tiddlyspace.com
+						<span class="spaceName"></span><span class="hostName"></span>
 					</h1>
 					<p class="tagline"><span class="subTitle"></span><a class="managespaces inactive" href="/ManageSpaces">manage space</a></p>
 				</div>

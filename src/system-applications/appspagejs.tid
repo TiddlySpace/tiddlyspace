@@ -11,7 +11,18 @@ modifier: osmosoft
 		var store = tiddlyweb.Store(null, false);
 		store.getDefaults(function(containers) {
 			var spaceName = containers.pullFrom.name.replace(/_[^_]+$/,'');
-			$('#title-subtitle .spaceName').text(spaceName);
+			$.ajax({
+				url: '/status',
+				dataType: 'json',
+				success: function(data) {
+					var hostName = '.' + data.server_host.host || '';
+					$('#title-subtitle .spaceName').text(spaceName);
+					$('#title-subtitle .hostName').text(hostName);
+				},
+				error: function() {
+					$('#title-subtitle .spaceName').text(spaceName);
+				}
+			});
 			store.get(new tiddlyweb.Tiddler({
 				title: 'SiteSubtitle',
 				bag: containers.pushTo
