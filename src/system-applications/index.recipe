@@ -1,9 +1,9 @@
 tiddler: links.tid
-recipe: https://raw.github.com/jdlrobson/notabene/master/dist/latest/index.recipe
+recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/index.recipe
 tiddler: apps.tid
 tiddler: appspagecss.tid
 tiddler: appspagejs.tid
-tiddler: https://raw.github.com/jdlrobson/notabene/master/dist/latest/HtmlJavascript.tid
-tiddler: https://raw.github.com/jdlrobson/notabene/master/dist/latest/htmljs-takenoteedit.js.js
+tiddler: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/HtmlJavascript.tid
+tiddler: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/htmljs-takenoteedit.js.js
 tiddler: _space.tid
 tiddler: _account.tid
