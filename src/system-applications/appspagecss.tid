@@ -31,6 +31,7 @@ body {
 	border-radius: 2px;
 	float: left;
 	margin-right: 2em;
+	height: 100px;
 }
 
 #title-subtitle {
@@ -74,7 +75,7 @@ h1 {
 	font-size: 2em;
 }
 
-h1 span {
+h1 .spaceName {
 	color: #0059AF;
 	color: #0082AF;
 	font-size: 1.5em;

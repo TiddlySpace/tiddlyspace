@@ -1,24 +1,62 @@
 title: appspage.js
 tags: excludeLists excludeSearch
 type: text/javascript
-modifier: colmbritton
+modifier: osmosoft
 
 (function($){
-	
+
 	$(function(){
-		
+
+		// get some default tiddlers
+		var store = tiddlyweb.Store(null, false);
+		store.getDefaults(function(containers) {
+			var spaceName = containers.pullFrom.name.replace(/_[^_]+$/,'');
+			$.ajax({
+				url: '/status',
+				dataType: 'json',
+				success: function(data) {
+					var hostName = '.' + data.server_host.host || '';
+					$('#title-subtitle .spaceName').text(spaceName);
+					$('#title-subtitle .hostName').text(hostName);
+				},
+				error: function() {
+					$('#title-subtitle .spaceName').text(spaceName);
+				}
+			});
+			store.get(new tiddlyweb.Tiddler({
+				title: 'SiteSubtitle',
+				bag: containers.pushTo
+			}), function(tiddler) {
+				if (tiddler) {
+					$('#title-subtitle .subTitle').text(tiddler.text);
+				} else {
+					$('#title-subtitle .subTitle').text('a TiddlySpace');
+				}
+			}).get(new tiddlyweb.Tiddler({
+				title: 'SiteIcon',
+				bag: containers.pushTo
+			}), function(tiddler) {
+				if (tiddler) {
+					$('#space-details .siteicon').attr('src', tiddler.route());
+				} else {
+					$('#space-details .siteicon')
+						.attr('src', '/bags/common/tiddlers/defaultSiteIcon');
+				}
+			});
+		});
+
 		$('#app-list li').mouseover(function() {
-		  	var me = $(this),
+			var me = $(this),
 				appname = me.attr("class"),
 				descEl = '.' + appname + 'desc';
 			$(descEl).addClass("highlightdesc");
 		}).mouseout(function() {
-		  	var me = $(this),
-			appname = me.attr("class"),
-			descEl = '.' + appname + 'desc';
+			var me = $(this),
+				appname = me.attr("class"),
+				descEl = '.' + appname + 'desc';
 			$(descEl).removeClass("highlightdesc");
 		});
-		
+
 		$(".inactive").click(function() {
 			var me = $(this),
 				oldtext = me.text();
@@ -29,7 +67,7 @@ modifier: colmbritton
 			});
 			return false;
 		});
-		
+
 		$(".soon").click(function() {
 			var me = $(this),
 				comingsoon = $('.comingsoon', me);
@@ -40,7 +78,7 @@ modifier: colmbritton
 			});
 			return false;
 		});
-		
+
 	});
-	
+
 })(jQuery);
