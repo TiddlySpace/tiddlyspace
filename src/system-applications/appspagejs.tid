@@ -24,7 +24,7 @@ modifier: osmosoft
 				}
 			});
 			store.get(new tiddlyweb.Tiddler({
-				title: 'SiteSubtitle',
+				title: 'SiteTitle',
 				bag: containers.pushTo
 			}), function(tiddler) {
 				if (tiddler) {
