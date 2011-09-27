@@ -100,7 +100,6 @@ def init(config):
     new_serializer = ['tiddlywebplugins.tiddlyspace.htmlserialization',
             'text/html; charset=UTF-8']
     config['serializers']['text/html'] = new_serializer
-    config['serializers']['default'] = new_serializer
 
 
 original_gather_data = tiddlywebplugins.status._gather_data
