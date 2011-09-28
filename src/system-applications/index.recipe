@@ -1,6 +1,4 @@
 tiddler: links.tid
-recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/tiddlyspace.recipe
-recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/common.recipe
 tiddler: apps.tid
 tiddler: appspagecss.tid
 tiddler: appspagejs.tid
@@ -9,3 +7,6 @@ tiddler: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/htmljs-t
 tiddler: _space.tid
 tiddler: _account.tid
 recipe: https://raw.github.com/Hugheth/preso2/master/dist/latest/index.recipe
+
+# Preso2 app html
+recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/tiddlyspace.recipe
