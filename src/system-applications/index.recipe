@@ -1,5 +1,6 @@
 tiddler: links.tid
-recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/index.recipe
+recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/tiddlyspace.recipe
+recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/common.recipe
 tiddler: apps.tid
 tiddler: appspagecss.tid
 tiddler: appspagejs.tid
