@@ -7,10 +7,10 @@ tags: excludeLists excludeSearch
 <head>
 	<meta charset="utf-8"/>
 	<title>TiddlySpace Apps</title>
-	<link rel="stylesheet" href="http://tiddlyspace.com/bags/common/tiddlers/reset.css" />
-	<link rel="stylesheet" href="appspage.css" />
+	<link rel="stylesheet" href="/bags/common/tiddlers/reset.css" />
+	<link rel="stylesheet" href="/bags/common/tiddlers/appspage.css" />
 	<!--[if lt IE 7 ]>
-	<link rel="stylesheet" href="appspageie6.css" />
+	<link rel="stylesheet" href="/bags/common/tiddlers/appspageie6.css" />
 	<![endif]-->
 </head>
 <body>
@@ -97,6 +97,6 @@ tags: excludeLists excludeSearch
 	<script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
 	<script type="text/javascript" src="/bags/common/tiddlers/chrjs-store.js"></script>
 	<script type="text/javascript" src="/bags/common/tiddlers/jquery-json.js"></script>
-	<script type="text/javascript" src="appspage.js"></script>
+	<script type="text/javascript" src="/bags/common/tiddlers/appspage.js"></script>
 </body>
 </html>
