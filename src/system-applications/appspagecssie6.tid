@@ -6,3 +6,7 @@ modifier: colmbritton
 #container {
    height:100%;
 }
+
+#app-list li a img {
+	position: static;
+}
