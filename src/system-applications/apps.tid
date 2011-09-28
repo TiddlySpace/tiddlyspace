@@ -75,7 +75,7 @@ tags: excludeLists excludeSearch
 							<li class="presodesc"><p>an interactive pan-able, zoom-able, shareable representation of your content.  Think PowerPoint but on the web. And better.</p></li>
 						</ul>
 					</aside>
-					<br style="clear:both">
+					<div style="clear: both;"></div>
 				</div>
 			</div>
 		</div>
