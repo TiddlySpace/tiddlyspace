@@ -66,7 +66,7 @@ tags: excludeLists excludeSearch
 							<button class="inactive">Add More!</button>
 						</div>
 					</div>
-					<aside id="app-desc">
+					<div id="app-desc">
 						<ul>
 							<li class="writedesc"><p>write your notes on the web.  Link them, tag them, share them.  Your notes are available everywhere, on and offline.</p></li>
 							<li class="htmlserialisationdesc"><p>an easy to understand HTML representation of your content.</p></li>
@@ -74,7 +74,7 @@ tags: excludeLists excludeSearch
 							<li class="tiddlywikidesc"><p>use TiddlyWiki to create, edit and organise your content.</p></li>
 							<li class="presodesc"><p>an interactive pan-able, zoom-able, shareable representation of your content.  Think PowerPoint but on the web. And better.</p></li>
 						</ul>
-					</aside>
+					</div>
 					<div style="clear: both;"></div>
 				</div>
 			</div>
