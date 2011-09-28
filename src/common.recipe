@@ -26,5 +26,5 @@ tiddler: icons/share_blue.png.tid
 tiddler: icons/tiddlywiki2_blue.png.tid
 tiddler: icons/box_closed_blue.png.tid
 
-# Preso2 common recipe
+# Preso2 app common recipe
 recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/common.recipe
