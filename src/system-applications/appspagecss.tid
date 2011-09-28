@@ -3,9 +3,19 @@ type: text/css
 tags: excludeLists excludeSearch
 modifier: colmbritton
 
+html,
+body {
+	height: 100%;
+}
+
 body {
 	font-family: "helvetica neue";
 	font-size: 16px;
+}
+
+#wrapper {
+	min-height: 100%;
+	position: relative;
 }
 
 #TSbar {
@@ -18,7 +28,7 @@ body {
 
 #main-content {
 	margin: 0 auto;
-	padding-top: 2em;
+	padding: 2em 0 5em; /* original 3em + footer size */
 	width: 960px;
 }
 
@@ -244,7 +254,10 @@ h1 .spaceName {
 
 #footer {
 	background: #1A1F1E;
-	margin-top: 3em;
+	height: 1.375em;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
 	padding: 0.3em 0;
 	clear: both;
 }
@@ -252,7 +265,7 @@ h1 .spaceName {
 #footer-content {
 	color: #B2AAA4;
 	font-size: 0.8em;
-	line-height: 1.3em;
+	line-height: 1.8em;
 	margin: 0 auto;
 	width: 960px;
 }
