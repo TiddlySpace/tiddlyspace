@@ -9,6 +9,9 @@ tags: excludeLists excludeSearch
 	<title>TiddlySpace Apps</title>
 	<link rel="stylesheet" href="http://tiddlyspace.com/bags/common/tiddlers/reset.css" />
 	<link rel="stylesheet" href="appspage.css" />
+	<!--[if lt IE 7 ]>
+	<link rel="stylesheet" href="appspageie6.css" />
+	<![endif]-->
 </head>
 <body>
 	
