@@ -6,4 +6,4 @@ tiddler: _account.tid
 # notabene app html
 recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/tiddlyspace.recipe
 # Preso2 app html
-#recipe: https://raw.github.com/TiddlySpace/preso2/master/dist/latest/tiddlyspace.recipe
+recipe: https://github.com/Hugheth/preso2/raw/master/dist/latest/tiddlyspace.recipe
