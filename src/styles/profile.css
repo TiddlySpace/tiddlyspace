@@ -226,6 +226,32 @@ dd.meta-tag {
 	padding: 0px 10px;
 }
 
+/**********/
+/* Tables */
+/**********/
+
+table.twtable {
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px solid gray;
+	margin-top: 0.5em;
+}
+
+.twtable thead {
+	background: #F0F4F8;
+	font-weight: 600;
+}
+
+.twtable thead td {
+	text-align: center;
+}
+
+.twtable th,
+.twtable td {
+	border: 1px solid gray;
+	padding: 0.2em;
+}
+
 @media screen and (orientation:portrait) and (max-width: 320px) {
 	#backstage {
 		font-size: 0.8em;
