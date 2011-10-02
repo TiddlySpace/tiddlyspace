@@ -77,20 +77,20 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			this.purgeSystemSettings();
 		}
 	},
-        pubTid: {
-                tags: ["excludeLists", "excludeSearch"],
-                fields: $.extend({}, config.defaultCustomFields, {
-                        "server.workspace": tiddlyspace.getCurrentWorkspace("public")
-                })
-        },
-        makeTiddlerIfNot: function(tiddler) {
-                if (!store.tiddlerExists(tiddler.title)) {
-                    $.extend(true, tiddler, plugin.pubTid);
-                    return [store.saveTiddler(tiddler)];
-                } else {
-                    return [];
-                }
-        },
+	pubTid: {
+		tags: ["excludeLists", "excludeSearch"],
+		fields: $.extend({}, config.defaultCustomFields, {
+			"server.workspace": tiddlyspace.getCurrentWorkspace("public")
+		})
+	},
+	makeTiddlerIfNot: function(tiddler) {
+		if (!store.tiddlerExists(tiddler.title)) {
+			$.extend(true, tiddler, plugin.pubTid);
+			return [store.saveTiddler(tiddler)];
+		} else {
+			return [];
+		}
+	},
 	firstRun: function() {
 		var tiddlers = [];
 		// generate Site*itle
@@ -98,13 +98,13 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			var tid = new Tiddler(item);
 			tid.text = plugin[item].format([currentSpace.name]);
 			tiddlers.push.apply(tiddlers,
-                            plugin.makeTiddlerIfNot(tid));
+				plugin.makeTiddlerIfNot(tid));
 		});
 		// generate public ColorPalette
 		var tid = new Tiddler("ColorPalette");
 		tid.text = config.macros.RandomColorPalette.generatePalette({},
-                        false);
-                tiddlers.push.apply(tiddlers, plugin.makeTiddlerIfNot(tid));
+			false);
+		tiddlers.push.apply(tiddlers, plugin.makeTiddlerIfNot(tid));
 		this.createAvatar();
 		this.setupMarkupPreHead();
 		return tiddlers;
