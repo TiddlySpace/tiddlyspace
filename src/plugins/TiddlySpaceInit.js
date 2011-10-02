@@ -77,28 +77,34 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			this.purgeSystemSettings();
 		}
 	},
+        pubTid: {
+                tags: ["excludeLists", "excludeSearch"],
+                fields: $.extend({}, config.defaultCustomFields, {
+                        "server.workspace": tiddlyspace.getCurrentWorkspace("public")
+                })
+        },
+        makeTiddlerIfNot: function(tiddler) {
+                if (!store.tiddlerExists(tiddler.title)) {
+                    $.extend(true, tiddler, plugin.pubTid);
+                    return [store.saveTiddler(tiddler)];
+                } else {
+                    return [];
+                }
+        },
 	firstRun: function() {
 		var tiddlers = [];
-		var pubTid = {
-			tags: ["excludeLists", "excludeSearch"],
-			fields: $.extend({}, config.defaultCustomFields, {
-				"server.workspace": tiddlyspace.getCurrentWorkspace("public")
-			})
-		};
 		// generate Site*itle
 		$.each(["SiteTitle", "SiteSubtitle"], function(i, item) {
 			var tid = new Tiddler(item);
-			$.extend(true, tid, pubTid);
 			tid.text = plugin[item].format([currentSpace.name]);
-			tid = store.saveTiddler(tid);
-			tiddlers.push(tid);
+			tiddlers.push.apply(tiddlers,
+                            plugin.makeTiddlerIfNot(tid));
 		});
 		// generate public ColorPalette
 		var tid = new Tiddler("ColorPalette");
-		$.extend(true, tid, pubTid);
-		tid.text = config.macros.RandomColorPalette.generatePalette({}, false);
-		tid = store.saveTiddler(tid);
-		tiddlers.push(tid);
+		tid.text = config.macros.RandomColorPalette.generatePalette({},
+                        false);
+                tiddlers.push.apply(tiddlers, plugin.makeTiddlerIfNot(tid));
 		this.createAvatar();
 		this.setupMarkupPreHead();
 		return tiddlers;
