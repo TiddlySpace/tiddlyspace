@@ -1,16 +1,16 @@
-body {
+html {
 	font: 14px/1.4 "Helvetica Neue", "Lucida Grande", "Arial";
-	margin: 0;
 	background-image: url(/bags/common/tiddlers/HtmlBackground);
 }
 
-.gradient {
+body {
 	background-color: transparent;
 	background-image: -webkit-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
 	background-image: -moz-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
 	background-image: -o-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
 	background-image: -ms-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
 	background-image: radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
+	margin: 0;
 	padding-top: 10px;
 }
 
