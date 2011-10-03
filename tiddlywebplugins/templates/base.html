@@ -15,7 +15,7 @@
         <meta name="keywords" content="{{ meta_keywords|e }}"> 
     </head>
     <body>
-      <div class="gradient"></div>
+      <div class="gradient">
         <div id="container">
           <div id="header">
           {% block title %}
@@ -30,6 +30,7 @@
           Brought to you by <a href="{{ original_server_host }}">TiddlySpace</a>.
           </div>
         </div>
+      </div>
         {%- for link in js -%}
         <script type="text/javascript" src="{{ link }}"></script>
         {%- endfor -%}

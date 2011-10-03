@@ -5,17 +5,13 @@ body {
 }
 
 .gradient {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
 	background-color: transparent;
 	background-image: -webkit-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
 	background-image: -moz-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
 	background-image: -o-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
 	background-image: -ms-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
 	background-image: radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
+	padding-top: 10px;
 }
 
 blockquote {
@@ -53,7 +49,6 @@ pre {
 	padding: 10px;
 	margin: auto;
 	padding: 10px;
-	margin-top: 10px;
 }
 
 a {
