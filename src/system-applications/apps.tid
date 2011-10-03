@@ -38,7 +38,7 @@ tags: excludeLists excludeSearch
 								</a>
 							</li>
 							<li class="htmlserialisation">
-								<a href="/tiddlers.html">
+								<a href="/tiddlers.html?select=tag:!excludeLists;sort=-modified">
 									<img src="/bags/common/tiddlers/browse_read_blue.png" alt="Icon for the HTML Serialisation" class="app-img" />
 									BROWSE
 								</a>
