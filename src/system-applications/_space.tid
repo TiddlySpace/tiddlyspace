@@ -110,9 +110,17 @@ tags: excludeLists
 		new tiddlyweb.Tiddler("SiteInfo", new tiddlyweb.Bag(publicBag, "/")).get(
 			function(tid) {
 				$("#siteinfo").html(tid.render || tid.text);
+				if($(document.body).hasClass("ts-member")) {
+					$("<a />").attr("href", "/takenote#!/quickedit/tiddler/SiteInfo").
+						text("Edit").insertAfter("#siteinfo");
+				}
 			},
 			function() {
 				$("#siteinfo").text("This space has not published any information about itself.");
+				if($(document.body).hasClass("ts-member")) {
+					$("<a />").attr("href", "/takenote#!/quickedit/tiddler/SiteInfo").
+						text("Provide information now.").insertAfter("#siteinfo");
+				}
 			}, "render=1");
 
 		new tiddlyweb.Tiddler("SiteTitle", new tiddlyweb.Bag(publicBag, "/")).get(
