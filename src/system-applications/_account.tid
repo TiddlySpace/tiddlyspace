@@ -18,6 +18,7 @@ tags: excludeLists
 		<h2>Find Space</h2>
 		<form class="spaceSearch">
 			<input type="search" placeholder="search for space name" />
+			<a href="http://docs.tiddlyspace.com/What%20is%20a%20Space%3F">What is a space?</a>
 		</form>
 		<h2>Create New Space</h2>
 		<form class="ts-spaces">
