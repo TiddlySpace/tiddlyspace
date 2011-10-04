@@ -2,22 +2,69 @@ type: image/svg+xml
 tags: excludeSearch excludeLists
 modifier: osmosoft
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="918 510 14 14" width="14pt" height="14pt">
-<defs>
-	<radialGradient cx="0" cy="0" r="1" id="Gradient" gradientUnits="userSpaceOnUse">
-		<stop offset="0" stop-color="white"/>
-		<stop offset="1" stop-color="#2b2b2b"/>
-	</radialGradient>
-	<radialGradient id="Obj_Gradient" xl:href="#Gradient" gradientTransform="translate(922.3752 513.7837) scale(11.4739436)"/>
-</defs>
-<g stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
-	<g>
-		<path d="M 929.6952 512.9018 C 927.1568 510.36337 923.0412 510.36337 920.5028 512.9018 C 917.9644 515.4402 917.9644 519.5558 920.5028 522.09418 C 923.0412 524.63257 927.1568 524.63257 929.6952 522.09418 C 932.2336 519.5558 932.2336 515.4402 929.6952 512.9018 M 925.099 515.7425 L 927.17633 513.66516 L 928.9318 515.42065 L 926.8545 517.498 L 928.9318 519.57532 L 927.17633 521.3308 L 925.099 519.25348 L 923.02167 521.3308 L 921.2662 519.57532 L 923.3435 517.498 L 921.2662 515.42065 L 923.02167 513.66516 Z" fill="url(#Obj_Gradient)"/>
-		<path
-	   d="M 927.61447,515.38354 A 4.5120482,4.2590361 0 1 1 918.59037,515.38354 A 4.5120482,4.2590361 0 1 1 927.61447,515.38354 z"
-	   transform="matrix(1.0218069,0,0,1.0462046,-18.063694,-21.648443)"
-	   id="path2394"
-	   style="opacity:1;fill:#000000;fill-opacity:0;fill-rule:evenodd;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-	</g>
-</g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.1"
+   width="14pt"
+   height="14pt"
+   viewBox="918 510 14 14"
+   id="svg3070">
+  <metadata
+     id="metadata3089">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3072">
+    <radialGradient
+       cx="0"
+       cy="0"
+       r="1"
+       id="Gradient"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         id="stop3075"
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop3077"
+         style="stop-color:#2b2b2b;stop-opacity:1"
+         offset="1" />
+    </radialGradient>
+    <radialGradient
+       id="Obj_Gradient"
+       xlink:href="#Gradient"
+       gradientTransform="matrix(11.473944,0,0,11.473944,922.3752,513.7837)" />
+  </defs>
+  <g
+     id="g3080"
+     style="fill:none;stroke:none">
+    <g
+       id="g3082">
+      <path
+         d="m 929.6952,512.9018 c -2.5384,-2.53843 -6.654,-2.53843 -9.1924,0 -2.5384,2.5384 -2.5384,6.654 0,9.19238 2.5384,2.53839 6.654,2.53839 9.1924,0 2.5384,-2.53838 2.5384,-6.65398 0,-9.19238 m -4.5962,2.8407 2.07733,-2.07734 1.75547,1.75549 -2.0773,2.07735 2.0773,2.07732 -1.75547,1.75548 -2.07733,-2.07732 -2.07733,2.07732 -1.75547,-1.75548 2.0773,-2.07732 -2.0773,-2.07735 1.75547,-1.75549 z"
+         id="path3084"
+         style="fill:url(#Obj_Gradient)" />
+      <path
+         d="m 927.61447,515.38354 a 4.51205,4.2590378 0 1 1 -9.0241,0 4.51205,4.2590378 0 1 1 9.0241,0 z"
+         transform="matrix(1.0218069,0,0,1.0462046,-18.063694,-21.648443)"
+         id="path2394"
+         style="fill:#000000;fill-opacity:0;fill-rule:evenodd;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+  </g>
 </svg>
