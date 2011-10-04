@@ -7,10 +7,12 @@ tags: excludeLists
 	<script type='text/javascript' src='/bags/common/tiddlers/backstage.js'></script>
 	<link href="/bags/common/tiddlers/profile.css" type='text/css' rel='stylesheet' >
 	<style type="text/css">
-		.ts-member .ts-membership {
+		.ts-membership {
 			display: none;
 		}
-	
+		.ts-member .ts-membership {
+			display: block;
+		}
 		#header h2 {
 			text-align: center;
 		}
