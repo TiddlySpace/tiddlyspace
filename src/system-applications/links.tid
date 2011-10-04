@@ -127,8 +127,10 @@ modifier: hugheth
 			<div id="header">
 				<h1>Share Space</h1>
 			</div>
-			<p>Here are a number of methods that you can use to share this Space and its content in different ways.</p>
-			<span id="share_links"></span>
+			<div class="main section">
+				<p>Here are a number of methods that you can use to share this Space and its content in different ways.</p>
+				<span id="share_links"></span>
+			</div>
 		</div>
 	</body>
 </html>
