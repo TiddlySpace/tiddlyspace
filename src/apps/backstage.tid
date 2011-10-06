@@ -13,7 +13,12 @@ tags: excludeLists
 	<input type="hidden" name="redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
 	<input type="submit" value="Log In" />
 </form>
-<div class="ts-logout logout"></div>
+<div class="ts-logout logout">
+	<form method="POST" action="/logout">
+		<input type="hidden" name="tiddlyweb_redirect" />
+		<input type="submit" class="button" value="Log out" />
+	</form>
+</div>
 <hr />
 <ul id="app-list">
 	<li class="write">
