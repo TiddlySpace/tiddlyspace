@@ -15,6 +15,7 @@ tags: excludeLists
 </form>
 <div class="ts-logout logout">
 	<form method="POST" action="/logout">
+		<input type="hidden" name="tiddlyweb_redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
 		<input type="submit" class="button" value="Log out" />
 	</form>
 </div>
