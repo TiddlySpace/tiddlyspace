@@ -34,6 +34,6 @@ tiddler: icons/box_closed_blue.png.tid
 recipe: https://github.com/Hugheth/preso2/raw/master/dist/latest/common.recipe
 
 # notabene app common files
-recipe: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/common.recipe
-tiddler: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/HtmlJavascript.tid
-tiddler: https://raw.github.com/TiddlySpace/notabene/master/dist/latest/htmljs-takenoteedit.js.js
+recipe: https://raw.github.com/jdlrobson/notabene/master/dist/latest/common.recipe
+tiddler: https://raw.github.com/jdlrobson/notabene/master/dist/latest/HtmlJavascript.tid
+tiddler: https://raw.github.com/jdlrobson/notabene/master/dist/latest/htmljs-takenoteedit.js.js

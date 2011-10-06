@@ -1,33 +1,35 @@
 html {
-	font: 14px/1.4 "Helvetica Neue", "Lucida Grande", "Arial";
-	background-image: url(/bags/common/tiddlers/HtmlBackground);
+	font-family: "Helvetica Neue", "Lucida Grande", "Arial";
+	font-size: 62.5%;
+	background-image: -webkit-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%), url(/bags/common/tiddlers/HtmlBackground);
+	background-image: -moz-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%), url(/bags/common/tiddlers/HtmlBackground);
+	background-image: -o-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%), url(/bags/common/tiddlers/HtmlBackground);
+	background-image: -ms-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%), url(/bags/common/tiddlers/HtmlBackground);
+	background-image: radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%), url(/bags/common/tiddlers/HtmlBackground);
+	min-height: 100%;
 }
 
 body {
 	background-color: transparent;
-	background-image: -webkit-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
-	background-image: -moz-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
-	background-image: -o-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
-	background-image: -ms-radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
-	background-image: radial-gradient(50% 30%, ellipse cover, rgba(255, 255, 255, 0.4), transparent 100%);
+	font-size: 1.6em;
+	line-height: 1.4;
 	margin: 0;
-	padding-top: 10px;
 }
 
 blockquote {
 	quotes: "\201C" "\201D";
-	margin-bottom: 50px;
+	margin-bottom: 3.125em;
 }
 
 blockquote:before {
 	content: open-quote;
-	font-size: 3em;
+	font-size: 2.625em;
 	font-weight: bold;
 	color: #CCC;
 }
 
 blockquote:after {
-	font-size: 3em;
+	font-size: 2.625em;
 	content: close-quote;
 	font-weight: bold;
 	float: right;
@@ -35,20 +37,19 @@ blockquote:after {
 }
 
 pre {
-	margin-left: 50px;
+	margin-left: 3.125em;
 	border: dotted 1px #ccc;
-	padding: 10px;
+	padding: 0.625em;
 	word-wrap: break-word;
 }
 
 #container {
 	position: relative;
-	width: 520px;
+	width: 32.5em;
 	background-color: #E0E0E0;
 	background-color: rgba(255, 255, 255, 0.7);
-	padding: 10px;
-	margin: auto;
-	padding: 10px;
+	margin: 0.625em auto;
+	padding: 0.625em;
 }
 
 a {
@@ -56,8 +57,8 @@ a {
 }
 
 #header {
-	width: 556px;
-	margin-left: -18px;
+	width: 34.75em;
+	margin-left: -1.125em;
 	-webkit-box-shadow: 0px 1px 1px #606A73;
 	position: relative;
 	background-color: #DCE7F1;
@@ -71,7 +72,7 @@ a {
 	margin: auto;
 	font-family: Georgia;
 	text-align: center;
-	font-size: 3em;
+	font-size: 2.625em;
 }
 
 #header h1,
@@ -84,7 +85,7 @@ a {
 #header::before {
 	content: "";
 	position: absolute;
-	bottom: -8px;
+	bottom: -0.5em;
 	left: 0px;
 	border-width: 0px 8px 8px 0px;
 	border-style: solid;
@@ -97,7 +98,7 @@ a {
 #header::after {
 	content: "";
 	position: absolute;
-	bottom: -8px;
+	bottom: -0.5em;
 	right: 0px;
 	border-width: 8px 8px 0px 0px;
 	border-style: solid;
@@ -110,23 +111,23 @@ a {
 .main {
 	color: #1A1F1E;
 	font-family: Georgia;
-	font-size: 1.3em;
-	padding: 16px;
+	font-size: 1.15em;
+	padding: 1em;
 	position: relative;
 	border: 1px solid gray;
 	background: #FFFFFF;
 	background: rgba(255, 255, 255, 0.7);
-	margin-top: 18px;
-	padding: 16px;
+	margin-top: 1.125em;
+	padding: 1em;
 	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5), -1px -1px 2px rgba(0, 0, 0, 0.5);
 	word-wrap: break-word;
 }
 
 .meta {
-	padding: 10px;
+	padding: 0.8em;
 	border: solid 1px #F0F4F8;
 	color: #4D4D4D;
-	font-size: .9em;
+	font-size: 0.7875em;
 }
 
 
@@ -141,18 +142,18 @@ a {
 #footer {
 	text-align: center;
 	font-style: italic;
-	font-size: .8em;
+	font-size: 0.7em;
 	color: gray;
 	font-weight: bold;
 	border-top: solid 1px #CCC;
 }
 
 dt, dd {
-	line-height: 24px;
+	line-height: 1.9em;
 }
 
 dt {
-	margin-right: 8px;
+	margin-right: 0.65em;
 	float: left;
 	clear: both;
 	font-weight: bold;
@@ -160,19 +161,19 @@ dt {
 
 dd {
 	margin: 0px;
-	margin-right: 10px;
+	margin-right: 0.8em;
 	display: block;
 }
 
 dd.meta-tag {
 	display: inline-block;
-	margin-right: 8px;
+	margin-right: 0.65em;
 }
 
 #editLink {
 	position: absolute;
 	right: 0px;
-	top: 10px;
+	top: 0.625em;
 	z-index: 5;
 	color: #787878;
 	font-size: 0.8em;
@@ -186,7 +187,7 @@ dd.meta-tag {
 	padding: 0px;
 	background-color: black;
 	margin: 0px 0px 0px 0px;
-	height: 32px;
+	height: 2em;
 	text-align: center;
 	background: -moz-linear-gradient(center bottom,#222 0%, #333 50%, #555 100%);
 	background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #222),color-stop(0.5, #333),color-stop(1, #555));
@@ -197,7 +198,7 @@ dd.meta-tag {
 
 #backstage a {
 	color: white;
-	padding: 4px;
+	padding: 0.25em;
 	display: block;
 	text-decoration: none;
 }
@@ -216,9 +217,9 @@ dd.meta-tag {
 
 #backstage li {
 	display: inline-block;
-	line-height: 18px;
-	margin-top: 2px;
-	padding: 0px 10px;
+	line-height: 1.125em;
+	margin-top: 0.125em;
+	padding: 0 0.625em;
 }
 
 /**********/
@@ -244,7 +245,7 @@ table.twtable {
 .twtable th,
 .twtable td {
 	border: 1px solid gray;
-	padding: 0.2em;
+	padding: 0.1875em;
 }
 
 @media screen and (orientation:portrait) and (max-width: 320px) {
