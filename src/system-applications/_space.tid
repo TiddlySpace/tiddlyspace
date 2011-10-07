@@ -42,7 +42,7 @@ tags: excludeLists
 		</div>
 		<div>
 			<h2>Included Spaces</h2>
-			This space includes the following spaces... <a href="http://docs.tiddlyspace.com/What%20is%20space%20inclusion">What is Inclusion?</a>
+			This space includes the following spaces... <a href="http://docs.tiddlyspace.com/What%20is%20space%20inclusion%3F">What is Inclusion?</a>
 			<ul class="ts-includes"></ul>
 			<form class="ts-includes">
 				<input type="text" name="spacename">
