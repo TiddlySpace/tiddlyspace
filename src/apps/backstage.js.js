@@ -20,14 +20,11 @@ var twStylesheet = function(css, options) {
 	var doc = options.doc || document;
 	var el = doc.getElementById(id);
 	if(doc.createStyleSheet) { // IE-specific handling
-		alert("apply ie");
 		if(el) {
 			el.parentNode.removeChild(el);
 		}
-		alert(doc.getElementsByTagName("head")[0]);
 		doc.getElementsByTagName("head")[0].insertAdjacentHTML("beforeEnd",
 			'&nbsp;<style id="' + id + '" type="text/css">' + css + '</style>'); // fails without &nbsp;
-		alert(css);
 	} else { // modern browsers
 		if(el) {
 			el.replaceChild(doc.createTextNode(css), el.firstChild);
