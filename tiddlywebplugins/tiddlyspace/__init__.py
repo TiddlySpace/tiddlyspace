@@ -8,6 +8,7 @@ repository: http://github.com/TiddlySpace/tiddlyspace
 
 import tiddlywebplugins.tiddlyspace.fixups
 import tiddlywebplugins.status
+import tiddlyweb.web.handler.tiddler
 
 from tiddlyweb.model.user import User
 from tiddlyweb.store import NoUserError
@@ -126,3 +127,27 @@ def _status_gather_data(environ):
 
 
 tiddlywebplugins.status._gather_data = _status_gather_data
+
+original_get_tiddler_content = \
+    tiddlyweb.web.handler.tiddler._get_tiddler_content
+
+
+def _get_tiddler_content(environ, tiddler):
+    """
+    Monkey patch _get_tiddler_content for cache manifests so
+    that updates to tiddlyspace trigger updates to apps within
+    tiddlyspace
+    """
+    try:
+        extension = environ['tiddlyweb.extension']
+    except KeyError:
+        extension = 'html'
+
+    if tiddler.type and tiddler.type == "text/cache-manifest" and \
+        extension == 'html':
+        tiddler.text = "%s\n# tiddlyspace version: \n" % (tiddler.text,
+          __version__)
+    return original_get_tiddler_content(environ, tiddler)
+
+
+tiddlyweb.web.handler.tiddler._get_tiddler_content = _get_tiddler_content
