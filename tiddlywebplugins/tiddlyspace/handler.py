@@ -119,7 +119,7 @@ def serve_space(environ, start_response, http_host):
         if not redirect_required:
             return get_tiddler(environ, start_response)
         else:
-            start_response('303 see other', [('Location', "/%s" % (title))])
+            start_response('302 Found', [('Location', "/%s" % (title))])
             return ""
     if 'text/html' in mime_type:
         if lazy:
