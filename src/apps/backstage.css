@@ -3,6 +3,14 @@ iframe {
 	z-index: 1000;
 }
 
+.ts-logout {
+	display: none;
+}
+
+.ts-loggedin .ts-logout {
+	display: block;
+}
+
 a.app-picker {
 	position: absolute;
 	right: 24px;
