@@ -44,6 +44,7 @@ var twStylesheet = function(css, options) {
 var stylesheet = ["iframe {",
 "	height: 320px;",
 "	z-index: 1000;",
+"	position: relative;",
 "}",
 "",
 "#app-picker {",
@@ -67,6 +68,8 @@ var stylesheet = ["iframe {",
 "}",
 "",
 ".bs-popup {",
+"	width: 100%;",
+"	height: 100%;",
 "	position: absolute;",
 "	z-index: 1000;",
 "	right: 10px;",
@@ -79,6 +82,7 @@ var stylesheet = ["iframe {",
 "}",
 "",
 ".bubble {",
+"	float: right;",
 "	font-size: 0.9em;",
 "	font-family: Georgia;",
 "	position: relative;",
@@ -142,7 +146,7 @@ var loadEvent = function() {
 	link.appendChild(document.createTextNode("tiddlyspace"));
 
 	var body = document.getElementsByTagName("BODY")[0];
-	body.appendChild(link);
+	body.insertBefore(link, body.firstChild);
 	var html = [
 	'<div class="bubble">',
 	    '<iframe src="/bags/common/tiddlers/backstage" width="auto" style="border:none;"></iframe>',
@@ -153,7 +157,7 @@ var loadEvent = function() {
 	bubble.setAttribute("style", "display:none;");
 	bubble.setAttribute("class", "bs-popup");
 	bubble.innerHTML = html;
-	body.appendChild(bubble);
+	body.insertBefore(bubble, link);
 
 	twStylesheet(stylesheet);
 
