@@ -19,7 +19,7 @@ from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
 from tiddlyweb.web.http import HTTP403
-from tiddlyweb.web.util import get_serialize_type
+from tiddlyweb.web.util import get_serialize_type, encode_name
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -119,7 +119,9 @@ def serve_space(environ, start_response, http_host):
         if not redirect_required:
             return get_tiddler(environ, start_response)
         else:
-            start_response('302 Found', [('Location', "/%s" % (title))])
+            scheme = environ['tiddlyweb.config']['server_host']['scheme']
+            start_response('302 Found', [('Location', "%s://%s/%s" % (
+                scheme, determine_host(environ)[0], encode_name(title)))])
             return ""
     if 'text/html' in mime_type:
         if lazy:
