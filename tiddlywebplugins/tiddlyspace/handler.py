@@ -117,10 +117,10 @@ def serve_space(environ, start_response, http_host):
         title = index.encode('UTF-8')
         environ['wsgiorg.routing_args'][1]['tiddler_name'] = title
         if not redirect_required:
-          return get_tiddler(environ, start_response)
+            return get_tiddler(environ, start_response)
         else:
-          start_response('303 see other', [('Location', "/%s"%title )])
-          return ""
+            start_response('303 see other', [('Location', "/%s" % (title))])
+            return ""
     if 'text/html' in mime_type:
         if lazy:
             environ['tiddlyweb.type'] = 'text/x-ltiddlywiki'
@@ -200,10 +200,9 @@ def update_space_settings(environ, name):
             for key, values in query_data.items()]))
 
     if index:
-      return index, lazy, True
+        return index, lazy, True
     else:
-      return index, lazy, False
-    
+        return index, lazy, False
 
 
 def _setup_friendly_environ(environ):
