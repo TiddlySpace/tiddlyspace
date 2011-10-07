@@ -210,8 +210,7 @@ var loadEvent = function() {
 		}
 	});
 };
-// TODO: support ie < 9
-if(window.addEventListener) {
+
 addEventListener(window, "load", loadEvent);
-}
+
 })();
