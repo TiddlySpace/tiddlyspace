@@ -83,7 +83,7 @@ def get_space_tiddlers(environ, start_response):
     # If we are a wiki read ServerSettings, but ignore index
     if ('betaserialization' in serializer
             or 'betalazyserialization' in serializer):
-        _, lazy = update_space_settings(environ, space_name)
+        _, lazy, _ = update_space_settings(environ, space_name)
         if lazy:
             environ['tiddlyweb.type'] = 'text/x-ltiddlywiki'
     return get_tiddlers(environ, start_response)
@@ -112,11 +112,15 @@ def serve_space(environ, start_response, http_host):
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
             'UTF-8')
     _, mime_type = get_serialize_type(environ)
-    index, lazy = update_space_settings(environ, space_name)
+    index, lazy, redirect_required = update_space_settings(environ, space_name)
     if index:
-        environ['wsgiorg.routing_args'][1]['tiddler_name'] = index.encode(
-                'UTF-8')
-        return get_tiddler(environ, start_response)
+        title = index.encode('UTF-8')
+        environ['wsgiorg.routing_args'][1]['tiddler_name'] = title
+        if not redirect_required:
+          return get_tiddler(environ, start_response)
+        else:
+          start_response('303 see other', [('Location', "/%s"%title )])
+          return ""
     if 'text/html' in mime_type:
         if lazy:
             environ['tiddlyweb.type'] = 'text/x-ltiddlywiki'
@@ -164,7 +168,7 @@ def update_space_settings(environ, name):
         tiddler = store.get(tiddler)
         data_text = tiddler.text
     except StoreError:
-        return _figure_default_index(environ, bag_name, space), False
+        return _figure_default_index(environ, bag_name, space), False, False
 
     query_strings = []
     index = ''
@@ -195,7 +199,11 @@ def update_space_settings(environ, name):
         [(key, [value for value in values])
             for key, values in query_data.items()]))
 
-    return index, lazy
+    if index:
+      return index, lazy, True
+    else:
+      return index, lazy, False
+    
 
 
 def _setup_friendly_environ(environ):
