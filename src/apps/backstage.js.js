@@ -124,6 +124,12 @@ var stylesheet = ["iframe {",
 "	left:auto;",
 "	border-width:0 15px 15px;",
 "	border-color: #DCE7F1 transparent;",
+"}",
+".ts-logout {",
+"	display: none;",
+"}",
+".ts-loggedin .ts-logout {",
+"	display: block;",
 "}"
 ].join("\n");
 function addEventListener(node, event, handler) {
