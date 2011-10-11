@@ -1,5 +1,5 @@
 type: text/html
-tags: excludeLists
+tags: excludeLists excludeSearch excludeMissing
 
 <html>
 <head>
