@@ -121,7 +121,7 @@ def serve_space(environ, start_response, http_host):
         else:
             scheme = environ['tiddlyweb.config']['server_host']['scheme']
             start_response('302 Found', [('Location', "%s://%s/%s" % (
-                scheme, determine_host(environ)[0], encode_name(title)))])
+                scheme, determine_host(environ)[0], encode_name(index)))])
             return ""
     if 'text/html' in mime_type:
         if lazy:
