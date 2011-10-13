@@ -23,7 +23,7 @@ modifier: hugheth
 				}, {
 					title: "Public Tiddlers",
 					info: "Show a list of all the public tiddlers in this space in alphabetical order.",
-					href: "{host}/bags/{subdomain}_public/select=tag:!excludeLists;sort=title"
+					href: "{host}/bags/{subdomain}_public/tiddlers?select=tag:!excludeLists;sort=title"
 				}, {
 					title: "Atom Feed",
 					info: "Get the Atom feed of the most recently changed tiddlers.",
