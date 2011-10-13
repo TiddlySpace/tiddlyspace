@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.7.1|
+|''Version''|0.7.2|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -102,7 +102,11 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		});
 		// generate public ColorPalette
 		var tid = new Tiddler("ColorPalette");
-		tid.text = config.macros.RandomColorPalette.generatePalette({},
+		tid.text = config.macros.RandomColorPalette.generatePalette({
+			saturation_pale: 0.67, saturation_light: 0.53,
+			saturation_mid: 0.43, saturation_dark: 0.06,
+			pale: 0.99, light: 0.85, mid: 0.5, dark: 0.31
+		},
 			false);
 		tiddlers.push.apply(tiddlers, plugin.makeTiddlerIfNot(tid));
 		this.createAvatar();
