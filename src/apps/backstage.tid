@@ -6,7 +6,7 @@ tags: excludeLists
 <link rel="stylesheet" href="/bags/common/tiddlers/reset.css" />
 <link rel="stylesheet" href="/bags/common/tiddlers/app.css" />
 </head>
-<body>
+<body style="display:none;">
 <form class="ts-login login" action="" autocomplete="off">
 	<input type="text" name="username" placeholder="username" />
 	<input type="password" name="password" placeholder="password" /> 
@@ -69,6 +69,7 @@ tags: excludeLists
 		window.parent.location.reload();
 	}
 	ts.init(function(ts) {
+		$(document.body).show();
 	}, {});
 </script>
 </body>
