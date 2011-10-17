@@ -124,10 +124,10 @@ a {
 }
 
 .meta {
-	padding: 0.8em;
 	border: solid 1px #F0F4F8;
 	color: #4D4D4D;
-	font-size: 0.7875em;
+	font-size: 0.75em;
+	padding: 0.8em 1em;
 }
 
 
