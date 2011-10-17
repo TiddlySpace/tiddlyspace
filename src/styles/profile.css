@@ -54,7 +54,7 @@ pre {
 }
 
 a {
-	color: royalBlue;
+	color: #0082af;
 }
 
 #header {
@@ -83,7 +83,7 @@ a {
 
 #header h1,
 #header h1 a {
-	color: #4C4A54;
+	color: #434B50;
 	text-decoration: none;
 	text-shadow: 0px 1px 1px white;
 }
@@ -121,8 +121,7 @@ a {
 	padding: 1em;
 	position: relative;
 	border: 1px solid gray;
-	background: #FFFFFF;
-	background: rgba(255, 255, 255, 0.7);
+	background: #F0F4F8;
 	margin-top: 1em;
 	padding: 1em;
 	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5), -1px -1px 2px rgba(0, 0, 0, 0.5);
@@ -131,7 +130,7 @@ a {
 
 .meta {
 	border: solid 1px #F0F4F8;
-	color: #4D4D4D;
+	color: #434B50;
 	font-size: 0.75em;
 	margin-top: 1.5em;
 	padding: 0.8em 1em;
