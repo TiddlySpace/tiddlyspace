@@ -92,3 +92,11 @@ form input[type=submit] {
 	font-size: 0.5em;
 	color: #B8B6BD;
 }
+
+.write {
+	opacity: 0.1;
+}
+
+.ts-member .write {
+	opacity: 1;
+}
