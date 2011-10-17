@@ -18,28 +18,29 @@ body {
 
 blockquote {
 	quotes: "\201C" "\201D";
-	margin-bottom: 3.125em;
+	margin-bottom: 3.25em;
+}
+
+blockquote:before,
+blockquote:after {
+	font-size: 2.75em;
+	font-weight: bold;
 }
 
 blockquote:before {
 	content: open-quote;
-	font-size: 2.625em;
-	font-weight: bold;
 	color: #CCC;
 }
 
 blockquote:after {
-	font-size: 2.625em;
 	content: close-quote;
-	font-weight: bold;
-	float: right;
 	color: #999;
+	float: right;
 }
 
 pre {
-	margin-left: 3.125em;
 	border: dotted 1px #ccc;
-	padding: 0.625em;
+	padding: 0.75em;
 	word-wrap: break-word;
 }
 
@@ -49,22 +50,27 @@ pre {
 	background-color: #E0E0E0;
 	background-color: rgba(255, 255, 255, 0.7);
 	margin: 0.625em auto;
-	padding: 0.625em;
+	padding: 0.75em 0.625em;
 }
 
 a {
-	color: royalBlue;
+	color: #0082af;
 }
 
 #header {
 	width: 34.75em;
-	margin-left: -1.125em;
-	-webkit-box-shadow: 0px 1px 1px #606A73;
 	position: relative;
 	background-color: #DCE7F1;
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+	-o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+	-ms-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+	margin-left: -1.125em;
 }
 
 #links {
+	margin-top: 1em;
 	text-align: center;
 }
 
@@ -72,12 +78,12 @@ a {
 	margin: auto;
 	font-family: Georgia;
 	text-align: center;
-	font-size: 2.625em;
+	font-size: 2.5em;
 }
 
 #header h1,
 #header h1 a {
-	color: #4C4A54;
+	color: #434B50;
 	text-decoration: none;
 	text-shadow: 0px 1px 1px white;
 }
@@ -115,19 +121,19 @@ a {
 	padding: 1em;
 	position: relative;
 	border: 1px solid gray;
-	background: #FFFFFF;
-	background: rgba(255, 255, 255, 0.7);
-	margin-top: 1.125em;
+	background: #F0F4F8;
+	margin-top: 1em;
 	padding: 1em;
 	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5), -1px -1px 2px rgba(0, 0, 0, 0.5);
 	word-wrap: break-word;
 }
 
 .meta {
-	padding: 0.8em;
 	border: solid 1px #F0F4F8;
-	color: #4D4D4D;
-	font-size: 0.7875em;
+	color: #434B50;
+	font-size: 0.75em;
+	margin-top: 1.5em;
+	padding: 0.8em 1em;
 }
 
 
@@ -245,7 +251,7 @@ table.twtable {
 .twtable th,
 .twtable td {
 	border: 1px solid gray;
-	padding: 0.1875em;
+	padding: 0.2em;
 }
 
 @media screen and (orientation:portrait) and (max-width: 320px) {
