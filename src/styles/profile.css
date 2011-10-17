@@ -21,19 +21,21 @@ blockquote {
 	margin-bottom: 3.25em;
 }
 
-blockquote:before {
-	content: open-quote;
+blockquote:before,
+blockquote:after {
 	font-size: 2.75em;
 	font-weight: bold;
+}
+
+blockquote:before {
+	content: open-quote;
 	color: #CCC;
 }
 
 blockquote:after {
-	font-size: 2.75em;
 	content: close-quote;
-	font-weight: bold;
-	float: right;
 	color: #999;
+	float: right;
 }
 
 pre {
