@@ -14,14 +14,17 @@ class Repudiator(object):
 
     def __init__(self, application):
         self.application = application
-        self.is_manifest = False
         self.environ = None
-        self.headers = None
-        self.status = None
+        self._init_headers()
+
+    def _init_headers(self):
+        self.headers = []
+        self.status = '500 Undef'
+        self.is_manifest = False
 
     def __call__(self, environ, start_response):
-
         self.environ = environ
+        self._init_headers()
 
         def replacement_start_response(status, headers, exc_info=None):
             self.status = status

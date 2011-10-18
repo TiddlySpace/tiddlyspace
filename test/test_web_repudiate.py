@@ -47,11 +47,11 @@ def test_basic_get():
             'http://0.0.0.0:8080/bags/place/tiddlers/notmanifest')
     assert response['status'] == '200'
     assert 'text/html' in response['content-type']
-    assert '\n# Refutation: ' not in content
+    assert '\n# Repudiation: ' not in content
 
 def test_json_get():
     response, content = http.request(
             'http://0.0.0.0:8080/bags/place/tiddlers/manifest.json')
 
     assert response['status'] == '200'
-    assert '\n# Refutation: ' not in content
+    assert '\n# Repudiation: ' not in content
