@@ -41,6 +41,8 @@ def test_basic_get():
 
     assert response['status'] == '200'
     assert response['content-type'] == MANIFEST_TYPE
+    assert 'etag' not in response
+    assert 'last-modified' not in response
     assert '\n# Repudiation: ' in content
 
     response, content = http.request(
