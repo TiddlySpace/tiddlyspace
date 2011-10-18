@@ -35,8 +35,10 @@ class Repudiator(object):
             except IndexError:
                 content_type = None
             if (environ['REQUEST_METHOD'] == 'GET'
-                and content_type == MANIFEST_TYPE):
+                and content_type == MANIFEST_TYPE
+                and self.status.startswith('200')):
                 self.is_manifest = True
+                self._flush_headers()
 
         output_iter = self.application(environ, replacement_start_response)
 
@@ -45,7 +47,14 @@ class Repudiator(object):
         for item in output_iter:
             yield item
         if self.is_manifest:
-            yield '\n# Repudiation: ' + self._repudiator()
+            yield '\n# Repudiation: ' + self._repudiator() + '\n'
+
+    def _flush_headers(self):
+        i = 0
+        while i < len(self.headers):
+            if self.headers[i][0].lower() in ['etag', 'last-modified']:
+                del self.headers[i]
+            i += 1
 
     def _repudiator(self):
         return self.environ['tiddlyweb.config']['tiddlyspace.version']
