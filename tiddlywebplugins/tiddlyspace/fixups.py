@@ -6,6 +6,8 @@ import tiddlyweb.web.util
 import tiddlywebplugins.status
 
 from tiddlywebplugins.tiddlyspace.space import Space
+from tiddlywebplugins.tiddlyspace.web import (determine_host,
+        determine_space, determine_space_recipe)
 
 from tiddlyweb.model.user import User
 from tiddlyweb.store import NoUserError
@@ -24,6 +26,14 @@ def _status_gather_data(environ):
     data['server_host'] = environ['tiddlyweb.config']['server_host']
     data['tiddlyspace_version'] = environ['tiddlyweb.config'][
             'tiddlyspace.version']
+
+    # gather space data
+    http_host, host_url = determine_host(environ)
+    if http_host != host_url:
+        space_name = determine_space(environ, http_host)
+        recipe_name = determine_space_recipe(environ, space_name)
+        data['space'] = {'name': space_name, 'recipe': recipe_name}
+
     # ensure user is known
     usersign = environ['tiddlyweb.usersign']['name']
     store = environ['tiddlyweb.store']
