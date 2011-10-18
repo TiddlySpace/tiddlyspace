@@ -50,11 +50,11 @@ class Repudiator(object):
             yield '\n# Repudiation: ' + self._repudiator() + '\n'
 
     def _flush_headers(self):
-        i = 0
-        while i < len(self.headers):
-            if self.headers[i][0].lower() in ['etag', 'last-modified']:
-                del self.headers[i]
-            i += 1
+        kept = []
+        for header, value in self.headers:
+            if header.lower() not in ['etag', 'last-modified']:
+                kept.append((header, value))
+        self.headers = kept
 
     def _repudiator(self):
         return self.environ['tiddlyweb.config']['tiddlyspace.version']

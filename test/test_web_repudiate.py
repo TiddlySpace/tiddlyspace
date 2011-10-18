@@ -39,11 +39,12 @@ def test_basic_get():
     response, content = http.request(
             'http://0.0.0.0:8080/bags/place/tiddlers/manifest')
 
-    assert response['status'] == '200'
-    assert response['content-type'] == MANIFEST_TYPE
-    assert 'etag' not in response
-    assert 'last-modified' not in response
-    assert '\n# Repudiation: ' in content
+    for i in range(10):
+        assert response['status'] == '200'
+        assert response['content-type'] == MANIFEST_TYPE
+        assert 'etag' not in response, response
+        assert 'last-modified' not in response
+        assert '\n# Repudiation: ' in content
 
     response, content = http.request(
             'http://0.0.0.0:8080/bags/place/tiddlers/notmanifest')
