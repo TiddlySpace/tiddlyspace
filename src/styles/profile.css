@@ -41,7 +41,7 @@ blockquote:after {
 pre {
 	border: dotted 1px #ccc;
 	padding: 0.75em;
-	word-wrap: break-word;
+	overflow: auto;
 }
 
 #container {
@@ -132,10 +132,9 @@ a {
 	border: solid 1px #F0F4F8;
 	color: #434B50;
 	font-size: 0.75em;
-	margin-top: 1.5em;
+	margin: 1.5em 0 0;
 	padding: 0.8em 1em;
 }
-
 
 .meta ul {
 	list-style-type: none;
@@ -152,6 +151,7 @@ a {
 	color: gray;
 	font-weight: bold;
 	border-top: solid 1px #CCC;
+	margin-top: 1em;
 }
 
 dt, dd {
