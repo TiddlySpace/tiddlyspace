@@ -19,7 +19,7 @@ from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
 from tiddlyweb.web.http import HTTP403
-from tiddlyweb.web.util import get_serialize_type, encode_name
+from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -83,7 +83,7 @@ def get_space_tiddlers(environ, start_response):
     # If we are a wiki read ServerSettings, but ignore index
     if ('betaserialization' in serializer
             or 'betalazyserialization' in serializer):
-        _, lazy, _ = update_space_settings(environ, space_name)
+        _, lazy = update_space_settings(environ, space_name)
         if lazy:
             environ['tiddlyweb.type'] = 'text/x-ltiddlywiki'
     return get_tiddlers(environ, start_response)
@@ -112,17 +112,11 @@ def serve_space(environ, start_response, http_host):
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
             'UTF-8')
     _, mime_type = get_serialize_type(environ)
-    index, lazy, redirect_required = update_space_settings(environ, space_name)
+    index, lazy = update_space_settings(environ, space_name)
     if index:
-        title = index.encode('UTF-8')
-        environ['wsgiorg.routing_args'][1]['tiddler_name'] = title
-        if not redirect_required:
-            return get_tiddler(environ, start_response)
-        else:
-            scheme = environ['tiddlyweb.config']['server_host']['scheme']
-            start_response('302 Found', [('Location', "%s://%s/%s" % (
-                scheme, determine_host(environ)[0], encode_name(index)))])
-            return ""
+        environ['wsgiorg.routing_args'][1]['tiddler_name'] = index.encode(
+                'UTF-8')
+        return get_tiddler(environ, start_response)
     if 'text/html' in mime_type:
         if lazy:
             environ['tiddlyweb.type'] = 'text/x-ltiddlywiki'
@@ -170,7 +164,7 @@ def update_space_settings(environ, name):
         tiddler = store.get(tiddler)
         data_text = tiddler.text
     except StoreError:
-        return _figure_default_index(environ, bag_name, space), False, False
+        return _figure_default_index(environ, bag_name, space), False
 
     query_strings = []
     index = ''
@@ -201,10 +195,7 @@ def update_space_settings(environ, name):
         [(key, [value for value in values])
             for key, values in query_data.items()]))
 
-    if index:
-        return index, lazy, True
-    else:
-        return index, lazy, False
+    return index, lazy
 
 
 def _setup_friendly_environ(environ):

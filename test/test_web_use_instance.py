@@ -324,19 +324,6 @@ def test_space_server_settings_index():
     assert 'TiddlyWiki' not in content
     assert 'TiddlyWeb' not in content
 
-    # Make sure that the index request is a redirect.
-
-    http = httplib2.Http()
-    try:
-        response, content = http.request('http://foo.0.0.0.0:8080/',
-                method='GET', redirections=0)
-    except httplib2.RedirectLimit, e:
-        raised = 1
-
-    assert raised
-    assert e.response['status'] == '302'
-    assert e.response['location'] == 'http://foo.0.0.0.0:8080/MySPA'
-    
 def test_new_space_loads_apps():
     http = httplib2.Http()
     tiddler = Tiddler('ServerSettings', 'foo_public')
