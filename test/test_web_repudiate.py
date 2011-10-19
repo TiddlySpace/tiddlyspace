@@ -9,7 +9,7 @@ import py.test
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.tiddler import Tiddler
 
-from tiddlywebplugins.tiddlyspace.repudiator import MANIFEST_TYPE
+from tiddlywebplugins.tiddlyspace.repudiator import MANIFEST_TYPE, Repudiator
 
 BASE_MANIFEST = """\
 /bags/common/tiddlers/chrjs.js
@@ -58,3 +58,13 @@ def test_json_get():
 
     assert response['status'] == '200'
     assert '\n# Repudiation: ' not in content
+
+def test_flush_headers():
+    r = Repudiator(None)
+    r.headers = [('Cache-Control', 'no-cache'),
+        ('Content-Type', 'text/cache-manifest'), ('Vary', 'Accept'),
+        ('Last-Modified', 'Wed, 19 Oct 2011 07:06:18 GMT'),
+        ('Etag', '"common/takenote_manifest.appcache/81:e03"')]
+
+    r._flush_headers()
+    assert len(r.headers) is 3
