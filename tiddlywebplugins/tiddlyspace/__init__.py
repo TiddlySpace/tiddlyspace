@@ -10,7 +10,7 @@ import tiddlywebplugins.tiddlyspace.fixups
 from tiddlywebplugins.tiddlyspace.plugin import init_plugin
 
 
-__version__ = '1.0.55'
+__version__ = '1.0.56'
 
 
 def init(config):
