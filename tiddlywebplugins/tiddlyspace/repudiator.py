@@ -2,7 +2,7 @@
 Invalidate cache manifest files every time they are requested.
 """
 
-from uuid import uuid4
+from time import time
 
 
 MANIFEST_TYPE = 'text/cache-manifest'
@@ -59,4 +59,5 @@ class Repudiator(object):
         self.headers = kept
 
     def _repudiator(self):
-        return str(uuid4())
+        # fun with integer math!
+        return str((int(time()) / 60) * 60)
