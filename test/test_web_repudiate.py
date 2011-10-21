@@ -60,7 +60,7 @@ def test_json_get():
     assert '\n# Repudiation: ' not in content
 
 def test_flush_headers():
-    r = Repudiator(None)
+    r = Repudiator({}, lambda x: x)
     r.headers = [('Cache-Control', 'no-cache'),
         ('Content-Type', 'text/cache-manifest'), ('Vary', 'Accept'),
         ('Last-Modified', 'Wed, 19 Oct 2011 07:06:18 GMT'),

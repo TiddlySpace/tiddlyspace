@@ -14,7 +14,7 @@ from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector
 from tiddlywebplugins.tiddlyspace.handler import (home, friendly_uri,
         get_identities, get_space_tiddlers)
 from tiddlywebplugins.tiddlyspace.profiles import add_profile_routes
-from tiddlywebplugins.tiddlyspace.repudiator import Repudiator
+from tiddlywebplugins.tiddlyspace.repudiator import RepudiatorController
 from tiddlywebplugins.tiddlyspace.safemode import safe_mode
 from tiddlywebplugins.tiddlyspace.spaces import add_spaces_routes
 
@@ -50,10 +50,10 @@ def establish_www(config):
                 config['server_response_filters'].
                 index(PrettyHTTPExceptor) + 1, AllowOrigin)
 
-    if Repudiator not in config['server_response_filters']:
+    if RepudiatorController not in config['server_response_filters']:
         config['server_response_filters'].insert(
                 config['server_response_filters'].
-                index(PrettyHTTPExceptor) + 1, Repudiator)
+                index(PrettyHTTPExceptor) + 1, RepudiatorController)
 
     if HTMLPresenter in config['server_response_filters']:
         config['server_response_filters'].remove(HTMLPresenter)
