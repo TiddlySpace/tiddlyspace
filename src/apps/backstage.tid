@@ -1,5 +1,6 @@
 type: text/html
 tags: excludeLists
+_cache-max-age: 3600
 
 <html>
 <head>
