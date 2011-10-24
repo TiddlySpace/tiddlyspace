@@ -24,7 +24,7 @@ setup(
     scripts = ['tiddlyspace'],
     install_requires = [
         'setuptools',
-        'tiddlyweb>=1.2.44',
+        'tiddlyweb>=1.2.51',
         'tiddlywebwiki>=0.57.0',
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout>=0.6',
