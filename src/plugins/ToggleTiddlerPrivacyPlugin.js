@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.6.9|
+|''Version''|0.7.0|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate, and allows you to set a default privacy setting|
 |''CoreVersion''|2.6.1|
@@ -88,12 +88,12 @@ var macro = config.macros.setPrivacy = {
 		var rPrivate = $("input[type=radio].isPrivate", tiddlerEl);
 		var rPublic = $("input[type=radio].isPublic", tiddlerEl);
 		if(newBag.indexOf("_public") > -1) {
-			rPublic.attr("checked", true);
 			rPrivate.attr("checked", false);
+			rPublic.attr("checked", true);
 			status = "public";
 		} else {
-			rPrivate.attr("checked", true);
 			rPublic.attr("checked", false); // explicitly do this for ie
+			rPrivate.attr("checked", true);
 			status = "private";
 		}
 		refreshIcon(status);
@@ -119,7 +119,7 @@ var macro = config.macros.setPrivacy = {
 			}
 		});
 		window.setTimeout(function() {
-			macro.setBag(el, defaultValue, options); // XXX: breaks in jQuery 1.4.4 (cf. TiddlyWiki ticket #472)
+			macro.setBag(el, defaultValue, options);
 		}, 100);
 		// annoyingly this is needed as customFields are added to end of EditTemplate so are not present yet
 		// and don't seem to respect any existing customFields.
