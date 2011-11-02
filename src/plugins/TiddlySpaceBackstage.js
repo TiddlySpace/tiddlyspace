@@ -30,7 +30,7 @@ config.tasks.user = {
 	text: "user: ",
 	tooltip: "user control panel",
 	unpluggedText: "unplugged user",
-	content: "<html><iframe src='/_account' width='100%' height='600px'></iframe></html>"
+	content: "<html><iframe src='/_account'></iframe></html>"
 };
 
 config.tasks.space = {
@@ -49,7 +49,7 @@ if(window.location.protocol == "file:") {
 	config.unplugged = true; // TODO: move into extensions.tiddly{web/space} namespace!?
 	config.tasks.space.content = "<<tiddler Backstage##SpaceUnplugged>>";
 } else {
-	config.tasks.space.content = "<html><iframe src='/_space' width='100%' height='600px'></iframe></html>";
+	config.tasks.space.content = "<html><iframe src='/_space'></iframe></html>";
 }
 config.backstageTasks = ["tiddlyspace", "user", "space"];
 

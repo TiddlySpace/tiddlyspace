@@ -399,6 +399,12 @@ a.baskstageTask.task_user {
 	display: none;
 }
 
+#backstage iframe {
+	height: 600px;
+	width: 100%;
+	border: none;
+}
+
 /* TODO: This is a presentational fix for a data problem that
    ought to go away with sync refactorings.  See:
    https://github.com/TiddlySpace/tiddlyspace/pull/536#commitcomment-216317
