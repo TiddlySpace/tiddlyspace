@@ -1,9 +1,6 @@
 modifier: osmosoft
 tags: excludeLists excludeSearch excludeMissing
 
-!UserUnplugged
-<<TiddlySpaceLogin>>
-
 !SpaceUnplugged
 {{unpluggedSpaceTab{
 {{wizard{
@@ -16,27 +13,22 @@ Key}}}
 }}}
 <<sync>>
 
-!User
-{{textRight{
-<<TiddlySpaceLogout>>
-<<tabs txtUserTab
-	"Your Identities" "Manage your identities" [[Backstage##Identities]]
-	"Your Spaces" "Maintain your spaces and create new ones" [[Backstage##UserSpaces]]
-	"Your Password" "Change your password" [[Backstage##Password]]
->>
-}}}
-
 !Menu
-{{tiddlyspaceMenu{
 <<message messages.memberStatus>> <<homeLink>>
 {{unsyncedList{<<message messages.syncListHeading>> <<list filter [is[unsynced]]>>}}}
 
 <<tabs txtTiddlySpaceTab
 search "search across TiddlySpace" Backstage##Search
+tiddlers "tiddlers control panel" Backstage##Tiddlers
+plugins "Manage installed plugins" PluginManager
+batch "Perform batch operations on public/private tiddlers" Backstage##BatchOps
+options "TiddlyWiki options" Backstage##Options
+tweaks "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions
+import "Import tiddlers from a TiddlyWiki" Backstage##FileImport
+export "Export this TiddlySpace for offline use" Backstage##Export
 help "quick access to useful space resources" Backstage##Resources
 >>
 running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddlyspace_version>>
-}}}
 
 !Resources
 [[blog|@@blog]]
@@ -46,20 +38,6 @@ running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddl
 !Search
 <<tsSearch>>
 
-!Space
-<<followSpace>>
-<<tabs txtSpaceTab
-	members Members Backstage##SpaceMembers
-	includes "include spaces" Backstage##SpaceInclusions
-	tiddlers "tiddlers control panel" Backstage##Tiddlers
-	plugins "Manage installed plugins" PluginManager
-	batch "Perform batch operations on public/private tiddlers" Backstage##BatchOps
-	options "TiddlyWiki options" Backstage##Options
-	tweaks "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions
-	import "Import tiddlers from a TiddlyWiki" Backstage##FileImport
-	export "Export this TiddlySpace for offline use" Backstage##Export
->>
-
 !FileImport
 <<fileImport>>
 
@@ -67,44 +45,11 @@ running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddl
 You can download this TiddlySpace as an offline TiddlyWiki:
 {{chunkyButton{<<exportSpace>>}}}
 
-!Identities
-You can associate your account with multiple identities. If you have an open id for example you could log into TiddlySpace with that as well as a TiddlySpace user account.
-<<TiddlySpaceIdentities add>>
-{{inlineList{
-	<<TiddlySpaceIdentities list>>
-}}}
-{{backstageClear{}}}
-
-!Login
-<<tabs txtLoginTab 
-"TiddlySpace Username" "Login via a TiddlySpace username and password" Backstage##UserUnplugged
-"OpenID" "Login via an OpenID"  Backstage##TabOpenID
-"Register" "Register a TiddlySpace account" Backstage##TabRegister
->>
-
-!TabOpenID
-<<TiddlySpaceLogin openid>>
-
-!TabRegister
-<<TiddlySpaceRegister>>
-
 !Options
 upload a <<message messages.privacySetting>> file:
 <<binaryUpload>>
 <<search>><<closeAll>><<permaview>><<newTiddler>><<newJournal "DD MMM YYYY" "journal">><<saveChanges>><<slider chkSliderOptionsPanel OptionsPanel "options »" "Change TiddlyWiki advanced options">>
 
-!Password
-<<TiddlySpaceChangePassword>>
-
-!SpaceInclusions
-This space includes the public tiddlers from the following spaces:
-<<TiddlySpaceInclusion list>>
-<<TiddlySpaceInclusion passive>>
-
-!SpaceMembers
-The following people are members of the space ''<<message extensions.tiddlyspace.currentSpace.name>>''. Only members have access to the private tiddlers in a space.
-<<TiddlySpaceMembers list>>
-<<TiddlySpaceMembers add>>
 
 !Tiddlers
 <<tabs
@@ -132,11 +77,3 @@ The following people are members of the space ''<<message extensions.tiddlyspace
 
 !BatchPublic
 <<TiddlySpacePublisher type:public>>
-
-!UserSpaces
-<<TiddlySpaceSpaces add>>
-You are currently a member of the following spaces.
-{{inlineList{
-<<TiddlySpaceSpaces list>>
-}}}
-{{backstageClear{}}}
