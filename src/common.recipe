@@ -8,6 +8,9 @@ tiddler: lib/jquery-json.js.js
 tiddler: lib/jquery-ui.custom.js.js
 tiddler: lib/jquery-ui.custom.css
 tiddler: lib/chrjs-store.js.js
+tiddler: lib/chrjs.users.js
+tiddler: lib/chrjs.space.js
+tiddler: lib/chrjs.identities.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid
