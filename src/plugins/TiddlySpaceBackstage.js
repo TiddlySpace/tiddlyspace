@@ -6,10 +6,415 @@
 |''Contributors''|Jon Lister, Jon Robson, Colm Britton|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin TiddlySpaceViewTypes|
+!StyleSheet
+.publicLightText {
+	color: #C0E5FC;
+}
+
+.privateLightText {
+	color: #E2C1D6;
+}
+
+.tiddler .error.annotation .button{
+	display: inline-block;
+}
+
+#backstageArea #backstageToolbar a.task_tiddlyspace {
+	margin: 0px auto auto -75px;
+	font-weight: bold;
+	width: 150px;
+	line-height:24px;
+	font-size: 1.2em;
+	padding: 0;
+	top: 0;
+	position: absolute;
+	left: 50%;
+}
+
+.task_tiddlyspace .image,
+.task_tiddlyspace .svgIcon {
+	display: inline;
+}
+
+.task_tiddlyspace .svgIconText {
+	display: none;
+}
+
+.task_tiddlyspace .logoText {
+	position: absolute;
+	top: 0px;
+	margin-left: 5px;
+}
+
+#backstageArea {
+	z-index: 49;
+	color: white;
+	background-color: black;
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #222),color-stop(0.5, #333),color-stop(1, #555));
+	background: -moz-linear-gradient(center bottom,#222 0%, #333 50%, #555 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222);
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222)";
+	height: 24px;
+	padding: 0;
+	border-bottom: solid 1px black;
+}
+
+.backstageBackground {
+	fill: black;
+}
+
+#backstageButton {
+	overflow: hidden;
+}
+
+#backstageButton #backstageShow,
+#backstageButton #backstageHide {
+	margin: 0px;
+	padding: 0px;
+}
+
+#backstageButton #backstageShow:hover,
+#backstageButton #backstageHide:hover {
+	background: none;
+	color: none;
+}
+
+#backstageButton img,
+#backstageButton svg {
+	width: 24px;
+	height: 24px;
+}
+
+#messageArea {
+	top: 50px;
+}
+
+#backstageToolbar {
+	position: relative;
+}
+
+#backstageArea a {
+	padding: 0px;
+	margin-left: 0px;
+	color: white;
+	background: none;
+}
+
+#backstageArea a:hover {
+	background-color: white;
+}
+
+#backstage .tabContents ol,
+#backstage .tabContents ul {
+	padding: auto;
+}
+
+#backstageButton a {
+	margin: 0;
+}
+
+.backstagePanelBody,
+.backstagePanelBody .tabContents ul {
+	padding: 5px;
+	margin: 5px;
+}
+
+#backstage #backstagePanel {
+	margin-left: 5%;
+	padding: 0em;
+	margin-right: 5%;
+}
+
+#backstageToolbar a {
+	position: relative;
+}
+
+#backstageArea a.backstageSelTab,
+#backstageToolbar .backstageTask {
+	line-height: 24px;
+	color: #767676;
+}
+
+.backstageTask .externalImage,
+.backstageTask .image {
+	display: inline;
+}
+
+.backstageTask .txtUserName,
+.backstageTask .spaceName {
+	color: #fff;
+}
+
+.backstageSelTab .txtUserName,
+.backstageSelTab .spaceName,
+a:hover .txtUserName,
+a:hover .spaceName {
+	color: #000;
+}
+
+.spaceSiteIcon {
+	margin-right: 10px;
+}
+
+.userSiteIcon {
+	margin-left: 10px;
+}
+
+#backstageToolbar .task_space {
+	position: absolute;
+	top: 0px;
+	left: 0%;
+}
+
+#backstageToolbar .task_user,
+#backstageToolbar .task_login {
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: 5%;
+}
+
+#backstageToolbar .task_login img {
+	position: relative;
+	display: inline;
+}
+
+#backstageToolbar .task_login img,
+#backstageToolbar .task_user img {
+	float: right;
+}
+
+#backstageToolbar .task_space .svgIcon {
+	float: left;
+	position: relative;
+	z-index: 2;
+}
+
+#backstageToolbar a span {
+	z-index: 2;
+}
+
+#backstageToolbar .spaceSiteIcon {
+	float: left;
+}
+
+a.backstageTask {
+	display: block;
+}
+
+#backstageToolbar a span.txtUserName,
+#backstageToolbar a .txtUserName span {
+	display: inline;
+	float: none;
+}
+
+#backstage .deleteButton {
+	margin-left: 0.3em;
+	font-weight: bold;
+	color: red;
+	font-size: 1.6em;
+}
+
+#backstage .deleteButton:hover {
+	background: none;
+}
+
+#backstageArea .siteIcon {
+	display: inline;
+}
+
+#backstagePanel .TiddlySpaceLogin {
+	display: inline;
+}
+
+.backstagePanelBody .tabContents .button {
+	display: block;
+}
+
+.backstagePanelBody .tab {
+	margin: 0 0 0 0.6em;
+	padding: 0.4em 0.5em 1px 0.5em;
+}
+
+#backstage .tabContents{
+	padding: 1.5em;
+}
+
+#backstage .wizard {
+	border: 0px;
+}
+
+#backstage .txtSpaceTab li {
+	border: 1px solid #ddd;
+	background: #eee;
+	list-style: none;
+	margin: 0.5em;
+	padding: 0.5em;
+	width: 80%;
+}
+
+#backstage .txtSpaceTab li.annotation {
+	border: 2px solid [[ColorPalette::SecondaryMid]];
+}
+
+#backstage div  li.listLink {
+	border: 0px;
+	width: 78%;
+	font-size: 0.7em;
+}
+
+#backstage div li.listTitle {
+	font-weight: bold;
+	text-decoration: underline;
+	font-size: 1em;
+	background: #ccc;
+	width: 100%;
+}
+
+#backstage div.txtSpaceTab li .deleteButton {
+	float: right;
+}
+
+#backstage fieldset {
+	border: solid 1px [[ColorPalette::Background]];
+}
+
+#backstage .viewer table,#backstage table.twtable {
+	border: 0px;
+}
+
+#backstageToolbar img {
+	padding: 0;
+}
+
+#backstage .wizard,
+#backstage .wizardFooter {
+	background: none;
+}
+
+.viewer td, .viewer tr, .twtable td, .twtable tr {
+	border: 1px solid #eee;
+}
+
+#backstage .inlineList ul li {
+	background-color: [[ColorPalette::Background]];
+	border: solid 1px [[ColorPalette::TertiaryMid]];
+	display: block;
+	float: left;
+	list-style: none;
+	margin-right: 1em;
+	padding: 0.5em;
+}
+
+.backstageClear, .inlineList form {
+	clear: both;
+	display: block;
+	margin-top: 3em;
+}
+
+.tiddlyspaceMenu {
+	text-align: center;
+}
+
+span.chunkyButton {
+	display: block;
+	padding: 0;
+	margin: 0;
+	border: solid 2px #000;
+}
+
+span.chunkyButton a.button, span.chunkyButton a:active.button {
+	white-space: nowrap;
+	font-weight: bold;
+	font-size: 1.8em;
+	color: #fff;
+	background-color: #04b;
+	text-align: center;
+	padding: 1em 3em;
+	margin: 0;
+	border-style: none;
+	border-top: solid 1px #fff;
+	display: block;
+}
+
+.chunkyButton {
+	width: 18em;
+}
+
+span.chunkyButton a.button:hover {
+	background-color: #014;
+	border-style: none;
+	color: #fff;
+	border-top: solid 1px #8cf;
+}
+
+a.baskstageTask.task_login,
+a.baskstageTask.task_user {
+	_width: 200px;
+	_text-align: right;
+}
+
+#backstageArea #backstageToolbar .task_login img,
+#backstageArea #backstageToolbar .task_user img {
+	_display: inline;
+	_float: none;
+}
+
+#backstage .unpluggedSpaceTab .wizard,
+.unpluggedSpaceTab .wizard {
+	background: white;
+	border: 2px solid #CCC;
+	padding: 5px;
+}
+
+.syncKey .keyItem {
+	border: 1px solid black;
+	display: inline-block;
+	margin: 0.2em;
+	padding: 0.1em 0.1em 0.1em 0.1em;
+}
+
+.keyHeading {
+	font-size: 2em;
+	font-weight: bold;
+	margin: 0.4em 0em -0.2em;
+}
+
+.unpluggedSpaceTab .putToServer,
+.unpluggedSpaceTab .notChanged {
+	display: none;
+}
+
+.tiddlyspaceMenu ul {
+	margin: 0;
+	padding: 0;
+}
+
+.tiddlyspaceMenu ul li {
+	list-style: none;
+}
+
+.unsyncedChanges .unsyncedList {
+	display: block;
+}
+
+.unsyncedList {
+	display: none;
+}
+
+#backstage iframe {
+	height: 600px;
+	width: 100%;
+	border: none;
+}
 !Code
 ***/
 //{{{
 (function($) {
+var name = "StyleSheet" + tiddler.title;
+config.shadowTiddlers[name] = "/*{{{*/\n%0\n/*}}}*/".
+	format(store.getTiddlerText(tiddler.title + "##StyleSheet")); // this accesses the StyleSheet section of the current tiddler (the plugin that contains it)
+store.addNotification(name, refreshStyles);
 
 if(!config.extensions.tiddlyweb.status.tiddlyspace_version) { // unplugged
 	config.extensions.tiddlyweb.status.tiddlyspace_version = "<unknown>";
