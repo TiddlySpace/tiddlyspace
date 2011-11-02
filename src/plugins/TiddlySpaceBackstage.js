@@ -25,16 +25,12 @@ var imageMacro = config.macros.image;
 if(config.options.chkBackstage === undefined) {
 	config.options.chkBackstage = true;
 }
-config.tasks.login = {
-	text: "login",
-	tooltip: "TiddlySpace login",
-	content: "<<tiddler Backstage##Login>>"
-};
 
 config.tasks.user = {
 	text: "user: ",
 	tooltip: "user control panel",
-	unpluggedText: "unplugged user"
+	unpluggedText: "unplugged user",
+	content: "<html><iframe src='/_account' width='100%' height='600px'></iframe></html>"
 };
 
 config.tasks.space = {
@@ -52,12 +48,10 @@ config.tasks.tiddlyspace = {
 if(window.location.protocol == "file:") {
 	config.unplugged = true; // TODO: move into extensions.tiddly{web/space} namespace!?
 	config.tasks.space.content = "<<tiddler Backstage##SpaceUnplugged>>";
-	config.tasks.user.content = "<<tiddler Backstage##UserUnplugged>>";
 } else {
 	config.tasks.space.content = "<html><iframe src='/_space' width='100%' height='600px'></iframe></html>";
-	config.tasks.user.content = "<html><iframe src='/_account' width='100%' height='600px'></iframe></html>";
 }
-config.backstageTasks = ["login", "tiddlyspace", "user", "space"];
+config.backstageTasks = ["tiddlyspace", "user", "space"];
 
 config.messages.backstage.prompt = "";
 // initialize state
