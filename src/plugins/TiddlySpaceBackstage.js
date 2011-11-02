@@ -54,8 +54,8 @@ if(window.location.protocol == "file:") {
 	config.tasks.space.content = "<<tiddler Backstage##SpaceUnplugged>>";
 	config.tasks.user.content = "<<tiddler Backstage##UserUnplugged>>";
 } else {
-	config.tasks.space.content = "<<tiddler Backstage##Space>>";
-	config.tasks.user.content = "<<tiddler Backstage##User>>";
+	config.tasks.space.content = "<html><iframe src='/_space' width='100%' height='600px'></iframe></html>";
+	config.tasks.user.content = "<html><iframe src='/_account' width='100%' height='600px'></iframe></html>";
 }
 config.backstageTasks = ["login", "tiddlyspace", "user", "space"];
 
