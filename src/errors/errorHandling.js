@@ -1,13 +1,14 @@
 /***
 |''Name''|TiddlySpaceErrorHandlers|
 |''Description''|Provides useful functionality for a given error message|
-|''Version''|0.1.0|
+|''Version''|0.2.0|
 ***/
 //{{{
 var errorhandler = {
 	homespace: "frontpage",
 	locale: {
 		errorCreateSpace: "error creating space.",
+		makeTiddlerHeader: "Make Tiddler",
 		tiddlerSuggestionsHeader: "Were you looking for one of these tiddlers...?",
 		spaceSuggestionsHeader: "Were you looking for one of these spaces...?",
 		claimSpace: "create space with this name",
@@ -29,9 +30,9 @@ var errorhandler = {
 			var container = $(".spaceSuggestions")[0];
 			if(path) {
 				var segments = path.split("/");
-				tiddler = segments[segments.length - 1];
-				if(segments.length === 1 || tiddler.length === 4) { // currently only for for tiddler uris
-					errorhandler.suggestTiddlers(container, space, path);
+				var tiddler = segments[segments.length - 1];
+				if(tiddler) { // currently only for for tiddler uris
+					errorhandler.suggestTiddlers(container, space, tiddler);
 				}
 			} else {
 				errorhandler.createSpaceLink($(".claim-space"), space);
@@ -75,8 +76,21 @@ var errorhandler = {
 			return false;
 		}
 	},
+	createTiddler: function(container, space, title) {
+		$.ajax({url: "/status", dataType: "json",
+			success: function(status) {
+				if(status.username && status.username != "GUEST") {
+					$("<h2 />").text(errorhandler.locale.makeTiddlerHeader).appendTo(container);
+					container = $("<p />").appendTo(container)[0];
+					$("<a />").attr("href", "takenote#tiddler/" + title).
+						text("Create tiddler named '" + decodeURIComponent(title) + "'").appendTo(container);
+				}
+			}
+		});
+	},
 	suggestTiddlers: function(container, space, title) {
 		$(container).empty(errorhandler.locale.alternativeTiddlers);
+		errorhandler.createTiddler(container, space, title);
 		var uri = "/bags/" + space + "_public/tiddlers";
 		$.ajax({url: uri, dataType: "text",
 			success: function(txt) {
@@ -88,7 +102,6 @@ var errorhandler = {
 						suggestions.push(thisTitle);
 					}
 				}
-				$(container).empty();
 				if(suggestions.length > 0) {
 					$("<h2 />").text(errorhandler.locale.tiddlerSuggestionsHeader).appendTo(container);
 					var list = $("<ol />").appendTo(container)[0];
