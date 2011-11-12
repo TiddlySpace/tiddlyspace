@@ -19,7 +19,8 @@ class RepudiatorController(object):
 
     def __call__(self, environ, start_response):
         wrapper = Repudiator(environ, start_response)
-        app_iter = self.application(environ, wrapper.replacement_start_response)
+        app_iter = self.application(environ,
+                wrapper.replacement_start_response)
         return (wrapper.finish_response(app_iter))
 
 
