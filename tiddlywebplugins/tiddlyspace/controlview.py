@@ -93,12 +93,6 @@ class ControlView(object):
 
             space = Space(space_name)
 
-            template = recipe_template(environ)
-            bags = space.extra_bags()
-            for bag, _ in recipe.get_recipe(template):
-                bags.append(bag)
-            bags.extend(ADMIN_BAGS)
-
             filter_string = None
             search_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
@@ -122,7 +116,7 @@ class ControlView(object):
                 serializer = Serializer(serialize_type, environ)
 
                 def lister():
-                    for bag in bags:
+                    for bag in get_blessed_bags(environ, space_name):
                         yield Bag(bag)
 
                 return list_entities(environ, start_response, mime_type,
@@ -130,7 +124,7 @@ class ControlView(object):
 
             elif req_uri.startswith('/search') and req_uri.count('/') == 1:
                 search_string = ' OR '.join(['bag:%s' % bag
-                    for bag in bags])
+                    for bag in get_blessed_bags(environ, space_name)])
             else:
                 entity_name = urllib.unquote(
                         req_uri.split('/')[2]).decode('utf-8')
@@ -140,7 +134,7 @@ class ControlView(object):
                         raise HTTP404('recipe %s not found due to ControlView'
                                 % entity_name)
                 else:
-                    if entity_name not in bags:
+                    if entity_name not in get_blessed_bags(environ, space_name):
                         raise HTTP404('bag %s not found due to ControlView'
                                 % entity_name)
 
@@ -198,27 +192,19 @@ class DropPrivs(object):
             return
 
         space = Space(space_name)
-
-        store = environ['tiddlyweb.store']
         container_name = req_uri.split('/')[2]
 
         if req_uri.startswith('/bags/'):
-            recipe_name = determine_space_recipe(environ, space_name)
-            space_recipe = store.get(Recipe(recipe_name))
-            template = recipe_template(environ)
-            recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
-            recipe_bags.extend(space.extra_bags())
-            if environ['REQUEST_METHOD'] == 'GET':
-                if container_name in recipe_bags:
-                    return
-                if container_name in ADMIN_BAGS:
-                    return
+            blessed_get_bags = get_blessed_bags(environ, space_name)
+            if (environ['REQUEST_METHOD'] == 'GET' and
+                    container_name in blessed_get_bags):
+                return
             else:
                 base_bags = space.list_bags()
                 # add bags in the recipe which may have been added
                 # by the recipe mgt. That is: bags which are not
                 # included and not core.
-                acceptable_bags = [bag for bag in recipe_bags if not (
+                acceptable_bags = [bag for bag in blessed_get_bags if not (
                     Space.bag_is_public(bag) or Space.bag_is_private(bag)
                     or Space.bag_is_associate(bag))]
                 acceptable_bags.extend(base_bags)
@@ -277,3 +263,18 @@ class AllowOrigin(object):
             return start_response(status, headers, exc_info)
 
         return self.application(environ, replacement_start_response)
+
+def get_blessed_bags(environ, space_name):
+    """
+    Return the list of bags which may legitimately be accessed in 
+    space_name. This is used in ControlView and DropPrivs GET.
+    """
+    store = environ['tiddlyweb.store']
+    space = Space(space_name)
+    recipe_name = determine_space_recipe(environ, space_name)
+    space_recipe = store.get(Recipe(recipe_name))
+    template = recipe_template(environ)
+    blessed_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
+    blessed_bags.extend(space.extra_bags())
+    blessed_bags.extend(ADMIN_BAGS)
+    return blessed_bags

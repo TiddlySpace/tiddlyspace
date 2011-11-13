@@ -58,7 +58,7 @@ def test_mapspace_validator():
                 'Authorization': 'Basic %s' % auth},
             body='{"text": ""}')
 
-    assert response['status'] == '204'
+    assert response['status'] == '204', content
 
     # cannot write even with user
     response, content = http.request(
