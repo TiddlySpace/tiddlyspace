@@ -24,6 +24,7 @@ class Space(object):
 
     ASSOCIATED_BAG_MAP = [
             'archive',
+            'auxbags',
             ]
 
     CORE_RECIPE = [

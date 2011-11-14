@@ -31,7 +31,7 @@ from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializer import Serializer
-from tiddlyweb.store import NoRecipeError
+from tiddlyweb.store import NoRecipeError, StoreError
 from tiddlyweb.web.http import HTTP404
 from tiddlyweb.web.listentities import list_entities
 from tiddlyweb.web.util import get_serialize_type
@@ -119,8 +119,11 @@ class ControlView(object):
                     for bag in get_blessed_bags(environ, space_name):
                         yield Bag(bag)
 
-                return list_entities(environ, start_response, mime_type,
-                        lister, serializer.list_bags)
+                try:
+                    return list_entities(environ, start_response, mime_type,
+                            lister, serializer.list_bags)
+                except StoreError, exc:
+                    raise HTTP400('invalid bag list in controlview: %s', exc)
 
             elif req_uri.startswith('/search') and req_uri.count('/') == 1:
                 search_string = ' OR '.join(['bag:%s' % bag
@@ -202,13 +205,12 @@ class DropPrivs(object):
             else:
                 base_bags = space.list_bags()
                 # add bags in the recipe which may have been added
-                # by the recipe mgt. That is: bags which are not
-                # included and not core.
+                # by the recipe mgt. or axubags.
+                # That is: bags which are not included and not core.
                 acceptable_bags = [bag for bag in blessed_get_bags if not (
                     Space.bag_is_public(bag) or Space.bag_is_private(bag)
                     or Space.bag_is_associate(bag))]
                 acceptable_bags.extend(base_bags)
-                acceptable_bags.extend(ADMIN_BAGS)
                 if container_name in acceptable_bags:
                     return
 
@@ -277,4 +279,11 @@ def get_blessed_bags(environ, space_name):
     blessed_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
     blessed_bags.extend(space.extra_bags())
     blessed_bags.extend(ADMIN_BAGS)
+    try:
+        auxbag_names = [tiddler.title for tiddler in store.list_bag_tiddlers(
+            Bag('%s_auxbags' % space_name))]
+        blessed_bags.extend(auxbag_names)
+    except StoreError:
+        logging.warn('space %s missing _auxbags', space_name)
+        pass  # the bag is not there or something else went weird
     return blessed_bags

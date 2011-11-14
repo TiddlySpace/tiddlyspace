@@ -63,7 +63,7 @@ def test_check_default_bags():
 
     response, content = http.request('http://thing.0.0.0.0:8080/bags.txt',
             headers={'Cookie': 'tiddlyweb_user="%s"' % user_cookie})
-    assert response['status'] == '200'
+    assert response['status'] == '200', content
     content_check(content, isin=['system', 'thing_public', 'thing_private'],
             notin=['other_public', 'other_private'])
 
@@ -79,13 +79,52 @@ def test_check_default_bags():
         'other_public'], notin=['other_private'])
 
 def test_extra_bag():
+    # make sure the extra bag exists
     bag = Bag('everybodybag')
+    bag.policy.read = []
+    bag.policy.write = ['thing']
+    bag.policy.create = ['thing']
+    bag.policy.delete = ['thing']
     store.put(bag)
 
+    # it is there in the base host
     response, content = http.request('http://0.0.0.0:8080/bags.txt')
     assert response['status'] == '200'
     content_check(content, isin=['everybodybag'])
 
+    # it is not there in space host without aux
     response, content = http.request('http://thing.0.0.0.0:8080/bags.txt')
     assert response['status'] == '200'
     content_check(content, notin=['everybodybag'])
+
+    # we can't put a tiddler to it, will 404
+    response, content = http.request(
+            'http://thing.0.0.0.0:8080/bags/everybodybag/tiddlers/heyo',
+            method='PUT',
+            headers={'Content-Type': 'application/json'},
+            body='{"modifier": "cdent", "text": "oh"}')
+    assert response['status'] == '404'
+
+    # add to aux
+    tiddler = Tiddler('everybodybag', 'thing_auxbags')
+    store.put(tiddler)
+
+    # now it is there!
+    response, content = http.request('http://thing.0.0.0.0:8080/bags.txt')
+    assert response['status'] == '200', content
+    content_check(content, isin=['everybodybag'])
+
+    response, content = http.request(
+            'http://thing.0.0.0.0:8080/bags/everybodybag/tiddlers/heyo',
+            method='PUT',
+            headers={'Content-Type': 'application/json'},
+            body='{"modifier": "cdent", "text": "oh"}')
+    assert response['status'] == '403'
+
+    response, content = http.request(
+            'http://thing.0.0.0.0:8080/bags/everybodybag/tiddlers/heyo',
+            method='PUT',
+            headers={'Content-Type': 'application/json',
+                'Cookie': 'tiddlyweb_user="%s"' % user_cookie},
+            body='{"modifier": "cdent", "text": "oh"}')
+    assert response['status'] == '204'
