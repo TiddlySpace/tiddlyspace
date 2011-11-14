@@ -22,7 +22,7 @@ def test_public_recipe():
 
 def test_list_bags():
     space = Space('cat')
-    assert sorted(space.list_bags()) == ['cat_archive', 'cat_private',
+    assert sorted(space.list_bags()) == ['cat_archive', 'cat_auxbags', 'cat_private',
             'cat_public']
 
 def test_list_recipes():
