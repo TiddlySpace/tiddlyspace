@@ -218,6 +218,8 @@ var loadEvent = function() {
 	});
 };
 
-addEventListener(window, "load", loadEvent);
+if(window == top) { // only add the backstage when NOT in an iframe (top window)
+	addEventListener(window, "load", loadEvent);
+}
 
 })();
