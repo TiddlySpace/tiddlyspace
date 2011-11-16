@@ -93,14 +93,17 @@ for space_name, description in spaces.items():
     private_bag_name = space.private_bag()
     public_recipe_name = space.public_recipe()
     private_recipe_name = space.private_recipe()
+    extra_bags = space.extra_bags()
 
     store_structure['bags'][public_bag_name] = {
         'desc': description,
         'policy': frontpage_policy,
     }
-    store_structure['bags'][private_bag_name] = deepcopy(
-        store_structure['bags'][public_bag_name])
-    store_structure['bags'][private_bag_name]['policy']['read'] = ['R:ADMIN']
+
+    for bagname in [private_bag_name] + extra_bags:
+        store_structure['bags'][bagname] = deepcopy(
+                store_structure['bags'][public_bag_name])
+        store_structure['bags'][bagname]['policy']['read'] = ['R:ADMIN']
 
     store_structure['recipes'][public_recipe_name] = {
         'desc': description,

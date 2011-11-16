@@ -24,6 +24,7 @@ copyright holders; it's more about protecting groups and individuals
 from defamation and fraud.
 """
 
+import logging
 import urllib
 
 from tiddlyweb.control import recipe_template
@@ -32,7 +33,7 @@ from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializer import Serializer
 from tiddlyweb.store import NoRecipeError, StoreError
-from tiddlyweb.web.http import HTTP404
+from tiddlyweb.web.http import HTTP404, HTTP400
 from tiddlyweb.web.listentities import list_entities
 from tiddlyweb.web.util import get_serialize_type
 
