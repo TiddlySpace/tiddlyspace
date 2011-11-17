@@ -186,6 +186,10 @@ a.app:hover {
 	background: #0082AF;
 }
 
+.iframeMode a.app {
+	display: none;
+}
+
 @media (max-width:600px) {
 	.left, .right {
 		float: none;

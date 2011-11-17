@@ -13,6 +13,7 @@ tags: excludeLists excludeSearch excludeMissing
 
 <div id="container">
 	<div class="main section">
+		<a class="app" href="/apps">applications</a>
 		<div class="left">
 		<h2>Find Space</h2>
 		<form class="spaceSearch">
