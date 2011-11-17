@@ -584,17 +584,6 @@ backstage.tiddlyspace = {
 		$("<span />").text(tasks.space.text).appendTo(btn);
 		$("<span />").addClass("spaceName").text(currentSpace).appendTo(btn);
 	},
-	loginButton: function(backstageArea, user) {
-		var loginBtn = $("[task=login]", backstageArea).empty();
-		if(user.anon && !config.unplugged) {
-			$("<span />").text(tasks.login.text).appendTo(loginBtn);
-			var container = $("<span />").appendTo(loginBtn)[0];
-			imageMacro.renderImage(container, commonUrl.format("defaultUserIcon"),
-				{ imageClass:"userSiteIcon", height: 24, width: 24 });
-		} else {
-			loginBtn.remove();
-		}
-	},
 	addClasses: function(backstageArea) {
 		var tasks = $(".backstageTask", backstageArea);
 		for(var i = 0; i < tasks.length; i++) {
@@ -617,7 +606,6 @@ backstage.init = function() {
 		bs.hideButton();
 		bs.middleButton(backstageArea, user);
 		bs.spaceButton(backstageArea, user);
-		bs.loginButton(backstageArea, user);
 		bs.addClasses(backstageArea); // for IE styling purposes
 		bs.checkSyncStatus();
 	};
