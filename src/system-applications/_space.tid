@@ -6,49 +6,50 @@ tags: excludeLists excludeSearch excludeMissing
 	<title>This Space</title>
 	<script type='text/javascript' src='/bags/common/tiddlers/backstage.js'></script>
 	<link href="/bags/common/tiddlers/profile.css" type='text/css' rel='stylesheet' >
-	<style type="text/css">
-		.ts-membership {
-			display: none;
-		}
-		.ts-member .ts-membership {
-			display: block;
-		}
-		#header h2 {
-			text-align: center;
-		}
-	</style>
+	<link href="/bags/common/tiddlers/admin.css" type='text/css' rel='stylesheet' >
 </head>
 <body>
 <div id="container">
-	<div id="header">
-		<h1 id='siteTitle'>This Space</h1>
-		<h2 id='siteUrl' class="meta"></h2>
-	</div>
 	<div id="text-html" class="main section">
+		<a class="app" href="/apps">applications</a>
+		<div class="left">
 		<h2>About this space</h2>
 		<div id="siteinfo"></div>
 		<h2>Vital Statistics</h2>
 		<div id="info">please wait while information is loaded about this space...</div>
+		</div>
+		<div class="right">
 		<div class="ts-membership">
-			<h2>Members</h2>
-			Your space currently has the following members... 
-			<a href="http://docs.tiddlyspace.com/What%20is%20a%20member%3F">What is a Member?</a>
-			<ul class="ts-members"></ul>
+			<h2>
+				Add Member
+				<a href="http://docs.tiddlyspace.com/What%20is%20a%20member%3F" title="What is a Member?" class="help">What is a Member?</a>
+			</h2>
 			<p>Add a new member to your space by entering their name below. Enter a space to add all existing members of that space.</p>
 			<form class="ts-members">
 				<input type="text" name="username">
 				<input type="submit" value="Add Member" />
 			</form>
-		</div>
-		<div>
-			<h2>Included Spaces</h2>
-			This space includes the following spaces... <a href="http://docs.tiddlyspace.com/What%20is%20space%20inclusion%3F">What is Inclusion?</a>
-			<ul class="ts-includes"></ul>
+			<h2>
+				Include Space
+				<a class="help" href="http://docs.tiddlyspace.com/What%20is%20space%20inclusion%3F" title="What is inclusion?">What is Inclusion?</a>
+			</h2>
 			<form class="ts-includes">
 				<input type="text" name="spacename">
 				<input type="submit" value="Include Space" />
 			</form>
+			<h2>
+				Existing Members
+			</h2>
+			Your space currently has the following members: 
+			<ul class="ts-members"></ul>
 		</div>
+		<div>
+			<h2>Included Spaces</h2>
+			This space includes the following spaces:
+			<ul class="ts-includes"></ul>
+		</div>
+		</div>
+		<div class="clear"></div>
 	</div>
 </div>
 <script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
@@ -113,8 +114,8 @@ tags: excludeLists excludeSearch excludeMissing
 			function(tid) {
 				$("#siteinfo").html(tid.render || tid.text);
 				if($(document.body).hasClass("ts-member")) {
-					$("<a />").attr("href", "/takenote#!/quickedit/tiddler/SiteInfo").
-						text("Edit").insertAfter("#siteinfo");
+					$("<a class='button edit' />").attr("href", "/takenote#!/quickedit/tiddler/SiteInfo").
+						text("Edit").prependTo("#siteinfo");
 				}
 			},
 			function() {
@@ -124,14 +125,6 @@ tags: excludeLists excludeSearch excludeMissing
 						text("Provide information now.").insertAfter("#siteinfo");
 				}
 			}, "render=1");
-
-		new tiddlyweb.Tiddler("SiteTitle", new tiddlyweb.Bag(publicBag, "/")).get(
-			function(tid) {
-				$("#siteTitle").text(tid.text);
-			}, 
-			function() {
-				$("#siteTitle").text(window.location.hostname);
-			});
 	});
 </script>
 </body>

@@ -24,6 +24,7 @@ recipe: apps/apps.recipe
 # appspage common files
 tiddler: system-applications/appspagecss.tid
 tiddler: system-applications/appspagejs.tid
+tiddler: system-applications/admin.css.tid
 
 # Icons used by the appswitcher
 tiddler: icons/browse_read_blue.png.tid
@@ -32,6 +33,9 @@ tiddler: icons/preso_blue.png.tid
 tiddler: icons/share_blue.png.tid
 tiddler: icons/tiddlywiki2_blue.png.tid
 tiddler: icons/box_closed_blue.png.tid
+
+#generic icons
+tiddler: icons/help.png.tid
 
 # Preso2 app common recipe
 recipe: https://github.com/Hugheth/preso2/raw/master/dist/latest/common.recipe
