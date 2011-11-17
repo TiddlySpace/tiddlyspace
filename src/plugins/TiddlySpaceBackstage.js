@@ -113,7 +113,6 @@
 	margin: 0;
 }
 
-.backstagePanelBody,
 .backstagePanelBody .tabContents ul {
 	padding: 5px;
 	margin: 5px;
