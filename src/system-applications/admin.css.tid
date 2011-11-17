@@ -26,6 +26,7 @@ type: text/css
 	right: 0px;
 	top: -40px;
 	color: white;
+	_color: black; /* ie6 hack */
 	position: absolute;
 }
 
@@ -149,6 +150,7 @@ h1,h2,h3,h4,h5 {
 }
 
 .left {
+	position: relative;
 	width: 48%;
 	float: left;
 	border-right: solid 1px #CCC;
@@ -156,6 +158,7 @@ h1,h2,h3,h4,h5 {
 }
 
 .right {
+	position: relative;
 	float: left;
 	width: 46%; /* firefox doesn't render correctly when this is 47% */
 	padding-left: 3%;
