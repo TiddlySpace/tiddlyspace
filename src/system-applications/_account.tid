@@ -141,5 +141,8 @@ if(window.location.hash == "#iframeMode") {
 	});
 }
 </script>
+<!--[if lt IE 8]>
+<script type="text/javascript" src="/bags/common/tiddlers/json2.js"></script>
+<![endif]-->
 </body>
 </html>

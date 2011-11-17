@@ -171,5 +171,8 @@ tags: excludeLists excludeSearch excludeMissing
 		});
 	}
 </script>
+<!--[if lt IE 8]>
+<script type="text/javascript" src="/bags/common/tiddlers/json2.js"></script>
+<![endif]-->
 </body>
 </html>

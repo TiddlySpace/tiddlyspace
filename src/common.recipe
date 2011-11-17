@@ -7,6 +7,7 @@ tiddler: lib/jquery.js.js
 tiddler: lib/jquery-json.js.js
 tiddler: lib/jquery-ui.custom.js.js
 tiddler: lib/jquery-ui.custom.css
+tiddler: lib/json2.js.js
 tiddler: lib/chrjs-store.js.js
 tiddler: lib/chrjs.users.js
 tiddler: lib/chrjs.space.js
