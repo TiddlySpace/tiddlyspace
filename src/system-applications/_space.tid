@@ -110,19 +110,56 @@ tags: excludeLists excludeSearch excludeMissing
 			countTiddlers();
 		});
 
-		new tiddlyweb.Tiddler("SiteInfo", new tiddlyweb.Bag(publicBag, "/")).get(
+		function complete(tiddler) {
+			$("#siteinfo .edit").show();
+			$("#siteinfo .value").data("tiddler", tiddler).
+				empty().html(tiddler.render);
+		}
+		function siteInfoEditor(tiddler) {
+			var errback = function() {
+				$("#siteinfo .edit").click();
+				$("<div class='error' />").text("Error occurred whilst saving.").prependTo("#siteinfo .value");
+			};
+			$("<button class='edit' />").click(function(ev) {
+				var editBtn = $(ev.target);
+				$(editBtn).hide();
+				var val = $(".value", $(ev.target).parent("#siteinfo")[0]);
+				var wikitext = $(val).data("tiddler").text;
+				var html = $(val).html();
+				$(val).empty();
+				$("<textarea />").val(wikitext).appendTo(val);
+				$("<button />").text("save").click(function(ev) {
+					var text = $("textarea", val).val();
+					$(val).empty().text("saving...");
+					tiddler.text = text;
+					tiddler.put(function() {
+						tiddler.get(function(tid) {
+							tiddler = tid;
+							complete(tid);
+						}, errback, "render=y");
+					}, errback);
+					$(editBtn).show();
+				}).appendTo(val);
+				$("<button />").text("cancel").
+					click(function(ev) {
+						complete(tiddler);
+					}).appendTo(val);
+			}).text("edit").appendTo("#siteinfo");
+		}
+		var tiddler = new tiddlyweb.Tiddler("SiteInfo", new tiddlyweb.Bag(publicBag, "/"));
+		tiddler.get(
 			function(tid) {
-				$("#siteinfo").html(tid.render || tid.text);
+				tiddler = tid;
+				$("<div class='value' />").data("tiddler", tiddler).
+					html(tid.render || tid.text).appendTo("#siteinfo");
 				if($(document.body).hasClass("ts-member")) {
-					$("<a class='button edit' />").attr("href", "/takenote#!/quickedit/tiddler/SiteInfo").
-						text("Edit").prependTo("#siteinfo");
+					siteInfoEditor(tid);
 				}
 			},
 			function() {
 				$("#siteinfo").text("This space has not published any information about itself.");
 				if($(document.body).hasClass("ts-member")) {
-					$("<a />").attr("href", "/takenote#!/quickedit/tiddler/SiteInfo").
-						text("Provide information now.").insertAfter("#siteinfo");
+					siteInfoEditor(tiddler);
 				}
 			}, "render=1");
 	});
