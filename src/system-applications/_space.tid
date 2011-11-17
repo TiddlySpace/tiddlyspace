@@ -126,6 +126,13 @@ tags: excludeLists excludeSearch excludeMissing
 				}
 			}, "render=1");
 	});
+
+	if(window.location.hash == "#iframeMode") {
+		$("html").addClass("iframeMode");
+		$("a").live("click",function(ev) {
+			$(ev.target).attr("target", "_parent");
+		});
+	}
 </script>
 </body>
 </html>
