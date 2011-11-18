@@ -26,7 +26,7 @@ tags: excludeLists excludeSearch excludeMissing
 			</h2>
 			<p>Add a new member to your space by entering their name below. Enter a space to add all existing members of that space.</p>
 			<form class="ts-members">
-				<input type="text" name="username">
+				<input class="inputBox" type="text" name="username">
 				<input type="submit" value="Add Member" />
 			</form>
 			<h2>
@@ -34,7 +34,7 @@ tags: excludeLists excludeSearch excludeMissing
 				<a class="help" href="http://docs.tiddlyspace.com/What%20is%20space%20inclusion%3F" title="What is inclusion?">What is Inclusion?</a>
 			</h2>
 			<form class="ts-includes">
-				<input type="text" name="spacename">
+				<input class="inputBox" type="text" name="spacename">
 				<input type="submit" value="Include Space" />
 			</form>
 			<h2>

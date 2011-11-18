@@ -1,5 +1,19 @@
 type: text/css
 
+.messageArea {
+	padding: 10px;
+	border: groove 1px #CCC;
+	background-color: #EEE;
+}
+
+.autocompleteLink img {
+	margin-right: 8px;
+}
+
+.iframeMode .app-picker {
+	display: none !important;
+}
+
 .ts-membership {
 	display: none;
 }
@@ -108,7 +122,7 @@ a:hover {
 }
 
 textarea,
-input[type=text] {
+.inputBox {
 	padding-right: 170px;
 	margin-bottom: 0.25em;
 	font-size: 1.3em;
@@ -124,8 +138,12 @@ input[type=text] {
 	border-radius: 4px;
 }
 
-input[type=text]:focus {
+.inputBox:focus {
 	background: rgba(255,255,255,0.7);
+}
+
+.ts-password input {
+	display: block;
 }
 
 a {

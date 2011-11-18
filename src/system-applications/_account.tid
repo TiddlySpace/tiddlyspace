@@ -17,29 +17,29 @@ tags: excludeLists excludeSearch excludeMissing
 		<div class="left">
 		<h2>Find Space</h2>
 		<form class="spaceSearch">
-			<input type="search" placeholder="search for space name" />
+			<input class="inputBox" type="text" placeholder="search for space name" />
 			<a href="http://docs.tiddlyspace.com/What%20is%20a%20Space%3F" class="help"
 				title="What is a space?">What is a space?</a>
 		</form>
 		<h2>Create New Space</h2>
 		<form class="ts-spaces">
-			<input type="text" name="spacename" placeholder="name of new space"><span class="hostSuffix">.tiddlyspace.com</span>
+			<input class="inputBox" type="text" name="spacename" placeholder="name of new space"><span class="hostSuffix">.tiddlyspace.com</span>
 			<input type="submit" value="Create Space" />
 		</form>
 		</div>
 		<div class="right">
 		<h2>Your Password</h2>
 		<form class="ts-password">
-			<input placeholder="existing password" type="password" name="password">
-			<input placeholder="new password" type="password" name="new_password">
-			<input placeholder="new password"	type="password" name="new_password_confirm">
+			<input class="inputBox" placeholder="existing password" type="password" name="password">
+			<input class="inputBox" placeholder="new password" type="password" name="new_password">
+			<input class="inputBox" placeholder="new password"	type="password" name="new_password_confirm">
 			<input type="submit" value="Change password">
 		</form>
 		<h2>Your Identities</h2>
 		<ul class="ts-identities"></ul>
 		<form class="ts-openid">
 			Add an openid
-			<input type="text" name="openid" placeholder="your openid" />
+			<input class="inputBox" type="text" name="openid" placeholder="your openid" />
 			<input type="submit" value="Register" />
 			<a href="http://openid.net/get-an-openid/" class="help"
 			title="What is an open id?">What is an open id?</a>
