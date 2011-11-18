@@ -19,37 +19,33 @@ Key}}}
 
 <<tabs txtTiddlySpaceTab
 search "search across TiddlySpace" Backstage##Search
-tiddlers "tiddlers control panel" Backstage##Tiddlers
+tiddlers "tiddlers control panel" Backstage##BackstageTiddlers
 plugins "Manage installed plugins" PluginManager
 batch "Perform batch operations on public/private tiddlers" Backstage##BatchOps
-options "TiddlyWiki options" Backstage##Options
 tweaks "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions
-import "Import tiddlers from a TiddlyWiki" Backstage##FileImport
-export "Export this TiddlySpace for offline use" Backstage##Export
-help "quick access to useful space resources" Backstage##Resources
+"import/export" "Import/export tiddlers from/to a TiddlyWiki" Backstage##ImportExport
 >>
 running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddlyspace_version>>
+{{autotable{
+<<tiddler Backstage##Resources>>
+}}}
 
 !Resources
-[[blog|@@blog]]
-[[documentation|@@docs]]
-[[featured spaces|@@featured]]
+|[[blog|@@blog]]|[[documentation|@@docs]]|[[featured spaces|@@featured]]|
 
 !Search
 <<tsSearch>>
 
-!FileImport
+!ImportExport
 <<fileImport>>
-
-!Export
 You can download this TiddlySpace as an offline TiddlyWiki:
+
 {{chunkyButton{<<exportSpace>>}}}
 
-!Options
-upload a <<message messages.privacySetting>> file:
-<<binaryUpload>>
-<<search>><<closeAll>><<permaview>><<newTiddler>><<newJournal "DD MMM YYYY" "journal">><<saveChanges>><<slider chkSliderOptionsPanel OptionsPanel "options »" "Change TiddlyWiki advanced options">>
-
+!BackstageTiddlers
+|upload a <<message messages.privacySetting>> file: <<binaryUpload>>|<<closeAll>><<permaview>><<newTiddler>><<newJournal "DD MMM YYYY" "journal">><<saveChanges>>|
+|>|<<search>>|
+|>|<<tiddler Backstage##Tiddlers>>|
 
 !Tiddlers
 <<tabs

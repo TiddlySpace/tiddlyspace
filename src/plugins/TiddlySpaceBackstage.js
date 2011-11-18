@@ -122,6 +122,7 @@
 	margin-left: 5%;
 	padding: 0em;
 	margin-right: 5%;
+	text-align: center;
 }
 
 #backstageToolbar a {
@@ -227,7 +228,8 @@ a.backstageTask {
 }
 
 .backstagePanelBody .tabContents .button {
-	display: block;
+	display: inline-block;
+	margin-right: 10px;
 }
 
 .backstagePanelBody .tab {
@@ -235,12 +237,18 @@ a.backstageTask {
 	padding: 0.4em 0.5em 1px 0.5em;
 }
 
-#backstage .tabContents{
+#backstage .tabContents {
 	padding: 1.5em;
+	text-align: left;
 }
 
-#backstage .wizard {
+#backstage table {
+	margin: auto;
+}
+
+#backstage .wizard table {
 	border: 0px;
+	margin: 0;
 }
 
 #backstage .txtSpaceTab li {
@@ -316,10 +324,11 @@ a.backstageTask {
 }
 
 span.chunkyButton {
-	display: block;
+	display: inline-block;
 	padding: 0;
 	margin: 0;
 	border: solid 2px #000;
+	background-color: #04b;
 }
 
 span.chunkyButton a.button, span.chunkyButton a:active.button {
@@ -327,24 +336,21 @@ span.chunkyButton a.button, span.chunkyButton a:active.button {
 	font-weight: bold;
 	font-size: 1.8em;
 	color: #fff;
-	background-color: #04b;
 	text-align: center;
-	padding: 1em 3em;
+	padding: 0.5em 0.5em;
 	margin: 0;
 	border-style: none;
-	border-top: solid 1px #fff;
 	display: block;
 }
 
-.chunkyButton {
-	width: 18em;
+span.chunkyButton:hover {
+	background-color: #014;
 }
 
 span.chunkyButton a.button:hover {
-	background-color: #014;
 	border-style: none;
+	background: none;
 	color: #fff;
-	border-top: solid 1px #8cf;
 }
 
 a.baskstageTask.task_login,
