@@ -634,33 +634,6 @@ var home = config.macros.homeLink = {
 	}
 };
 
-var followLink = config.macros.followSpace = {
-	locale: {
-		label: "follow %0"
-	},
-	paramifiedLink: function(container, space, title, label, paramifier) {
-		tweb.getStatus(function(status) {
-			var host = config.extensions.tiddlyspace.getHost(status.server_host, space);
-			var url = "%0/#%1:[[%2]]".format(host, paramifier, title);
-			label = label ? label : title;
-			$("<a />").attr("href", url).text(label).appendTo(container);
-		});
-	},
-	make: function(container, username, space) {
-		followLink.paramifiedLink(container, username, "@" + space,
-			followLink.locale.label.format(space), "follow");
-	},
-	handler: function(place) {
-		var container = $("<span />").appendTo(place)[0];
-		tweb.getUserInfo(function(user) {
-			var username = user.name;
-			if(!user.anon && currentSpace != username) {
-				followLink.make(place, username, currentSpace);
-			}
-		});
-	}
-};
-
 config.macros.exportSpace = {
 	handler: function(place, macroName, params) {
 		var filename = params[0] ||
