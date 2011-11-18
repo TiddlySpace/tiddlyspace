@@ -120,7 +120,7 @@ ts.init(function(ts) {
 							var img = host + "/SiteIcon";
 							selected.push({
 								value: space.name,
-								label: '<a href="' + host + '"><img src="' + img + '" style="height:24px;width:auto;max-height:24px;max-width:24px;"/>' + space.name + '</a>'
+								label: '<a href="' + host + '" target="_parent" class="autocompleteLink"><img src="' + img + '" style="height:24px;width:auto;max-height:24px;max-width:24px;"/>' + space.name + '</a>'
 							});
 						}
 					}
@@ -128,7 +128,7 @@ ts.init(function(ts) {
 				});
 			},
 			select: function(event, ui) {
-				window.location = ts.getHost(ui.item.value);
+				window.top.location = ts.getHost(ui.item.value);
 			}
 		});
 	});
