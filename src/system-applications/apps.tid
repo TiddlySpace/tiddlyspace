@@ -24,7 +24,7 @@ tags: excludeLists excludeSearch
 					<h1 class="spaceaddress">
 						<span class="spaceName"></span><span class="hostName"></span>
 					</h1>
-					<p class="tagline"><span class="subTitle"></span><a class="managespaces inactive" href="/ManageSpaces">manage space</a></p>
+					<p class="tagline"><span class="subTitle"></span><a class="managespaces" href="/_space">manage space</a></p>
 				</div>
 			</div>
 			<div id="holder">
