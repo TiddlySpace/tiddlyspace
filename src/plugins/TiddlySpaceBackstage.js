@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceBackstage|
-|''Version''|0.6.8|
+|''Version''|0.8.0|
 |''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
 |''Status''|@@beta@@|
 |''Contributors''|Jon Lister, Jon Robson, Colm Britton|
@@ -423,6 +423,8 @@ store.addNotification(name, refreshStyles);
 
 if(!config.extensions.tiddlyweb.status.tiddlyspace_version) { // unplugged
 	config.extensions.tiddlyweb.status.tiddlyspace_version = "<unknown>";
+	config.extensions.tiddlyweb.status.server_host = {
+		url: config.extensions.tiddlyweb.host }; // TiddlySpaceLinkPlugin expects this
 }
 var disabled_tabs_for_nonmembers = ["PluginManager", "Backstage##FileImport",
 	"Backstage##BatchOps", "Backstage##SpaceMembers",
@@ -440,7 +442,7 @@ config.tasks.user = {
 	text: "user: ",
 	tooltip: "user control panel",
 	unpluggedText: "unplugged user",
-	content: "<html><iframe frameBorder='0' src='/_account'></iframe></html>"
+	content: "<html><iframe frameBorder='0' src='" + config.extensions.tiddlyweb.host + "/_account'></iframe></html>"
 };
 
 config.tasks.space = {
