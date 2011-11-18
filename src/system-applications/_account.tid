@@ -134,7 +134,7 @@ ts.init(function(ts) {
 	});
 });
 
-if(window.location.hash == "#iframeMode") {
+if(window != window.top) {
 	$("html").addClass("iframeMode");
 	$("a").live("click",function(ev) {
 		$(ev.target).attr("target", "_parent");
