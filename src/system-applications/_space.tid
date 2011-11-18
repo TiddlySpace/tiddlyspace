@@ -147,17 +147,17 @@ tags: excludeLists excludeSearch excludeMissing
 			}).text("edit").appendTo("#siteinfo");
 		}
 		var tiddler = new tiddlyweb.Tiddler("SiteInfo", new tiddlyweb.Bag(publicBag, "/"));
+		$("<div class='value' />").text("(Loading SiteInfo tiddler)").data("tiddler", tiddler).appendTo("#siteinfo");
 		tiddler.get(
 			function(tid) {
 				tiddler = tid;
-				$("<div class='value' />").data("tiddler", tiddler).
-					html(tid.render || tid.text).appendTo("#siteinfo");
+				$("#siteinfo .value").html(tid.render || tid.text);
 				if($(document.body).hasClass("ts-member")) {
 					siteInfoEditor(tid);
 				}
 			},
 			function() {
-				$("#siteinfo").text("This space has not published any information about itself.");
+				$("#siteinfo .value").text("This space has not published any information about itself.");
 				if($(document.body).hasClass("ts-member")) {
 					siteInfoEditor(tiddler);
 				}
