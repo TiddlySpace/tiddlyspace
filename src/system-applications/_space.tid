@@ -11,7 +11,7 @@ tags: excludeLists excludeSearch excludeMissing
 <body>
 <div id="container">
 	<div id="text-html" class="main section">
-		<a class="app" href="/apps">applications</a>
+		<a class="app" href="/apps">back to apps</a>
 		<div class="left">
 		<h2>About this space</h2>
 		<div id="siteinfo"></div>
