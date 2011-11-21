@@ -13,7 +13,7 @@ tags: excludeLists excludeSearch excludeMissing
 	<div id="text-html" class="main section">
 		<a class="app" href="/apps">back to apps</a>
 		<div class="left">
-		<h2>About this space</h2>
+		<h2>About this space <button class='toggleNext'>&lt;</button></button></h2>
 		<div id="siteinfo"></div>
 		<h2>Vital Statistics</h2>
 		<div id="info">please wait while information is loaded about this space...</div>
@@ -24,11 +24,20 @@ tags: excludeLists excludeSearch excludeMissing
 				Add Member
 				<a href="http://docs.tiddlyspace.com/What%20is%20a%20member%3F" title="What is a Member?" class="help">What is a Member?</a>
 			</h2>
-			<p>Add a new member to your space by entering their name below. Enter a space to add all existing members of that space.</p>
-			<form class="ts-members">
-				<input class="inputBox" type="text" name="username">
-				<input type="submit" value="Add Member" />
-			</form>
+			<div>
+				<p>Add a new member to your space by entering their name below. Enter a space to add all existing members of that space.</p>
+				<form class="ts-members">
+					<input class="inputBox" type="text" name="username">
+					<input type="submit" value="Add Member" />
+				</form>
+			</div>
+			<h2>
+				Existing Members <button class='toggleNext'>&lt;</button></button>
+			</h2>
+			<div>
+				Your space currently has the following members: 
+				<ul class="ts-members"></ul>
+			</div>
 			<h2>
 				Include Space
 				<a class="help" href="http://docs.tiddlyspace.com/What%20is%20space%20inclusion%3F" title="What is inclusion?">What is Inclusion?</a>
@@ -37,16 +46,13 @@ tags: excludeLists excludeSearch excludeMissing
 				<input class="inputBox" type="text" name="spacename">
 				<input type="submit" value="Include Space" />
 			</form>
-			<h2>
-				Existing Members
-			</h2>
-			Your space currently has the following members: 
-			<ul class="ts-members"></ul>
 		</div>
 		<div>
-			<h2>Included Spaces</h2>
+			<h2>Included Spaces <button class='toggleNext'>&lt;</button></button></h2>
+			<div>
 			This space includes the following spaces:
 			<ul class="ts-includes"></ul>
+			</div>
 		</div>
 		</div>
 		<div class="clear"></div>
@@ -162,6 +168,31 @@ tags: excludeLists excludeSearch excludeMissing
 					siteInfoEditor(tiddler);
 				}
 			}, "render=1");
+	});
+	function toggleNext(ev) {
+		var label1 = ">";
+		var label2 = "<";
+		var target = $(ev.target).parent().next();
+		var visible = $(ev.target).hasClass("open") ? true : false;
+		var label = visible ? label1 : label2;
+		$(target).stop(true, true);
+		if(!visible) {
+			$(target).slideDown(200);
+			$(ev.target).addClass("open").text(label1);
+		} else {
+			if($(target).parents().is(":hidden")) {
+				// see http://forum.jquery.com/topic/slideup-doesn-t-work-with-hidden-parent
+				$(target).hide();
+			} else {
+				$(target).slideUp(200);
+			}
+			$(ev.target).removeClass("open").text(label2);
+		}
+	}
+	// setup hide/show sliders
+	$(".toggleNext").each(function(i, el) {
+		$(el).addClass("open").click(toggleNext);
+		toggleNext({ target: el });
 	});
 
 	if(window != window.top) {
