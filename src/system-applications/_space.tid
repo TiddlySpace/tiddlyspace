@@ -1,6 +1,7 @@
 type: text/html
 tags: excludeLists excludeSearch excludeMissing
 
+<!DOCTYPE html>
 <html>
 <head>
 	<title>This Space</title>
