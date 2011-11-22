@@ -1,7 +1,7 @@
 /***
 |''Name''|TiddlySpaceBackstage|
 |''Version''|0.8.0|
-|''Description''|Provides a TiddlySpace version of the backstage and a homeLink, and followSpace macro|
+|''Description''|Provides a TiddlySpace version of the backstage and a homeLink macro|
 |''Status''|@@beta@@|
 |''Contributors''|Jon Lister, Jon Robson, Colm Britton|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
