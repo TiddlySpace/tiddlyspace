@@ -47,11 +47,10 @@ type: text/css
 .help {
 	background-image: url(/bags/common/tiddlers/help.png);
 	background-repeat: no-repeat;
-	background-size: 14px 14px;
 	text-indent: -999px;
 	overflow: hidden;
-	width: 14px;
-	height: 14px;
+	width: 16px;
+	height: 16px;
 	display: inline-block;
 }
 
@@ -136,6 +135,7 @@ textarea,
 	outline: none;
 	border: none;
 	border-radius: 4px;
+	_border: dotted 1px #ccc;
 }
 
 .inputBox:focus {
