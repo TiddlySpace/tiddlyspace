@@ -218,6 +218,8 @@ var loadEvent = function() {
 	});
 };
 
-addEventListener(window, "load", loadEvent);
+if(window.top == window) { // not in iframe
+	addEventListener(window, "load", loadEvent);
+}
 
 })();
