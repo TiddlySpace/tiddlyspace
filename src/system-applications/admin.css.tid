@@ -217,6 +217,10 @@ a.app:hover {
 	display: none;
 }
 
+.iframeMode #container {
+	width: 100%;
+}
+
 @media (max-width:600px) {
 	.left, .right {
 		float: none;
