@@ -22,6 +22,17 @@ type: text/css
 	display: block;
 }
 
+.ts-identities li,
+.ts-includes li,
+.ts-members li {
+	font-size: 1.3em;
+}
+
+.ts-includes button,
+.ts-members button {
+	font-size: 0.8em;
+}
+
 #header h2 {
 	text-align: center;
 }
@@ -80,7 +91,6 @@ button {
 	color: #888;
 	cursor: pointer;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 11px;
 	font-weight: bold;
 	height: 30px;
 	line-height: 30px;
