@@ -199,7 +199,7 @@ tags: excludeLists excludeSearch excludeMissing
 	if(window != window.top) {
 		$("html").addClass("iframeMode");
 		$("a").live("click",function(ev) {
-			$(ev.target).attr("target", "_parent");
+			$(ev.target).attr("target", "_blank");
 		});
 	}
 </script>
