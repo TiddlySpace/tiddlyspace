@@ -4,6 +4,7 @@ tags: excludeLists excludeSearch excludeMissing
 <!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 	<title>This Space</title>
 	<script type='text/javascript' src='/bags/common/tiddlers/backstage.js'></script>
 	<link href="/bags/common/tiddlers/profile.css" type='text/css' rel='stylesheet' >

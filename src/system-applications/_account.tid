@@ -4,6 +4,7 @@ tags: excludeLists excludeSearch excludeMissing
 <!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 	<title>Account</title>
 	<link href="/bags/common/tiddlers/profile.css" type='text/css' rel='stylesheet' >
 	<link href="/bags/common/tiddlers/admin.css" type='text/css' rel='stylesheet' >
