@@ -38,8 +38,11 @@ tags: excludeLists excludeSearch excludeMissing
 		</form>
 		<h2>OpenID</h2>
 		<ul class="ts-identities"></ul>
-		<form class="ts-openid">
-			Add an openid
+		<form class="ts-openid" target="_top">
+			<div>
+				Add an openid
+				<a href="http://openid.net/"><img src="/bags/common/tiddlers/openid.png" alt="openid" ></a>
+			</div>
 			<input class="inputBox" type="text" name="openid" placeholder="your openid" />
 			<input type="submit" value="Register" />
 			<a href="http://openid.net/get-an-openid/" class="help"
