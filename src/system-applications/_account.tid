@@ -29,14 +29,14 @@ tags: excludeLists excludeSearch excludeMissing
 		</form>
 		</div>
 		<div class="right">
-		<h2>Your Password</h2>
+		<h2>Change Password</h2>
 		<form class="ts-password">
 			<input class="inputBox" placeholder="existing password" type="password" name="password">
 			<input class="inputBox" placeholder="new password" type="password" name="new_password">
 			<input class="inputBox" placeholder="new password"	type="password" name="new_password_confirm">
 			<input type="submit" value="Change password">
 		</form>
-		<h2>Your Identities</h2>
+		<h2>OpenID</h2>
 		<ul class="ts-identities"></ul>
 		<form class="ts-openid">
 			Add an openid
