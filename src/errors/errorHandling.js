@@ -82,7 +82,7 @@ var errorhandler = {
 				if(status.username && status.username != "GUEST") {
 					$("<h2 />").text(errorhandler.locale.makeTiddlerHeader).appendTo(container);
 					container = $("<p />").appendTo(container)[0];
-					$("<a />").attr("href", "takenote#tiddler/" + title).
+					$("<a />").attr("href", "/takenote#tiddler/" + title).
 						text("Create tiddler named '" + decodeURIComponent(title) + "'").appendTo(container);
 				}
 			}
