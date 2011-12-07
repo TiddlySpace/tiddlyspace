@@ -38,11 +38,15 @@ tags: excludeLists excludeSearch excludeMissing
 			<input type="submit" value="Change password">
 		</form>
 		<h2>OpenID</h2>
+		<h3>Why OpenID?</h3>
+		<a href="http://openid.net/"><img src="/bags/common/tiddlers/openid.png" alt="openid" ></a><br />
+		Use just one username and password across hundreds of OpenID-enabled sites.<br />
+		It's an open standard.<br />
+		<a href="http://openid.net/what/">learn more</a>
 		<ul class="ts-identities"></ul>
 		<form class="ts-openid" target="_top">
 			<div>
-				Add an openid
-				<a href="http://openid.net/"><img src="/bags/common/tiddlers/openid.png" alt="openid" ></a>
+				Add an openid:
 			</div>
 			<input class="inputBox" type="text" name="openid" placeholder="your openid" />
 			<input type="submit" value="Register" />
