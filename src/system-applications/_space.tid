@@ -15,7 +15,7 @@ tags: excludeLists excludeSearch excludeMissing
 	<div id="text-html" class="main section">
 		<a class="app" href="/apps">back to apps</a>
 		<div class="left">
-		<h2>About this space <button class='toggleNext'>&#8593;</button></button></h2>
+		<h2>About this space <button class='toggleNext'>show</button></button></h2>
 		<div id="siteinfo"></div>
 		<h2>Vital Statistics</h2>
 		<div id="info">please wait while information is loaded about this space...</div>
@@ -172,8 +172,8 @@ tags: excludeLists excludeSearch excludeMissing
 			}, "render=1");
 	});
 	function toggleNext(ev) {
-		var label1 = "↑";
-		var label2 = "↓";
+		var label1 = "hide";
+		var label2 = "show";
 		var target = $(ev.target).parent().next();
 		var visible = $(ev.target).hasClass("open") ? true : false;
 		var label = visible ? label1 : label2;
