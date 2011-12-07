@@ -203,6 +203,7 @@ h1,h2,h3,h4,h5 {
 }
 
 a.app {
+	z-index: 2;
 	background: #D0D5D6;
 	color: #F0F4F8;
 	position: absolute;
