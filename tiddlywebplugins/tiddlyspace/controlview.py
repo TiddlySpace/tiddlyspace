@@ -152,12 +152,12 @@ class ControlView(object):
                 search_query = environ['tiddlyweb.query'].get('q', [''])[0]
                 environ['tiddlyweb.query.original'] = search_query
                 if search_query:
-                    search_query = '%s AND (%s)' % (search_query, search_string)
+                    search_query = '%s AND (%s)' % (search_query,
+                            search_string)
                     environ['tiddlyweb.query']['q'][0] = search_query
                 else:
                     search_query = '(%s)' % search_string
                     environ['tiddlyweb.query']['q'] = [search_query]
-
 
 
 class DropPrivs(object):
