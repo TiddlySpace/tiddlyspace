@@ -44,3 +44,10 @@ def test_determine_host_common_port():
     http_host, host_url = determine_host(environ)
     assert http_host == 'something.example.com:8080'
     assert host_url == 'example.com'
+
+    environ['HTTP_HOST'] = 'something.example.com:80'
+    server_host['port'] = '80'
+
+    http_host, host_url = determine_host(environ)
+    assert http_host == 'something.example.com'
+    assert host_url == 'example.com'
