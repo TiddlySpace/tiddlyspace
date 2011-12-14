@@ -1,0 +1,241 @@
+type: text/css
+
+.messageArea {
+	padding: 10px;
+	border: groove 1px #CCC;
+	background-color: #EEE;
+}
+
+.autocompleteLink img {
+	margin-right: 8px;
+}
+
+.iframeMode .app-picker {
+	display: none !important;
+}
+
+.ts-membership {
+	display: none;
+}
+
+.ts-member .ts-membership {
+	display: block;
+}
+
+.ts-identities li,
+.ts-includes li,
+.ts-members li {
+	font-size: 1.3em;
+}
+
+.ts-includes button,
+.ts-members button {
+	font-size: 0.8em;
+}
+
+#header h2 {
+	text-align: center;
+}
+
+#siteinfo {
+	position: relative;
+}
+
+#siteinfo textarea {
+	display: block;
+	width: 100%;
+	height: 200px;
+}
+
+#siteinfo .edit {
+	right: 0px;
+	top: -40px;
+	color: white;
+	_color: black; /* ie6 hack */
+	position: absolute;
+}
+
+.help {
+	background-image: url(/bags/common/tiddlers/help.png);
+	background-repeat: no-repeat;
+	text-indent: -999px;
+	overflow: hidden;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+}
+
+#container {
+	width: 90%;
+	margin: 0 auto;
+}
+
+h1 {
+	margin-top: 0;
+}
+
+body {
+	font-size: 1.1em;
+}
+
+html {
+	background: none;
+}
+
+input[type=submit],
+.button,
+button {
+	text-decoration: underline;
+	margin-bottom: 1em;
+	background: #CCC;
+	color: #888;
+	cursor: pointer;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: bold;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 10px;
+	text-align: center;
+	text-shadow: rgba(0, 0, 0, .1) 0 -1px 0;
+	text-transform: uppercase;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	display: inline-block;
+	background: #D0D5D6;
+	color: #F0F4F8;
+	border-radius: 4px;
+	padding: 0 0.7em;
+	text-decoration: none;
+	-webkit-transition: all 0.4s ease-in-out;
+	-moz-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	-ms-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
+	margin-left: 16px;
+	border: none;
+}
+
+input[type=submit]:hover,
+.button:hover,
+button:hover {
+	background: #0082AF;
+}
+
+button.delete:hover {
+	background: #AF2800;
+}
+
+a:hover {
+	color: #E56AA0;
+}
+
+textarea,
+.inputBox {
+	padding-right: 170px;
+	margin-bottom: 0.25em;
+	font-size: 1.3em;
+	background:rgba(0, 0, 0, 0.5);
+	-moz-box-shadow:inset 2px 2px 3px rgba(26,30,31,0.5);
+	-webkit-box-shadow:inset 2px 2px 3px rgba(26,30,31,0.5);
+	-o-box-shadow:inset 2px 2px 3px rgba(26,30,31,0.5);
+	-ms-box-shadow:inset 2px 2px 3px rgba(26,30,31,0.5);
+	box-shadow:inset 2px 2px 3px rgba(26,30,31,0.5);
+	padding: 0.3em 0.5em;
+	outline: none;
+	border: none;
+	border-radius: 4px;
+	_border: dotted 1px #ccc;
+}
+
+.inputBox:focus {
+	background: rgba(255,255,255,0.7);
+}
+
+.ts-password input {
+	display: block;
+}
+
+a {
+	color: #BC4378;
+	-webkit-transition: color 0.4s linear;
+	-moz-transition: color 0.4s linear;
+	-o-transition: color 0.4s linear;
+	-ms-transition: color 0.4s linear;
+	transition: color 0.4s linear;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.main {
+	color: #596A73;
+	font-family: "helvetica neue", helvetica, georgia;
+	background: #F0F4F8;
+}
+
+h1,h2,h3,h4,h5 {
+	color: #4C4A54;
+}
+
+.left {
+	position: relative;
+	width: 48%;
+	float: left;
+	border-right: solid 1px #CCC;
+	padding-right: 2%;
+}
+
+.right {
+	position: relative;
+	float: left;
+	width: 46%; /* firefox doesn't render correctly when this is 47% */
+	padding-left: 3%;
+	border-left: solid 1px #CCC;
+	margin-left: -1px;
+}
+
+.clear {
+	clear:both;
+}
+
+#text-html {
+	box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.25), -1px 0px 3px 0px rgba(0,0,0,0.25);
+}
+
+a.app {
+	z-index: 2;
+	background: #D0D5D6;
+	color: #F0F4F8;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding: 0 0.7em;
+	text-decoration: none;
+	-webkit-transition: all 0.4s ease-in-out;
+	-moz-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	-ms-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
+	font-size: 1.3em;
+	line-height: 38px;
+}
+
+a.app:hover {
+	background: #0082AF;
+}
+
+.iframeMode a.app {
+	display: none;
+}
+
+.iframeMode #container {
+	width: 100%;
+	padding: 0;
+}
+
+@media (max-width:600px) {
+	.left, .right {
+		float: none;
+		width: 100%;
+	}
+}
