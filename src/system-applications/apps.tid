@@ -24,7 +24,7 @@ tags: excludeLists excludeSearch
 					<h1 class="spaceaddress">
 						<span class="spaceName"></span><span class="hostName"></span>
 					</h1>
-					<p class="tagline"><span class="subTitle"></span><a class="managespaces inactive" href="/ManageSpaces">manage space</a></p>
+					<p class="tagline"><span class="subTitle"></span><a class="managespaces" href="/_space">manage space</a></p>
 				</div>
 			</div>
 			<div id="holder">
@@ -93,7 +93,7 @@ tags: excludeLists excludeSearch
 	</div>
 	
 	<script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/bags/common/tiddlers/jquery.js"></script>
 	<script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
 	<script type="text/javascript" src="/bags/common/tiddlers/chrjs-store.js"></script>
 	<script type="text/javascript" src="/bags/common/tiddlers/jquery-json.js"></script>

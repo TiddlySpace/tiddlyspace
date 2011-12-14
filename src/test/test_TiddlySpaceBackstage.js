@@ -47,23 +47,6 @@ test("addClasses", function() {
 	strictEqual($(".task_foo", el).length, 1);
 });
 
-test("loginButton (logged in)", function() {
-	var el = $("<div />")[0];
-	var task = $("<div />").attr("task", "login").text("foo").appendTo(el);
-	backstage.tiddlyspace.loginButton(el, { name: "jon" });
-	strictEqual($("[task=login]", el).length, 0);
-});
-
-test("loginButton (not logged in)", function() {
-	var el = $("<div />")[0];
-	var task = $("<div />").attr("task", "login").text("foo").appendTo(el);
-	backstage.tiddlyspace.loginButton(el, { anon: true });
-	var login = $("[task=login]", el);
-	strictEqual(login.length, 1);
-	strictEqual(login.text(), "login");
-	strictEqual($("[image=/bags/common/tiddlers/defaultUserIcon]", el).length, 1);
-});
-
 test("userButton (logged in)", function() {
 	var el = $("<div />")[0];
 	var task = $("<div />").attr("task", "user").text("foo").appendTo(el);
@@ -109,22 +92,6 @@ test("checkSyncStatus (ui) with unsynced tiddlers", function() {
 	strictEqual($("#backstagePanel.unsyncedChanges .unsyncedList").length, 0);
 	strictEqual($(".iconContainer[image=privateAndPublicIcon]").length, 1, "note filterTiddlers returns no tiddlers");
 });
-
-test("followSpace paramifiedLink", function() {
-	var container = $("<span />")[0];
-	config.macros.followSpace.paramifiedLink(container, "foo", "bar", "abc", "newTiddler");
-	var link = $("a", container);
-	strictEqual(link.attr("href"), "http://foo.tiddlyspace.com/#newTiddler:[[bar]]");
-	strictEqual(link.text(), "abc");
-});
-
-test("followSpace make", function() {
-	var container = $("<span />")[0];
-	config.macros.followSpace.make(container, "jerm", "bob");
-	var link = $("a", container);
-	strictEqual(link.attr("href"), "http://jerm.tiddlyspace.com/#follow:[[@bob]]");
-	strictEqual(link.text(), "follow bob");
-})
 
 module("TiddlySpaceBackstage plugin - unplugged tests", {
 	setup: function() {
