@@ -57,9 +57,8 @@ class Serialization(WikiSerialization):
                 wiki = read_utf8_file(file)
         if not wiki:
             wiki = WikiSerialization._get_wiki(self)
-        tag = "<!--POST-SCRIPT-END-->"
-        wiki = wiki.replace(tag, '''
-          <script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
-          %s
-          ''' % tag)
+        tag = "<!--POST-SCRIPT-START-->"
+        wiki = wiki.replace(tag, '''\
+<script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
+%s''' % tag)
         return wiki
