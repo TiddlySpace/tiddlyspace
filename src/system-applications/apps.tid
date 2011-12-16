@@ -55,12 +55,6 @@ tags: excludeLists excludeSearch
 									TIDDLYWIKI
 								</a>
 							</li>
-							<li class="preso">
-								<a href="/present">
-									<img src="/bags/common/tiddlers/preso_blue.png" alt="Icon for Preso" class="app-img" />
-									PRESO
-								</a>
-							</li>
 						</ul>
 						<div id="addapp">
 							<button class="inactive">Add More!</button>
