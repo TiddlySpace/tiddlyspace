@@ -46,12 +46,6 @@ _cache-max-age: 3600
 			TIDDLYWIKI
 		</a>
 	</li>
-	<li class="preso">
-		<a href="/present"  target="_parent">
-			<img src="/bags/common/tiddlers/preso_blue.png" alt="Icon for Preso" class="app-img" />
-			PRESO
-		</a>
-	</li>
 	<li class="apps">
 		<a href="/apps"  target="_parent">
 			<img src="/bags/common/tiddlers/box_closed_blue.png" alt="Icon for Apps" class="app-img" />
