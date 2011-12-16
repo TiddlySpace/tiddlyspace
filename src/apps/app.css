@@ -7,6 +7,7 @@ a {
 	color: #BC4378;
 }
 
+.ts-loggedin .ts-openidlogin,
 .ts-loggedin .ts-login {
 	display: none;
 }

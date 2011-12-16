@@ -14,6 +14,13 @@ _cache-max-age: 3600
 	<input type="hidden" name="redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
 	<input type="submit" value="Log In" />
 </form>
+<form class="ts-openidlogin"
+		method="post" action="/challenge/tiddlywebplugins.tiddlyspace.openid">
+	<input name="tiddlyweb_redirect" type="hidden" value="/bags/common/tiddlers/backstage">
+	Login via openid: <input class="openid" type="text" name="openid" placeholder="your openid">
+	<input class="button" type="submit" value="Sign In">
+	<a class="openid-help" href="http://openid.net/get-an-openid/">What is an open id?</a>
+</form>
 <div class="ts-logout logout">
 	<form method="POST" action="/logout">
 		<input type="hidden" name="tiddlyweb_redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
