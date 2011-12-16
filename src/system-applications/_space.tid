@@ -159,7 +159,7 @@ tags: excludeLists excludeSearch excludeMissing
 		tiddler.get(
 			function(tid) {
 				tiddler = tid;
-				$("#siteinfo .value").html(tid.render || tid.text);
+				$("#siteinfo .value").data("tiddler", tid).html(tid.render || tid.text);
 				if($(document.body).hasClass("ts-member")) {
 					siteInfoEditor(tid);
 				}
