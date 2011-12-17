@@ -66,7 +66,6 @@ tags: excludeLists excludeSearch
 							<li class="htmlserialisationdesc"><p>an easy to understand HTML representation of your content.</p></li>
 							<li class="linksdesc"><p>share direct links to your content. The share app provides you with quick and easy access to the key links within your TiddlySpace.</p></li>
 							<li class="tiddlywikidesc"><p>use TiddlyWiki to create, edit and organise your content.</p></li>
-							<li class="presodesc"><p>an interactive pan-able, zoom-able, shareable representation of your content.  Think PowerPoint but on the web. And better.</p></li>
 						</ul>
 					</div>
 					<div style="clear: both;"></div>
