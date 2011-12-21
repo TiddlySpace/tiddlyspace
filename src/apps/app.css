@@ -7,6 +7,7 @@ a {
 	color: #BC4378;
 }
 
+.ts-loggedin .ts-openidlogin,
 .ts-loggedin .ts-login {
 	display: none;
 }
@@ -99,4 +100,15 @@ form input[type=submit] {
 
 .ts-member .write {
 	opacity: 1;
+}
+
+.login-method {
+	display: none;
+}
+
+.login-method:target {
+	display: block;
+}
+.login-method p {
+	padding-bottom: 5px;
 }
