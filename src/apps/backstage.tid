@@ -8,16 +8,18 @@ _cache-max-age: 14400
 <link rel="stylesheet" href="/bags/common/tiddlers/app.css" />
 </head>
 <body style="display:none;">
-<form class="ts-login login" action="" autocomplete="off">
+<form class="ts-login login login-method" action="" autocomplete="off" id="userpass-login" class="toggler">
+	<p>login via <a href="#openid-login">openid</a></p>
 	<input type="text" name="username" placeholder="username" />
 	<input type="password" name="password" placeholder="password" /> 
 	<input type="hidden" name="redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
 	<input type="submit" value="Log In" />
 </form>
-<form class="ts-openidlogin"
+<form class="ts-openidlogin login-method" id="openid-login"
 		method="post" action="/challenge/tiddlywebplugins.tiddlyspace.openid">
+	<p>login with <a href="#userpass-login">username and password</a></p>
 	<input name="tiddlyweb_redirect" type="hidden" value="/bags/common/tiddlers/backstage">
-	Login via openid: <input class="openid" type="text" name="openid" placeholder="your openid">
+	<input class="openid" type="text" name="openid" placeholder="your openid">
 	<input class="button" type="submit" value="Sign In">
 	<a class="openid-help" href="http://openid.net/get-an-openid/">What is an open id?</a>
 </form>
@@ -72,6 +74,7 @@ _cache-max-age: 14400
 	}
 	ts.init(function(ts) {
 		$(document.body).show();
+		window.location.hash = "#userpass-login";
 	}, {});
 </script>
 </body>
