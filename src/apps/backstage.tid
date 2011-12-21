@@ -1,6 +1,6 @@
 type: text/html
 tags: excludeLists
-_cache-max-age: 3600
+_cache-max-age: 14400
 
 <html>
 <head>
@@ -51,12 +51,6 @@ _cache-max-age: 3600
 		<a href="/tiddlers.wiki" target="_parent">
 			<img src="/bags/common/tiddlers/tiddlywiki2_blue.png" alt="Icon for TiddlyWiki" class="app-img" />
 			TIDDLYWIKI
-		</a>
-	</li>
-	<li class="preso">
-		<a href="/present"  target="_parent">
-			<img src="/bags/common/tiddlers/preso_blue.png" alt="Icon for Preso" class="app-img" />
-			PRESO
 		</a>
 	</li>
 	<li class="apps">

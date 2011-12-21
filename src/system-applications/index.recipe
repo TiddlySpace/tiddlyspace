@@ -5,5 +5,3 @@ tiddler: _account.tid
 
 # notabene app html
 recipe: https://raw.github.com/jdlrobson/notabene/master/dist/latest/tiddlyspace.recipe
-# Preso2 app html
-recipe: https://github.com/Hugheth/preso2/raw/master/dist/latest/tiddlyspace.recipe

@@ -14,6 +14,10 @@ type: text/css
 	display: none !important;
 }
 
+.ts-nonmember .delete {
+	display: none;
+}
+
 .ts-membership {
 	display: none;
 }

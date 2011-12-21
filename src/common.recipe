@@ -30,7 +30,6 @@ tiddler: system-applications/admin.css.tid
 # Icons used by the appswitcher
 tiddler: icons/browse_read_blue.png.tid
 tiddler: icons/pencil_blue.png.tid
-tiddler: icons/preso_blue.png.tid
 tiddler: icons/share_blue.png.tid
 tiddler: icons/tiddlywiki2_blue.png.tid
 tiddler: icons/box_closed_blue.png.tid
@@ -38,9 +37,6 @@ tiddler: icons/openid.png.tid
 
 #generic icons
 tiddler: icons/help.png.tid
-
-# Preso2 app common recipe
-recipe: https://github.com/Hugheth/preso2/raw/master/dist/latest/common.recipe
 
 # notabene app common files
 recipe: https://raw.github.com/jdlrobson/notabene/master/dist/latest/common.recipe
