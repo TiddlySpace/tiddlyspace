@@ -107,3 +107,27 @@ def test_cased_search():
             'http://0.0.0.0:8080/search.json?q=ftitle:%22one%20two%22%20fbag:fnd_public')
     info = simplejson.loads(content)
     assert len(info) == 1, info # don't get the new tiddler because of case
+
+def test_search_no_args():
+    """a no args search is like recent changes, this test confirms
+    controlview"""
+    response, content = http.request('http://0.0.0.0:8080/search.json')
+    # a search with no query string is invalid
+    assert response['status'] == '400'
+
+    response, content = http.request('http://0.0.0.0:8080/search.json?q=_limit:999')
+    assert response['status'] == '200'
+    allinfo = simplejson.loads(content)
+    assert len(allinfo) == 153
+
+    response, content = http.request('http://fnd.0.0.0.0:8080/search.json')
+    assert response['status'] == '200'
+    fndinfo = simplejson.loads(content)
+    assert len(fndinfo) == 20
+
+    response, content = http.request('http://fnd.0.0.0.0:8080/search.json?q=_limit:999')
+    assert response['status'] == '200'
+    fndinfo = simplejson.loads(content)
+    assert len(fndinfo) == 88
+
+    assert len(allinfo) > len(fndinfo)

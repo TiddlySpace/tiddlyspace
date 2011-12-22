@@ -24,7 +24,7 @@ tags: excludeLists excludeSearch
 					<h1 class="spaceaddress">
 						<span class="spaceName"></span><span class="hostName"></span>
 					</h1>
-					<p class="tagline"><span class="subTitle"></span><a class="managespaces inactive" href="/ManageSpaces">manage space</a></p>
+					<p class="tagline"><span class="subTitle"></span><a class="managespaces" href="/_space">manage space</a></p>
 				</div>
 			</div>
 			<div id="holder">
@@ -55,12 +55,6 @@ tags: excludeLists excludeSearch
 									TIDDLYWIKI
 								</a>
 							</li>
-							<li class="preso">
-								<a href="/present">
-									<img src="/bags/common/tiddlers/preso_blue.png" alt="Icon for Preso" class="app-img" />
-									PRESO
-								</a>
-							</li>
 						</ul>
 						<div id="addapp">
 							<button class="inactive">Add More!</button>
@@ -72,7 +66,6 @@ tags: excludeLists excludeSearch
 							<li class="htmlserialisationdesc"><p>an easy to understand HTML representation of your content.</p></li>
 							<li class="linksdesc"><p>share direct links to your content. The share app provides you with quick and easy access to the key links within your TiddlySpace.</p></li>
 							<li class="tiddlywikidesc"><p>use TiddlyWiki to create, edit and organise your content.</p></li>
-							<li class="presodesc"><p>an interactive pan-able, zoom-able, shareable representation of your content.  Think PowerPoint but on the web. And better.</p></li>
 						</ul>
 					</div>
 					<div style="clear: both;"></div>
@@ -93,7 +86,7 @@ tags: excludeLists excludeSearch
 	</div>
 	
 	<script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/bags/common/tiddlers/jquery.js"></script>
 	<script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
 	<script type="text/javascript" src="/bags/common/tiddlers/chrjs-store.js"></script>
 	<script type="text/javascript" src="/bags/common/tiddlers/jquery-json.js"></script>

@@ -1,62 +1,71 @@
 type: text/html
 tags: excludeLists excludeSearch excludeMissing
 
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 	<title>This Space</title>
 	<script type='text/javascript' src='/bags/common/tiddlers/backstage.js'></script>
 	<link href="/bags/common/tiddlers/profile.css" type='text/css' rel='stylesheet' >
-	<style type="text/css">
-		.ts-membership {
-			display: none;
-		}
-		.ts-member .ts-membership {
-			display: block;
-		}
-		#header h2 {
-			text-align: center;
-		}
-	</style>
+	<link href="/bags/common/tiddlers/admin.css" type='text/css' rel='stylesheet' >
 </head>
 <body>
 <div id="container">
-	<div id="header">
-		<h1 id='siteTitle'>This Space</h1>
-		<h2 id='siteUrl' class="meta"></h2>
-	</div>
 	<div id="text-html" class="main section">
-		<h2>About this space</h2>
+		<a class="app" href="/apps">back to apps</a>
+		<div class="left">
+		<h2>About this space <button class='toggleNext'>show</button></button></h2>
 		<div id="siteinfo"></div>
 		<h2>Vital Statistics</h2>
 		<div id="info">please wait while information is loaded about this space...</div>
-		<div class="ts-membership">
-			<h2>Members</h2>
-			Your space currently has the following members... 
-			<a href="http://docs.tiddlyspace.com/What%20is%20a%20member%3F">What is a Member?</a>
-			<ul class="ts-members"></ul>
-			<p>Add a new member to your space by entering their name below. Enter a space to add all existing members of that space.</p>
-			<form class="ts-members">
-				<input type="text" name="username">
-				<input type="submit" value="Add Member" />
-			</form>
 		</div>
-		<div>
-			<h2>Included Spaces</h2>
-			This space includes the following spaces... <a href="http://docs.tiddlyspace.com/What%20is%20space%20inclusion%3F">What is Inclusion?</a>
-			<ul class="ts-includes"></ul>
+		<div class="right">
+		<div class="ts-membership">
+			<h2>
+				Add Member
+				<a href="http://docs.tiddlyspace.com/What%20is%20a%20member%3F" title="What is a Member?" class="help">What is a Member?</a>
+			</h2>
+			<div>
+				<p>Add a new member to your space by entering their name below. Enter a space to add all existing members of that space.</p>
+				<form class="ts-members">
+					<input class="inputBox" type="text" name="username">
+					<input type="submit" value="Add Member" />
+				</form>
+			</div>
+			<h2>
+				Existing Members <button class='toggleNext'>&lt;</button></button>
+			</h2>
+			<div>
+				Your space currently has the following members: 
+				<ul class="ts-members"></ul>
+			</div>
+			<h2>
+				Include Space
+				<a class="help" href="http://docs.tiddlyspace.com/What%20is%20space%20inclusion%3F" title="What is inclusion?">What is Inclusion?</a>
+			</h2>
 			<form class="ts-includes">
-				<input type="text" name="spacename">
+				<input class="inputBox" type="text" name="spacename">
 				<input type="submit" value="Include Space" />
 			</form>
 		</div>
+		<div>
+			<h2>Included Spaces <button class='toggleNext'>&lt;</button></button></h2>
+			<div>
+			This space includes the following spaces:
+			<ul class="ts-includes"></ul>
+			</div>
+		</div>
+		</div>
+		<div class="clear"></div>
 	</div>
 </div>
 <script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/jquery-json.js'></script>
 <script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs'></script>
-<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs.space'></script>
-<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs.users'></script>
-<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs.identities'></script>
+<script type='text/javascript' src='/bags/common/tiddlers/chrjs.space'></script>
+<script type='text/javascript' src='/bags/common/tiddlers/chrjs.users'></script>
+<script type='text/javascript' src='/bags/common/tiddlers/chrjs.identities'></script>
 <script type='text/javascript' src="/bags/common/tiddlers/ts.js"></script>
 <script type="text/javascript">
 	ts.init(function(ts) {
@@ -109,30 +118,94 @@ tags: excludeLists excludeSearch excludeMissing
 			countTiddlers();
 		});
 
-		new tiddlyweb.Tiddler("SiteInfo", new tiddlyweb.Bag(publicBag, "/")).get(
+		function complete(tiddler) {
+			$("#siteinfo .edit").show();
+			$("#siteinfo .value").data("tiddler", tiddler).
+				empty().html(tiddler.render);
+		}
+		function siteInfoEditor(tiddler) {
+			var errback = function() {
+				$("#siteinfo .edit").click();
+				$("<div class='error' />").text("Error occurred whilst saving.").prependTo("#siteinfo .value");
+			};
+			$("<button class='edit' />").click(function(ev) {
+				var editBtn = $(ev.target);
+				$(editBtn).hide();
+				var val = $(".value", $(ev.target).parent("#siteinfo")[0]);
+				var wikitext = $(val).data("tiddler").text;
+				var html = $(val).html();
+				$(val).empty();
+				$("<textarea />").val(wikitext).appendTo(val);
+				$("<button />").text("save").click(function(ev) {
+					var text = $("textarea", val).val();
+					$(val).empty().text("saving...");
+					tiddler.text = text;
+					tiddler.put(function() {
+						tiddler.get(function(tid) {
+							tiddler = tid;
+							complete(tid);
+						}, errback, "render=y");
+					}, errback);
+					$(editBtn).show();
+				}).appendTo(val);
+				$("<button />").text("cancel").
+					click(function(ev) {
+						complete(tiddler);
+					}).appendTo(val);
+			}).text("edit").appendTo("#siteinfo");
+		}
+		var tiddler = new tiddlyweb.Tiddler("SiteInfo", new tiddlyweb.Bag(publicBag, "/"));
+		$("<div class='value' />").text("(Loading SiteInfo tiddler)").data("tiddler", tiddler).appendTo("#siteinfo");
+		tiddler.get(
 			function(tid) {
-				$("#siteinfo").html(tid.render || tid.text);
+				tiddler = tid;
+				$("#siteinfo .value").data("tiddler", tid).html(tid.render || tid.text);
 				if($(document.body).hasClass("ts-member")) {
-					$("<a />").attr("href", "/takenote#!/quickedit/tiddler/SiteInfo").
-						text("Edit").insertAfter("#siteinfo");
+					siteInfoEditor(tid);
 				}
 			},
 			function() {
-				$("#siteinfo").text("This space has not published any information about itself.");
+				$("#siteinfo .value").text("This space has not published any information about itself.");
 				if($(document.body).hasClass("ts-member")) {
-					$("<a />").attr("href", "/takenote#!/quickedit/tiddler/SiteInfo").
-						text("Provide information now.").insertAfter("#siteinfo");
+					siteInfoEditor(tiddler);
 				}
 			}, "render=1");
-
-		new tiddlyweb.Tiddler("SiteTitle", new tiddlyweb.Bag(publicBag, "/")).get(
-			function(tid) {
-				$("#siteTitle").text(tid.text);
-			}, 
-			function() {
-				$("#siteTitle").text(window.location.hostname);
-			});
 	});
+	function toggleNext(ev) {
+		var label1 = "hide";
+		var label2 = "show";
+		var target = $(ev.target).parent().next();
+		var visible = $(ev.target).hasClass("open") ? true : false;
+		var label = visible ? label1 : label2;
+		$(target).stop(true, true);
+		if(!visible) {
+			$(target).slideDown(200);
+			$(ev.target).addClass("open").text(label1);
+		} else {
+			if($(target).parents().is(":hidden")) {
+				// see http://forum.jquery.com/topic/slideup-doesn-t-work-with-hidden-parent
+				$(target).hide();
+			} else {
+				$(target).slideUp(200);
+			}
+			$(ev.target).removeClass("open").text(label2);
+		}
+	}
+	// setup hide/show sliders
+	$(".toggleNext").each(function(i, el) {
+		$(el).addClass("open").click(toggleNext);
+		toggleNext({ target: el });
+	});
+
+	if(window != window.top) {
+		$("html").addClass("iframeMode");
+		$("a").live("click",function(ev) {
+			$(ev.target).attr("target", "_blank");
+		});
+	}
 </script>
+<!--[if lt IE 8]>
+<script type="text/javascript" src="/bags/common/tiddlers/json2.js"></script>
+<![endif]-->
 </body>
 </html>

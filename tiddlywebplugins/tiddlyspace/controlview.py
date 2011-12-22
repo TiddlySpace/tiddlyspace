@@ -94,7 +94,12 @@ class ControlView(object):
 
             space = Space(space_name)
 
-            filter_string = None
+            template = recipe_template(environ)
+            bags = space.extra_bags()
+            for bag, _ in recipe.get_recipe(template):
+                bags.append(bag)
+            bags.extend(ADMIN_BAGS)
+
             search_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
                 serialize_type, mime_type = get_serialize_type(environ)
@@ -142,10 +147,6 @@ class ControlView(object):
                         raise HTTP404('bag %s not found due to ControlView'
                                 % entity_name)
 
-            if filter_string:
-                filters, _ = parse_for_filters(filter_string)
-                for single_filter in filters:
-                    environ['tiddlyweb.filters'].insert(0, single_filter)
             if search_string:
                 search_query = environ['tiddlyweb.query'].get('q', [''])[0]
                 environ['tiddlyweb.query.original'] = search_query

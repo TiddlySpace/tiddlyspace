@@ -7,7 +7,11 @@ tiddler: lib/jquery.js.js
 tiddler: lib/jquery-json.js.js
 tiddler: lib/jquery-ui.custom.js.js
 tiddler: lib/jquery-ui.custom.css
+tiddler: lib/json2.js.js
 tiddler: lib/chrjs-store.js.js
+tiddler: lib/chrjs.users.js
+tiddler: lib/chrjs.space.js
+tiddler: lib/chrjs.identities.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid
@@ -21,17 +25,18 @@ recipe: apps/apps.recipe
 # appspage common files
 tiddler: system-applications/appspagecss.tid
 tiddler: system-applications/appspagejs.tid
+tiddler: system-applications/admin.css.tid
 
 # Icons used by the appswitcher
 tiddler: icons/browse_read_blue.png.tid
 tiddler: icons/pencil_blue.png.tid
-tiddler: icons/preso_blue.png.tid
 tiddler: icons/share_blue.png.tid
 tiddler: icons/tiddlywiki2_blue.png.tid
 tiddler: icons/box_closed_blue.png.tid
+tiddler: icons/openid.png.tid
 
-# Preso2 app common recipe
-recipe: https://github.com/Hugheth/preso2/raw/master/dist/latest/common.recipe
+#generic icons
+tiddler: icons/help.png.tid
 
 # notabene app common files
 recipe: https://raw.github.com/jdlrobson/notabene/master/dist/latest/common.recipe

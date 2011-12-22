@@ -1,0 +1,38 @@
+modifier: jon
+type: text/html
+
+<html>
+<head>
+	<title>Sign up</title>
+	<script type='text/javascript' src='/bags/common/tiddlers/backstage.js'></script>
+	<link href="/bags/common/tiddlers/profile.css" type='text/css' rel='stylesheet' >
+</head>
+<body>
+<div id="container">
+	<div class="main section">
+		<h2>Get Your Own TiddlySpace!</h2>
+		<form class="ts-registration registration register clearfix" action="" autocomplete="off">
+			<input type="text" name="username" placeholder="username" />
+			<div>
+				<input type="password" name="password" placeholder="password" /> 
+				<input type="password" name="password_confirm" placeholder="confirm password" />
+			</div>
+			<input class="button" type="submit" value="Create Your Space" />
+		</form>
+	</div>
+</div>
+<script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
+<!--[if lt IE 8]>
+<script type="text/javascript" src="/bags/common/tiddlers/json2.js"></script>
+<![endif]-->
+<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs'></script>
+<script type='text/javascript' src='/bags/common/tiddlers/chrjs.space'></script>
+<script type='text/javascript' src='/bags/common/tiddlers/chrjs.users'></script>
+<script src="/bags/common/tiddlers/ts.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		ts.init(function() {}, { space: "" });
+	});
+</script>
+</body>
+</html>

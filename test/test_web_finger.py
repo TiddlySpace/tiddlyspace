@@ -15,6 +15,7 @@ def setup_module(module):
     make_test_env(module)
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
+    wsgi_intercept.add_wsgi_intercept('cdent.0.0.0.0', 8080, app_fn)
 
     module.http = httplib2.Http()
 
@@ -30,6 +31,10 @@ def test_for_meta():
     assert response['status'] == '200'
     assert 'rel="lrdd" template="http://0.0.0.0:8080/webfinger?q={uri}"' in content
 
+    response, content = http.request('http://cdent.0.0.0.0:8080/.well-known/host-meta')
+    assert response['status'] == '404'
+    assert 'No host-meta at this host:' in content
+
 def test_get_webfinger():
     response, content = http.request('http://0.0.0.0:8080/webfinger?q=cdent@0.0.0.0:8080')
     response2, content2 = http.request('http://0.0.0.0:8080/webfinger?q=acct:cdent@0.0.0.0:8080')
@@ -41,6 +46,15 @@ def test_get_webfinger():
     assert '<Alias>http://0.0.0.0:8080/profiles/cdent</Alias>' in content
     assert 'href="http://0.0.0.0:8080/profiles/cdent"' in content
     assert 'href="http://0.0.0.0:8080/profiles/cdent.atom"' in content
+
+    response, content = http.request('http://cdent.0.0.0.0:8080/webfinger?q=cdent@0.0.0.0:8080')
+    assert response['status'] == '404'
+    assert 'No webfinger at this host:' in content
+
+    response, content = http.request('http://0.0.0.0:8080/webfinger')
+    assert response['status'] == '400'
+    assert 'No account provided to webfinger query' in content
+
 
 def test_get_profile_html():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent')
@@ -58,6 +72,14 @@ def test_get_profile_html():
 
     assert 'Hello There' in content
     assert '/cdent_public/tiddlers/profile' in content
+
+    response, content = http.request('http://cdent.0.0.0.0:8080/profiles/cdent')
+    assert response['status'] == '404', content
+    assert 'No profiles at this host' in content
+
+    response, content = http.request('http://0.0.0.0:8080/profiles/notexist')
+    assert response['status'] == '404', content
+    assert 'Profile not found for notexist' in content
 
 def test_get_profile_atom():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent',

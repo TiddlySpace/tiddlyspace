@@ -1,6 +1,6 @@
 type: text/html
 tags: excludeLists
-_cache-max-age: 3600
+_cache-max-age: 14400
 
 <html>
 <head>
@@ -8,11 +8,20 @@ _cache-max-age: 3600
 <link rel="stylesheet" href="/bags/common/tiddlers/app.css" />
 </head>
 <body style="display:none;">
-<form class="ts-login login" action="" autocomplete="off">
+<form class="ts-login login login-method" action="" autocomplete="off" id="userpass-login" class="toggler">
+	<p>login via <a href="#openid-login">openid</a></p>
 	<input type="text" name="username" placeholder="username" />
 	<input type="password" name="password" placeholder="password" /> 
 	<input type="hidden" name="redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
 	<input type="submit" value="Log In" />
+</form>
+<form class="ts-openidlogin login-method" id="openid-login"
+		method="post" action="/challenge/tiddlywebplugins.tiddlyspace.openid">
+	<p>login with <a href="#userpass-login">username and password</a></p>
+	<input name="tiddlyweb_redirect" type="hidden" value="/bags/common/tiddlers/backstage">
+	<input class="openid" type="text" name="openid" placeholder="your openid">
+	<input class="button" type="submit" value="Sign In">
+	<a class="openid-help" href="http://openid.net/get-an-openid/">What is an open id?</a>
 </form>
 <div class="ts-logout logout">
 	<form method="POST" action="/logout">
@@ -46,12 +55,6 @@ _cache-max-age: 3600
 			TIDDLYWIKI
 		</a>
 	</li>
-	<li class="preso">
-		<a href="/present"  target="_parent">
-			<img src="/bags/common/tiddlers/preso_blue.png" alt="Icon for Preso" class="app-img" />
-			PRESO
-		</a>
-	</li>
 	<li class="apps">
 		<a href="/apps"  target="_parent">
 			<img src="/bags/common/tiddlers/box_closed_blue.png" alt="Icon for Apps" class="app-img" />
@@ -61,8 +64,8 @@ _cache-max-age: 3600
 </ul>
 <script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
 <script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
-<script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs.users"></script>
-<script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs.space"></script>
+<script type="text/javascript" src="/bags/common/tiddlers/chrjs.users"></script>
+<script type="text/javascript" src="/bags/common/tiddlers/chrjs.space"></script>
 <script type="text/javascript" src="/bags/common/tiddlers/ts.js"></script>
 <script type="text/javascript">
 	if(window.location.hash === "#refreshParent") {
@@ -71,6 +74,10 @@ _cache-max-age: 3600
 	}
 	ts.init(function(ts) {
 		$(document.body).show();
+		window.location.hash = "#userpass-login";
+		if($('#userpass-login').css('display') !== "block") {
+			$(".login-method").show();
+		}
 	}, {});
 </script>
 </body>
