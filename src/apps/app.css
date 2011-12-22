@@ -102,6 +102,7 @@ form input[type=submit] {
 	opacity: 1;
 }
 
+.ts-loggedin .login-method:target,
 .login-method {
 	display: none;
 }
