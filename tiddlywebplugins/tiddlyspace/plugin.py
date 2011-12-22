@@ -41,6 +41,10 @@ def init_plugin(config):
 
     merge_config(config, space_config)
 
+    if config.get('tiddlyspace.enable_profile', False):
+        from werkzeug.contrib.profiler import ProfilerMiddleware
+        config['server_request_filters'].insert(0, ProfilerMiddleware)
+
     tiddlywebwiki.init(config)
     tiddlywebplugins.logout.init(config)
     tiddlywebplugins.magicuser.init(config)
