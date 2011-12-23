@@ -66,6 +66,7 @@ _cache-max-age: 14400
 <script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
 <script type="text/javascript" src="/bags/common/tiddlers/chrjs.users"></script>
 <script type="text/javascript" src="/bags/common/tiddlers/chrjs.space"></script>
+<script type="text/javascript" src="/bags/common/tiddlers/chrjs.identities"></script>
 <script type="text/javascript" src="/bags/common/tiddlers/ts.js"></script>
 <script type="text/javascript">
 	if(window.location.hash === "#refreshParent") {
