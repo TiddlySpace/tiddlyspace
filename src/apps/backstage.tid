@@ -75,7 +75,7 @@ _cache-max-age: 14400
 	ts.init(function(ts) {
 		$(document.body).show();
 		window.location.hash = "#userpass-login";
-		if($('#userpass-login').css('display') !== "block") {
+		if(ts.user.anon && $('#userpass-login').css('display') !== "block") {
 			$(".login-method").show();
 		}
 	}, {});
