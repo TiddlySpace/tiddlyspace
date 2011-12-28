@@ -61,7 +61,6 @@ tags: excludeLists excludeSearch excludeMissing
 	</div>
 </div>
 <script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
-<script type='text/javascript' src='/bags/common/tiddlers/jquery-json.js'></script>
 <script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.space'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.users'></script>
