@@ -157,7 +157,7 @@ var loadEvent = function() {
 	'</div>'].join("");
 	var bubble = document.createElement("div");
 	bubble.setAttribute("id", "bs-popup");
-	bubble.style.cssText = "display:none;";
+	bubble.style.cssText = "visibility:hidden;";
 	bubble.className = "bs-popup";
 	bubble.innerHTML = html;
 	body.insertBefore(bubble, link);
@@ -176,7 +176,7 @@ var loadEvent = function() {
 			opacity = fadeIn ? opacity + 0.1 : opacity - 0.1;
 			if(opacity < 0 || opacity > 1) {
 				clearInterval(bubbleFadeInterval);
-				el.style.cssText = fadeIn ? "" : "display:none;";
+				el.style.cssText = fadeIn ? "" : "visibility:hidden;";
 			}
 		}, 50);
 	}
