@@ -58,13 +58,8 @@ function createSpaceLink(place, spaceName, title, alt, isBag) {
 		jQuery(a).attr('tiddlyspace', spaceName);
 	}
 
-	config.extensions.tiddlyweb.getStatus(function() {
-		try {
-			// now enabled by tweb getStatus
-			link = config.extensions.tiddlyweb.status.server_host.url;
-		} catch (ex) {
-			link = "http://tiddlyspace.com";
-		}
+	config.extensions.tiddlyweb.getStatus(function(status) {
+		link = status.server_host.url;
 		if (title) {
 			label = alt || title;
 			link = link + "#" + encodeURIComponent(String.encodeTiddlyLink(title));
