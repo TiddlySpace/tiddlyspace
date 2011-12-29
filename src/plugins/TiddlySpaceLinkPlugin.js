@@ -38,13 +38,7 @@ Wikitext linking to a space on another server, for example from a tiddler in a s
 /*global jQuery config createTiddlyText createExternalLink createTiddlyLink */
 
 function createSpaceLink(place, spaceName, title, alt, isBag) {
-	var link, a, currentSpaceName;
-	try {
-		// seems safe to expect this to have been initialised within TiddlySpace
-		link = config.extensions.tiddlyweb.status.server_host.url;
-	} catch (ex) {
-		link = "http://tiddlyspace.com";
-	}
+	var link, a, currentSpaceName, label;
 	try {
 		if (spaceName === config.extensions.tiddlyspace.currentSpace.name) {
 			title = title || spaceName;
@@ -56,24 +50,35 @@ function createSpaceLink(place, spaceName, title, alt, isBag) {
 		currentSpaceName = false;
 	}
 
-	// assumes a http URI without user:pass@ prefix
-	if(!isBag) {
-		link = link.replace("http://", "http://" + spaceName.toLowerCase() + ".");
-	} else {
-		link += "/bags/" + spaceName + "/tiddlers.wiki";
-	}
-
-	if (title) {
-		a = createExternalLink(place, link + "#" + encodeURIComponent(String.encodeTiddlyLink(title)), alt || title);
-	} else {
-		a = createExternalLink(place, link, alt || spaceName);
-	}
-	jQuery(a).addClass('tiddlySpaceLink').attr('tiddler', title);
+	a = jQuery("<a />").addClass('tiddlySpaceLink externalLink').attr('tiddler', title).
+		appendTo(place)[0];
 	if(isBag) {
 		jQuery(a).attr('bag', spaceName);
 	} else {
 		jQuery(a).attr('tiddlyspace', spaceName);
 	}
+
+	config.extensions.tiddlyweb.getStatus(function() {
+		try {
+			// now enabled by tweb getStatus
+			link = config.extensions.tiddlyweb.status.server_host.url;
+		} catch (ex) {
+			link = "http://tiddlyspace.com";
+		}
+		if (title) {
+			label = alt || title;
+			link = link + "#" + encodeURIComponent(String.encodeTiddlyLink(title));
+		} else {
+			label = alt || spaceName;
+		}
+		// assumes a http URI without user:pass@ prefix
+		if(!isBag) {
+			link = link.replace("http://", "http://" + spaceName.toLowerCase() + ".");
+		} else {
+			link += "/bags/" + spaceName + "/tiddlers.wiki";
+		}
+		jQuery(a).attr("href", link).text(label);
+	});
 	return a;
 }
 
