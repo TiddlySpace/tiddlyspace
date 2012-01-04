@@ -9,9 +9,11 @@ var mockRenderImage = function(place, src, options) {
 		attr("tiddlyLink", tiddlyLink).appendTo(place);
 };
 
-var _format;
+var _format, _status;
 module("TiddlySpaceTiddlerIcons", {
 	setup: function() {
+		_status = config.extensions.tiddlyweb.status;
+		config.extensions.tiddlyweb.status = { server_host: { scheme: "http", host: "tiddlyspace.com" } }; //{ scheme: "", host: "" };
 		_format = String.prototype.format;
 		String.prototype.format = function(str) {
 			if(typeof(str) !== "string") {
@@ -65,6 +67,7 @@ module("TiddlySpaceTiddlerIcons", {
 		};
 	},
 	teardown: function() {
+		config.extensions.tiddlyweb.status = _status;
 		String.prototype.format = _format;
 		config.macros.image.getArguments = _getArguments;
 		store.removeTiddler("foo");
