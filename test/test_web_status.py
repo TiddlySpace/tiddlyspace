@@ -21,12 +21,24 @@ def setup_module(module):
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('thing.0.0.0.0', 8080, app_fn)
+    wsgi_intercept.add_wsgi_intercept('unclaimed-space.0.0.0.0', 8080, app_fn)
     module.http = httplib2.Http()
     make_fake_space(store, 'thing')
 
 def teardown_module(module):
     import os
     os.chdir('..')
+
+def test_status_unclaimed_space():
+    response, content = http.request('http://unclaimed-space.0.0.0.0:8080/status')
+    assert response['status'] == '200'
+    info = simplejson.loads(content)
+
+    assert info['username'] == 'GUEST'
+    assert info['tiddlyspace_version'] == VERSION
+    assert info['server_host']['host'] == '0.0.0.0'
+    assert info['server_host']['port'] == '8080'
+    assert 'space' not in info
 
 def test_status_base():
     response, content = http.request('http://0.0.0.0:8080/status')
