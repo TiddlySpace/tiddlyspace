@@ -71,7 +71,8 @@ pypi: test
 dev: remotes dev_local
 
 dev_local:
-	@mysqladmin -f drop tiddlyspace create tiddlyspace
+	@mysqladmin -f drop tiddlyspace || true
+	@mysqladmin create tiddlyspace
 	@PYTHONPATH="." ./tiddlyspace dev_instance
 	( cd dev_instance && \
 		ln -s ../devconfig.py && \
