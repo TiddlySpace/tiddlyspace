@@ -294,7 +294,8 @@ def _create_space(environ, start_response, space_name):
     """
     Create the space named by space_name. Raise 201 on success.
     """
-    _make_space(environ, space_name)
+    _make_space(space_name, environ['tiddlyweb.store'],
+            environ['tiddlyweb.usersign']['name'])
     start_response('201 Created', [
         ('Location', space_uri(environ, space_name)),
         ])
@@ -387,16 +388,10 @@ def _update_policy(policy, add=None, subtract=None):
     return policy
 
 
-def _make_space(environ, space_name):
+def _make_space(space_name, store, member):
     """
     The details of creating the bags and recipes that make up a space.
     """
-    store = environ['tiddlyweb.store']
-    member = environ['tiddlyweb.usersign']['name']
-
-    # XXX stub out the clumsy way for now
-    # can make this much more declarative
-
     space = Space(space_name)
 
     for bag_name in space.list_bags():
