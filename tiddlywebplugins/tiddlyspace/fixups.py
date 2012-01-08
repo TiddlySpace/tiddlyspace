@@ -3,6 +3,7 @@ Override behaviors from other modules.
 """
 
 import tiddlyweb.web.util
+from tiddlyweb.web.http import HTTP404
 import tiddlywebplugins.status
 
 from tiddlywebplugins.tiddlyspace.space import Space
@@ -31,8 +32,11 @@ def _status_gather_data(environ):
     http_host, host_url = determine_host(environ)
     if http_host != host_url:
         space_name = determine_space(environ, http_host)
-        recipe_name = determine_space_recipe(environ, space_name)
-        data['space'] = {'name': space_name, 'recipe': recipe_name}
+        try:
+            recipe_name = determine_space_recipe(environ, space_name)
+            data['space'] = {'name': space_name, 'recipe': recipe_name}
+        except HTTP404:
+            pass
 
     # ensure user is known
     usersign = environ['tiddlyweb.usersign']['name']
