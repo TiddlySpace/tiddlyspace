@@ -242,7 +242,7 @@ var me = config.macros.viewRevisions = {
 
 	// move the already present revisions down by 1 to fit the next one in
 	shiftVisibleDown: function(title, callback) {
-		var revisions = $("[revName=%0].revisions".format([title]));
+		var revisions = $("[revName='%0'].revisions".format([title]));
 		var revisionCount = revisions.length;
 
 		$(revisions).animate({top: "+=" + me.offsetTop},
@@ -346,14 +346,14 @@ var me = config.macros.viewRevisions = {
 	},
 
 	slideOut: function(revElem, revision, title, callback) {
-		var leftMostPos = $("[revName=%0].revisions".format([title]))
+		var leftMostPos = $("[revName='%0'].revisions".format([title]))
 			.offset().left;
 		var width = $(revElem).width();
 		var originalLeftPos = $(story.getTiddler(title))
 			.position().left;
 
 		var slideAmount = leftMostPos + width - me.visibleSlideAmount;
-		$("[revName=%0].revisions:not(.viewRevision)".format([title]))
+		$("[revName='%0'].revisions:not(.viewRevision)".format([title]))
 			.animate({left: "-=" + slideAmount}, 1000);
 		$(revElem)
 			.attr("baseHeight", $(revElem).css("height"))
@@ -366,7 +366,7 @@ var me = config.macros.viewRevisions = {
 			$(story.getTiddler(title)).offset().left;
 		var origRevPos = $(revElem).attr("prevPos");
 
-		$("[revName=%0].revisions:not(.viewRevision)".format([title]))
+		$("[revName='%0'].revisions:not(.viewRevision)".format([title]))
 			.animate({left: "+=" + slideAmount}, 1000);
 		$(revElem).animate({left: origRevPos}, 1000, function() {
 			$(revElem)

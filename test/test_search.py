@@ -128,6 +128,6 @@ def test_search_no_args():
     response, content = http.request('http://fnd.0.0.0.0:8080/search.json?q=_limit:999')
     assert response['status'] == '200'
     fndinfo = simplejson.loads(content)
-    assert len(fndinfo) == 88
+    assert len(fndinfo) == 134
 
     assert len(allinfo) > len(fndinfo)
