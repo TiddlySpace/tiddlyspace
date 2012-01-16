@@ -3,7 +3,7 @@
 |''Description:''|Formatter to reference other spaces from wikitext |
 |''Author:''|PaulDowney (psd (at) osmosoft (dot) com) |
 |''Source:''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceLinkPlugin.js|
-|''Version:''|1.4.1|
+|''Version:''|1.4.2|
 |''License:''|[[BSD License|http://www.opensource.org/licenses/bsd-license.php]] |
 |''Comments:''|Please make comments at http://groups.google.co.uk/group/TiddlyWikiDev |
 |''~CoreVersion:''|2.4|
@@ -64,7 +64,7 @@ function createSpaceLink(place, spaceName, title, alt, isBag) {
 		link = status.server_host.url;
 		if (title) {
 			label = alt || title;
-			link = link + "#" + encodeURIComponent(String.encodeTiddlyLink(title));
+			link = link + "/" + encodeURIComponent(title);
 		} else {
 			label = alt || spaceName;
 		}
