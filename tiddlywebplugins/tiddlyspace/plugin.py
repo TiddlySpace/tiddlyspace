@@ -74,6 +74,11 @@ def init_plugin(config):
     config['instance_tiddlers'] = get_tiddler_locations(store_contents,
             'tiddlywebplugins.tiddlyspace')
 
+    # When tiddlyspace.frontpage_installed is True, don't update
+    # the frontpage_public bag, thus not overwriting what's there.
+    if config.get('tiddlyspace.frontpage_installed', False):
+        config['instance_tiddlers']['frontpage_public'] = []
+
     # inject lazy serialization information
     config['extension_types'].update({'lwiki': 'text/x-ltiddlywiki'})
     config['serializers'].update({'text/x-ltiddlywiki':
