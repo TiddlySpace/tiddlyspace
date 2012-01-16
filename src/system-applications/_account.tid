@@ -22,7 +22,13 @@ tags: excludeLists excludeSearch excludeMissing
 			<input class="inputBox" type="text" placeholder="find space" />
 			<a href="http://docs.tiddlyspace.com/What%20is%20a%20Space%3F" class="help"
 				title="What is a space?">What is a space?</a>
+			<button>view all</button>
 		</form>
+		<div class='list-container'>
+			You are a member of the following spaces:
+			<ul class='ts-space-search'>
+			</ul>
+		</div>
 		<h2>Create New Space</h2>
 		<form class="ts-spaces">
 			<input class="inputBox" type="text" name="spacename" placeholder="space name"><span class="hostSuffix">.tiddlyspace.com</span>
@@ -138,6 +144,18 @@ ts.init(function(ts) {
 			select: function(event, ui) {
 				window.top.location = ts.getHost(ui.item.value);
 			}
+		});
+
+		var $ul = $('.ts-space-search');
+		$.each(spaces, function(i, space) {
+			$ul.append($('<li/>').html($('<a/>').attr('href', space.uri)
+				.text(space.name)));
+		});
+
+		$('form.spaceSearch button').click(function(ev) {
+			$('.list-container').slideToggle('fast');
+			ev.preventDefault();
+			return false;
 		});
 	});
 });
