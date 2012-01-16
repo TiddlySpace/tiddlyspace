@@ -28,8 +28,13 @@ type: text/css
 
 .ts-identities li,
 .ts-includes li,
+.ts-space-search li,
 .ts-members li {
 	font-size: 1.3em;
+}
+
+.list-container {
+	display: none;
 }
 
 .ts-includes button,
