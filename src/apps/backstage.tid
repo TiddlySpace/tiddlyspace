@@ -2,6 +2,7 @@ type: text/html
 tags: excludeLists
 _cache-max-age: 14400
 
+<!DOCTYPE HTML>
 <html>
 <head>
 <link rel="stylesheet" href="/bags/common/tiddlers/reset.css" />
