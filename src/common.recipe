@@ -12,6 +12,7 @@ tiddler: lib/chrjs-store.js.js
 tiddler: lib/chrjs.users.js
 tiddler: lib/chrjs.space.js
 tiddler: lib/chrjs.identities.js
+tiddler: lib/jquery-form.js.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid

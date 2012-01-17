@@ -64,6 +64,21 @@ type: text/css
 	position: absolute;
 }
 
+.siteicon {
+	/* ie6 hacks */
+	width: expression(48 + "px");
+	height: expression(48 + "px");
+	max-width: 48px;
+	max-height: 48px;
+	border: solid 2px #333;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	-ms-border-radius: 5px;
+	border-radius: 5px;
+	border-image: initial;
+}
+
 .help {
 	background-image: url(/bags/common/tiddlers/help.png);
 	background-repeat: no-repeat;

@@ -17,6 +17,17 @@ tags: excludeLists excludeSearch excludeMissing
 		<div class="left">
 		<h2>About this space <button class='toggleNext'>show</button></button></h2>
 		<div id="siteinfo"></div>
+		<h2>Site Icon</h2>
+		<div>
+			<img id="siteicon" class="siteicon">
+			<form id="upload" method="POST" enctype="multipart/form-data">
+				<input type="hidden" name="title" value="SiteIcon" />
+				<input type="hidden" name="tags" value="excludeLists">
+				<input type="hidden" name="csrf_token" class="csrf" />
+				<input type="file" name="file" />
+				<input type="submit" value="upload" />
+			</form>
+		</div>
 		<h2>Vital Statistics</h2>
 		<div id="info">please wait while information is loaded about this space...</div>
 		</div>
@@ -65,6 +76,8 @@ tags: excludeLists excludeSearch excludeMissing
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.space'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.users'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.identities'></script>
+<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF'></script>
+<script type='text/javascript' src='/bags/common/tiddlers/jquery-form.js'></script>
 <script type='text/javascript' src="/bags/common/tiddlers/ts.js"></script>
 <script type="text/javascript">
 	ts.init(function(ts) {
@@ -76,6 +89,19 @@ tags: excludeLists excludeSearch excludeMissing
 		var publicBag = spaceName + "_public";
 		$("#siteUrl").text(window.location.hostname);
 
+		var csrf = window.getCSRFToken();
+		$("#siteicon").attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon");
+		var form = $('#upload')[0];
+		$(form).attr("action", "/bags/" + publicBag + "/tiddlers?csrf_token=" + csrf + "&redirect=/tiddlers");
+		$(form).ajaxForm({
+			success: function(a) {
+				$("#siteicon").attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon?r=" + Math.random());
+			},
+			error: function() {
+				$('#messageArea').html("Error uploading SiteIcon.")
+			}
+		});
+		
 		function countTiddlers(members) {
 			var numMembers = members ? members.length : false;
 			var publicBagUrl = "/bags/" + spaceName + "_public/tiddlers";
