@@ -19,7 +19,7 @@ tags: excludeLists excludeSearch
 		<div id="TSbar"></div>
 		<div id="main-content">
 			<div id="space-details">
-				<img class="siteicon">
+				<a href="/_space"><img class="siteicon"></a>
 				<div id="title-subtitle">
 					<h1 class="spaceaddress">
 						<span class="spaceName"></span><span class="hostName"></span>
