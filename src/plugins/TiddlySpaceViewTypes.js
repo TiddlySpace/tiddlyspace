@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceViewTypes|
-|''Version''|0.5.4|
+|''Version''|0.5.6|
 |''Status''|@@beta@@|
 |''Description''|Provides TiddlySpace specific view types|
 |''Author''|Jon Robson|
@@ -19,6 +19,7 @@ Provides replyLink, spaceLink and SiteIcon view types.
 
 var tiddlyspace = config.extensions.tiddlyspace;
 var originMacro = config.macros.tiddlerOrigin;
+var tweb = config.extensions.tiddlyweb;
 
 config.macros.view.replyLink = {
 	locale: {
@@ -48,11 +49,15 @@ config.macros.view.views.replyLink = function(value, place, params, wikifier,
 		space = tiddlyspace.resolveSpaceName(bag);
 	}
 	var container = $('<span class="replyLink" />').appendTo(place)[0];
-	config.extensions.tiddlyweb.getUserInfo(function(user) {
+	tweb.getUserInfo(function(user) {
 		if(!user.anon) {
 			if((space && user.name != space &&
 					user.name != tiddlyspace.currentSpace.name) || imported) {
 				createSpaceLink(container, user.name, value, label);
+				tweb.getStatus(function(status) { // force callback to run after existing callbacks
+					var url = config.extensions.tiddlyspace.getHost(status.server_host, user.name) + "#[[" + encodeURIComponent(value) + "]]";
+					jQuery("a", container).attr("href", url);
+				});
 			}
 		}
 	});
