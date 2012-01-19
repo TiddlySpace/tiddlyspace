@@ -17,6 +17,19 @@ tags: excludeLists excludeSearch excludeMissing
 	<div class="main section">
 		<a class="app" href="/apps">back to apps</a>
 		<div class="left">
+		<div id="siteiconArea">
+		<h2>Site Icon</h2>
+		<div>
+			<img id="siteicon" class="siteicon">
+			<form id="upload" method="POST" enctype="multipart/form-data">
+				<input type="hidden" name="title" value="SiteIcon" />
+				<input type="hidden" name="tags" value="excludeLists">
+				<input type="hidden" name="csrf_token" class="csrf" />
+				<input type="file" name="file" />
+				<input type="submit" value="upload" />
+			</form>
+		</div>
+		</div>
 		<h2>Find Space</h2>
 		<form class="spaceSearch">
 			<input class="inputBox" type="text" placeholder="find space" />
@@ -69,6 +82,8 @@ tags: excludeLists excludeSearch excludeMissing
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.users'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.identities'></script>
 <script type='text/javascript' src="/bags/common/tiddlers/jquery-ui.custom.js"></script>
+<script type='text/javascript' src='/bags/common/tiddlers/jquery-form.js'></script>
+<script type='text/javascript' src="/bags/common/tiddlers/siteiconupload.js"></script>
 <script type='text/javascript' src='/bags/common/tiddlers/ts.js'></script>
 <script type="text/javascript">
 /*
@@ -118,6 +133,10 @@ _accounts application specific javascript
 ts.init(function(ts) {
 	if(ts.user.anon) { // redirect to homepage when user not logged in
 		window.location = ts.getHost();
+	} else if(ts.user.name === ts.currentSpace){
+		initSiteIconUpload(ts.user.name);
+	} else {
+		$("#siteiconArea").remove();
 	}
 	$(".hostSuffix").text("." + ts.getHost("").split("//")[1]);
 	ts.getSpaces(function(spaces) {

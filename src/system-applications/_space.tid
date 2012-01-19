@@ -78,6 +78,7 @@ tags: excludeLists excludeSearch excludeMissing
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.identities'></script>
 <script type='text/javascript' src='/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/jquery-form.js'></script>
+<script type='text/javascript' src="/bags/common/tiddlers/siteiconupload.js"></script>
 <script type='text/javascript' src="/bags/common/tiddlers/ts.js"></script>
 <script type="text/javascript">
 	ts.init(function(ts) {
@@ -86,22 +87,9 @@ tags: excludeLists excludeSearch excludeMissing
 		}
 		var address = window.location.hostname.split(".");
 		var spaceName = address[0];
-		var publicBag = spaceName + "_public";
 		$("#siteUrl").text(window.location.hostname);
+		initSiteIconUpload(spaceName);
 
-		var csrf = window.getCSRFToken();
-		$("#siteicon").attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon");
-		var form = $('#upload')[0];
-		$(form).attr("action", "/bags/" + publicBag + "/tiddlers?csrf_token=" + csrf + "&redirect=/tiddlers");
-		$(form).ajaxForm({
-			success: function(a) {
-				$("#siteicon").attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon?r=" + Math.random());
-			},
-			error: function() {
-				$('#messageArea').html("Error uploading SiteIcon.")
-			}
-		});
-		
 		function countTiddlers(members) {
 			var numMembers = members ? members.length : false;
 			var publicBagUrl = "/bags/" + spaceName + "_public/tiddlers";
