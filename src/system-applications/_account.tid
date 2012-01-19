@@ -130,13 +130,15 @@ $.extend( proto, {
 /***
 _accounts application specific javascript
 ***/
+var link;
 ts.init(function(ts) {
 	if(ts.user.anon) { // redirect to homepage when user not logged in
 		window.location = ts.getHost();
 	} else if(ts.user.name === ts.currentSpace){
 		initSiteIconUpload(ts.user.name);
 	} else {
-		$("#siteiconArea").remove();
+		link = $("<a />").attr("href", ts.getHost(ts.user.name) + "/_account").text("Change SiteIcon");
+		$("#siteiconArea div").empty().append(link);
 	}
 	$(".hostSuffix").text("." + ts.getHost("").split("//")[1]);
 	ts.getSpaces(function(spaces) {
