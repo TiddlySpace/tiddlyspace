@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.9|
+|''Version''|0.7.1|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -357,11 +357,16 @@ var scanMacro = config.macros.tsScan = {
 					scanMacro.scanned[url].callbacks.push(run);
 				}
 			} else {
-				scanMacro.scanned[url] = {
-					callbacks: [function(tiddlers) {
-						scanMacro._scanCallback(place, tiddlers, options);
-					}]
+				var callback = function(tiddlers) {
+					scanMacro._scanCallback(place, tiddlers, options);
 				};
+				if(scanMacro.scanned[url] && scanMacro.scanned[url].callbacks) {
+					scanMacro.scanned[url].callbacks.push(callback)
+				} else {
+					scanMacro.scanned[url] = {
+						callbacks: [callback]
+					};
+				}
 				ajaxReq({
 					url: url,
 					dataType: "json",
