@@ -74,11 +74,21 @@ _cache-max-age: 14400
 		window.location.hash = "";
 		window.parent.location.reload();
 	}
+	var li, siteiconurl, link, host;
 	ts.init(function(ts) {
+		host = ts.getHost(ts.user.name);
 		$(document.body).show();
 		window.location.hash = "#userpass-login";
 		if(ts.user.anon && $('#userpass-login').css('display') !== "block") {
 			$(".login-method").show();
+		}
+		if(!ts.user.anon) {
+			li = $('<li class="account" />').appendTo("#app-list")[0];
+			siteiconurl = host + '/bags/' + ts.user.name + '_public/tiddlers/SiteIcon';
+			link = $('<a target="_parent" />').attr("href", host + "/_account").
+				text(" YOUR ACCOUNT").appendTo(li);
+			$('<img class="app-img">').attr("alt",  'SiteIcon for ' + ts.user.name).
+				attr("src", siteiconurl).prependTo(link);
 		}
 	}, {});
 </script>
