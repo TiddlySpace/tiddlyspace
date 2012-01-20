@@ -128,6 +128,10 @@ a {
 	word-wrap: break-word;
 }
 
+.main img {
+	max-width: 100%;
+}
+
 .meta {
 	border: solid 1px #F0F4F8;
 	color: #434B50;
