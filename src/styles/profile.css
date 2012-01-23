@@ -14,6 +14,7 @@ body {
 	font-size: 1.6em;
 	line-height: 1.4;
 	margin: 0;
+	min-width: 320px;
 }
 
 blockquote {
@@ -46,7 +47,7 @@ pre {
 
 #container {
 	position: relative;
-	width: 32.5em;
+	max-width: 55em;
 	background-color: #E0E0E0;
 	background-color: rgba(255, 255, 255, 0.7);
 	margin: 0.625em auto;
@@ -55,10 +56,15 @@ pre {
 
 a {
 	color: #0082af;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 #header {
-	width: 34.75em;
+	width: 104.1%;
 	position: relative;
 	background-color: #DCE7F1;
 	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -135,7 +141,7 @@ a {
 .meta {
 	border: solid 1px #F0F4F8;
 	color: #434B50;
-	font-size: 0.75em;
+	font-size: 0.875em;
 	margin: 1.5em 0 0;
 	padding: 0.8em 1em;
 }
@@ -261,5 +267,58 @@ table.twtable {
 @media screen and (orientation:portrait) and (max-width: 320px) {
 	#backstage {
 		font-size: 0.8em;
+	}
+}
+
+/*****************/
+/* Media Queries */
+/*****************/
+
+@media all and (max-width: 920px) {
+	#container {
+		margin: 0;
+	}
+	#header {
+		width: 100%;
+		margin-left: 0;
+	}
+	#header::before, #header::after {
+		display: none;
+	}
+}
+  
+@media all and (max-width: 700px) {
+	.meta {
+		font-size: 0.75em;
+	}
+}
+  
+@media all and (max-width: 680px) {
+}
+  
+@media all and (max-width: 560px) {
+	#container {
+		padding: 0 0 0.75em;
+	}
+	#header {
+		padding: 0.5em 0;
+	}
+	#header h1 {
+		font-size: 2em;
+		padding: 0 0.5em;
+	}
+	.main {
+		border-left: none;
+		border-right: none;
+		-o-box-shadow: none;
+		-ms-box-shadow: none;
+		-moz-box-shadow: none;
+		-webkit-box-shadow: none;
+		font-size: 1em;
+		margin-top: 0.75em;
+	}
+	.meta {
+		border: none;
+		margin: 0;
 	}
 }
