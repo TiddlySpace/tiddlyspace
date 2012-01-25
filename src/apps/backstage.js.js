@@ -132,9 +132,9 @@ var stylesheet = ["iframe {",
 "	display: block;",
 "}"
 ].join("\n");
-function addEventListener(node, event, handler) {
+function addEventListener(node, event, handler, bubble) {
 	if (node.addEventListener){  
-		node.addEventListener(event, handler, false);   
+		node.addEventListener(event, handler, bubble);   
 	} else if (node.attachEvent){  
 		event = event == "click" ? "onclick" : event;
 		event = event == "load" ? "onload" : event;
@@ -207,7 +207,7 @@ var loadEvent = function() {
 			if(bubbleOpen) {
 				toggleBubble(ev);
 			}
-		}, false);
+		}, true);
 
 	addEventListener(bubble, "click", function(ev) {
 		if(ev.stopPropagation) {
