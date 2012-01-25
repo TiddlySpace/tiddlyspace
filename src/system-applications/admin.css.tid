@@ -253,8 +253,9 @@ a.app:hover {
 }
 
 .iframeMode #container {
-	width: 100%;
 	padding: 0;
+	max-width: none;
+	width: 100%;
 }
 
 @media (max-width:600px) {
