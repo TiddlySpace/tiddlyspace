@@ -54,9 +54,8 @@
 	background: -moz-linear-gradient(center bottom,#222 0%, #333 50%, #555 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222);
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222)";
-	height: 24px;
+	height: 25px;
 	padding: 0;
-	border-bottom: solid 1px black;
 }
 
 .backstageBackground {
@@ -131,7 +130,7 @@
 
 #backstageArea a.backstageSelTab,
 #backstageToolbar .backstageTask {
-	line-height: 24px;
+	line-height: 25px;
 	color: #767676;
 }
 
