@@ -87,12 +87,13 @@ tags: excludeLists excludeSearch excludeMissing
 		}
 		var address = window.location.hostname.split(".");
 		var spaceName = address[0];
+		var publicBag = spaceName + "_public";
 		$("#siteUrl").text(window.location.hostname);
 		initSiteIconUpload(spaceName);
 
 		function countTiddlers(members) {
 			var numMembers = members ? members.length : false;
-			var publicBagUrl = "/bags/" + spaceName + "_public/tiddlers";
+			var publicBagUrl = "/bags/" + publicBag + "/tiddlers";
 			var url = members ? "/bags/" + spaceName + "_private/tiddlers" :
 				publicBagUrl;
 			$.ajax({ url: url, dataType: "text",
