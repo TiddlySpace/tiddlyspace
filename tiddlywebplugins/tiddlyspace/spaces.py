@@ -406,7 +406,10 @@ def _update_policy(policy, add=None, subtract=None):
             if constraint == 'read' and constraint_values == []:
                 pass
             else:
-                constraint_values.append(add)
+                if "ANY" not in constraint_values:
+                    if "NONE" in constraint_values:
+                        constraint_values.remove("NONE")
+                    constraint_values.append(add)
         if subtract and subtract in constraint_values:
             constraint_values.remove(subtract)
     return policy
