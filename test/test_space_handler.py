@@ -17,6 +17,7 @@ import wsgi_intercept
 
 from wsgi_intercept import httplib2_intercept
 
+from tiddlywebplugins.tiddlyspace.spaces import _update_policy, _make_policy
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
@@ -337,6 +338,15 @@ def test_add_a_member():
             )
     assert response['status'] == '409'
 
+def test_update_policy_nonstandard():
+    policy = _make_policy('jon')
+    setattr(policy, 'write', ['ANY'])
+    setattr(policy, 'read', ['fnd'])
+    setattr(policy, 'create', ['NONE'])
+    newpolicy = _update_policy(policy, add='jon')
+    assert getattr(newpolicy, 'read') == ['fnd', 'jon']
+    assert getattr(newpolicy, 'write') == ['ANY']  # ANY takes preference over jon as more powerful
+    assert getattr(newpolicy, 'create') == ['jon']  # jon takes preference over NONE
 
 def test_delete_member():
     cookie = get_auth('fnd', 'bird')
