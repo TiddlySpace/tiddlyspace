@@ -3,6 +3,7 @@ Middleware to protect against cross site request forgery attacks
 """
 import Cookie
 from datetime import datetime, timedelta
+import time
 
 from tiddlyweb.util import sha
 from tiddlyweb.web.http import HTTP400
@@ -29,9 +30,6 @@ class CSRFProtector(object):
             """
             add a csrf_token header (if we need to)
             """
-            if environ['tiddlyweb.usersign']['name'] == 'GUEST':
-                start_response(status, headers, exc_info)
-                return
             user_cookie = Cookie.SimpleCookie()
             user_cookie.load(environ.get('HTTP_COOKIE', {}))
             csrf_cookie = user_cookie.get('csrf_token')
@@ -44,8 +42,21 @@ class CSRFProtector(object):
                     timestamp = ''
                     cookie_user = ''
             username = environ['tiddlyweb.usersign']['name']
-            now = datetime.now().strftime('%Y%m%d%H')
-            if now != timestamp or cookie_user != username:
+            now = datetime.utcnow().strftime('%Y%m%d%H')
+            if username == 'GUEST':
+                if cookie_user:
+                    if 'MSIE' in environ.get('HTTP_USER_AGENT', ''):
+                        expires = 'Expires=%s;' % datetime.strftime(
+                                datetime.utcnow() - timedelta(hours=1),
+                                '%a, %d-%m-%y %H:%M:%S GMT')
+                    else:
+                        expires = 'Max-Age=0;'
+                    set_cookie = 'csrf_token=; %s' % expires
+                    headers.append(('Set-Cookie', set_cookie))
+                else:
+                    start_response(status, headers, exc_info)
+                    return
+            elif now != timestamp or cookie_user != username:
                 user, space, secret = get_nonce_components(environ)
                 nonce = gen_nonce(user, space, now, secret)
                 set_cookie = 'csrf_token=%s' % nonce
@@ -85,7 +96,7 @@ class CSRFProtector(object):
             raise InvalidNonceError('No csrf_token supplied')
 
         user, space, secret = get_nonce_components(environ)
-        time = datetime.now().strftime('%Y%m%d%H')
+        time = datetime.utcnow().strftime('%Y%m%d%H')
         nonce_time = nonce.split(':', 1)[0]
         if time != nonce_time:
             date = datetime.strptime(time, '%Y%m%d%H')

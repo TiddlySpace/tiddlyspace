@@ -335,19 +335,32 @@ def test_no_cookie_sent():
 
     user_cookie = get_auth('foo', 'foobar')
     time = datetime.now().strftime('%Y%m%d%H')
-    cookie = 'csrf_token=%s:%s:%s' % (time, user.usersign,
+    token_cookie = 'csrf_token=%s:%s:%s' % (time, user.usersign,
         sha('%s:%s:%s:%s' % (user.usersign,
         time, space, config['secret'])).hexdigest())
 
     response, _ = http.request('http://foo.0.0.0.0:8080/status',
         method='GET',
         headers={
-            'Cookie': 'tiddlyweb_user="%s"; %s' % (user_cookie, cookie)
+            'Cookie': 'tiddlyweb_user="%s"; %s' % (user_cookie, token_cookie)
         })
 
     cookie = response.get('set-cookie')
     if cookie:
         assert 'csrf_token' not in cookie
+
+    # When making transition from logged in to GUEST, expire
+    # csrf_token.
+    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+        method='GET',
+        headers={
+            'User-Agent': 'MSIE',
+            'Cookie': '%s' % token_cookie
+        })
+
+    cookie = response.get('set-cookie')
+    assert 'csrf_token' in cookie
+    assert 'Expires=' in cookie
 
 def test_invalid_cookie():
     """
