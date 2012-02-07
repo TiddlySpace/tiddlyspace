@@ -52,7 +52,6 @@ var stylesheet = ["iframe {",
 "	width: 24px;",
 "	height: 24px;",
 "	background-size: 24px 24px;",
-"	background-image: url(/bags/common/tiddlers/backstageIcon.png);",
 "	text-indent: -999px;",
 "	overflow: hidden;",
 "	z-index: 2000;",
@@ -147,6 +146,13 @@ var loadEvent = function() {
 	link.setAttribute("id", "app-picker");
 	link.setAttribute("class", "app-picker");
 	link.appendChild(document.createTextNode("tiddlyspace"));
+
+        // Quite a hack. GUEST does not have a csrf token.
+        if (/csrf_token/.test(document.cookie)) {
+            link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/privateAndPublicIcon)';
+        } else {
+            link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/publicIcon)';
+        }
 
 	var body = document.getElementsByTagName("BODY")[0];
 	body.insertBefore(link, body.firstChild);
