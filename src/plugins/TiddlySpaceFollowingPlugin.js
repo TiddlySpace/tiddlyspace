@@ -159,15 +159,18 @@ var followMacro = config.macros.followTiddlers = {
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var args = paramString.parseParams("anon")[0];
-		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
+		var containingTiddler = story.findContainingTiddler(place).getAttribute('tiddler');
+		var title = (args.anon && args.anon[0]) || tiddler.fields["server.title"] || tiddler.title;
 		var tid = store.getTiddler(title);
 		var user = params[1] || false;
 		if(tid) {
 			followMacro.makeButton(place, {
 				url: "/search?q=title:%22"
                                     + encodeURIComponent(title) + "%22",
+				containingTiddler: containingTiddler,
 				blacklisted: followMacro.getBlacklist(), title: title, user: user,
-				consultFollowRelationship: args.follow ? true : false });
+				consultFollowRelationship: (args.follow &&
+					args.follow[0] === 'false') ? false : true });
 		}
 	},
 	makeButton: function(place, options) { // this is essentially the same code in TiddlySpaceFollowingPlugin
@@ -181,7 +184,7 @@ var followMacro = config.macros.followTiddlers = {
 		} else {
 			var user = options.user;
 			window.setTimeout(function() { // prevent multiple calls due to refresh
-				tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
+				tiddlyspace.scroller.registerIsVisibleEvent(options.containingTiddler, function() {
 					var mkButton = function(followers, ignore) {
 						if(!followers && !ignore) {
 							$(btn).remove();
