@@ -406,6 +406,8 @@ def _update_policy(policy, add=None, subtract=None):
             if constraint == 'read' and constraint_values == []:
                 pass
             else:
+                if 'ANY' in constraint_values or 'NONE' in constraint_values:
+                    raise HTTP409('Policy contains ANY or NONE.')
                 constraint_values.append(add)
         if subtract and subtract in constraint_values:
             constraint_values.remove(subtract)
