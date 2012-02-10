@@ -148,7 +148,7 @@ var loadEvent = function() {
 	link.appendChild(document.createTextNode("tiddlyspace"));
 
         // Quite a hack. GUEST does not have a csrf token.
-        if (/csrf_token=\d+:\w+:\d+/.test(document.cookie)) {
+        if (/csrf_token=\d+:\w+:\w+/.test(document.cookie)) {
             link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/privateAndPublicIcon)';
         } else {
             link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/publicIcon)';
