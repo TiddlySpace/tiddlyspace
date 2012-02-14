@@ -496,12 +496,16 @@ var linkedMacro = config.macros.linkedTiddlers = {
 		var args = paramString.parseParams("anon")[0];
 		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
 		var tid = store.getTiddler(title);
+		var containingTiddler = story.findContainingTiddler(place).getAttribute('tiddler');
 		if(tid) {
 			followMacro.makeButton(place, {
 				spaceField: "recipe",
 				url: "/bags/%0/tiddlers/%1/backlinks".format(tid.fields['server.bag'],
 					encodeURIComponent(tid.title)),
-				blacklisted: followMacro.getBlacklist(), title: title, user: params[1] || false,
+				blacklisted: followMacro.getBlacklist(),
+				title: title,
+				containingTiddler: containingTiddler,
+				user: params[1] || false,
 				consultFollowRelationship: args.follow ? true : false });
 		}
 	}
