@@ -4,12 +4,6 @@ Middleware to read the ServerSettings for the current space.
 The data is put in environ['tiddlyweb.server_settings'] dictionary.
 """
 
-try:
-    from urlparse import parse_qs
-except ImportError:
-    from cgi import parse_qs
-
-from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.store import StoreError, NoTiddlerError
 
@@ -20,7 +14,8 @@ SPACE_SERVER_SETTINGS = 'ServerSettings'
 SERVER_SETTINGS_KEYS = ['lazy', 'index']
 DEFAULT_SERVER_SETTINGS = {
         'index': None,
-        'lazy': False}
+        'lazy': False,
+        'extra_query': ''}
 DEFAULT_NEWUSER_APP = 'apps'
 DEFAULT_SPACE_NAME = 'frontpage'
 
@@ -83,14 +78,7 @@ def update_space_settings(environ, name):
 
     _figure_default_index(environ, bag_name, space)
 
-    query_string = ';'.join(query_strings)
-
-    filters, leftovers = parse_for_filters(query_string, environ)
-    environ['tiddlyweb.filters'].extend(filters)
-    query_data = parse_qs(leftovers, keep_blank_values=True)
-    environ['tiddlyweb.query'].update(dict(
-        [(key, [value for value in values])
-            for key, values in query_data.items()]))
+    environ['tiddlyweb.space_settings']['extra_query'] = ';'.join(query_strings)
 
 
 def _figure_default_index(environ, bag_name, space):

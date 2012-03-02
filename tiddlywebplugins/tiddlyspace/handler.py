@@ -6,6 +6,12 @@ The extensions and modifications to the default TiddlyWeb routes.
 
 import simplejson
 
+try:
+    from urlparse import parse_qs
+except ImportError:
+    from cgi import parse_qs
+
+from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.store import NoBagError
 from tiddlyweb import control
@@ -68,7 +74,9 @@ def get_space_tiddlers(environ, start_response):
     """
     _setup_friendly_environ(environ)
     serializer, _ = get_serialize_type(environ)
-    # If we are a wiki read ServerSettings, but ignore index
+
+    _extra_query_update(environ)
+
     if ('betaserialization' in serializer
             or 'betalazyserialization' in serializer):
         if environ['tiddlyweb.space_settings']['lazy']:
@@ -89,6 +97,7 @@ def home(environ, start_response):
     return serve_space(environ, start_response, http_host)
 
 
+
 def serve_space(environ, start_response, http_host):
     """
     Serve a space determined from the current virtual host and user.
@@ -99,6 +108,9 @@ def serve_space(environ, start_response, http_host):
     environ['wsgiorg.routing_args'][1]['recipe_name'] = recipe_name.encode(
             'UTF-8')
     _, mime_type = get_serialize_type(environ)
+
+    _extra_query_update(environ)
+
     index = environ['tiddlyweb.space_settings']['index']
     if index:
         environ['wsgiorg.routing_args'][1]['tiddler_name'] = index.encode(
@@ -110,6 +122,21 @@ def serve_space(environ, start_response, http_host):
         else:
             environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return get_tiddlers(environ, start_response)
+
+
+def _extra_query_update(environ):
+    """
+    If extra_query is set via ServerSettings, then process that
+    information as query strings and filters.
+    """
+    extra_query = environ['tiddlyweb.space_settings']['extra_query']
+    if extra_query:
+        filters, leftovers = parse_for_filters(extra_query, environ)
+        environ['tiddlyweb.filters'].extend(filters)
+        query_data = parse_qs(leftovers, keep_blank_values=True)
+        environ['tiddlyweb.query'].update(dict(
+            [(key, [value for value in values])
+                for key, values in query_data.items()]))
 
 
 def _setup_friendly_environ(environ):
