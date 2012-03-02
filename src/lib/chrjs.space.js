@@ -81,7 +81,7 @@ $.extend(IncludesCollection.prototype, {
 			success: function(response, status, xhr) {
 				callback(self, status, xhr);
 			},
-			errback: function(xhr, error, exc) {
+			error: function(xhr, error, exc) {
 				errback(xhr, error, exc, self);
 			}
 		});
@@ -97,7 +97,7 @@ $.extend(IncludesCollection.prototype, {
 			success: function(response, status, xhr) {
 				callback(self, status, xhr);
 			},
-			errback: function(xhr, error, exc) {
+			error: function(xhr, error, exc) {
 				errback(xhr, error, exc, self);
 			}
 		});
