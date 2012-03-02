@@ -44,6 +44,8 @@ jslib: qunit
 		http://mobile-bookmark-bubble.googlecode.com/hg/bookmark_bubble.js)
 	$(call wrap_jslib, src/lib/jquery-json.js.js, \
 		http://jquery-json.googlecode.com/files/jquery.json-2.3.min.js)
+	$(call wrap_jslib, src/lib/jquery-form.js.js, \
+		https://raw.github.com/malsup/form/master/jquery.form.js)
 
 qunit:
 	mkdir -p src/test/qunit
@@ -71,7 +73,8 @@ pypi: test
 dev: remotes dev_local
 
 dev_local:
-	@mysqladmin -f drop tiddlyspace create tiddlyspace
+	@mysqladmin -f drop tiddlyspace || true
+	@mysqladmin create tiddlyspace
 	@PYTHONPATH="." ./tiddlyspace dev_instance
 	( cd dev_instance && \
 		ln -s ../devconfig.py && \

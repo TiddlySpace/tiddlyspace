@@ -52,7 +52,6 @@ var stylesheet = ["iframe {",
 "	width: 24px;",
 "	height: 24px;",
 "	background-size: 24px 24px;",
-"	background-image: url(/bags/common/tiddlers/backstageIcon.png);",
 "	text-indent: -999px;",
 "	overflow: hidden;",
 "	z-index: 2000;",
@@ -132,9 +131,9 @@ var stylesheet = ["iframe {",
 "	display: block;",
 "}"
 ].join("\n");
-function addEventListener(node, event, handler) {
+function addEventListener(node, event, handler, bubble) {
 	if (node.addEventListener){  
-		node.addEventListener(event, handler, false);   
+		node.addEventListener(event, handler, bubble);   
 	} else if (node.attachEvent){  
 		event = event == "click" ? "onclick" : event;
 		event = event == "load" ? "onload" : event;
@@ -148,16 +147,23 @@ var loadEvent = function() {
 	link.setAttribute("class", "app-picker");
 	link.appendChild(document.createTextNode("tiddlyspace"));
 
+        // Quite a hack. GUEST does not have a csrf token.
+        if (/csrf_token=\d+:\w+:\w+/.test(document.cookie)) {
+            link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/privateAndPublicIcon)';
+        } else {
+            link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/publicIcon)';
+        }
+
 	var body = document.getElementsByTagName("BODY")[0];
 	body.insertBefore(link, body.firstChild);
 	var html = [
 	'<div class="bubble">',
-	    '<iframe src="/bags/common/tiddlers/backstage" width="auto" style="border:none;"></iframe>',
+	    '<iframe src="/bags/common/tiddlers/backstage#userpass-login" width="auto" style="border:none;"></iframe>',
 	    '<div class="tail"></div>',
 	'</div>'].join("");
 	var bubble = document.createElement("div");
 	bubble.setAttribute("id", "bs-popup");
-	bubble.style.cssText = "display:none;";
+	bubble.style.cssText = "visibility:hidden;";
 	bubble.className = "bs-popup";
 	bubble.innerHTML = html;
 	body.insertBefore(bubble, link);
@@ -176,7 +182,7 @@ var loadEvent = function() {
 			opacity = fadeIn ? opacity + 0.1 : opacity - 0.1;
 			if(opacity < 0 || opacity > 1) {
 				clearInterval(bubbleFadeInterval);
-				el.style.cssText = fadeIn ? "" : "display:none;";
+				el.style.cssText = fadeIn ? "" : "visibility:hidden;";
 			}
 		}, 50);
 	}
@@ -207,7 +213,7 @@ var loadEvent = function() {
 			if(bubbleOpen) {
 				toggleBubble(ev);
 			}
-		}, false);
+		}, true);
 
 	addEventListener(bubble, "click", function(ev) {
 		if(ev.stopPropagation) {

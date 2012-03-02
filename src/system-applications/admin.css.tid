@@ -28,8 +28,13 @@ type: text/css
 
 .ts-identities li,
 .ts-includes li,
+.ts-space-search li,
 .ts-members li {
 	font-size: 1.3em;
+}
+
+.list-container {
+	display: none;
 }
 
 .ts-includes button,
@@ -57,6 +62,21 @@ type: text/css
 	color: white;
 	_color: black; /* ie6 hack */
 	position: absolute;
+}
+
+.siteicon {
+	/* ie6 hacks */
+	width: expression(48 + "px");
+	height: expression(48 + "px");
+	max-width: 48px;
+	max-height: 48px;
+	border: solid 2px #333;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	-ms-border-radius: 5px;
+	border-radius: 5px;
+	border-image: initial;
 }
 
 .help {
@@ -233,8 +253,9 @@ a.app:hover {
 }
 
 .iframeMode #container {
-	width: 100%;
 	padding: 0;
+	max-width: none;
+	width: 100%;
 }
 
 @media (max-width:600px) {

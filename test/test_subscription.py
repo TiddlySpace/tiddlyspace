@@ -63,12 +63,12 @@ def test_subscription():
     recipe = Recipe('fnd_public')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 4
+    assert len(recipe) == 8
 
     recipe = Recipe('fnd_private')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 5
+    assert len(recipe) == 9
 
     response, content = add_subscription('cdent', 'fnd') # identical to above
     assert response['status'] == '409'
@@ -82,12 +82,12 @@ def test_subscription():
     recipe = Recipe('fnd_public')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 4
+    assert len(recipe) == 8
 
     recipe = Recipe('fnd_private')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 5
+    assert len(recipe) == 9
 
     response, content = add_subscription('psd', 'fnd')
     assert response['status'] == '204'
@@ -95,12 +95,12 @@ def test_subscription():
     recipe = Recipe('fnd_public')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 5
+    assert len(recipe) == 9
 
     recipe = Recipe('fnd_private')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 6
+    assert len(recipe) == 10
 
 
 def test_mutual_subscription():
@@ -133,12 +133,12 @@ def test_unsubscribe():
     recipe = Recipe('fnd_public')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 4
+    assert len(recipe) == 8
 
     recipe = Recipe('fnd_private')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 5
+    assert len(recipe) == 9
 
     # do it with non-existent space
     response, content = remove_subscription('spanner', 'fnd')
@@ -148,12 +148,12 @@ def test_unsubscribe():
     recipe = Recipe('fnd_public')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 4
+    assert len(recipe) == 8
 
     recipe = Recipe('fnd_private')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 5
+    assert len(recipe) == 9
 
     # unsubscribe self?
     response, content = remove_subscription('fnd', 'fnd')
@@ -163,12 +163,12 @@ def test_unsubscribe():
     recipe = Recipe('fnd_public')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 4
+    assert len(recipe) == 8
 
     recipe = Recipe('fnd_private')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 5
+    assert len(recipe) == 9
 
     # unsubscribe mutuality
     # We don't want a subscribed-to space which has subscribed to the
@@ -183,9 +183,9 @@ def test_unsubscribe():
     recipe = Recipe('fnd_public')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 3
+    assert len(recipe) == 7
 
     recipe = Recipe('fnd_private')
     recipe = store.get(recipe)
     recipe = recipe.get_recipe()
-    assert len(recipe) == 4
+    assert len(recipe) == 8

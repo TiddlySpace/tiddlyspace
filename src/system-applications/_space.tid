@@ -17,6 +17,17 @@ tags: excludeLists excludeSearch excludeMissing
 		<div class="left">
 		<h2>About this space <button class='toggleNext'>show</button></button></h2>
 		<div id="siteinfo"></div>
+		<h2>Site Icon</h2>
+		<div>
+			<img id="siteicon" class="siteicon">
+			<form id="upload" method="POST" enctype="multipart/form-data">
+				<input type="hidden" name="title" value="SiteIcon" />
+				<input type="hidden" name="tags" value="excludeLists">
+				<input type="hidden" name="csrf_token" class="csrf" />
+				<input type="file" name="file" />
+				<input type="submit" value="upload" />
+			</form>
+		</div>
 		<h2>Vital Statistics</h2>
 		<div id="info">please wait while information is loaded about this space...</div>
 		</div>
@@ -61,11 +72,13 @@ tags: excludeLists excludeSearch excludeMissing
 	</div>
 </div>
 <script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
-<script type='text/javascript' src='/bags/common/tiddlers/jquery-json.js'></script>
 <script type='text/javascript' src='/bags/tiddlyspace/tiddlers/chrjs'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.space'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.users'></script>
 <script type='text/javascript' src='/bags/common/tiddlers/chrjs.identities'></script>
+<script type='text/javascript' src='/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF'></script>
+<script type='text/javascript' src='/bags/common/tiddlers/jquery-form.js'></script>
+<script type='text/javascript' src="/bags/common/tiddlers/siteiconupload.js"></script>
 <script type='text/javascript' src="/bags/common/tiddlers/ts.js"></script>
 <script type="text/javascript">
 	ts.init(function(ts) {
@@ -76,10 +89,11 @@ tags: excludeLists excludeSearch excludeMissing
 		var spaceName = address[0];
 		var publicBag = spaceName + "_public";
 		$("#siteUrl").text(window.location.hostname);
+		initSiteIconUpload(spaceName);
 
 		function countTiddlers(members) {
 			var numMembers = members ? members.length : false;
-			var publicBagUrl = "/bags/" + spaceName + "_public/tiddlers";
+			var publicBagUrl = "/bags/" + publicBag + "/tiddlers";
 			var url = members ? "/bags/" + spaceName + "_private/tiddlers" :
 				publicBagUrl;
 			$.ajax({ url: url, dataType: "text",

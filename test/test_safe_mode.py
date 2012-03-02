@@ -81,7 +81,9 @@ def test_safe_exists():
     tiddlers = simplejson.loads(content)
     tiddlers_info = [(tiddler['title'], tiddler['bag']) for tiddler in tiddlers]
     bags = set(bag for title, bag in tiddlers_info)
-    assert sorted(list(bags)) == ['system', 'tiddlyspace']
+    assert sorted(list(bags)) == ['system', 'system-images_public',
+            'system-info_public', 'system-plugins_public',
+            'system-theme_public', 'tiddlyspace']
 
     assert ('TiddlyWebAdaptor', 'system') in tiddlers_info
 
@@ -96,7 +98,9 @@ def test_safe_exists():
     tiddlers = simplejson.loads(content)
     tiddlers_info = [(tiddler['title'], tiddler['bag']) for tiddler in tiddlers]
     bags = set(bag for title, bag in tiddlers_info)
-    assert sorted(list(bags)) == ['cdent_private', 'system', 'tiddlyspace']
+    assert sorted(list(bags)) == ['cdent_private', 'system',
+            'system-images_public', 'system-info_public',
+            'system-plugins_public', 'system-theme_public', 'tiddlyspace']
 
     assert ('TiddlyWebAdaptor', 'system') in tiddlers_info
 
@@ -130,7 +134,9 @@ def test_safe_mode_deletes_bad():
     tiddlers = simplejson.loads(content)
     tiddlers_info = [(tiddler['title'], tiddler['bag']) for tiddler in tiddlers]
     bags = set(bag for title, bag in tiddlers_info)
-    assert sorted(list(bags)) == ['cdent_private', 'system', 'tiddlyspace']
+    assert sorted(list(bags)) == ['cdent_private', 'system',
+            'system-images_public', 'system-info_public',
+            'system-plugins_public', 'system-theme_public', 'tiddlyspace']
 
     assert ('TiddlyWebAdaptor', 'cdent_private') in tiddlers_info
     assert ('helloplugin', 'cdent_private') in tiddlers_info
@@ -144,7 +150,9 @@ def test_safe_mode_deletes_bad():
     tiddlers = simplejson.loads(content)
     tiddlers_info = [(tiddler['title'], tiddler['bag']) for tiddler in tiddlers]
     bags = set(bag for title, bag in tiddlers_info)
-    assert sorted(list(bags)) == ['cdent_private', 'system', 'tiddlyspace']
+    assert sorted(list(bags)) == ['cdent_private', 'system',
+            'system-images_public', 'system-info_public',
+            'system-plugins_public', 'system-theme_public', 'tiddlyspace']
 
     assert ('TiddlyWebAdaptor', 'system') in tiddlers_info
     assert ('helloplugin', 'cdent_private') in tiddlers_info

@@ -205,6 +205,30 @@ def list_space_members(environ, start_response):
     return simplejson.dumps(members)
 
 
+def make_space(space_name, store, member):
+    """
+    The details of creating the bags and recipes that make up a space.
+    """
+    space = Space(space_name)
+
+    for bag_name in space.list_bags():
+        bag = Bag(bag_name)
+        bag.policy = _make_policy(member)
+        if Space.bag_is_public(bag_name):
+            bag.policy.read = []
+        store.put(bag)
+
+    public_recipe = Recipe(space.public_recipe())
+    public_recipe.set_recipe(space.public_recipe_list())
+    private_recipe = Recipe(space.private_recipe())
+    private_recipe.set_recipe(space.private_recipe_list())
+    private_recipe.policy = _make_policy(member)
+    public_recipe.policy = _make_policy(member)
+    public_recipe.policy.read = []
+    store.put(public_recipe)
+    store.put(private_recipe)
+
+
 def space_uri(environ, space_name):
     """
     Determine the uri of a space based on its name.
@@ -294,7 +318,8 @@ def _create_space(environ, start_response, space_name):
     """
     Create the space named by space_name. Raise 201 on success.
     """
-    _make_space(environ, space_name)
+    make_space(space_name, environ['tiddlyweb.store'],
+            environ['tiddlyweb.usersign']['name'])
     start_response('201 Created', [
         ('Location', space_uri(environ, space_name)),
         ])
@@ -381,40 +406,12 @@ def _update_policy(policy, add=None, subtract=None):
             if constraint == 'read' and constraint_values == []:
                 pass
             else:
+                if 'ANY' in constraint_values or 'NONE' in constraint_values:
+                    raise HTTP409('Policy contains ANY or NONE.')
                 constraint_values.append(add)
         if subtract and subtract in constraint_values:
             constraint_values.remove(subtract)
     return policy
-
-
-def _make_space(environ, space_name):
-    """
-    The details of creating the bags and recipes that make up a space.
-    """
-    store = environ['tiddlyweb.store']
-    member = environ['tiddlyweb.usersign']['name']
-
-    # XXX stub out the clumsy way for now
-    # can make this much more declarative
-
-    space = Space(space_name)
-
-    for bag_name in space.list_bags():
-        bag = Bag(bag_name)
-        bag.policy = _make_policy(member)
-        if Space.bag_is_public(bag_name):
-            bag.policy.read = []
-        store.put(bag)
-
-    public_recipe = Recipe(space.public_recipe())
-    public_recipe.set_recipe(space.public_recipe_list())
-    private_recipe = Recipe(space.private_recipe())
-    private_recipe.set_recipe(space.private_recipe_list())
-    private_recipe.policy = _make_policy(member)
-    public_recipe.policy = _make_policy(member)
-    public_recipe.policy.read = []
-    store.put(public_recipe)
-    store.put(private_recipe)
 
 
 def _same_space_required(environ, space_name):

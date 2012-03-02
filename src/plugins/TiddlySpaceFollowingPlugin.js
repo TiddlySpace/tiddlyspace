@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceFollowingPlugin|
-|''Version''|0.6.9|
+|''Version''|0.7.1|
 |''Description''|Provides a following macro|
 |''Author''|Jon Robson|
 |''Requires''|TiddlySpaceConfig TiddlySpaceTiddlerIconsPlugin ErrorHandler|
@@ -159,14 +159,18 @@ var followMacro = config.macros.followTiddlers = {
 	},
 	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 		var args = paramString.parseParams("anon")[0];
-		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
+		var containingTiddler = story.findContainingTiddler(place).getAttribute('tiddler');
+		var title = (args.anon && args.anon[0]) || tiddler.fields["server.title"] || tiddler.title;
 		var tid = store.getTiddler(title);
 		var user = params[1] || false;
 		if(tid) {
 			followMacro.makeButton(place, {
-				url: "/search?q=title:%0".format(encodeURIComponent(title)),
+				url: "/search?q=title:%22"
+                                    + encodeURIComponent(title) + "%22",
+				containingTiddler: containingTiddler,
 				blacklisted: followMacro.getBlacklist(), title: title, user: user,
-				consultFollowRelationship: args.follow ? true : false });
+				consultFollowRelationship: (args.follow &&
+					args.follow[0] === 'false') ? false : true });
 		}
 	},
 	makeButton: function(place, options) { // this is essentially the same code in TiddlySpaceFollowingPlugin
@@ -180,7 +184,7 @@ var followMacro = config.macros.followTiddlers = {
 		} else {
 			var user = options.user;
 			window.setTimeout(function() { // prevent multiple calls due to refresh
-				tiddlyspace.scroller.registerIsVisibleEvent(title, function() {
+				tiddlyspace.scroller.registerIsVisibleEvent(options.containingTiddler, function() {
 					var mkButton = function(followers, ignore) {
 						if(!followers && !ignore) {
 							$(btn).remove();
@@ -357,11 +361,16 @@ var scanMacro = config.macros.tsScan = {
 					scanMacro.scanned[url].callbacks.push(run);
 				}
 			} else {
-				scanMacro.scanned[url] = {
-					callbacks: [function(tiddlers) {
-						scanMacro._scanCallback(place, tiddlers, options);
-					}]
+				var callback = function(tiddlers) {
+					scanMacro._scanCallback(place, tiddlers, options);
 				};
+				if(scanMacro.scanned[url] && scanMacro.scanned[url].callbacks) {
+					scanMacro.scanned[url].callbacks.push(callback)
+				} else {
+					scanMacro.scanned[url] = {
+						callbacks: [callback]
+					};
+				}
 				ajaxReq({
 					url: url,
 					dataType: "json",
@@ -487,12 +496,16 @@ var linkedMacro = config.macros.linkedTiddlers = {
 		var args = paramString.parseParams("anon")[0];
 		var title = params[0] || tiddler.fields["server.title"] || tiddler.title;
 		var tid = store.getTiddler(title);
+		var containingTiddler = story.findContainingTiddler(place).getAttribute('tiddler');
 		if(tid) {
 			followMacro.makeButton(place, {
 				spaceField: "recipe",
 				url: "/bags/%0/tiddlers/%1/backlinks".format(tid.fields['server.bag'],
 					encodeURIComponent(tid.title)),
-				blacklisted: followMacro.getBlacklist(), title: title, user: params[1] || false,
+				blacklisted: followMacro.getBlacklist(),
+				title: title,
+				containingTiddler: containingTiddler,
+				user: params[1] || false,
 				consultFollowRelationship: args.follow ? true : false });
 		}
 	}

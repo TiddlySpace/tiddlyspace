@@ -15,11 +15,16 @@ import simplejson
 import httplib2
 import wsgi_intercept
 
+import py.test
+
 from wsgi_intercept import httplib2_intercept
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
+from tiddlyweb.web.http import HTTP409
+
+from tiddlywebplugins.tiddlyspace.spaces import _update_policy, _make_policy
 
 from test.fixtures import make_test_env, make_fake_space, get_auth
 SYSTEM_SPACES = ['system-plugins', 'system-info', 'system-images',
@@ -336,6 +341,16 @@ def test_add_a_member():
             method='PUT',
             )
     assert response['status'] == '409'
+
+
+def test_update_policy_nonstandard():
+    policy = _make_policy('jon')
+    setattr(policy, 'write', ['ANY'])
+    setattr(policy, 'read', ['fnd'])
+    py.test.raises(HTTP409, '_update_policy(policy, add="jon")')
+    setattr(policy, 'write', [])
+    setattr(policy, 'create', ['NONE'])
+    py.test.raises(HTTP409, '_update_policy(policy, add="jon")')
 
 
 def test_delete_member():
