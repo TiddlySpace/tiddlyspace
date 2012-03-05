@@ -94,7 +94,7 @@ def test_safe_exists():
             headers={'Accept': 'application/json',
                 'Cookie': 'tiddlyweb_user="%s"' % AUTH_COOKIE})
 
-    assert response['status'] == '200'
+    assert response['status'] == '200', content
     tiddlers = simplejson.loads(content)
     tiddlers_info = [(tiddler['title'], tiddler['bag']) for tiddler in tiddlers]
     bags = set(bag for title, bag in tiddlers_info)
