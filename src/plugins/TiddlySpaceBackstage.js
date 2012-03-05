@@ -636,7 +636,7 @@ var home = config.macros.homeLink = {
 config.macros.exportSpace = {
 	handler: function(place, macroName, params) {
 		var filename = params[0] ||
-			"/?download=%0.html".format(currentSpace);
+			"/tiddlers.wiki?download=%0.html".format(currentSpace);
 		$('<a class="button">download</a>'). // XXX: i18n
 			attr("href", filename).appendTo(place);
 	}
