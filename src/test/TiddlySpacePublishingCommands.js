@@ -131,7 +131,7 @@ test("toggleBag", function() {
 	actual.push(cmd.toggleBag("jon_public", "public"));
 	actual.push(cmd.toggleBag(tiddler, "private"));
 	actual.push(cmd.toggleBag(tiddler));
-	same(["jon_private", "jon_public", "bob_private", "bob_public"], actual);
+	deepEqual(["jon_private", "jon_public", "bob_private", "bob_public"], actual);
 });
 
 test("copyTiddler", function() {

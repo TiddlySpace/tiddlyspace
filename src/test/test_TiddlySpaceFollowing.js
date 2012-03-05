@@ -70,9 +70,9 @@ test("_getFollowerBags", function() {
 	actual.push(followMacro._getFollowerBags(["foo"]));
 	actual.push(followMacro._getFollowerBags(["foo", "bar", "dum"]));
 	actual.push(followMacro._getFollowerBags([]));
-	same(actual[0].length, 0);
-	same(actual[1].length, 2);
-	same(actual[2].length, 0);
+	deepEqual(actual[0].length, 0);
+	deepEqual(actual[1].length, 2);
+	deepEqual(actual[2].length, 0);
 });
 
 test("getFollowers", function() {
