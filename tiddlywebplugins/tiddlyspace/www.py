@@ -11,6 +11,7 @@ from tiddlywebplugins.utils import replace_handler
 from tiddlywebplugins.tiddlyspace.controlview import (ControlView,
         DropPrivs, AllowOrigin)
 from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector
+from tiddlywebplugins.tiddlyspace.serversettings import ServerSettings
 from tiddlywebplugins.tiddlyspace.handler import (home, friendly_uri,
         get_identities, get_space_tiddlers)
 from tiddlywebplugins.tiddlyspace.profiles import add_profile_routes
@@ -44,6 +45,9 @@ def establish_www(config):
 
     if CSRFProtector not in config['server_request_filters']:
         config['server_request_filters'].append(CSRFProtector)
+
+    if ServerSettings not in config['server_request_filters']:
+        config['server_request_filters'].append(ServerSettings)
 
     if AllowOrigin not in config['server_response_filters']:
         config['server_response_filters'].insert(
