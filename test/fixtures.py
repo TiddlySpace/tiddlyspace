@@ -44,11 +44,11 @@ def make_test_env(module):
     os.system('mysqladmin -f drop tiddlyspacetest create tiddlyspacetest')
     if SESSION_COUNT > 1:
         del sys.modules['tiddlywebplugins.tiddlyspace.store']
-        del sys.modules['tiddlywebplugins.mysql2']
-        del sys.modules['tiddlywebplugins.sqlalchemy2']
+        del sys.modules['tiddlywebplugins.mysql3']
+        del sys.modules['tiddlywebplugins.sqlalchemy3']
         import tiddlywebplugins.tiddlyspace.store
-        import tiddlywebplugins.mysql2
-        import tiddlywebplugins.sqlalchemy2
+        import tiddlywebplugins.mysql3
+        import tiddlywebplugins.sqlalchemy3
         clear_hooks(HOOKS)
     SESSION_COUNT += 1
     db_config = init_config['server_store'][1]['db_config']
