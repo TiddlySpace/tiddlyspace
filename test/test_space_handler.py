@@ -64,7 +64,7 @@ def test_spaces_list():
     response, content = http.request('http://0.0.0.0:8080/spaces',
             method='GET')
     assert response['status'] == '200'
-    assert response['cache-control'] == 'no-cache'
+    assert response['cache-control'] == 'no-cache, no-transform'
 
     info = simplejson.loads(content)
     uris = [uri for _, uri in [item.values() for item in info]]
@@ -112,7 +112,7 @@ def test_space_members():
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='GET')
     assert response['status'] == '200'
-    assert response['cache-control'] == 'no-cache'
+    assert response['cache-control'] == 'no-cache, no-transform'
     info = simplejson.loads(content)
     assert info == ['cdent']
 
