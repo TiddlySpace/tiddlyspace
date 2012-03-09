@@ -62,6 +62,12 @@ _cache-max-age: 43200
 			APPS
 		</a>
 	</li>
+	<li class="space">
+		<a href="/_space"  target="_parent">
+			<img src="/SiteIcon" alt="Space SiteIcon" class="app-img" />
+			THIS SPACE
+		</a>
+	</li>
 </ul>
 <script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
 <script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
