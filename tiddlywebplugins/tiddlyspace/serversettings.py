@@ -51,7 +51,10 @@ def update_space_settings(environ, name):
     # double assign to avoid later updates to the defaults
     environ['tiddlyweb.space_settings'] = {}
     environ['tiddlyweb.space_settings'].update(DEFAULT_SERVER_SETTINGS)
-    space = Space(name)
+    try:
+        space = Space(name)
+    except ValueError:
+        return
     bag_name = space.public_bag()
     tiddler = Tiddler(SPACE_SERVER_SETTINGS, bag_name)
     data_text = ''
