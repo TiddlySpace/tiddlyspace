@@ -340,7 +340,7 @@ var scanMacro = config.macros.tsScan = {
 		var query = searchQuery.join(" OR ");
 		query = tag ? "(%0) AND tag:%1".format(query, tag) : query;
 		query = options.query ? "%0;%1;".format(query, options.query) : query;
-		query = options.fat ? "%0&fat=y".format(query) : query;
+		query = options.fat ? "%0&fat=1".format(query) : query;
 		return '%0/search?q=%1'.format(host, query);
 	},
 	scan: function(place, options) { // TODO: make use of list macro with url filter
