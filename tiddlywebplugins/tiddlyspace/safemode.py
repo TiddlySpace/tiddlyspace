@@ -14,7 +14,7 @@ from tiddlyweb.web.http import HTTP403, HTTP404
 from tiddlyweb.web.sendtiddlers import send_tiddlers
 from tiddlyweb.web.util import get_serialize_type
 
-from tiddlywebplugins.csrf import gen_nonce, get_nonce_components
+from tiddlywebplugins.tiddlyspace.csrf import gen_nonce, get_nonce_components
 from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.web import (determine_host,
         determine_space, determine_space_recipe)
@@ -121,8 +121,8 @@ def _send_safe_mode(environ, start_response):
     """
     environ['tiddlyweb.title'] = 'Confirm Safe Mode'
     now = datetime.now().strftime('%Y%m%d%H')
-    user, hostname, secret = get_nonce_components(environ)
-    csrf_token = gen_nonce(user, hostname, now, secret)
+    user, space, secret = get_nonce_components(environ)
+    csrf_token = gen_nonce(user, space, now, secret)
     start_response('200 OK', [('Content-Type', 'text/html; charset=UTF-8')])
     return ["""
 <div id='content'><div class='tiddler'>
