@@ -336,9 +336,3 @@ def test_new_space_loads_apps():
     response, appsContent = http.request('http://foo.0.0.0.0:8080/apps')
     assert response['status'] == '200'
     assert appsContent == defaultContent
-
-def test_download_wiki_no_extra():
-    http = httplib2.Http()
-    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers.wiki?download=foo.html')
-    assert response['status'] == '200', content
-    assert 'TiddlySpacePublishingCommands' not in content
