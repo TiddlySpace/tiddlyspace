@@ -28,21 +28,6 @@ def build_config_var(alpha=False, beta=False, external=False):
 
 class Serialization(WikiSerialization):
 
-    def list_tiddlers(self, tiddlers):
-        """
-        Push out a wiki. Filter out the system- bags, if we are
-        download only.
-        """
-        download = self.environ.get('tiddlyweb.query', {}).get(
-                'download', [False])[0]
-        if download:
-            filter_string = ';'.join(
-                    ['select=bag:!%s' % bag for bag, _ in Space.CORE_RECIPE if
-                        bag.endswith('_public')])
-            tiddlers = filter_tiddlers(tiddlers, filter_string,
-                    environ=self.environ)
-        return self._put_tiddlers_in_tiddlywiki(tiddlers)
-
     def _get_wiki(self):
         alpha = beta = external = False
 
