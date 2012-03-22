@@ -41,7 +41,7 @@ setup(
         'tiddlywebplugins.form',
         'tiddlywebplugins.reflector>=0.6',
         'tiddlywebplugins.atom>=1.3.7',
-        'tiddlywebplugins.mysql3>=2.1.0',
+        'tiddlywebplugins.mysql3>=3.0.0',
         'tiddlywebplugins.privateer',
         'tiddlywebplugins.lazy>=0.4',
         'tiddlywebplugins.relativetime',
