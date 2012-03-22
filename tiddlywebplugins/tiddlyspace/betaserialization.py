@@ -8,9 +8,12 @@ activated via "twrelease=beta" URL parameter
 
 import logging
 
+from tiddlyweb.control import filter_tiddlers
 from tiddlyweb.util import read_utf8_file
+
 from tiddlywebwiki.serialization import Serialization as WikiSerialization
 
+from tiddlywebplugins.tiddlyspace.space import Space
 
 def build_config_var(alpha=False, beta=False, external=False):
     base = 'base_tiddlywiki'
