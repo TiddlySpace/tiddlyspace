@@ -47,6 +47,7 @@ setup(
         'tiddlywebplugins.relativetime',
         'tiddlywebplugins.jsonp>=0.4',
         'tiddlywebplugins.templates',
+        'tiddlywebplugins.csrf',
         'selector<0.9.0'
     ],
     include_package_data = True,
