@@ -31,7 +31,13 @@ var errorhandler = {
 			if(path) {
 				var segments = path.split("/");
 				var tiddler = segments[segments.length - 1];
-				if(tiddler) { // currently only for for tiddler uris
+                                var bagsP = $.inArray('bags', segments);
+                                var recipesP = $.inArray('recipes', segments);
+                                var segmentsCount = segments.length;
+                                if ((segmentsCount == 1
+                                            && bagsP == -1
+                                            && recipesP == -1)
+                                        || segmentsCount == 4) {
 					errorhandler.suggestTiddlers(container, space, tiddler);
 				}
 			} else {
