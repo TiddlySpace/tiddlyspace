@@ -27,6 +27,7 @@ $message
 <script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
 <script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/_errors/tiddlers/errorHandling"></script>
 <script type="text/javascript">
+var editURITemplate = '$tiddlyweb_space_settings_editor';
 jQuery(document).ready(function() {
 	errorhandler.init(404);
 });

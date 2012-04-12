@@ -83,12 +83,13 @@ var errorhandler = {
 		}
 	},
 	createTiddler: function(container, space, title) {
+                var editURI = editURITemplate.replace('{tiddler}', title)
 		$.ajax({url: "/status", dataType: "json",
 			success: function(status) {
 				if(status.username && status.username != "GUEST") {
 					$("<h2 />").text(errorhandler.locale.makeTiddlerHeader).appendTo(container);
 					container = $("<p />").appendTo(container)[0];
-					$("<a />").attr("href", "/takenote#tiddler/" + title).
+					$("<a />").attr("href", editURI).
 						text("Create tiddler named '" + decodeURIComponent(title) + "'").appendTo(container);
 				}
 			}

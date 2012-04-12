@@ -11,9 +11,10 @@ from tiddlywebplugins.tiddlyspace.web import determine_space, determine_host
 from tiddlywebplugins.tiddlyspace.space import Space
 
 SPACE_SERVER_SETTINGS = 'ServerSettings'
-SERVER_SETTINGS_KEYS = ['lazy', 'index']
+SERVER_SETTINGS_KEYS = ['lazy', 'index', 'editor']
 DEFAULT_SERVER_SETTINGS = {
         'index': None,
+        'editor': '/takenote#tiddler/{tiddler}',
         'lazy': False,
         'extra_query': ''}
 DEFAULT_NEWUSER_APP = 'apps'
