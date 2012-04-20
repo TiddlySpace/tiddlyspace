@@ -32,7 +32,7 @@ from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializer import Serializer
 from tiddlyweb.store import NoRecipeError
-from tiddlyweb.web.http import HTTP404
+from tiddlyweb.web.http import HTTP404, HTTP400
 from tiddlyweb.web.listentities import list_entities
 from tiddlyweb.web.util import get_serialize_type
 
@@ -131,8 +131,15 @@ class ControlView(object):
                 search_string = ' OR '.join(['bag:%s' % bag
                     for bag in bags])
             else:
-                entity_name = urllib.unquote(
-                        req_uri.split('/')[2]).decode('utf-8')
+
+                try:
+                    entity_name = urllib.unquote(
+                            req_uri.split('/')[2]).decode('utf-8')
+                except UnicodeDecodeError, exc:
+                    raise HTTP400(
+                            'incorrect encoding in URI, url-escaped '
+                            'utf-8 required: %s' % exc)
+
                 if '/recipes/' in req_uri:
                     valid_recipes = space.list_recipes()
                     if entity_name not in valid_recipes:
