@@ -52,6 +52,9 @@ var msgs = config.messages.editConflict = {
 var plugin = config.extensions.errorHandler = {
 	diffTags: ["excludeLists", "excludeMissing", "excludeSearch"],
 	displayMessage: function(message, tiddler, context) {
+		if(title === "SystemSettings") {
+			return;
+		}
 		var desc = context && context.httpStatus ? context.statusText :
 			sssp.locale.connectionError;
 		var reportArea = plugin.reportError(tiddler.title);
