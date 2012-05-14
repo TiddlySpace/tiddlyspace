@@ -31,7 +31,7 @@ running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddl
 }}}
 
 !Resources
-|[[blog|@@blog]]|[[documentation|@@docs]]|[[featured spaces|@@featured]]|
+[[blog|@@blog]] [[documentation|@@docs]] [[featured spaces|@@featured]]
 
 !Search
 <<tsSearch>>
