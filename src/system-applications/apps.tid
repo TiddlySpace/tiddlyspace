@@ -43,12 +43,6 @@ tags: excludeLists excludeSearch
 									BROWSE
 								</a>
 							</li>
-							<li class="links">
-								<a href="/links">
-									<img src="/bags/common/tiddlers/share_blue.png" alt="Icon for the Links App" class="app-img" />
-									SHARE
-								</a>
-							</li>
 							<li class="tiddlywiki">
 								<a href="/tiddlers.wiki">
 									<img src="/bags/common/tiddlers/tiddlywiki2_blue.png" alt="Icon for TiddlyWiki" class="app-img" />
