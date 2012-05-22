@@ -92,6 +92,10 @@ def _figure_default_index(environ, bag_name, space):
     the new default: the app switcher. The presence of a spaceSetupFlag
     tiddler is the test for this.
     """
+    pass
+    # XXX: Disable the default new user app switcher temporarily
+    # TODO: Turn this back on when the app switcher is more complete
+    """
     store = environ['tiddlyweb.store']
     index = environ['tiddlyweb.space_settings']['index']
     if not index and space.name != 'frontpage':
@@ -105,3 +109,4 @@ def _figure_default_index(environ, bag_name, space):
             except NoTiddlerError:
                 environ['tiddlyweb.space_settings']['index'] \
                         = DEFAULT_NEWUSER_APP
+    """
