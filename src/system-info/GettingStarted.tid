@@ -2,22 +2,16 @@ type: None
 tags: excludeSearch excludeLists excludeMissing
 modifier: osmosoft
 
-Welcome to your brand new [[TiddlySpace]]@glossary. If you're a first time ~TiddlySpace user then there are a few things we should tell you to help get you started.  If you're already familiar with the application, or have used [[TiddlyWiki|http://tiddlywiki.org]] then you'll probably want to dive right in.
-!The basics
-* Documentation for ~TiddlySpace is constantly evolving and you can find ~FAQs, guidelines and a glossary in the @docs space
-* If you can't find the answer you're looking for in the @docs space then the community hanging out in [[Google Groups|https://groups.google.com/group/tiddlywiki?hl=en]] are likely to be able to help
-* You can edit, view and manipulate your content using a variety of ~TiddlySpace apps. You can vist the [[apps switcher|/apps]] to find out more
-* To get an idea of how others are using ~TiddlySpace you can take a look through the @featured space
-!Making your ~TiddlySpace your own
-At the moment your ~TiddlySpace is empty so there are a couple of things you should do to make it your own.
+Welcome to your brand new [[TiddlySpace]]@glossary.
 
-<<slider chkColorScheme [[colorScheme]] "Changing the color scheme »" "Changing the color scheme">>
+You're almost ready to go, there are just a couple of things left to do.
 
-<<slider chkSiteIcon [[spaceIcon]] "Giving your space an icon »" "Giving your space an icon">>
+!Customise your space
+Go to [[SpaceSettings]] to finish customising  your space. When you're done, come back here. Don't worry though, this will still be open when you've finished.
 
-<<slider chkSpaceTitle [[spaceTitle]] "Giving your space a title »" "Giving your space a title">>
+!Finished customising?
+You can [[Start writing]] some [[tiddlers|Tiddler]]@glossary.
+If you're not done tweaking yet though, you can always [[Customise this space|SpaceSettings]] a bit more.
 
-<<slider chkDefaultTiddlers [[setDefaultTiddlers]] "Setting default tiddlers »" "Setting default tiddlers">>
-!Some advanced stuff
-If you want to find out about some of the more advanced features, such as customising the [[CSS|http://docs.tiddlyspace.com/#%5B%5BStyleSheet%20shadow%20tiddlers%5D%5D]], [[including plugins|http://docs.tiddlyspace.com/#%5B%5BPluginManager%20shadow%20tiddlers%5D%5D]], [[developer resources|http://docs.tiddlyspace.com/#%5B%5BDeveloper%20Resources%5D%5D]] etc visit the @docs space.
-
+!Stuck?
+If you're stuck, and would like some help, please visit the @help space, which can point you in the right direction.
