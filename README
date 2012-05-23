@@ -5,8 +5,8 @@ TiddlySpace provides a shared hosting environment for lots of users using lots o
 
 Spaces can optionally include other spaces to add content and functionality. Content can easily be followed, copied, shared, and modified to create a network of learning and sharing. Tiddlers can also be used as a flexible key value data store, allowing the creation of interesting JavaScript-based application.
 
-Public TiddlySpace Website: http://tiddlyspace.com
-GitHub Repository: http://github.com/TiddlySpace/tiddlyspace
+* Public TiddlySpace Website: http://tiddlyspace.com
+* GitHub Repository: http://github.com/TiddlySpace/tiddlyspace
 
 TiddlySpace is an open source project managed by Osmosoft with contributions from the [TiddlyWiki](http://tiddlywiki.com/) and [TiddlyWeb](http://tiddlyweb.com/) communities. TiddlySpace can be used on the public website, or groups can host their own.
 
