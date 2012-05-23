@@ -43,3 +43,7 @@ tiddler: icons/help.png.tid
 recipe: https://raw.github.com/jdlrobson/notabene/master/dist/latest/common.recipe
 tiddler: https://raw.github.com/jdlrobson/notabene/master/dist/latest/HtmlJavascript.tid
 tiddler: https://raw.github.com/jdlrobson/notabene/master/dist/latest/htmljs-takenoteedit.js.js
+
+# reply button common files
+tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply-button.js.tid
+tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply.js.tid

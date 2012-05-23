@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceViewTypes|
-|''Version''|0.5.6|
+|''Version''|0.6.0|
 |''Status''|@@beta@@|
 |''Description''|Provides TiddlySpace specific view types|
 |''Author''|Jon Robson|
@@ -27,6 +27,8 @@ config.macros.view.replyLink = {
 	}
 };
 
+var _replyButtons = [];
+var _replyInitialised, _replyScriptLoaded;
 config.macros.view.views.replyLink = function(value, place, params, wikifier,
 		paramString, tiddler) {
 	var valueField = params[0];
@@ -49,18 +51,33 @@ config.macros.view.views.replyLink = function(value, place, params, wikifier,
 		space = tiddlyspace.resolveSpaceName(bag);
 	}
 	var container = $('<span class="replyLink" />').appendTo(place)[0];
+
 	tweb.getUserInfo(function(user) {
-		if(!user.anon) {
-			if((space && user.name != space &&
-					user.name != tiddlyspace.currentSpace.name) || imported) {
-				createSpaceLink(container, user.name, value, label);
-				tweb.getStatus(function(status) { // force callback to run after existing callbacks
-					var url = config.extensions.tiddlyspace.getHost(status.server_host, user.name) + "#[[" + encodeURIComponent(value) + "]]";
-					jQuery("a", container).attr("href", url);
-				});
+		if ((!user.anon) && ((space && user.name != space &&
+				user.name != tiddlyspace.currentSpace.name) || imported)) {
+			var link = $("<a />")
+				.text(config.macros.view.replyLink.locale.label)
+				.appendTo(container)[0];
+
+			if(typeof(createReplyButton) === "undefined") {
+				_replyButtons.push(link);
+			}
+			if(_replyInitialised) {
+				createReplyButton(link);
+			} else if(!_replyScriptLoaded) {
+				_replyScriptLoaded = true;
+				$.getScript("/bags/common/tiddlers/_reply-button.js",
+					function() {
+						_replyInitialised = true;
+						for(var i = 0; i < _replyButtons.length; i++) {
+							createReplyButton(_replyButtons[i]);
+						}
+						_replyButtons = [];
+					});
 			}
 		}
 	});
+
 };
 
 config.macros.view.views.spaceLink = function(value, place, params, wikifier,
