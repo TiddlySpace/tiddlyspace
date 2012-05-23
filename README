@@ -1,14 +1,14 @@
-TiddlySpace
-A discoursive social model for tiddlers
+# TiddlySpace
+## A discoursive social model for tiddlers
 
-TiddlySpace provides a shared hosting environment for lots of users using lots
-of Tiddlers, contained in "spaces". Each space can be presented as a TiddlyWiki.
-Spaces can optionally include other spaces to add content and functionality.
-Content can easily be followed, copied, shared, and modified to create a
-network of learning and sharing.
+TiddlySpace provides a shared hosting environment for lots of users using lots of Tiddlers, contained in "spaces". Each space may be presented as a [TiddlyWiki](http://tiddlywiki.com/) or in one of several other representations (e.g. HTML, Atom, JSON).
+
+Spaces can optionally include other spaces to add content and functionality. Content can easily be followed, copied, shared, and modified to create a network of learning and sharing. Tiddlers can also be used as a flexible key value data store, allowing the creation of interesting JavaScript-based application.
 
 Public TiddlySpace Website: http://tiddlyspace.com
 GitHub Repository: http://github.com/TiddlySpace/tiddlyspace
 
-TiddlySpace is an open source project managed by Osmosoft with contributions
-from the TiddlyWiki and TiddlyWeb communities.
+TiddlySpace is an open source project managed by Osmosoft with contributions from the [TiddlyWiki](http://tiddlywiki.com/) and [TiddlyWeb](http://tiddlyweb.com/) communities. TiddlySpace can be used on the public website, or groups can host their own.
+
+Copyright 2012 [UnaMesa Association](http://unamesa.org/)
+BSD Licensed.
