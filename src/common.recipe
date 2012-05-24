@@ -46,4 +46,6 @@ tiddler: https://raw.github.com/jdlrobson/notabene/master/dist/latest/htmljs-tak
 
 # reply button common files
 tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply-button.js.tid
+tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply-loader.js.tid
 tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply.js.tid
+tiddler: https://raw.github.com/bengillies/ts-reply/master/reply.png.tid
