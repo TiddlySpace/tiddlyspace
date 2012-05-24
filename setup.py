@@ -2,7 +2,7 @@ AUTHOR = 'Osmosoft'
 AUTHOR_EMAIL = 'tiddlyspace@osmosoft.com'
 NAME = 'tiddlywebplugins.tiddlyspace'
 DESCRIPTION = 'A discoursive social model for Tiddlers'
-VERSION = '1.1.1' # NB: duplicate of tiddlywebplugins.tiddlyspace.__init__
+VERSION = '1.1.2' # NB: duplicate of tiddlywebplugins.tiddlyspace.__init__
 
 
 import os
