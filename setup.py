@@ -43,7 +43,6 @@ setup(
         'tiddlywebplugins.atom>=1.3.7',
         'tiddlywebplugins.mysql3>=3.0.0',
         'tiddlywebplugins.privateer',
-        'tiddlywebplugins.lazy>=0.4',
         'tiddlywebplugins.relativetime',
         'tiddlywebplugins.jsonp>=0.4',
         'tiddlywebplugins.templates',

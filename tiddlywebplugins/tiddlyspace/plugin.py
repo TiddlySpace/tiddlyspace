@@ -79,12 +79,6 @@ def init_plugin(config):
     if config.get('tiddlyspace.frontpage_installed', False):
         config['instance_tiddlers']['frontpage_public'] = []
 
-    # inject lazy serialization information
-    config['extension_types'].update({'lwiki': 'text/x-ltiddlywiki'})
-    config['serializers'].update({'text/x-ltiddlywiki':
-        ['tiddlywebplugins.tiddlyspace.betalazyserialization',
-            'text/html; charset=UTF-8']})
-
     if 'selector' in config:  # system plugin
         establish_www(config)
 
