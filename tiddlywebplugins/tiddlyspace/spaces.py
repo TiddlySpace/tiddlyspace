@@ -110,7 +110,7 @@ def confirm_space(environ, start_response):
         space = Space(space_name)
         store.get(Recipe(space.public_recipe()))
         store.get(Recipe(space.private_recipe()))
-    except NoRecipeError:
+    except (NoRecipeError, ValueError):
         raise HTTP404('%s does not exist' % space_name)
     start_response('204 No Content', [])
     return ['']
