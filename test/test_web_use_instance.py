@@ -254,11 +254,6 @@ def test_space_server_settings_twrelease():
     assert response['status'] == '200', content
     assert '/bags/common/tiddlers/alpha_jquery.js' in content
 
-    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers.lwiki')
-    assert response['status'] == '200', content
-    assert '/bags/common/tiddlers/alpha_jquery.js' in content
-    assert 'TiddlyWiki created by Jeremy Ruston' in content
-
     response, content = http.request('http://foo.0.0.0.0:8080/tiddlers',
             headers={'Accept': 'text/x-tiddlywiki'})
     assert response['status'] == '200'

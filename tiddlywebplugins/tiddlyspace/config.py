@@ -39,7 +39,6 @@ config = {
         'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
     'indexer': 'tiddlywebplugins.mysql3',
     'tiddlywebwiki.binary_limit': 1048576,  # 1 MB
-    'lazy.titles': ['SiteIcon', 'ColorPalette'],
     # TiddlyWiki external, alpha, beta serialization
     'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
     'base_tiddlywiki_alpha': TIDDLYWIKI_ALPHA,
