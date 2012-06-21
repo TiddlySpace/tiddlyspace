@@ -135,8 +135,15 @@ class ControlView(object):
                 search_string = ' OR '.join(['bag:%s' % bag
                     for bag in get_blessed_bags(environ, space_name)])
             else:
-                entity_name = urllib.unquote(
-                        req_uri.split('/')[2]).decode('utf-8')
+
+                try:
+                    entity_name = urllib.unquote(
+                            req_uri.split('/')[2]).decode('utf-8')
+                except UnicodeDecodeError, exc:
+                    raise HTTP400(
+                            'incorrect encoding in URI, url-escaped '
+                            'utf-8 required: %s' % exc)
+
                 if '/recipes/' in req_uri:
                     valid_recipes = space.list_recipes()
                     if entity_name not in valid_recipes:

@@ -77,10 +77,6 @@ def get_space_tiddlers(environ, start_response):
 
     _extra_query_update(environ)
 
-    if ('betaserialization' in serializer
-            or 'betalazyserialization' in serializer):
-        if environ['tiddlyweb.space_settings']['lazy']:
-            environ['tiddlyweb.type'] = 'text/x-ltiddlywiki'
     return get_tiddlers(environ, start_response)
 
 
@@ -117,10 +113,7 @@ def serve_space(environ, start_response, http_host):
                 'UTF-8')
         return get_tiddler(environ, start_response)
     if 'text/html' in mime_type:
-        if environ['tiddlyweb.space_settings']['lazy']:
-            environ['tiddlyweb.type'] = 'text/x-ltiddlywiki'
-        else:
-            environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
+        environ['tiddlyweb.type'] = 'text/x-tiddlywiki'
     return get_tiddlers(environ, start_response)
 
 

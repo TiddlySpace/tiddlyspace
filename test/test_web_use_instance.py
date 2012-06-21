@@ -254,11 +254,6 @@ def test_space_server_settings_twrelease():
     assert response['status'] == '200', content
     assert '/bags/common/tiddlers/alpha_jquery.js' in content
 
-    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers.lwiki')
-    assert response['status'] == '200', content
-    assert '/bags/common/tiddlers/alpha_jquery.js' in content
-    assert 'TiddlyWiki created by Jeremy Ruston' in content
-
     response, content = http.request('http://foo.0.0.0.0:8080/tiddlers',
             headers={'Accept': 'text/x-tiddlywiki'})
     assert response['status'] == '200'
@@ -324,6 +319,9 @@ def test_space_server_settings_index():
     assert 'TiddlyWiki' not in content
     assert 'TiddlyWeb' not in content
 
+# XXX: Disable until app switcher is re-enabled as default
+# TODO: Re-enable test when app swither is re-enabled as default
+"""
 def test_new_space_loads_apps():
     http = httplib2.Http()
     tiddler = Tiddler('ServerSettings', 'foo_public')
@@ -336,3 +334,4 @@ def test_new_space_loads_apps():
     response, appsContent = http.request('http://foo.0.0.0.0:8080/apps')
     assert response['status'] == '200'
     assert appsContent == defaultContent
+"""

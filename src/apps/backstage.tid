@@ -44,12 +44,6 @@ _cache-max-age: 43200
 			BROWSE
 		</a>
 	</li>
-	<li class="links">
-		<a href="/links" target="_parent">
-			<img src="/bags/common/tiddlers/share_blue.png" alt="Icon for the Links App" class="app-img" />
-			SHARE
-		</a>
-	</li>
 	<li class="tiddlywiki">
 		<a href="/tiddlers.wiki" target="_parent">
 			<img src="/bags/common/tiddlers/tiddlywiki2_blue.png" alt="Icon for TiddlyWiki" class="app-img" />
@@ -66,6 +60,12 @@ _cache-max-age: 43200
 		<a href="/_space"  target="_parent">
 			<img src="/SiteIcon" alt="Space SiteIcon" class="app-img" />
 			THIS SPACE
+		</a>
+	</li>
+	<li class="help">
+		<a href="http://help.tiddlyspace.com"  target="_parent">
+			<img src="http://help.tiddlyspace.com/SiteIcon" alt="Help SiteIcon" class="app-img" />
+			HELP
 		</a>
 	</li>
 </ul>

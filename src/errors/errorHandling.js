@@ -31,7 +31,13 @@ var errorhandler = {
 			if(path) {
 				var segments = path.split("/");
 				var tiddler = segments[segments.length - 1];
-				if(tiddler) { // currently only for for tiddler uris
+                                var bagsP = $.inArray('bags', segments);
+                                var recipesP = $.inArray('recipes', segments);
+                                var segmentsCount = segments.length;
+                                if ((segmentsCount == 1
+                                            && bagsP == -1
+                                            && recipesP == -1)
+                                        || segmentsCount == 4) {
 					errorhandler.suggestTiddlers(container, space, tiddler);
 				}
 			} else {
@@ -77,12 +83,13 @@ var errorhandler = {
 		}
 	},
 	createTiddler: function(container, space, title) {
+                var editURI = editURITemplate.replace('{tiddler}', title)
 		$.ajax({url: "/status", dataType: "json",
 			success: function(status) {
 				if(status.username && status.username != "GUEST") {
 					$("<h2 />").text(errorhandler.locale.makeTiddlerHeader).appendTo(container);
 					container = $("<p />").appendTo(container)[0];
-					$("<a />").attr("href", "/takenote#tiddler/" + title).
+					$("<a />").attr("href", editURI).
 						text("Create tiddler named '" + decodeURIComponent(title) + "'").appendTo(container);
 				}
 			}

@@ -169,7 +169,7 @@ test("tsScan.constructSearchUrl", function() {
 	var url2 = config.macros.tsScan.constructSearchUrl("", {
 		searchField: "tag",
 		searchValues: ["hello"],
-		fat: "y"
+		fat: "1"
 	});
 	var url3 = config.macros.tsScan.constructSearchUrl("", {
 		searchValues: ["@jon"],
@@ -187,7 +187,7 @@ test("tsScan.constructSearchUrl", function() {
 	});
 
 	strictEqual(url, '/search?q=(title:"hello" OR title:"test") AND tag:foo');
-	strictEqual(url2, '/search?q=tag:"hello"&fat=y');
+	strictEqual(url2, '/search?q=tag:"hello"&fat=1');
 	strictEqual(url3, '/search?q=(title:"@jon") AND tag:foo;select=modified:>20101202000000;');
 	strictEqual(url4, '/search?q=tag:"great"');
 	strictEqual(url5, '/search?q=myquery');

@@ -30,6 +30,8 @@
           Brought to you by <a href="{{ original_server_host }}">TiddlySpace</a>.
           </div>
         </div>
+        {% block scripts %}
+        {% endblock %}
         {%- for link in js -%}
         <script type="text/javascript" src="{{ link }}"></script>
         {%- endfor -%}

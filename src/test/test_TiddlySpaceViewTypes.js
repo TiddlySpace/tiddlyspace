@@ -97,7 +97,6 @@ test("reply link for imported tiddler", function() {
 	runTest(container, "bar_public", "non-mangled title");
 	var link = $("a", container);
 	strictEqual(link.length, 1, "a reply link should be created as it is imported");
-	strictEqual(link.attr("tiddler"), "non-mangled title");
 });
 
 module("TiddlySpaceViewTypes - in a non-homespace", {
@@ -130,7 +129,6 @@ test("reply link on an imported tiddler in a non-homespace", function() {
 	runTest(container, "bar_public", "imported");
 	var link = $("a", container);
 	strictEqual(link.length, 1, "the tiddler is imported so a reply link is added");
-	strictEqual(link.attr("tiddler"), "imported", "make sure the real name is shown (the server.title)");
 });
 
 test("reply link on a tiddler in a non-homespace that originated from homespace", function() {

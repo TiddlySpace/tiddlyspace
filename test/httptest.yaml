@@ -200,7 +200,7 @@
 
 # Create reserved space
 - name: Create reserved space fail
-  url: /spaces/help
+  url: /spaces/status
   request_headers:
     authorization: Basic Y2RlbnQ66LKz6IKG5p+S6Zih
   method: PUT

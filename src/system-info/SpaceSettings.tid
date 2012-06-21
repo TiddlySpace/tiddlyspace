@@ -1,0 +1,24 @@
+type: None
+tags: excludeSearch excludeLists excludeMissing
+modifier: osmosoft
+
+!Upload an icon
+<<tiddler spaceIcon>>
+!Describe your space
+If you haven't already done so, you should provide a brief decscription of yourself and what you're using this space for. To do this, just edit the [[SiteInfo]] tiddler (keeping the title the same of course).
+
+!Change the title
+<<tiddler spaceTitle>>
+!Change the theme
+<<tiddler colorScheme>>
+!Change the menu
+If you'd like to change the menu items along the top, you can edit the [[MainMenu]] tiddler.
+
+!Change the default tiddlers
+<<tiddler setDefaultTiddlers>>
+!More Advanced customisations
+If you know HTML and CSS, you can edit some or all of the following tiddlers to customise your space further:
+* PageTemplate
+* EditTemplate
+* ViewTemplate
+* StyleSheet

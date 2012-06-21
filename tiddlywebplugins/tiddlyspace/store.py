@@ -1,11 +1,11 @@
 """
-Local overrides and extensions to tiddlywebplugins.mysql2
+Local overrides and extensions to tiddlywebplugins.mysql3
 to provide special optimized functionality.
 """
 
-from tiddlywebplugins.sqlalchemy2 import (sRecipe, sPolicy,
+from tiddlywebplugins.sqlalchemy3 import (sRecipe, sPolicy,
         recipe_policy_table)
-from tiddlywebplugins.mysql2 import Store as MySQLStore
+from tiddlywebplugins.mysql3 import Store as MySQLStore
 from tiddlywebplugins.hashmaker import hash_tiddler
 
 

@@ -1,0 +1,19 @@
+type: None
+tags: excludeSearch excludeLists excludeMissing
+modifier: osmosoft
+
+There are a lot of interesting people using ~TiddlySpace that you might like to keep track of and interact with. There are a number of ways of doing this.
+
+If you see a number in the speech bubble in one of your tiddlers, it means that someone is writing about the same thing as you. You can find out what they're saying by clicking on it. Likewise, if you see something interesting in someone else's space, you can respond to it and write up your own thoughts on the subject by clicking "Reply to this tiddler".
+
+Additionally, if you find anyone interesting, or you find an interesting looking space and you'd like to know when it's changed, you can "follow" that space. To do this, simply create a tiddler with the title: {{{@space-name}}} and tag it {{{follow}}}. If you want, you can store some notes about that space in the body of the tiddler.
+
+If you then want to know what happening, simply [[include|How do I include/exclude spaces?]]@docs the @tivity space and then visit your activity stream at [[/activity|/activity]], or just visit the @tapas space directly.
+
+!Not sure who to follow?
+Here's a few suggestions:
+* @fnd
+* @cdent
+* @pmario
+* @bengillies
+* @dickon

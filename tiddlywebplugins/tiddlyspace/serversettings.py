@@ -11,10 +11,10 @@ from tiddlywebplugins.tiddlyspace.web import determine_space, determine_host
 from tiddlywebplugins.tiddlyspace.space import Space
 
 SPACE_SERVER_SETTINGS = 'ServerSettings'
-SERVER_SETTINGS_KEYS = ['lazy', 'index']
+SERVER_SETTINGS_KEYS = ['index', 'editor']
 DEFAULT_SERVER_SETTINGS = {
         'index': None,
-        'lazy': False,
+        'editor': '/takenote#tiddler/{tiddler}',
         'extra_query': ''}
 DEFAULT_NEWUSER_APP = 'apps'
 DEFAULT_SPACE_NAME = 'frontpage'
@@ -71,8 +71,6 @@ def update_space_settings(environ, name):
             key = key.rstrip().lstrip()
             value = value.rstrip().lstrip()
             if key in SERVER_SETTINGS_KEYS:
-                if key == 'lazy' and value.lower() == 'true':
-                    value = True
                 environ['tiddlyweb.space_settings'][key] = value
             else:
                 query_strings.append('%s=%s' % (key, value))
@@ -91,6 +89,10 @@ def _figure_default_index(environ, bag_name, space):
     the new default: the app switcher. The presence of a spaceSetupFlag
     tiddler is the test for this.
     """
+    pass
+    # XXX: Disable the default new user app switcher temporarily
+    # TODO: Turn this back on when the app switcher is more complete
+    """
     store = environ['tiddlyweb.store']
     index = environ['tiddlyweb.space_settings']['index']
     if not index and space.name != 'frontpage':
@@ -104,3 +106,4 @@ def _figure_default_index(environ, bag_name, space):
             except NoTiddlerError:
                 environ['tiddlyweb.space_settings']['index'] \
                         = DEFAULT_NEWUSER_APP
+    """

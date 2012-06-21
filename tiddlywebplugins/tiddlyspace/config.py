@@ -32,14 +32,13 @@ config = {
     'bag_create_policy': 'ANY',
     'recipe_create_policy': 'ANY',
     'css_uri': '/bags/common/tiddlers/tiddlyweb.css',
-    'socialusers.reserved_names': ['www', 'about', 'help', 'announcements',
+    'socialusers.reserved_names': ['www', 'about', 'announcements',
         'dev', 'info', 'api', 'status', 'login', 'frontpage'],
     'cookie_age': '2592000',  # 1 month
     'server_store': ['tiddlywebplugins.tiddlyspace.store', {
         'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
-    'indexer': 'tiddlywebplugins.mysql2',
+    'indexer': 'tiddlywebplugins.mysql3',
     'tiddlywebwiki.binary_limit': 1048576,  # 1 MB
-    'lazy.titles': ['SiteIcon', 'ColorPalette'],
     # TiddlyWiki external, alpha, beta serialization
     'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
     'base_tiddlywiki_alpha': TIDDLYWIKI_ALPHA,

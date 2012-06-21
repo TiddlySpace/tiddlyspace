@@ -4,10 +4,6 @@ type: text/html
 <html>
 <head>
 <title>$status</title>
-<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/console/tiddlers/jquery.min.js"></script>
-<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/console/tiddlers/jquery-json.min.js"></script>
-<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/tiddlyspace/tiddlers/chrjs"></script>
-<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/common/tiddlers/chrjs.space"></script>
 <link rel="stylesheet" href="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/common/tiddlers/tiddlyweb.css" type="text/css" />
 </head>
 <body>
@@ -24,9 +20,14 @@ type: text/html
 $message
 </pre>
 </div>
-<script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/common/tiddlers/jquery.js"></script>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/common/tiddlers/jquery-json.js"></script>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/tiddlyspace/tiddlers/chrjs"></script>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/common/tiddlers/chrjs.space"></script>
+<script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/common/tiddlers/backstage.js"></script>
 <script type="text/javascript" src="$tiddlyweb_config_server_host_scheme://$tiddlyweb_config_server_host_host:$tiddlyweb_config_server_host_port/bags/_errors/tiddlers/errorHandling"></script>
 <script type="text/javascript">
+var editURITemplate = '$tiddlyweb_space_settings_editor';
 jQuery(document).ready(function() {
 	errorhandler.init(404);
 });
