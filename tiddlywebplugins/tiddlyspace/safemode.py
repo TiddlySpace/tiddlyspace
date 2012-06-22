@@ -120,7 +120,7 @@ def _send_safe_mode(environ, start_response):
     and we don't want that.
     """
     environ['tiddlyweb.title'] = 'Confirm Safe Mode'
-    now = datetime.now().strftime('%Y%m%d%H')
+    now = datetime.utcnow().strftime('%Y%m%d%H')
     user, hostname, secret = get_nonce_components(environ)
     csrf_token = gen_nonce(user, hostname, now, secret)
     start_response('200 OK', [('Content-Type', 'text/html; charset=UTF-8')])
