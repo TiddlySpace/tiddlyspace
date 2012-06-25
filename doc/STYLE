@@ -7,15 +7,11 @@ cf. http://www.kernel.org/pub/software/scm/git/docs/git-commit.html#_discussion
 JavaScript:
 * max. line length of 80 characters
 * 1TBS blocks
-* tabs for indentation
 * double quotes
 * trailing (rather than leading) dot for line continuation in chained operations
 * spaces around operator symbols (e.g. `x = 5`, `x + y`)
 * JSLint compliance
 * consistency with existing code (e.g. regarding whitespace)
-* misc. notes:
-  * avoid string stitching (instead of `"hello " + world` use TiddlyWiki's
-    `format` method e.g. "hello %0".format(world);
 
 Python:
 * spaces for indentation (four per level)
@@ -28,5 +24,4 @@ shell scripts:
 CSS
 * one line per declaration
 * 1TBS blocks
-* tabs for indentation
 * colon plus space to separate properties and values

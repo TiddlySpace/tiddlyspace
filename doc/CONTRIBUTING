@@ -12,8 +12,6 @@ Unit Tests
 * `make test` runs all tests
 * Python: test directory, using py.test (http://pytest.org)
 * JavaScript: src/test directory, using QUnit (http://docs.jquery.com/QUnit)
-  and Kopfloss (http://github.com/FND/kopfloss) - `make kopfloss` downloads
-  these dependenies
 
 Development Instance
 ====================
@@ -30,10 +28,13 @@ Development Instance
 * create development instance:
      $ make dev
      $ cd dev_instance
-  create a symlink to tiddlyweb
-     $ ln -s ../tiddlyweb-core/tiddlyweb
   fire up the server
      $ twanager server 0.0.0.0 8080
   open http://tiddlyspace.org:8080 in web browser
 
-* deploy: $ make deploy
+Deployment
+=========
+
+To deploy to tiddlyspace.com (you must have appropriate permissions):
+
+    $ make deploy
