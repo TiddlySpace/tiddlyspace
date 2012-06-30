@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceCloneCommand|
-|''Version''|0.5.7|
+|''Version''|0.5.8|
 |''Description''|provides a toolbar command for cloning external tiddlers|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceCloneCommand.js|
