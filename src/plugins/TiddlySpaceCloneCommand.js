@@ -27,7 +27,8 @@ cmd.cloneTiddler = {
 		var tiddler = store.getTiddler(title);
 		if(tiddler) {
 			fieldsCache[title] = $.extend({}, tiddler.fields);
-			tiddler.fields["server.workspace"] = tiddlyspace.getCurrentWorkspace("private");
+			tiddler.fields["server.workspace"] = tiddlyspace.getCurrentWorkspace(config.options.chkPrivateMode ?
+		"private" : "public");
 			tiddler.fields["server.permissions"] = "read, write, create"; // no delete
 			delete tiddler.fields["server.page.revision"];
 			delete tiddler.fields["server.title"];
