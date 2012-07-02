@@ -26,6 +26,7 @@ setup(
         'setuptools',
         'tiddlyweb>=1.2.51',
         'tiddlywebwiki>=0.57.0',
+        'tiddlywebplugins.status>=0.6',
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout>=0.6',
         'tiddlywebplugins.virtualhosting',
