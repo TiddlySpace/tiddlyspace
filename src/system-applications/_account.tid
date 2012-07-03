@@ -85,6 +85,7 @@ tags: excludeLists excludeSearch excludeMissing
 <script type='text/javascript' src='/bags/common/tiddlers/jquery-form.js'></script>
 <script type='text/javascript' src="/bags/common/tiddlers/siteiconupload.js"></script>
 <script type='text/javascript' src='/bags/common/tiddlers/ts.js'></script>
+<script src="/status.js"></script>
 <script type="text/javascript">
 /*
  * jQuery UI Autocomplete HTML Extension
