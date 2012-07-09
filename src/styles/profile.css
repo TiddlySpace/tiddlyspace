@@ -238,6 +238,11 @@ dd.meta-tag {
 	padding: 0 0.625em;
 }
 
+.reply-btn.loading {
+	background: rgba(255,255,255,.4);
+	border-radius: 3px;
+}
+
 /**********/
 /* Tables */
 /**********/
