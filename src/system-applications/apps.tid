@@ -58,7 +58,6 @@ tags: excludeLists excludeSearch
 						<ul>
 							<li class="writedesc"><p>write your notes on the web.  Link them, tag them, share them.  Your notes are available everywhere, on and offline.</p></li>
 							<li class="htmlserialisationdesc"><p>an easy to understand HTML representation of your content.</p></li>
-							<li class="linksdesc"><p>share direct links to your content. The share app provides you with quick and easy access to the key links within your TiddlySpace.</p></li>
 							<li class="tiddlywikidesc"><p>use TiddlyWiki to create, edit and organise your content.</p></li>
 						</ul>
 					</div>
