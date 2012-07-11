@@ -107,8 +107,11 @@ form input[type=submit] {
 	display: none;
 }
 
-.login-method:target {
+.login-method {
 	display: block;
+}
+.login-method-hide {
+	display: none;
 }
 .login-method p {
 	padding-bottom: 5px;
