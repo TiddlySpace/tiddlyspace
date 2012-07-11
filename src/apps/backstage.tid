@@ -10,15 +10,15 @@ _cache-max-age: 43200
 </head>
 <body style="display:none;">
 <form class="ts-login login login-method" action="" autocomplete="off" id="userpass-login" class="toggler">
-	<p>login via <a href="#openid-login">openid</a></p>
+	<p>login via <a class="toggle-form" href="#openid-login">openid</a></p>
 	<input type="text" name="username" placeholder="username" />
 	<input type="password" name="password" placeholder="password" /> 
 	<input type="hidden" name="redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
 	<input type="submit" value="Log In" />
 </form>
-<form class="ts-openidlogin login-method" id="openid-login"
+<form class="ts-openidlogin login-method login-method-hide" id="openid-login"
 		method="post" action="/challenge/tiddlywebplugins.tiddlyspace.openid">
-	<p>login with <a href="#userpass-login">username and password</a></p>
+	<p>login with <a class="toggle-form" href="#userpass-login">username and password</a></p>
 	<input name="tiddlyweb_redirect" type="hidden" value="/bags/common/tiddlers/backstage">
 	<input class="openid" type="text" name="openid" placeholder="your openid">
 	<input class="button" type="submit" value="Sign In">
@@ -86,8 +86,12 @@ _cache-max-age: 43200
 		host = ts.getHost(ts.user.name);
 		$(document.body).show();
 		window.location.hash = "#userpass-login";
-		if(ts.user.anon && $('#userpass-login').css('display') !== "block") {
-			$(".login-method").show();
+		if (ts.user.anon) {
+			$('.toggle-form').click(function(ev) {
+				$(this).closest('form').addClass('login-method-hide')
+					.siblings('form').removeClass('login-method-hide');
+				ev.preventDefault();
+			});
 		}
 		if(!ts.user.anon) {
 			li = $('<li class="account" />').appendTo("#app-list")[0];
