@@ -38,7 +38,7 @@ tags: excludeLists excludeSearch excludeMissing
 				<a href="http://docs.tiddlyspace.com/What%20is%20a%20member%3F" title="What is a Member?" class="help">What is a Member?</a>
 			</h2>
 			<div>
-				<p>Add a new member to your space by entering their name below. Enter a space to add all existing members of that space.</p>
+				<p>Add a new member to your space by entering their name below. Enter a space name instead and prefix with @ to add everyone who is already a member of that space.</p>
 				<form class="ts-members">
 					<input class="inputBox" type="text" name="username">
 					<input type="submit" value="Add Member" />
