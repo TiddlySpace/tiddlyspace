@@ -93,6 +93,9 @@ _cache-max-age: 43200
 				ev.preventDefault();
 			});
 		}
+		if ($(document.body).hasClass('ts-nonmember')) {
+			$('.write').remove();
+		}
 		if(!ts.user.anon) {
 			li = $('<li class="account" />').appendTo("#app-list")[0];
 			siteiconurl = host + '/bags/' + ts.user.name + '_public/tiddlers/SiteIcon';
