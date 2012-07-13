@@ -107,8 +107,13 @@ class Serialization(HTMLSerialization):
 
         # chop off the possible trailing .html
         tiddlers_url = tiddlers_url.rsplit('.html')[0]
+        
+        if tiddlers.is_search:
+            template = 'search.html'
+        else:
+            template = 'tiddlers.html'
 
-        return send_template(self.environ, 'tiddlers.html', {
+        return send_template(self.environ, template, {
             'meta_keywords': 'tiddlers, tiddlyspace',
             'meta_description': 'A list of tiddlers on TiddlySpace',
             'title': title,
