@@ -154,6 +154,11 @@ button:hover {
 	background: #0082AF;
 }
 
+input[disabled=disabled]:hover,
+button[disabled=disabled]:hover {
+	background: #CCC;
+}
+
 button.delete:hover {
 	background: #AF2800;
 }
