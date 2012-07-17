@@ -18,6 +18,14 @@ type: text/css
 	display: none;
 }
 
+#upload {
+    display: none;
+}
+
+.ts-member #upload {
+    display: block;
+}
+
 .ts-membership {
 	display: none;
 }
