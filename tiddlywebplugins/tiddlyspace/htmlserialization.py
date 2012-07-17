@@ -8,7 +8,7 @@ from tiddlyweb.model.policy import PermissionsError
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializations.html import Serialization as HTMLSerialization
 from tiddlyweb.wikitext import render_wikitext
-from tiddlyweb.web.util import encode_name, tiddler_url, get_route_value
+from tiddlyweb.web.util import encode_name, tiddler_url, get_route_value, server_base_url
 
 from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
@@ -121,6 +121,9 @@ class Serialization(HTMLSerialization):
             'environ': self.environ,
             'revisions': revisions,
             'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
+            'space_uri': space_uri,
+            'server_base_url': server_base_url,
+            'encode_name': encode_name,
             'query_string': query_string,
             'container_type': container_type,
             'container_name': container_name,
