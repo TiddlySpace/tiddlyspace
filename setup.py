@@ -48,6 +48,7 @@ setup(
         'tiddlywebplugins.jsonp>=0.4',
         'tiddlywebplugins.templates',
         'tiddlywebplugins.csrf',
+        'tiddlywebplugins.whoosher',
         'selector<0.9.0'
     ],
     include_package_data = True,

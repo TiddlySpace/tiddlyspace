@@ -13,6 +13,7 @@ from tiddlywebplugins.tiddlyspace.www import establish_www
 
 
 def init_plugin(config):
+    import tiddlywebplugins.whoosher
     import tiddlywebwiki
     import tiddlywebplugins.logout
     import tiddlywebplugins.virtualhosting  # calling init not required
@@ -45,6 +46,7 @@ def init_plugin(config):
         from werkzeug.contrib.profiler import ProfilerMiddleware
         config['server_request_filters'].insert(0, ProfilerMiddleware)
 
+    tiddlywebplugins.whoosher.init(config)
     tiddlywebwiki.init(config)
     tiddlywebplugins.logout.init(config)
     tiddlywebplugins.magicuser.init(config)

@@ -131,3 +131,16 @@ def test_search_no_args():
     assert len(fndinfo) == 143
 
     assert len(allinfo) > len(fndinfo)
+
+def test_hsearch():
+    response, content = http.request('http://0.0.0.0:8080/hsearch.json?q=monkeys')
+
+    assert response['status'] == '200'
+    info = simplejson.loads(content)
+    assert len(info) == 6, len(info)
+
+    response, content = http.request('http://0.0.0.0:8080/hsearch.json?q=bag:cdent_public%20monkeys')
+
+    assert response['status'] == '200'
+    info = simplejson.loads(content)
+    assert len(info) == 4, len(info)
