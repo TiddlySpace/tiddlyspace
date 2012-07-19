@@ -104,11 +104,16 @@ tags: excludeLists excludeSearch excludeMissing
 					function printFullInfo(numPublicTiddlers) {
 						var totalTiddlers = numPublicTiddlers + numTiddlers;
 						html += ['This space has ', numMembers,
-							' members, <a href="/tiddlers">', totalTiddlers,
+							(numMembers <= 1) ? ' member,' : ' members,',
+							' <a href="/tiddlers">', totalTiddlers,
 							' local tiddlers</a>, <a href="' + url + '">',
-							numTiddlers, ' are private</a> and <a href="',
+							numTiddlers, 
+							(numTiddlers === 0 || numTiddlers > 1) ? ' are' : ' is',
+							' private</a> and <a href="',
 							publicBagUrl, '">',
-							numPublicTiddlers, ' public</a>.'].join("");
+							numPublicTiddlers,
+							(numPublicTiddlers === 0 || numPublicTiddlers > 1) ? ' are' : ' is',
+							 ' public</a>.'].join("");
 						$("#info").html(html);
 					}
 					if(numMembers) {
