@@ -2,7 +2,7 @@
 Override behaviors from other modules.
 """
 
-import tiddlyweb.web.util
+import tiddlyweb.web.util 
 from tiddlyweb.web.http import HTTP404
 import tiddlywebplugins.status
 
@@ -53,7 +53,8 @@ def _status_gather_data(environ):
 tiddlywebplugins.status._gather_data = _status_gather_data
 
 
-def web_tiddler_url(environ, tiddler, container='bags', full=True):
+def web_tiddler_url(environ, tiddler, container='bags', full=True,
+        friendly=False):
     """
     Override default tiddler_url to be space+host aware.
 
@@ -89,7 +90,11 @@ def web_tiddler_url(environ, tiddler, container='bags', full=True):
     environ['HTTP_HOST'] = '%s%s%s' % (space_name.encode('utf-8'),
         host, port)
 
-    url = original_tiddler_url(environ, tiddler, container, full)
+    if friendly and space_name:
+        url = '%s/%s' % (tiddlyweb.web.util.server_base_url(environ),
+                tiddlyweb.web.util.encode_name(tiddler.title))
+    else:
+        url = original_tiddler_url(environ, tiddler, container, full)
     if saved_host:
         environ['HTTP_HOST'] = saved_host
     elif 'HTTP_HOST' in environ:
