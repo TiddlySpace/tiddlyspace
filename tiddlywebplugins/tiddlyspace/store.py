@@ -3,7 +3,7 @@ Local overrides and extensions to tiddlywebplugins.mysql3
 to provide special optimized functionality.
 """
 
-from tiddlywebplugins.sqlalchemy3 import (sRecipe, sPolicy,
+from tiddlywebplugins.sqlalchemy3.model import (sRecipe, sPolicy,
         recipe_policy_table)
 from tiddlywebplugins.mysql3 import Store as MySQLStore
 from tiddlywebplugins.hashmaker import hash_tiddler

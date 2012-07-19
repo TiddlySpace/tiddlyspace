@@ -43,6 +43,7 @@ setup(
         'tiddlywebplugins.reflector>=0.6',
         'tiddlywebplugins.atom>=1.3.7',
         'tiddlywebplugins.mysql3>=3.0.0',
+        'tiddlywebplugins.sqlalchemy>=3.0.10',
         'tiddlywebplugins.privateer',
         'tiddlywebplugins.relativetime',
         'tiddlywebplugins.jsonp>=0.4',
