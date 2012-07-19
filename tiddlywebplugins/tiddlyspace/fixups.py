@@ -2,7 +2,7 @@
 Override behaviors from other modules.
 """
 
-import tiddlyweb.web.util 
+import tiddlyweb.web.util
 from tiddlyweb.web.http import HTTP404
 import tiddlywebplugins.status
 
