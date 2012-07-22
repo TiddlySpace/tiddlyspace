@@ -144,3 +144,15 @@ def test_hsearch():
     assert response['status'] == '200'
     info = simplejson.loads(content)
     assert len(info) == 4, len(info)
+
+def test_search_html():
+    response, content = http.request('http://0.0.0.0:8080/hsearch?q=monkeys')
+
+    assert response['status'] == '200', content
+
+    assert 'http://fnd.0.0.0.0:8080/One%20Two' in content
+    assert 'http://cdent.0.0.0.0:8080/three%20two%20one' in content
+
+    assert (
+        '<a href="http://0.0.0.0:8080/bags/fnd_public/tiddlers">fnd_public</a>'
+        in content)

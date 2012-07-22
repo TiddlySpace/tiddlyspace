@@ -24,10 +24,10 @@
                     {%- if tiddler.modifier is not none -%}
                         <a href="{{ space_uri(environ, tiddler.modifier) }}">@{{tiddler.modifier}}</a>,&nbsp;
                         <a href="{{ '%s%s' % (space_uri(environ, tiddler.modifier),
-                            'bags/%s/tiddlers' % encode_name(tiddler.bag)) }}">{{ tiddler.bag }}</a>)
+                            'bags/%s/tiddlers' % tiddler.bag|e )}}">{{ tiddler.bag }}</a>)
                     {%- else -%}
                         <a href="{{ '%s/%s' % (
-                            server_host, 'bags/%s/tiddlers' % encode_name(tiddler.bag)) }}">{{ tiddler.bag }}</a>)
+                            server_host, 'bags/%s/tiddlers' % tiddler.bag|e) }}">{{ tiddler.bag }}</a>)
                     {%- endif -%}
                 </li>
             {%- endfor -%}
