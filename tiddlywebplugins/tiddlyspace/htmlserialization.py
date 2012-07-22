@@ -121,6 +121,8 @@ class Serialization(HTMLSerialization):
             'environ': self.environ,
             'revisions': revisions,
             'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
+            'space_uri': space_uri,
+            'encode_name': encode_name,
             'query_string': query_string,
             'container_type': container_type,
             'container_name': container_name,
