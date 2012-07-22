@@ -122,6 +122,7 @@ class Serialization(HTMLSerialization):
             'revisions': revisions,
             'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
             'space_uri': space_uri,
+            'space_bag': space_bag,
             'query_string': query_string,
             'container_type': container_type,
             'container_name': container_name,
@@ -213,7 +214,7 @@ class Serialization(HTMLSerialization):
         """
         if tiddler.recipe:
             link = _encode_space_link(tiddler)
-        elif _space_bag(tiddler.bag):
+        elif space_bag(tiddler.bag):
             space_name = tiddler.bag.split('_', 1)[0]
             space_link_uri = space_uri(self.environ, space_name).rstrip('/')
             link = _encode_space_link(tiddler)
@@ -224,7 +225,7 @@ class Serialization(HTMLSerialization):
         return '%s%s' % (self._server_prefix(), link)
 
 
-def _space_bag(bag_name):
+def space_bag(bag_name):
     """
     Return true if the bag is a standard space bag. If it is
     there will be a space link.

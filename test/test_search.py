@@ -146,13 +146,20 @@ def test_hsearch():
     assert len(info) == 4, len(info)
 
 def test_search_html():
-    response, content = http.request('http://0.0.0.0:8080/hsearch?q=monkeys')
+    response, content = http.request('http://0.0.0.0:8080/search?q=monkeys')
 
     assert response['status'] == '200', content
 
     assert 'http://fnd.0.0.0.0:8080/One%20Two' in content
     assert 'http://cdent.0.0.0.0:8080/three%20two%20one' in content
 
-    assert (
-        '<a href="http://0.0.0.0:8080/bags/fnd_public/tiddlers">fnd_public</a>'
-        in content)
+    assert '<a class="space" href="http://fnd.0.0.0.0:8080/">' in content
+
+    tiddler = store.get(Tiddler('One Two', 'fnd_public'))
+    tiddler.modifier = 'cowboy'
+    store.put(tiddler)
+
+    response, content = http.request('http://0.0.0.0:8080/search?q=monkeys')
+    assert response['status'] == '200', content
+    assert '<a class="modifier" href="http://fnd.0.0.0.0:8080/">' not in content
+    assert '<a class="modifier" href="http://cowboy.0.0.0.0:8080/">' in content
