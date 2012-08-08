@@ -126,7 +126,6 @@ clean:
 	rm -rf tiddlywebplugins/tiddlyspace/resources || true
 	rm -f src/externals/* || true
 	rm -r test_instance || true
-	rm -r phantomjs* || true
 
 purge: clean
 	cat .gitignore | while read -r entry; do rm -r $$entry; done || true
