@@ -90,7 +90,7 @@ phantomjs:
 
 jstest:
 	@cd phantomjs/bin && \
-	phantomjs ../../src/test/run-qunit.js ../../src/test/index.html
+	./phantomjs ../../src/test/run-qunit.js ../../src/test/index.html
 
 dist: clean remotes test
 	python setup.py sdist
