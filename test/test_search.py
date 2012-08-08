@@ -118,7 +118,7 @@ def test_search_no_args():
     response, content = http.request('http://0.0.0.0:8080/search.json?q=_limit:999')
     assert response['status'] == '200'
     allinfo = simplejson.loads(content)
-    assert len(allinfo) == 163
+    assert len(allinfo) == 165
 
     response, content = http.request('http://fnd.0.0.0.0:8080/search.json')
     assert response['status'] == '200'
@@ -128,7 +128,7 @@ def test_search_no_args():
     response, content = http.request('http://fnd.0.0.0.0:8080/search.json?q=_limit:999')
     assert response['status'] == '200'
     fndinfo = simplejson.loads(content)
-    assert len(fndinfo) == 144
+    assert len(fndinfo) == 146
 
     assert len(allinfo) > len(fndinfo)
 
@@ -155,6 +155,8 @@ def test_search_html():
 
     assert '<a class="space" href="http://fnd.0.0.0.0:8080/">' in content
 
+    assert '<img alt="space icon" src="http://fnd.0.0.0.0:8080/SiteIcon"/>' in content
+
     tiddler = store.get(Tiddler('One Two', 'fnd_public'))
     tiddler.modifier = 'cowboy'
     store.put(tiddler)
@@ -163,3 +165,11 @@ def test_search_html():
     assert response['status'] == '200', content
     assert '<a class="modifier" href="http://fnd.0.0.0.0:8080/">' not in content
     assert '<a class="modifier" href="http://cowboy.0.0.0.0:8080/">' in content
+    # tiddlers that do not come from a space should show the default tiddlyspace site icon.
+    tiddler = Tiddler('commoner', 'common')
+    tiddler.text = 'I want to live like common people.'
+    store.put(tiddler)
+
+    response, content = http.request('http://0.0.0.0:8080/search?q=title:commoner')
+    assert response['status'] == '200', content
+    assert '<img alt="space icon" src="http://0.0.0.0:8080/SiteIcon"/>' in content
