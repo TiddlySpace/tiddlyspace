@@ -275,6 +275,23 @@ table.twtable {
 	}
 }
 
+/**********/
+/* Search */
+/**********/
+/* TODO: move to dedicated stylesheet. */
+.search {
+    list-style-type: none;
+    line-height: 48px;
+}
+
+.search img {
+    width: 48px;
+    height: 48px;
+    vertical-align: middle;
+    padding-right: 5px;
+    padding-bottom: 5px;
+}
+
 /*****************/
 /* Media Queries */
 /*****************/
