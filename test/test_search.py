@@ -13,7 +13,7 @@ from tiddlyweb.model.tiddler import Tiddler
 
 
 def setup_module(module):
-    make_test_env(module)
+    make_test_env(module, hsearch=True)
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('cdent.0.0.0.0', 8080, app_fn)
