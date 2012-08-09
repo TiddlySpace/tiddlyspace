@@ -20,10 +20,14 @@
             {% for tiddler in tiddlers %}
                 <li class="search">
                 {% if space_bag(tiddler.bag) -%}
-                    <img alt="space icon" src="{{
-                    '%s%s' % (space_uri(environ, tiddler.bag.split('_')[0]), 'SiteIcon')}}"/>
+                    <a href="{{ space_uri(environ, tiddler.bag.split('_')[0]) }}">
+                        <img alt="space icon" src="{{
+                        '%s%s' % (space_uri(environ, tiddler.bag.split('_')[0]), 'SiteIcon')}}"/>
+                    </a>
                 {% else -%}
-                    <img alt="space icon" src="{{ '%s/%s' % (original_server_host, 'SiteIcon') }}"/>
+                    <a href="{{ '%s/%s' % (server_host, 'bags/%s/tiddlers' % tiddler.bag|e) }}">
+                        <img alt="space icon" src="{{ '%s/%s' % (original_server_host, 'SiteIcon') }}"/>
+                    </a>
                 {%- endif -%}
                 <a class="title"
                     href="{{ tiddler_url(environ, tiddler,
