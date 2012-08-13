@@ -1,4 +1,7 @@
-(function() {
+(function($) {
+
+var $siteicon = $("#siteicon"),
+	$messageArea = $("#messageArea");
 
 function initSiteIconUpload(spaceName) {
 	var publicBag = spaceName + "_public",
@@ -6,7 +9,7 @@ function initSiteIconUpload(spaceName) {
 		form = $('#upload')[0],
 		$submit = $(form).find("[type=submit]");
 
-	$("#siteicon").attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon");
+	$siteicon.attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon");
 	$submit.attr("disabled", true);
 	$(form)
 		.attr("action", "/bags/" + publicBag + "/tiddlers?csrf_token=" + csrf + "&redirect=/tiddlers")
@@ -17,11 +20,11 @@ function initSiteIconUpload(spaceName) {
 			.end()
 		.ajaxForm({
 			success: function(a) {
-				$("#siteicon").attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon?r=" + Math.random());
+				$siteicon.attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon?r=" + Math.random());
 				$submit.attr("disabled", true);
 			},
 			error: function() {
-				$("#messageArea").html("Error uploading SiteIcon.");
+				$messageArea.html("Error uploading SiteIcon.");
 			}
 		});
 
@@ -116,11 +119,11 @@ function DNDFileController(id, publicBag) {
 				data: JSON.stringify(tiddler),
 				processData: false,
 				success: function() {
-					$("#siteicon").attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon?r=" + Math.random());
+					$siteicon.attr("src", "/bags/" + publicBag + "/tiddlers/SiteIcon?r=" + Math.random());
 					$dzimg.addClass("notloading");
 				},
 				error: function(xhr, error, exc) {
-					$('#messageArea').html("Error uploading SiteIcon.");
+					$messageArea.html("Error uploading SiteIcon.");
 					$dzimg.addClass("notloading");
 				}
 			});
@@ -139,5 +142,5 @@ function DNDFileController(id, publicBag) {
 // make initSiteIconUpload globally accessible
 window.initSiteIconUpload = initSiteIconUpload;
 
-}());
+}(jQuery));
 
