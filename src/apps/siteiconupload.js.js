@@ -1,3 +1,5 @@
+(function() {
+
 function initSiteIconUpload(spaceName) {
 	var publicBag = spaceName + "_public",
 		csrf = window.getCSRFToken(),
@@ -133,3 +135,9 @@ function DNDFileController(id, publicBag) {
 	el_.addEventListener("dragleave", this.dragleave, false);
 	el_.addEventListener("drop", this.drop, false);
 };
+
+// make initSiteIconUpload globally accessible
+window.initSiteIconUpload = initSiteIconUpload;
+
+}());
+
