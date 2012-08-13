@@ -25,8 +25,11 @@ tags: excludeLists excludeSearch excludeMissing
 				<input type="hidden" name="tags" value="excludeLists">
 				<input type="hidden" name="csrf_token" class="csrf" />
 				<input type="file" name="file" />
-				<input type="submit" value="upload" />
+				<input class="btn" type="submit" value="upload" />
 			</form>
+			<div id="dropzone">Drop file here
+				<img class="notloading" src="/bags/common/tiddlers/ajax-loader.gif" alt="submitting SiteIcon" />
+			</div>
 		</div>
 		<h2>Vital Statistics</h2>
 		<div id="info">please wait while information is loaded about this space...</div>

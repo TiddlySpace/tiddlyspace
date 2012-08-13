@@ -40,6 +40,7 @@ tiddler: icons/openid.png.tid
 
 #generic icons
 tiddler: icons/help.png.tid
+tiddler: icons/ajax-loader.gif.tid
 
 # notabene app common files
 recipe: https://raw.github.com/jdlrobson/notabene/master/dist/latest/common.recipe
