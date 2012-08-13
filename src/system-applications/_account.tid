@@ -28,6 +28,9 @@ tags: excludeLists excludeSearch excludeMissing
 				<input type="file" name="file" />
 				<input type="submit" value="upload" />
 			</form>
+			<div id="dropzone">Drop file here
+				<img class="notloading" src="/bags/common/tiddlers/ajax-loader.gif" alt="submitting SiteIcon" />
+			</div>
 		</div>
 		</div>
 		<h2>Find Space</h2>
