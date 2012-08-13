@@ -41,15 +41,16 @@ var isFileAPIEnabled = function() {
 	return !!(window.File && window.FileList && window.FileReader);
 };
 
-// do i need CRSF token?
+// seems to work without needing CSRF token, is that correct?
 function DNDFileController(id, publicBag) {
 	var $el = $("#" + id),
-		el_ = document.getElementById(id);
+		el_ = document.getElementById(id),
+		$html = $("html");
 
 	this.dragenter = function(e) {
 		e.stopPropagation();
 		e.preventDefault();
-		$("html").addClass("dragging");
+		$html.addClass("dragging");
 	};
 
 	this.dragover = function(e) {
@@ -61,7 +62,7 @@ function DNDFileController(id, publicBag) {
 	this.dragleave = function(e) {
 		e.stopPropagation();
 		e.preventDefault();
-		$("html").removeClass("dragging");
+		$html.removeClass("dragging");
 	}
 
 	this.drop = function(e) {
@@ -70,7 +71,7 @@ function DNDFileController(id, publicBag) {
 
 		var files = e.dataTransfer.files; // FileList object.
 	
-		// Loop through the FileList and render image files as thumbnails.
+		// Loop through the FileList
 		for (var i = 0, f; f = files[i]; i++) {
 
 			// Only process image files.
@@ -80,11 +81,10 @@ function DNDFileController(id, publicBag) {
 			handleFile(f);
 		}
 
-		$("html").removeClass("dragging");
+		$html.removeClass("dragging");
 		return false;
 	};
 
-	// could you turn back to this.... and use call?
 	var handleFile = function(file) {
 
 		// read in files
