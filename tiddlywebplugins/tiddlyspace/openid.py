@@ -49,7 +49,6 @@ class Challenger(OpenID):
         except (ValueError, IndexError):
             fragment = None
         secondary_cookie_name = 'tiddlyweb_secondary_user'
-        secondary_cookie_age = None
         secondary_cookie_only = False
         if fragment:
             openid = fragment[len(FRAGMENT_PREFIX):]

@@ -77,7 +77,9 @@ def update_space_settings(environ, name):
         except ValueError:
             pass
 
-    _figure_default_index(environ, bag_name, space)
+    # XXX: Disable the default new user app switcher temporarily
+    # TODO: Turn this back on when the app switcher is more complete
+    #_figure_default_index(environ, bag_name, space)
 
     environ['tiddlyweb.space_settings']['extra_query'] = ';'.join(query_strings)
 
@@ -88,10 +90,8 @@ def _figure_default_index(environ, bag_name, space):
     old users should get the old default: TiddlyWiki, new users should get
     the new default: the app switcher. The presence of a spaceSetupFlag
     tiddler is the test for this.
-    """
-    pass
-    # XXX: Disable the default new user app switcher temporarily
-    # TODO: Turn this back on when the app switcher is more complete
+
+    NOTE: This code is currently unused but is expected to return.
     """
     store = environ['tiddlyweb.store']
     index = environ['tiddlyweb.space_settings']['index']
@@ -106,4 +106,3 @@ def _figure_default_index(environ, bag_name, space):
             except NoTiddlerError:
                 environ['tiddlyweb.space_settings']['index'] \
                         = DEFAULT_NEWUSER_APP
-    """

@@ -114,10 +114,6 @@ def _send_safe_mode(environ, start_response):
     Send a form that initiates safe_mode by asking
     the user to confirm that they want it and then
     POSTing back to the same URI.
-
-    XXX: This should maybe be replaced with a tiddler.
-    However, then that tiddler will be visible in spaces
-    and we don't want that.
     """
     environ['tiddlyweb.title'] = 'Confirm Safe Mode'
     now = datetime.utcnow().strftime('%Y%m%d%H')

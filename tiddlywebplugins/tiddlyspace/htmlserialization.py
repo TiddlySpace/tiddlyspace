@@ -107,7 +107,7 @@ class Serialization(HTMLSerialization):
 
         # chop off the possible trailing .html
         tiddlers_url = tiddlers_url.rsplit('.html')[0]
-        
+
         if tiddlers.is_search:
             template = 'search.html'
         else:

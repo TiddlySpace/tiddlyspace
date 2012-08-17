@@ -27,7 +27,6 @@ from defamation and fraud.
 import urllib
 
 from tiddlyweb.control import recipe_template
-from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializer import Serializer
