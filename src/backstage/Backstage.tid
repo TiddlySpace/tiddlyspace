@@ -1,3 +1,6 @@
+modifier: osmosoft
+tags: excludeLists excludeSearch excludeMissing
+
 !SpaceUnplugged
 {{unpluggedSpaceTab{
 {{wizard{
