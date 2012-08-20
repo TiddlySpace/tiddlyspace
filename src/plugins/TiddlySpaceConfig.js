@@ -151,6 +151,15 @@ var plugin = config.extensions.tiddlyspace = {
 			}
 		}
 	},
+    checkSyncStatus: function(tiddler) {
+		if(tiddler) {
+			var title = typeof(tiddler) === "string" ? tiddler : tiddler.title;
+			var el = story.getTiddler(title) || false;
+			if(el) {
+				refreshElements(el);
+			}
+		}
+	},
 	isDisabledTab: function(tabTitle) {
 		var match = new RegExp("(?:\\[\\[([^\\]]+)\\]\\])", "mg").exec(tabTitle);
 		var tabIdentifier = match ? match[1] : tabTitle;
@@ -286,6 +295,14 @@ if(fImport) {
 		_onGet.apply(this, [context, wizard]);
 	};
 }
+
+config.extensions.ServerSideSavingPlugin.reportSuccess = function(msg, tiddler) {
+	plugin.checkSyncStatus(tiddler);
+	msg = config.extensions.ServerSideSavingPlugin.locale[msg];
+	var link = "/" + encodeURIComponent(tiddler.title);
+	displayMessage(msg.format([tiddler.title]), link);
+};
+
 
 })(jQuery);
 //}}}

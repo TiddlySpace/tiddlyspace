@@ -376,16 +376,6 @@ backstage.tiddlyspace = {
 		loggedout: "You are currently logged out of TiddlySpace.",
 		unplugged: "You are unplugged."
 	},
-	// XXX: This should be TiddlySpaceConfig, not in backstage.
-    checkSyncStatus: function(tiddler) {
-		if(tiddler) {
-			var title = typeof(tiddler) === "string" ? tiddler : tiddler.title;
-			var el = story.getTiddler(title) || false;
-			if(el) {
-				refreshElements(el);
-			}
-		}
-	},
 	showButton: function() {
 		var showBtn = $("#backstageShow")[0];
 		var altText = $(showBtn).text();
@@ -434,13 +424,6 @@ config.macros.exportSpace = {
 		$('<a class="button">download</a>'). // XXX: i18n
 			attr("href", filename).appendTo(place);
 	}
-};
-
-config.extensions.ServerSideSavingPlugin.reportSuccess = function(msg, tiddler) {
-	backstage.tiddlyspace.checkSyncStatus(tiddler);
-	msg = config.extensions.ServerSideSavingPlugin.locale[msg];
-	var link = "/" + encodeURIComponent(tiddler.title);
-	displayMessage(msg.format([tiddler.title]), link);
 };
 
 })(jQuery);
