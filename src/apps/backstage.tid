@@ -32,6 +32,12 @@ _cache-max-age: 43200
 </div>
 <hr />
 <ul id="app-list">
+        <li class="search">
+                <form method="GET" target="_top" action="/hsearch">
+                <img src="/bags/common/tiddlers/search.png" alt="Search Icon" class="app-img" />
+                <input type="search" name="q" placeholder="SEARCH" />
+                <form>
+        </li>
 	<li class="write">
 		<a href="/takenote" target="_parent">
 			<img src="/bags/common/tiddlers/pencil_blue.png" alt="Icon for Takenote" class="app-img" />
@@ -64,7 +70,7 @@ _cache-max-age: 43200
 	</li>
 	<li class="help">
 		<a href="http://help.tiddlyspace.com"  target="_parent">
-			<img src="http://help.tiddlyspace.com/SiteIcon" alt="Help SiteIcon" class="app-img" />
+			<img src="/bags/common/tiddlers/help.png" alt="Help SiteIcon" class="app-img" />
 			HELP
 		</a>
 	</li>
