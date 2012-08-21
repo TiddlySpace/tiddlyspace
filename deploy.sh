@@ -7,8 +7,6 @@ package_name="tiddlywebplugins.tiddlyspace"
 host="tiddlyspace.com"
 remote_sudo_id="tiddlyweb"
 instance_dir="/home/tiddlyweb/tiddlywebs/tiddlyspace.com"
-timestamp=`date +%s`
-logfile="tiddlyweb.log"
 
 set -e
 set -x
@@ -39,7 +37,6 @@ sql="DELETE IGNORE FROM tiddler WHERE bag='system' \
 ssh $host "sudo pip install --upgrade $pip_options $package_name && " \
     "mysql -u tiddlyweb tiddlyspace2 -e \"${sql}\" && " \
     "cd $instance_dir && " \
-    "sudo -u $remote_sudo_id mv $logfile $logfile.$timestamp &&" \
     "sudo -u $remote_sudo_id twanager update && " \
     "sudo apache2ctl restart && sudo /etc/init.d/memcached restart && " \
     "echo INFO: deployment complete"
