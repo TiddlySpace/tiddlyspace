@@ -285,11 +285,6 @@ config.tasks.status = {
 	tooltip: "TiddlySpace Info",
 	content: "<<tiddler Backstage##Menu>>"
 };
-config.tasks.search = {
-	text: "search",
-	tooltip: "Search TiddlySpace",
-	content: "<<tiddler Backstage##Search>>"
-};
 config.tasks.tiddlers = {
 	text: "tiddlers",
 	tooltip: "tiddlers control panel",
@@ -325,7 +320,7 @@ if (window.location.protocol == "file:") {
 	config.unplugged = true;
 }
 
-config.backstageTasks = ["status", "search", "tiddlers", "plugins",
+config.backstageTasks = ["status", "tiddlers", "plugins",
 	"batch", "tweaks", "export", "sync"];
 
 config.messages.backstage.prompt = "";

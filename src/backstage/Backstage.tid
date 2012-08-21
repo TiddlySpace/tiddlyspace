@@ -25,10 +25,6 @@ running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddl
 !Resources
 [[blog|@@blog]] [[documentation|@@docs]] [[featured spaces|@@featured]] 
 
-!Search
-Search across the entire TiddlySpace service.
-<<tsSearch>>
-
 !ImportExport
 <<fileImport>>
 You can download this TiddlySpace as an offline TiddlyWiki:
