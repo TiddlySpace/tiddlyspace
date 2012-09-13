@@ -102,8 +102,9 @@ tags: excludeLists excludeSearch excludeMissing
 				publicBagUrl;
 			$.ajax({ url: url, dataType: "text",
 				success: function(tiddlers) {
-					var numTiddlers = $.trim(tiddlers).split("\n").length;
-					var html = "";
+					var data = $.trim(tiddlers),
+						numTiddlers = data ? data.split("\n").length : 0,
+						html = "";
 					function printFullInfo(numPublicTiddlers) {
 						var totalTiddlers = numPublicTiddlers + numTiddlers;
 						html += ['This space has ', numMembers,
@@ -124,7 +125,9 @@ tags: excludeLists excludeSearch excludeMissing
 							url: publicBagUrl,
 							dataType: "text",
 							success: function(tiddlers) {
-								printFullInfo($.trim(tiddlers).split("\n").length);
+								var data = $.trim(tiddlers),
+									count = data ? data.split("\n").length : 0;
+								printFullInfo(count);
 							}
 						});
 					} else {
