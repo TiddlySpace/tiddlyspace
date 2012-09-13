@@ -29,6 +29,7 @@ recipe: apps/apps.recipe
 tiddler: system-applications/appspagecss.tid
 tiddler: system-applications/appspagejs.tid
 tiddler: system-applications/admin.css.tid
+tiddler: system-applications/space.js.js
 
 # Icons used by the appswitcher
 tiddler: icons/browse_read_blue.png.tid
