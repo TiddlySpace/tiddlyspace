@@ -2,9 +2,13 @@ ts.init(function(ts) {
 
 	"use strict";
 
+	/*
+	 * If we aren't in a space, do nothing
+	 */
 	if(!ts.currentSpace) {
 		return;
 	}
+
 	var address = window.location.hostname.split("."),
 		spaceName = address[0],
 		publicBag = spaceName + "_public",
@@ -13,9 +17,9 @@ ts.init(function(ts) {
 		tiddler = new tiddlyweb.Tiddler("SiteInfo",
 			new tiddlyweb.Bag(publicBag, "/"));
 
-	$("#siteUrl").text(window.location.hostname);
-	initSiteIconUpload(spaceName);
-
+	/*
+	 * Display the number of tiddlers in this space.
+	 */
 	function displayTiddlerCounts(tiddlers, url, numMembers) {
 		var data = $.trim(tiddlers),
 			numTiddlers = data ? data.split("\n").length : 0,
@@ -46,11 +50,18 @@ ts.init(function(ts) {
 				}
 			});
 		} else {
-			html += 'This space has <a href="' + url + '">' + numTiddlers + " public tiddlers</a>";
+			html += 'This space has <a href="' +
+				url +
+				'">' +
+				numTiddlers +
+				" public tiddlers</a>";
 			$("#info").html(html);
 		}
 	}
 
+	/*
+	 * Count the number of tiddlers in this space.
+	 */
 	function countTiddlers(members) {
 		var numMembers = members ? members.length : false,
 			url = members ? "/bags/" + spaceName + "_private/tiddlers" :
@@ -64,18 +75,18 @@ ts.init(function(ts) {
 		});
 	}
 
-	space.members().get(function(members) {
-		countTiddlers(members);
-	}, function() {
-		countTiddlers();
-	});
-
-	function complete(tiddler) {
+	/*
+	 * Update SiteInfo display
+	 */
+	function completeEdit(tiddler) {
 		$("#siteinfo .edit").show();
 		$("#siteinfo .value").data("tiddler", tiddler).
 			empty().html(tiddler.render);
 	}
 
+	/*
+	 * Turn on the editor for SiteInfo
+	 */
 	function siteInfoEditor(tiddler) {
 		var errback = function() {
 			$("#siteinfo .edit").click();
@@ -95,14 +106,14 @@ ts.init(function(ts) {
 				tiddler.put(function() {
 					tiddler.get(function(tid) {
 						tiddler = tid;
-						complete(tid);
+						completeEdit(tid);
 					}, errback, "render=y");
 				}, errback);
 				$(editBtn).show();
 			}).appendTo(val);
 			$("<button />").text("cancel").
 				click(function(ev) {
-					complete(tiddler);
+					completeEdit(tiddler);
 				}).appendTo(val);
 		}).text("edit").appendTo("#siteinfo");
 	}
@@ -110,23 +121,43 @@ ts.init(function(ts) {
 	/*
 	 * SiteInfo handling
 	 */
-	$("<div class='value' />").text("(Loading SiteInfo tiddler)").data("tiddler", tiddler).appendTo("#siteinfo");
-	tiddler.get(
-		function(tid) {
-			tiddler = tid;
-			$("#siteinfo .value").data("tiddler", tid).html(tid.render || tid.text);
-			if($(document.body).hasClass("ts-member")) {
-				siteInfoEditor(tid);
-			}
-		},
-		function() {
-			$("#siteinfo .value").text("This space has not published any information about itself.");
-			if($(document.body).hasClass("ts-member")) {
-				siteInfoEditor(tiddler);
-			}
-		},
-		"render=1"
-	);
+	function initSiteInfo() {
+		$("<div class='value' />").
+			text("(Loading SiteInfo tiddler)").
+			data("tiddler", tiddler).appendTo("#siteinfo");
+		tiddler.get(
+			function(tid) {
+				tiddler = tid;
+				$("#siteinfo .value").
+					data("tiddler", tid).
+					html(tid.render || tid.text);
+				if ($(document.body).hasClass("ts-member")) {
+					siteInfoEditor(tid);
+				}
+			},
+			function() {
+				$("#siteinfo .value").
+					text("This space has not published any information " +
+						"about itself.");
+				if ($(document.body).hasClass("ts-member")) {
+					siteInfoEditor(tiddler);
+				}
+			},
+			"render=1"
+		);
+	}
+
+	$("#siteUrl").text(window.location.hostname);
+	initSiteIconUpload(spaceName);
+
+	space.members().get(function(members) {
+		countTiddlers(members);
+	}, function() {
+		countTiddlers();
+	});
+
+	initSiteInfo();
+
 }); // end of ts.init
 
 function toggleNext(ev) {
