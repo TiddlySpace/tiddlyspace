@@ -25,13 +25,18 @@ if [ -n "$1" ]; then
     log_name="$1@"
 fi
 
+
 host="${log_name}${host}"
-sql="DELETE IGNORE FROM tiddler WHERE bag='system' OR bag='tiddlyspace' \
+sql="DELETE IGNORE FROM tiddler WHERE bag='system' \
+    OR bag='tiddlyspace' \
+    OR bag='common' \
     OR bag='system-plugins_public' \
     OR bag='system-info_public' \
     OR bag='system-images_public' \
     OR bag='system-theme_public';"
 ssh $host "sudo pip install --upgrade $pip_options $package_name && " \
     "mysql -u tiddlyweb tiddlyspace2 -e \"${sql}\" && " \
-    "cd $instance_dir && sudo -u $remote_sudo_id twanager update && " \
-    "sudo apache2ctl restart && echo INFO: deployment complete"
+    "cd $instance_dir && " \
+    "sudo -u $remote_sudo_id twanager update && " \
+    "sudo apache2ctl restart && sudo /etc/init.d/memcached restart && " \
+    "echo INFO: deployment complete"

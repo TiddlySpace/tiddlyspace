@@ -7,43 +7,8 @@
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceBackstage.js|
 |''Requires''|TiddlySpaceConfig ImageMacroPlugin TiddlySpaceViewTypes|
 !StyleSheet
-.publicLightText {
-	color: #C0E5FC;
-}
-
-.privateLightText {
-	color: #E2C1D6;
-}
-
 .tiddler .error.annotation .button{
 	display: inline-block;
-}
-
-#backstageArea #backstageToolbar a.task_tiddlyspace {
-	margin: 0px auto auto -75px;
-	font-weight: bold;
-	width: 150px;
-	line-height:24px;
-	font-size: 1.2em;
-	padding: 0;
-	top: 0;
-	position: absolute;
-	left: 50%;
-}
-
-.task_tiddlyspace .image,
-.task_tiddlyspace .svgIcon {
-	display: inline;
-}
-
-.task_tiddlyspace .svgIconText {
-	display: none;
-}
-
-.task_tiddlyspace .logoText {
-	position: absolute;
-	top: 0px;
-	margin-left: 5px;
 }
 
 #backstageArea {
@@ -56,10 +21,6 @@
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff555555, endColorstr=#ff222222)";
 	height: 25px;
 	padding: 0;
-}
-
-.backstageBackground {
-	fill: black;
 }
 
 #backstageButton {
@@ -103,8 +64,8 @@
 	background-color: white;
 }
 
-#backstage .tabContents ol,
-#backstage .tabContents ul {
+#backstage ol,
+#backstage ul {
 	padding: auto;
 }
 
@@ -112,7 +73,7 @@
 	margin: 0;
 }
 
-.backstagePanelBody .tabContents ul {
+.backstagePanelBody ul {
 	padding: 5px;
 	margin: 5px;
 }
@@ -121,7 +82,6 @@
 	margin-left: 5%;
 	padding: 0em;
 	margin-right: 5%;
-	text-align: center;
 }
 
 #backstageToolbar a {
@@ -139,106 +99,23 @@
 	display: inline;
 }
 
-.backstageTask .txtUserName,
-.backstageTask .spaceName {
-	color: #fff;
-}
-
-.backstageSelTab .txtUserName,
-.backstageSelTab .spaceName,
-a:hover .txtUserName,
-a:hover .spaceName {
-	color: #000;
-}
-
-.spaceSiteIcon {
-	margin-right: 10px;
-}
-
-.userSiteIcon {
-	margin-left: 10px;
-}
-
-#backstageToolbar .task_space {
-	position: absolute;
-	top: 0px;
-	left: 0%;
-}
-
-#backstageToolbar .task_user,
-#backstageToolbar .task_login {
-	display: block;
-	position: absolute;
-	top: 0px;
-	right: 5%;
-}
-
-#backstageToolbar .task_login img {
-	position: relative;
-	display: inline;
-}
-
-#backstageToolbar .task_login img,
-#backstageToolbar .task_user img {
-	float: right;
-}
-
-#backstageToolbar .task_space .svgIcon {
-	float: left;
-	position: relative;
-	z-index: 2;
-}
-
 #backstageToolbar a span {
 	z-index: 2;
 }
 
-#backstageToolbar .spaceSiteIcon {
-	float: left;
-}
-
 a.backstageTask {
-	display: block;
-}
-
-#backstageToolbar a span.txtUserName,
-#backstageToolbar a .txtUserName span {
 	display: inline;
-	float: none;
+        margin-left: 1em !important;
 }
 
-#backstage .deleteButton {
-	margin-left: 0.3em;
-	font-weight: bold;
-	color: red;
-	font-size: 1.6em;
-}
-
-#backstage .deleteButton:hover {
-	background: none;
-}
-
-#backstageArea .siteIcon {
-	display: inline;
-}
-
-#backstagePanel .TiddlySpaceLogin {
-	display: inline;
-}
-
-.backstagePanelBody .tabContents .button {
+.backstagePanelBody .button {
 	display: inline-block;
 	margin-right: 10px;
 }
 
-.backstagePanelBody .tab {
+.backstagePanelBody {
 	margin: 0 0 0 0.6em;
 	padding: 0.4em 0.5em 1px 0.5em;
-}
-
-#backstage .tabContents {
-	padding: 1.5em;
-	text-align: left;
 }
 
 #backstage table {
@@ -248,19 +125,6 @@ a.backstageTask {
 #backstage .wizard table {
 	border: 0px;
 	margin: 0;
-}
-
-#backstage .txtSpaceTab li {
-	border: 1px solid #ddd;
-	background: #eee;
-	list-style: none;
-	margin: 0.5em;
-	padding: 0.5em;
-	width: 80%;
-}
-
-#backstage .txtSpaceTab li.annotation {
-	border: 2px solid [[ColorPalette::SecondaryMid]];
 }
 
 #backstage div  li.listLink {
@@ -275,10 +139,6 @@ a.backstageTask {
 	font-size: 1em;
 	background: #ccc;
 	width: 100%;
-}
-
-#backstage div.txtSpaceTab li .deleteButton {
-	float: right;
 }
 
 #backstage fieldset {
@@ -352,18 +212,6 @@ span.chunkyButton a.button:hover {
 	color: #fff;
 }
 
-a.baskstageTask.task_login,
-a.baskstageTask.task_user {
-	_width: 200px;
-	_text-align: right;
-}
-
-#backstageArea #backstageToolbar .task_login img,
-#backstageArea #backstageToolbar .task_user img {
-	_display: inline;
-	_float: none;
-}
-
 #backstage .unpluggedSpaceTab .wizard,
 .unpluggedSpaceTab .wizard {
 	background: white;
@@ -405,12 +253,6 @@ a.baskstageTask.task_user {
 .unsyncedList {
 	display: none;
 }
-
-#backstage iframe {
-	height: 600px;
-	width: 100%;
-	border: none;
-}
 !Code
 ***/
 //{{{
@@ -425,44 +267,61 @@ if(!config.extensions.tiddlyweb.status.tiddlyspace_version) { // unplugged
 	config.extensions.tiddlyweb.status.server_host = {
 		url: config.extensions.tiddlyweb.host }; // TiddlySpaceLinkPlugin expects this
 }
-var disabled_tabs_for_nonmembers = ["PluginManager", "Backstage##FileImport",
-	"Backstage##BatchOps", "Backstage##SpaceMembers",
-	"TiddlySpaceTabs##Private", "TiddlySpaceTabs##Drafts"];
+var disabled_tasks_for_nonmembers = ["tiddlers", "plugins", "batch", "sync"];
+
 var tweb = config.extensions.tiddlyweb;
 var tiddlyspace = config.extensions.tiddlyspace;
 var currentSpace = tiddlyspace.currentSpace.name;
 var imageMacro = config.macros.image;
 
 if(config.options.chkBackstage === undefined) {
-	config.options.chkBackstage = true;
+	config.options.chkBackstage = false;
 }
 
-config.tasks.user = {
-	text: "user: ",
-	tooltip: "user control panel",
-	unpluggedText: "unplugged user",
-	content: "<html><iframe frameBorder='0' src='" + config.extensions.tiddlyweb.host + "/_account'></iframe></html>"
-};
-
-config.tasks.space = {
-	text: "space: ",
-	tooltip: "space control panel",
-	className: "right"
-};
-
-config.tasks.tiddlyspace = {
-	text: "",
-	tooltip: "",
+// Set up Backstage
+config.tasks = {};
+config.tasks.status = {
+	text: "status",
+	tooltip: "TiddlySpace Info",
 	content: "<<tiddler Backstage##Menu>>"
 };
+config.tasks.tiddlers = {
+	text: "tiddlers",
+	tooltip: "tiddlers control panel",
+	content: "<<tiddler Backstage##BackstageTiddlers>>"
+};
+config.tasks.plugins = {
+	text: "plugins",
+	tooltip: "Manage installed plugins",
+	content: "<<tiddler Backstage##Plugins>>",
+};
+config.tasks.batch = {
+	text: "batch",
+	tooltip: "Batch manage public/private tiddlers",
+	content: "<<tiddler Backstage##BatchOps>>",
+};
+config.tasks.tweaks = {
+	text: "tweaks",
+	tooltip: "Tweak TiddlyWiki behaviors",
+	content: "<<tiddler Backstage##Tweaks>>"
+};
+config.tasks.export = {
+	text: "import/export",
+	tooltip: "Import/export tiddlers from/to a TiddlyWiki",
+	content: "<<tiddler Backstage##ImportExport>>"
+};
+config.tasks.sync = {
+	text: "sync",
+	tooltip: "Check Sync status",
+	content: "<<tiddler Backstage##SpaceUnplugged>>"
+};
 
-if(window.location.protocol == "file:") {
-	config.unplugged = true; // TODO: move into extensions.tiddly{web/space} namespace!?
-	config.tasks.space.content = "<<tiddler Backstage##SpaceUnplugged>>";
-} else {
-	config.tasks.space.content = "<html><iframe frameBorder='0' src='/_space'></iframe></html>";
+if (window.location.protocol == "file:") {
+	config.unplugged = true;
 }
-config.backstageTasks = ["tiddlyspace", "user", "space"];
+
+config.backstageTasks = ["status", "tiddlers", "plugins",
+	"batch", "tweaks", "export", "sync"];
 
 config.messages.backstage.prompt = "";
 // initialize state
@@ -470,28 +329,40 @@ var _show = backstage.show;
 backstage.show = function() {
 	// selectively hide backstage tasks and tabs based on user status
 	var tasks = $("#backstageToolbar .backstageTask").show();
+	var bs = backstage.tiddlyspace;
 	if(!config.unplugged) {
 		tweb.getUserInfo(function(user) {
 			if(user.anon) {
-				$(".task_user", tasks).hide();
-				tiddlyspace.disableTab(disabled_tabs_for_nonmembers);
+				jQuery.each(disabled_tasks_for_nonmembers, function(i, task) {
+					var taskIndex = config.backstageTasks.indexOf(task);
+					if (taskIndex !== -1) {
+						config.backstageTasks.splice(taskIndex, 1);
+					}
+				});
+				config.messages.memberStatus = bs.locale.loggedout;
 			} else {
-				$(".task_login", tasks).hide();
+				config.messages.memberStatus = readOnly ?
+					bs.locale.nonmember : bs.locale.member;
 			}
 		});
+	} else {
+		config.messages.memberStatus = bs.locale.unplugged;
 	}
+
 	// display backstage
 	return _show.apply(this, arguments);
 };
 if(readOnly) {
-	tiddlyspace.disableTab(disabled_tabs_for_nonmembers);
+	jQuery.each(disabled_tasks_for_nonmembers, function(i, task) {
+		var taskIndex = config.backstageTasks.indexOf(task);
+		if (taskIndex !== -1) {
+			config.backstageTasks.splice(taskIndex, 1);
+		}
+	});
 }
 
 var tasks = config.tasks;
 var commonUrl = "/bags/common/tiddlers/%0";
-
-// mock out renderAvatar if unavailable -- XXX: temporary hotfix, not a permanent solution!
-tiddlyspace.renderAvatar = tiddlyspace.renderAvatar || function() {};
 
 backstage.tiddlyspace = {
 	locale: {
@@ -499,42 +370,6 @@ backstage.tiddlyspace = {
 		nonmember: "You are not a member of this space.",
 		loggedout: "You are currently logged out of TiddlySpace.",
 		unplugged: "You are unplugged."
-	},
-	checkSyncStatus: function(tiddler) {
-		var bs = backstage.tiddlyspace;
-		var t = store.filterTiddlers("[is[unsynced]]");
-		var unsyncedList = $("#backstage .tiddlyspaceMenu .unsyncedList");
-		if(t.length > 0 && !readOnly) {
-			bs.tweakMiddleButton("unsyncedIcon");
-			$("#backstage").addClass("unsyncedChanges");
-		} else {
-			bs.tweakMiddleButton();
-			$("#backstage").removeClass("unsyncedChanges");
-		}
-		refreshElements($("#backstage")[0]);
-		if(tiddler) {
-			var title = typeof(tiddler) === "string" ? tiddler : tiddler.title;
-			var el = story.getTiddler(title) || false;
-			if(el) {
-				refreshElements(el);
-			}
-		}
-	},
-	userButton: function(backstageArea, user) {
-		// override user button (logged in) to show username
-		var userBtn = $("[task=user]", backstageArea).empty();
-		if(config.unplugged && user.anon) {
-			$("<span />").text(tasks.user.unpluggedText).appendTo(userBtn);
-		} else if(!config.unplugged && user.anon) {
-			userBtn.remove();
-		} else {
-			$("<span />").text(tasks.user.text).appendTo(userBtn);
-			$("<span />").addClass("txtUserName").text(user.name).appendTo(userBtn);
-			var container = $("<span />").appendTo(userBtn)[0];
-			tiddlyspace.renderAvatar(container, user.name,
-				{ imageOptions: { imageClass:"userSiteIcon", height: 24, width: 24 },
-				labelOptions: { include: false } });
-		}
 	},
 	showButton: function() {
 		var showBtn = $("#backstageShow")[0];
@@ -550,71 +385,15 @@ backstage.tiddlyspace = {
 		imageMacro.renderImage(hideBtn, "close.svg",
 			{ altImage: commonUrl.format("close.png"), alt: altText, width: 24, height: 24 });
 	},
-	middleButton: function(backstageArea, user) {
-		var bs = backstage.tiddlyspace;
-		var backstageToolbar = $("#backstageToolbar", backstageArea)[0];
-		if(config.unplugged) {
-			config.messages.memberStatus = bs.locale.unplugged;
-		} else if(!user.anon) {
-			config.messages.memberStatus = readOnly ? bs.locale.nonmember : bs.locale.member;
-		} else {
-			config.messages.memberStatus = bs.locale.loggedout;
-		}
-		// construct the tiddlyspace logo
-		var backstageLogo = $("#[task=tiddlyspace]").empty()[0];
-		$("<span />").addClass("iconContainer").appendTo(backstageLogo);
-		$('<span class="logoText"><span class="privateLightText">tiddly</span>' +
-				'<span class="publicLightText">space</span></span>').
-			appendTo(backstageLogo);
-		bs.tweakMiddleButton();
-	},
-	tweakMiddleButton: function(iconName) {
-		var backstageLogo = $("#[task=tiddlyspace] .iconContainer").empty()[0];
-		var backstageToolbar = $("#backstageToolbar");
-		var plugin = backstage.tiddlyspace;
-		if(!iconName) {
-			iconName = readOnly ? "publicIcon" : "privateAndPublicIcon";
-		}
-		config.macros.image.renderImage(backstageLogo, iconName, { width: 24, height: 24 });
-	},
-	spaceButton: function(backstageArea, user) {
-		// override space button to show SiteIcon
-		var btn = $("[task=space]", backstageArea).show();
-		if(user && user.anon && config.unplugged) {
-			btn.hide();
-			return;
-		}
-		btn.empty();
-		tiddlyspace.renderAvatar(btn[0], currentSpace,
-			{ imageOptions: { imageClass:"spaceSiteIcon", height: 24, width: 24 },
-			labelOptions: { include: false } });
-		$("<span />").text(tasks.space.text).appendTo(btn);
-		$("<span />").addClass("spaceName").text(currentSpace).appendTo(btn);
-	},
-	addClasses: function(backstageArea) {
-		var tasks = $(".backstageTask", backstageArea);
-		for(var i = 0; i < tasks.length; i++) {
-			var btn = $(tasks[i]);
-			var taskName = btn.attr("task");
-			btn.addClass("task_%0".format(taskName));
-		}
-	}
 };
 
 var _init = backstage.init;
 backstage.init = function() {
 	_init.apply(this, arguments);
 	var init = function(user) {
-		var backstageArea = $("#backstageArea")[0];
 		var bs = backstage.tiddlyspace;
-		store.addNotification(null, bs.checkSyncStatus);
-		bs.userButton(backstageArea, user);
 		bs.showButton();
 		bs.hideButton();
-		bs.middleButton(backstageArea, user);
-		bs.spaceButton(backstageArea, user);
-		bs.addClasses(backstageArea); // for IE styling purposes
-		bs.checkSyncStatus();
 	};
 	tweb.getUserInfo(init);
 };
@@ -640,17 +419,6 @@ config.macros.exportSpace = {
 		$('<a class="button">download</a>'). // XXX: i18n
 			attr("href", filename).appendTo(place);
 	}
-};
-
-$.extend(config.messages, {
-	syncExplanation: "You are currently viewing an offline version of this TiddlySpace. From here you can sync your offline copy with the online version.",
-	syncListHeading: "Unsaved tiddlers listed below"});
-
-config.extensions.ServerSideSavingPlugin.reportSuccess = function(msg, tiddler) {
-	backstage.tiddlyspace.checkSyncStatus(tiddler);
-	msg = config.extensions.ServerSideSavingPlugin.locale[msg];
-	var link = "/" + encodeURIComponent(tiddler.title);
-	displayMessage(msg.format([tiddler.title]), link);
 };
 
 })(jQuery);

@@ -43,6 +43,7 @@ config = {
     'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
     'base_tiddlywiki_alpha': TIDDLYWIKI_ALPHA,
     'base_tiddlywiki_external_alpha': TIDDLYWIKI_EXTERNAL_ALPHA,
+    'wsearch.handler': 'hsearch',
     'serializers': {
         'text/x-tiddlywiki': ['tiddlywebplugins.tiddlyspace.betaserialization',
             'text/html; charset=UTF-8']}}

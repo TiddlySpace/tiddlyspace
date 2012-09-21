@@ -108,7 +108,12 @@ class Serialization(HTMLSerialization):
         # chop off the possible trailing .html
         tiddlers_url = tiddlers_url.rsplit('.html')[0]
 
-        return send_template(self.environ, 'tiddlers.html', {
+        if tiddlers.is_search:
+            template = 'search.html'
+        else:
+            template = 'tiddlers.html'
+
+        return send_template(self.environ, template, {
             'meta_keywords': 'tiddlers, tiddlyspace',
             'meta_description': 'A list of tiddlers on TiddlySpace',
             'title': title,
@@ -116,6 +121,8 @@ class Serialization(HTMLSerialization):
             'environ': self.environ,
             'revisions': revisions,
             'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
+            'space_uri': space_uri,
+            'space_bag': space_bag,
             'query_string': query_string,
             'container_type': container_type,
             'container_name': container_name,
@@ -207,7 +214,7 @@ class Serialization(HTMLSerialization):
         """
         if tiddler.recipe:
             link = _encode_space_link(tiddler)
-        elif _space_bag(tiddler.bag):
+        elif space_bag(tiddler.bag):
             space_name = tiddler.bag.split('_', 1)[0]
             space_link_uri = space_uri(self.environ, space_name).rstrip('/')
             link = _encode_space_link(tiddler)
@@ -218,7 +225,7 @@ class Serialization(HTMLSerialization):
         return '%s%s' % (self._server_prefix(), link)
 
 
-def _space_bag(bag_name):
+def space_bag(bag_name):
     """
     Return true if the bag is a standard space bag. If it is
     there will be a space link.

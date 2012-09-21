@@ -63,6 +63,7 @@ form input[type=submit] {
 	line-height: 3.125em;
 }
 
+#app-list li form,
 #app-list li a {
 	display: block;
 	height: 100%;
@@ -70,6 +71,9 @@ form input[type=submit] {
 	text-decoration: none;
 	color: #BC4378;
 	width: 100%;
+}
+
+#app-list li a {
 	-webkit-transition: color 0.4s linear;
 	-moz-transition: color 0.4s linear;
 	-o-transition: color 0.4s linear;
@@ -77,11 +81,15 @@ form input[type=submit] {
 	transition: color 0.4s linear;
 }
 
+#app-list li input {
+    width: 50%;
+}
+
 #app-list li:hover a {
 	color: #E56AA0;
 }
 
-#app-list li a img {
+#app-list .app-img {
 	position: relative;
 	top: 0.2125em;
 	margin: 0 1em;
@@ -107,8 +115,11 @@ form input[type=submit] {
 	display: none;
 }
 
-.login-method:target {
+.login-method {
 	display: block;
+}
+.login-method-hide {
+	display: none;
 }
 .login-method p {
 	padding-bottom: 5px;

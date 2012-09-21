@@ -238,6 +238,11 @@ dd.meta-tag {
 	padding: 0 0.625em;
 }
 
+.reply-btn.loading {
+	background: rgba(255,255,255,.4);
+	border-radius: 3px;
+}
+
 /**********/
 /* Tables */
 /**********/
@@ -268,6 +273,23 @@ table.twtable {
 	#backstage {
 		font-size: 0.8em;
 	}
+}
+
+/**********/
+/* Search */
+/**********/
+/* TODO: move to dedicated stylesheet. */
+.search {
+    list-style-type: none;
+    line-height: 48px;
+}
+
+.search img {
+    width: 48px;
+    height: 48px;
+    vertical-align: middle;
+    padding-right: 5px;
+    padding-bottom: 5px;
 }
 
 /*****************/

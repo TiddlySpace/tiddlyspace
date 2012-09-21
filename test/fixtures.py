@@ -34,7 +34,12 @@ def get_auth(username, password):
     return cookie['tiddlyweb_user'].value
 
 
-def make_test_env(module):
+def make_test_env(module, hsearch=False):
+    """
+    If hsearch is False, don't bother updating the whoosh index
+    for this test instance. We do this by removing the store HOOK
+    used by whoosh.
+    """
     global SESSION_COUNT
     try:
         shutil.rmtree('test_instance')
@@ -65,6 +70,14 @@ def make_test_env(module):
     module.store = get_store(config)
 
     app = serve.load_app()
+
+    if not hsearch:
+        from tiddlywebplugins.whoosher import _tiddler_change_handler
+        try:
+            HOOKS['tiddler']['put'].remove(_tiddler_change_handler)
+            HOOKS['tiddler']['delete'].remove(_tiddler_change_handler)
+        except ValueError:
+            pass
 
     def app_fn():
         return app

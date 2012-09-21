@@ -18,6 +18,14 @@ type: text/css
 	display: none;
 }
 
+#upload {
+    display: none;
+}
+
+.ts-member #upload {
+    display: block;
+}
+
 .ts-membership {
 	display: none;
 }
@@ -146,6 +154,11 @@ button:hover {
 	background: #0082AF;
 }
 
+input[disabled=disabled]:hover,
+button[disabled=disabled]:hover {
+	background: #CCC;
+}
+
 button.delete:hover {
 	background: #AF2800;
 }
@@ -256,6 +269,36 @@ a.app:hover {
 	padding: 0;
 	max-width: none;
 	width: 100%;
+}
+
+#upload .btn {
+	margin: 0.2em 0;
+}
+
+#dropzone {
+	display: none;
+}
+
+.ts-member #dropzone {
+	display: block;
+}
+
+#dropzone {
+	border: 3px dashed #fff;
+	height: 50px;
+	text-align: center;
+	color: #ccc;
+	line-height: 50px;
+	font-size: 1.2em;
+}
+
+.dragging #dropzone {
+	border: 3px dashed #0082af;
+	color: #0082af;
+}
+
+#dropzone .notloading {
+	display: none;
 }
 
 @media (max-width:600px) {

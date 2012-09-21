@@ -1,6 +1,6 @@
 /***
 |''Name''|BinaryUploadPlugin|
-|''Version''|0.3.15|
+|''Version''|0.3.16|
 |''Author''|Ben Gillies and Jon Robson|
 |''Type''|plugin|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/BinaryUploadPlugin.js|
@@ -144,12 +144,15 @@ var macro = config.macros.binaryUpload = {
 		macro.renderInputFields(form, options);
 		$(form).
 			append('<div class="binaryUploadFile"><input type="file" name="file" /></div>').
-			append('<div class="binaryUploadSubmit"><input type="submit" value="Upload" /></div>').
+			append('<div class="binaryUploadSubmit"><input type="submit" value="Upload" disabled /></div>').
 			submit(function(ev) {
 				this.target = iframeName;
 				options.target = iframeName;
 				macro.uploadFile(place, baseURL, workspace, options);
-			});
+			})
+			.find('[type="file"]').bind('change', function() {
+				$(form).find('[type="submit"]').prop('disabled', false);
+			}).end();
 		$('<div />').addClass("uploadProgress").text(locale.uploadInProgress).hide().appendTo(place);
 		$("input[name=file]", place).change(function(ev) {
 			var target = $(ev.target);

@@ -290,7 +290,7 @@ def subscribe_space(environ, start_response):
     _do_subscriptions(environ, subscriptions, public_recipe_list,
             private_recipe_list, store)
     _do_unsubscriptions(space_name, unsubscriptions, public_recipe_list,
-            private_recipe_list, store)
+            private_recipe_list)
 
     public_recipe.set_recipe(public_recipe_list)
     store.put(public_recipe)
@@ -351,7 +351,7 @@ def _do_subscriptions(environ, subscriptions, public_recipe_list,
 
 
 def _do_unsubscriptions(space_name, unsubscriptions, public_recipe_list,
-        private_recipe_list, store):
+        private_recipe_list):
     """
     Remove unsubscriptions from the space represented by
     public_recipe_list and private_recipe_list.

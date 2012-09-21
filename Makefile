@@ -1,4 +1,20 @@
-.PHONY: test remotes jslib qunit dist release deploy pypi dev clean purge
+.PHONY: test remotes jslib qunit phantomjs jstest pytest dist release deploy pypi dev clean purge
+
+OS := $(shell uname)
+ARCH := $(shell uname -m)
+PHANTOMJS_MAC := phantomjs-1.6.1-macosx-static.zip
+PHANTOMJS_LINUX_32 := phantomjs-1.6.1-linux-i686-dynamic.tar.bz2
+PHANTOMJS_LINUX_64 := phantomjs-1.6.1-linux-x86_64-dynamic.tar.bz2
+ifeq ($(OS), Linux)
+	ifeq ($(ARCH), x86_64)
+		PHANTOMJS_DL := $(PHANTOMJS_LINUX_64)
+	else
+		PHANTOMJS_DL := $(PHANTOMJS_LINUX_32)
+	endif
+endif
+ifeq ($(OS), Darwin)
+	PHANTOMJS_DL := $(PHANTOMJS_MAC)
+endif
 
 wrap_jslib = curl -L -s $(2) | \
 	{ \
@@ -6,25 +22,26 @@ wrap_jslib = curl -L -s $(2) | \
 		echo "//{{{"; cat -; echo "//}}}"; \
 	} > $(1)
 
-test:
+pytest:
 	py.test -x test
+	
+test: pytest jstest
 
 tiddlywiki:
 	mkdir src/externals || true
 	mkdir tiddlywebplugins/tiddlyspace/resources || true
-	wget http://tiddlywiki.com/beta/empty.html \
+	wget http://tiddlywiki.github.com/beta/empty.html \
 		-O tiddlywebplugins/tiddlyspace/resources/beta.html
-	wget http://tiddlywiki.com/alpha/empty.html \
+	wget http://tiddlywiki.github.com/alpha/empty.html \
 		-O tiddlywebplugins/tiddlyspace/resources/alpha.html
-	wget http://tiddlywiki.com/alpha/tiddlywiki_externaljs_tiddlyspace.html \
+	wget http://tiddlywiki.github.com/alpha/tiddlywiki_externaljs_tiddlyspace.html \
 		-O tiddlywebplugins/tiddlyspace/resources/external_alpha.html
-	wget http://tiddlywiki.com/alpha/jquery.js \
+	wget http://tiddlywiki.github.com/alpha/jquery.js \
 		-O src/externals/alpha_jquery.js.js
-	wget http://tiddlywiki.com/alpha/jQuery.twStylesheet.js \
+	wget http://tiddlywiki.github.com/alpha/jQuery.twStylesheet.js \
 		-O src/externals/alpha_jQuery.twStylesheet.js.js
-	wget http://tiddlywiki.com/alpha/twcore.js \
+	wget http://tiddlywiki.github.com/alpha/twcore.js \
 		-O src/externals/alpha_twcore.js.js
-
 
 remotes: tiddlywiki jslib
 	./cacher
@@ -46,6 +63,8 @@ jslib: qunit
 		http://jquery-json.googlecode.com/files/jquery.json-2.3.min.js)
 	$(call wrap_jslib, src/lib/jquery-form.js.js, \
 		https://raw.github.com/malsup/form/master/jquery.form.js)
+	$(call wrap_jslib, src/lib/jquery.timeago.js.js, \
+		http://timeago.yarp.com/jquery.timeago.js)
 
 qunit:
 	mkdir -p src/test/qunit
@@ -58,6 +77,20 @@ qunit:
 		http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js
 	curl -Lo src/test/lib/jquery-json.js \
 		http://jquery-json.googlecode.com/files/jquery.json-2.2.js
+	curl -Lo src/test/lib/jquery.mockjax.js \
+		https://raw.github.com/appendto/jquery-mockjax/master/jquery.mockjax.js
+	curl -Lo src/test/run-qunit.js \
+		https://raw.github.com/ariya/phantomjs/1.6/examples/run-qunit.js
+
+phantomjs:
+	wget http://phantomjs.googlecode.com/files/$(PHANTOMJS_DL) \
+	-O phantomjs.tar.bz2
+	tar xjf phantomjs.tar.bz2
+	mv phantomjs-* phantomjs
+
+jstest:
+	@cd phantomjs/bin && \
+	./phantomjs ../../src/test/run-qunit.js ../../src/test/index.html
 
 dist: clean remotes test
 	python setup.py sdist

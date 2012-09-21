@@ -73,8 +73,6 @@ def get_space_tiddlers(environ, start_response):
     based on membership status.
     """
     _setup_friendly_environ(environ)
-    serializer, _ = get_serialize_type(environ)
-
     _extra_query_update(environ)
 
     return get_tiddlers(environ, start_response)
@@ -91,7 +89,6 @@ def home(environ, start_response):
     if http_host == host_url:
         http_host = 'frontpage.' + http_host
     return serve_space(environ, start_response, http_host)
-
 
 
 def serve_space(environ, start_response, http_host):

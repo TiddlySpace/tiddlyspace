@@ -35,3 +35,25 @@ def test_core_bag():
     uri = web_tiddler_url(ENVIRON, tiddler)
 
     assert uri == 'http://tiddlyspace.com/bags/common/tiddlers/monkey'
+
+def test_friendly_space():
+    tiddler = Tiddler('monkey', 'tapas_public')
+    uri = web_tiddler_url(ENVIRON, tiddler, friendly=True)
+    assert uri == 'http://tapas.tiddlyspace.com/monkey'
+
+def test_friendly_nonspace():
+    tiddler = Tiddler('monkey', 'tapas_extra')
+    uri = web_tiddler_url(ENVIRON, tiddler, friendly=True)
+    assert uri == 'http://tiddlyspace.com/bags/tapas_extra/tiddlers/monkey'
+
+def test_friendly_core():
+    tiddler = Tiddler('monkey', 'common')
+    uri = web_tiddler_url(ENVIRON, tiddler, friendly=True)
+
+    assert uri == 'http://tiddlyspace.com/bags/common/tiddlers/monkey'
+
+def test_friendly_port():
+    ENVIRON['tiddlyweb.config']['server_host']['port'] = 8080
+    tiddler = Tiddler('monkey', 'tapas_public')
+    uri = web_tiddler_url(ENVIRON, tiddler, friendly=True)
+    assert uri == 'http://tapas.tiddlyspace.com:8080/monkey'

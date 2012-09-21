@@ -39,7 +39,7 @@ var twStylesheet = function(css, options) {
 };
 
 var stylesheet = ["iframe {",
-"	height: 320px;",
+"	height: 340px;",
 "	z-index: 1000;",
 "	position: relative;",
 "}",

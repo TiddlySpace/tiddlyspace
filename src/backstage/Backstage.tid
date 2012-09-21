@@ -4,7 +4,7 @@ tags: excludeLists excludeSearch excludeMissing
 !SpaceUnplugged
 {{unpluggedSpaceTab{
 {{wizard{
-<<image unsyncedIcon width:48>> <<message messages.syncExplanation>>
+<<image unsyncedIcon width:48>> If you are unplugged, from here you can sync your offline version with the online version.
 }}}
 {{wizard syncKey{
 {{keyHeading{
@@ -17,24 +17,13 @@ Key}}}
 <<message messages.memberStatus>> <<homeLink>>
 {{unsyncedList{<<message messages.syncListHeading>> <<list filter [is[unsynced]]>>}}}
 
-<<tabs txtTiddlySpaceTab
-search "search across TiddlySpace" Backstage##Search
-tiddlers "tiddlers control panel" Backstage##BackstageTiddlers
-plugins "Manage installed plugins" PluginManager
-batch "Perform batch operations on public/private tiddlers" Backstage##BatchOps
-tweaks "Tweak the appearance and behaviour of TiddlyWiki" AdvancedOptions
-"import/export" "Import/export tiddlers from/to a TiddlyWiki" Backstage##ImportExport
->>
 running TiddlySpace@glossary version <<message extensions.tiddlyweb.status.tiddlyspace_version>>
 {{autotable{
 <<tiddler Backstage##Resources>>
 }}}
 
 !Resources
-[[blog|@@blog]] [[documentation|@@docs]] [[featured spaces|@@featured]]
-
-!Search
-<<tsSearch>>
+[[blog|@@blog]] [[documentation|@@docs]] [[featured spaces|@@featured]] 
 
 !ImportExport
 <<fileImport>>
@@ -73,3 +62,13 @@ You can download this TiddlySpace as an offline TiddlyWiki:
 
 !BatchPublic
 <<TiddlySpacePublisher type:public>>
+
+!Plugins
+''Note:'' Many of these plugins are core TiddlySpace plugins and cannot be changed unless first cloned.
+
+<<tiddler PluginManager>>
+
+!Tweaks
+These options change behavior in TiddlyWiki //only// and may be ineffective in TiddlySpace.
+
+<<tiddler AdvancedOptions>>

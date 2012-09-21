@@ -13,7 +13,7 @@ from tiddlyweb.model.tiddler import Tiddler
 
 
 def setup_module(module):
-    make_test_env(module)
+    make_test_env(module, hsearch=True)
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('cdent.0.0.0.0', 8080, app_fn)
@@ -118,7 +118,7 @@ def test_search_no_args():
     response, content = http.request('http://0.0.0.0:8080/search.json?q=_limit:999')
     assert response['status'] == '200'
     allinfo = simplejson.loads(content)
-    assert len(allinfo) == 162
+    assert len(allinfo) == 168
 
     response, content = http.request('http://fnd.0.0.0.0:8080/search.json')
     assert response['status'] == '200'
@@ -128,6 +128,48 @@ def test_search_no_args():
     response, content = http.request('http://fnd.0.0.0.0:8080/search.json?q=_limit:999')
     assert response['status'] == '200'
     fndinfo = simplejson.loads(content)
-    assert len(fndinfo) == 143
+    assert len(fndinfo) == 149
 
     assert len(allinfo) > len(fndinfo)
+
+def test_hsearch():
+    response, content = http.request('http://0.0.0.0:8080/hsearch.json?q=monkeys')
+
+    assert response['status'] == '200'
+    info = simplejson.loads(content)
+    assert len(info) == 6, len(info)
+
+    response, content = http.request('http://0.0.0.0:8080/hsearch.json?q=bag:cdent_public%20monkeys')
+
+    assert response['status'] == '200'
+    info = simplejson.loads(content)
+    assert len(info) == 4, len(info)
+
+def test_search_html():
+    response, content = http.request('http://0.0.0.0:8080/search?q=monkeys')
+
+    assert response['status'] == '200', content
+
+    assert 'http://fnd.0.0.0.0:8080/One%20Two' in content
+    assert 'http://cdent.0.0.0.0:8080/three%20two%20one' in content
+
+    assert '<a class="space" href="http://fnd.0.0.0.0:8080/">' in content
+
+    assert '<img alt="space icon" src="http://fnd.0.0.0.0:8080/SiteIcon"/>' in content
+
+    tiddler = store.get(Tiddler('One Two', 'fnd_public'))
+    tiddler.modifier = 'cowboy'
+    store.put(tiddler)
+
+    response, content = http.request('http://0.0.0.0:8080/search?q=monkeys')
+    assert response['status'] == '200', content
+    assert '<a class="modifier" href="http://fnd.0.0.0.0:8080/">' not in content
+    assert '<a class="modifier" href="http://cowboy.0.0.0.0:8080/">' in content
+    # tiddlers that do not come from a space should show the default tiddlyspace site icon.
+    tiddler = Tiddler('commoner', 'common')
+    tiddler.text = 'I want to live like common people.'
+    store.put(tiddler)
+
+    response, content = http.request('http://0.0.0.0:8080/search?q=title:commoner')
+    assert response['status'] == '200', content
+    assert '<img alt="space icon" src="http://0.0.0.0:8080/SiteIcon"/>' in content

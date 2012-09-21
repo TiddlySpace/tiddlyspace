@@ -18,7 +18,7 @@ tags: excludeLists excludeSearch excludeMissing
 		<a class="app" href="/apps">back to apps</a>
 		<div class="left">
 		<div id="siteiconArea">
-		<h2>Site Icon</h2>
+		<h2>User Icon</h2>
 		<div>
 			<img id="siteicon" class="siteicon">
 			<form id="upload" method="POST" enctype="multipart/form-data">
@@ -28,6 +28,9 @@ tags: excludeLists excludeSearch excludeMissing
 				<input type="file" name="file" />
 				<input type="submit" value="upload" />
 			</form>
+			<div id="dropzone">Drop file here
+				<img class="notloading" src="/bags/common/tiddlers/ajax-loader.gif" alt="submitting SiteIcon" />
+			</div>
 		</div>
 		</div>
 		<h2>Find Space</h2>
@@ -85,6 +88,7 @@ tags: excludeLists excludeSearch excludeMissing
 <script type='text/javascript' src='/bags/common/tiddlers/jquery-form.js'></script>
 <script type='text/javascript' src="/bags/common/tiddlers/siteiconupload.js"></script>
 <script type='text/javascript' src='/bags/common/tiddlers/ts.js'></script>
+<script src="/status.js"></script>
 <script type="text/javascript">
 /*
  * jQuery UI Autocomplete HTML Extension
@@ -137,7 +141,7 @@ ts.init(function(ts) {
 	} else if(ts.user.name === ts.currentSpace){
 		initSiteIconUpload(ts.user.name);
 	} else {
-		link = $("<a />").attr("href", ts.getHost(ts.user.name) + "/_account").text("Change SiteIcon");
+		link = $("<a />").attr("href", ts.getHost(ts.user.name) + "/_account").text("Change User Icon");
 		$("#siteiconArea div").empty().append(link);
 	}
 	$(".hostSuffix").text("." + ts.getHost("").split("//")[1]);

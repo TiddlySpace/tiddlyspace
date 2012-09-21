@@ -10,15 +10,15 @@ _cache-max-age: 43200
 </head>
 <body style="display:none;">
 <form class="ts-login login login-method" action="" autocomplete="off" id="userpass-login" class="toggler">
-	<p>login via <a href="#openid-login">openid</a></p>
+	<p>login via <a class="toggle-form" href="#openid-login">openid</a></p>
 	<input type="text" name="username" placeholder="username" />
 	<input type="password" name="password" placeholder="password" /> 
 	<input type="hidden" name="redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
 	<input type="submit" value="Log In" />
 </form>
-<form class="ts-openidlogin login-method" id="openid-login"
+<form class="ts-openidlogin login-method login-method-hide" id="openid-login"
 		method="post" action="/challenge/tiddlywebplugins.tiddlyspace.openid">
-	<p>login with <a href="#userpass-login">username and password</a></p>
+	<p>login with <a class="toggle-form" href="#userpass-login">username and password</a></p>
 	<input name="tiddlyweb_redirect" type="hidden" value="/bags/common/tiddlers/backstage">
 	<input class="openid" type="text" name="openid" placeholder="your openid">
 	<input class="button" type="submit" value="Sign In">
@@ -32,6 +32,12 @@ _cache-max-age: 43200
 </div>
 <hr />
 <ul id="app-list">
+        <li class="search">
+                <form method="GET" target="_top" action="/hsearch">
+                <img src="/bags/common/tiddlers/search.png" alt="Search Icon" class="app-img" />
+                <input type="search" name="q" placeholder="SEARCH" />
+                <form>
+        </li>
 	<li class="write">
 		<a href="/takenote" target="_parent">
 			<img src="/bags/common/tiddlers/pencil_blue.png" alt="Icon for Takenote" class="app-img" />
@@ -64,7 +70,7 @@ _cache-max-age: 43200
 	</li>
 	<li class="help">
 		<a href="http://help.tiddlyspace.com"  target="_parent">
-			<img src="http://help.tiddlyspace.com/SiteIcon" alt="Help SiteIcon" class="app-img" />
+			<img src="/bags/common/tiddlers/help.png" alt="Help SiteIcon" class="app-img" />
 			HELP
 		</a>
 	</li>
@@ -75,6 +81,7 @@ _cache-max-age: 43200
 <script type="text/javascript" src="/bags/common/tiddlers/chrjs.space"></script>
 <script type="text/javascript" src="/bags/common/tiddlers/chrjs.identities"></script>
 <script type="text/javascript" src="/bags/common/tiddlers/ts.js"></script>
+<script src="/status.js"></script>
 <script type="text/javascript">
 	if(window.location.hash === "#refreshParent") {
 		window.location.hash = "";
@@ -85,8 +92,15 @@ _cache-max-age: 43200
 		host = ts.getHost(ts.user.name);
 		$(document.body).show();
 		window.location.hash = "#userpass-login";
-		if(ts.user.anon && $('#userpass-login').css('display') !== "block") {
-			$(".login-method").show();
+		if (ts.user.anon) {
+			$('.toggle-form').click(function(ev) {
+				$(this).closest('form').addClass('login-method-hide')
+					.siblings('form').removeClass('login-method-hide');
+				ev.preventDefault();
+			});
+		}
+		if ($(document.body).hasClass('ts-nonmember')) {
+			$('.write').remove();
 		}
 		if(!ts.user.anon) {
 			li = $('<li class="account" />').appendTo("#app-list")[0];

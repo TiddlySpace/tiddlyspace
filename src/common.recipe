@@ -13,6 +13,8 @@ tiddler: lib/chrjs.users.js
 tiddler: lib/chrjs.space.js
 tiddler: lib/chrjs.identities.js
 tiddler: lib/jquery-form.js.js
+tiddler: lib/jquery.timeago.js.js
+tiddler: lib/run-timeago.js.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid
@@ -27,6 +29,7 @@ recipe: apps/apps.recipe
 tiddler: system-applications/appspagecss.tid
 tiddler: system-applications/appspagejs.tid
 tiddler: system-applications/admin.css.tid
+tiddler: system-applications/space.js.js
 
 # Icons used by the appswitcher
 tiddler: icons/browse_read_blue.png.tid
@@ -35,9 +38,11 @@ tiddler: icons/share_blue.png.tid
 tiddler: icons/tiddlywiki2_blue.png.tid
 tiddler: icons/box_closed_blue.png.tid
 tiddler: icons/openid.png.tid
+tiddler: icons/search.png
 
 #generic icons
 tiddler: icons/help.png.tid
+tiddler: icons/ajax-loader.gif.tid
 
 # notabene app common files
 recipe: https://raw.github.com/jdlrobson/notabene/master/dist/latest/common.recipe
@@ -49,3 +54,6 @@ tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply-button.js.tid
 tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply-loader.js.tid
 tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply.js.tid
 tiddler: https://raw.github.com/bengillies/ts-reply/master/reply.png.tid
+
+# normalize.css
+tiddler: https://github.com/necolas/normalize.css/raw/master/normalize.css

@@ -2,16 +2,33 @@ type: None
 tags: excludeSearch excludeLists excludeMissing
 modifier: osmosoft
 
+/%
+
+Hello,
+
+If you choose to change this GettingStarted tiddler, you may wish to add the following to your new content if you expect you space to be included:
+
+<<<
+----
+Hello,
+''This ~GettingStarted tiddler has been customized.''
+If you want to see the original system tiddler just click the following link: GettingStarted@system-info at system-info.
+<<<
+%/
+
 Welcome to your brand new [[TiddlySpace]]@glossary.
 
 You're almost ready to go, there are just a couple of things left to do.
 
 !Customise your space
-Go to [[SpaceSettings]] to finish customising  your space. When you're done, come back here. Don't worry though, this will still be open when you've finished.
+Go to [[SpaceSettings]] to finish customising  your space. When you're done, come back here (just scroll up). Don't worry though, this will still be open when you've finished.
 
 !Finished customising?
 You can [[Start writing]] some [[tiddlers|Tiddler]]@glossary.
 If you're not done tweaking yet though, you can always [[Customise this space|SpaceSettings]] a bit more.
+
+!Administration
+If you'd like to change your password or create another space, visit "Your Account" from the UniversalBackstage@faq (the blue dot in the upper right of the page). If you'd like to add a member or [[include a space|How do I include/exclude spaces?]]@faq visit "This Space" from the UniversalBackstage@faq.
 
 !Stuck?
 If you're stuck, and would like some help, please visit the @help space, which can point you in the right direction.

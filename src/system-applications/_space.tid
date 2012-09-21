@@ -13,7 +13,7 @@ tags: excludeLists excludeSearch excludeMissing
 <body>
 <div id="container">
 	<div id="text-html" class="main section">
-		<a class="app" href="/apps">back to apps</a>
+		<a class="app" href="/">home</a>
 		<div class="left">
 		<h2>About this space <button class='toggleNext'>show</button></button></h2>
 		<div id="siteinfo"></div>
@@ -25,8 +25,11 @@ tags: excludeLists excludeSearch excludeMissing
 				<input type="hidden" name="tags" value="excludeLists">
 				<input type="hidden" name="csrf_token" class="csrf" />
 				<input type="file" name="file" />
-				<input type="submit" value="upload" />
+				<input class="btn" type="submit" value="upload" />
 			</form>
+			<div id="dropzone">Drop file here
+				<img class="notloading" src="/bags/common/tiddlers/ajax-loader.gif" alt="submitting SiteIcon" />
+			</div>
 		</div>
 		<h2>Vital Statistics</h2>
 		<div id="info">please wait while information is loaded about this space...</div>
@@ -38,7 +41,7 @@ tags: excludeLists excludeSearch excludeMissing
 				<a href="http://docs.tiddlyspace.com/What%20is%20a%20member%3F" title="What is a Member?" class="help">What is a Member?</a>
 			</h2>
 			<div>
-				<p>Add a new member to your space by entering their name below. Enter a space to add all existing members of that space.</p>
+				<p>Add a new member to your space by entering their name below. Enter a space name instead and prefix with @ to add everyone who is already a member of that space.</p>
 				<form class="ts-members">
 					<input class="inputBox" type="text" name="username">
 					<input type="submit" value="Add Member" />
@@ -80,144 +83,8 @@ tags: excludeLists excludeSearch excludeMissing
 <script type='text/javascript' src='/bags/common/tiddlers/jquery-form.js'></script>
 <script type='text/javascript' src="/bags/common/tiddlers/siteiconupload.js"></script>
 <script type='text/javascript' src="/bags/common/tiddlers/ts.js"></script>
-<script type="text/javascript">
-	ts.init(function(ts) {
-		if(!ts.currentSpace) {
-			return;
-		}
-		var address = window.location.hostname.split(".");
-		var spaceName = address[0];
-		var publicBag = spaceName + "_public";
-		$("#siteUrl").text(window.location.hostname);
-		initSiteIconUpload(spaceName);
-
-		function countTiddlers(members) {
-			var numMembers = members ? members.length : false;
-			var publicBagUrl = "/bags/" + publicBag + "/tiddlers";
-			var url = members ? "/bags/" + spaceName + "_private/tiddlers" :
-				publicBagUrl;
-			$.ajax({ url: url, dataType: "text",
-				success: function(tiddlers) {
-					var numTiddlers = $.trim(tiddlers).split("\n").length;
-					var html = "";
-					function printFullInfo(numPublicTiddlers) {
-						var totalTiddlers = numPublicTiddlers + numTiddlers;
-						html += ['This space has ', numMembers,
-							' members, <a href="/tiddlers">', totalTiddlers,
-							' local tiddlers</a>, <a href="' + url + '">',
-							numTiddlers, ' are private</a> and <a href="',
-							publicBagUrl, '">',
-							numPublicTiddlers, ' public</a>.'].join("");
-						$("#info").html(html);
-					}
-					if(numMembers) {
-						$.ajax({
-							url: publicBagUrl,
-							dataType: "text",
-							success: function(tiddlers) {
-								printFullInfo($.trim(tiddlers).split("\n").length);
-							}
-						});
-					} else {
-						html += 'This space has <a href="' + url + '">' + numTiddlers + " public tiddlers</a>";
-						$("#info").html(html);
-					}
-				}
-			});
-		}
-		var space = new tiddlyweb.Space(spaceName, "/");
-		space.members().get(function(members) {
-			countTiddlers(members);
-		}, function() {
-			countTiddlers();
-		});
-
-		function complete(tiddler) {
-			$("#siteinfo .edit").show();
-			$("#siteinfo .value").data("tiddler", tiddler).
-				empty().html(tiddler.render);
-		}
-		function siteInfoEditor(tiddler) {
-			var errback = function() {
-				$("#siteinfo .edit").click();
-				$("<div class='error' />").text("Error occurred whilst saving.").prependTo("#siteinfo .value");
-			};
-			$("<button class='edit' />").click(function(ev) {
-				var editBtn = $(ev.target);
-				$(editBtn).hide();
-				var val = $(".value", $(ev.target).parent("#siteinfo")[0]);
-				var wikitext = $(val).data("tiddler").text;
-				var html = $(val).html();
-				$(val).empty();
-				$("<textarea />").val(wikitext).appendTo(val);
-				$("<button />").text("save").click(function(ev) {
-					var text = $("textarea", val).val();
-					$(val).empty().text("saving...");
-					tiddler.text = text;
-					tiddler.put(function() {
-						tiddler.get(function(tid) {
-							tiddler = tid;
-							complete(tid);
-						}, errback, "render=y");
-					}, errback);
-					$(editBtn).show();
-				}).appendTo(val);
-				$("<button />").text("cancel").
-					click(function(ev) {
-						complete(tiddler);
-					}).appendTo(val);
-			}).text("edit").appendTo("#siteinfo");
-		}
-		var tiddler = new tiddlyweb.Tiddler("SiteInfo", new tiddlyweb.Bag(publicBag, "/"));
-		$("<div class='value' />").text("(Loading SiteInfo tiddler)").data("tiddler", tiddler).appendTo("#siteinfo");
-		tiddler.get(
-			function(tid) {
-				tiddler = tid;
-				$("#siteinfo .value").data("tiddler", tid).html(tid.render || tid.text);
-				if($(document.body).hasClass("ts-member")) {
-					siteInfoEditor(tid);
-				}
-			},
-			function() {
-				$("#siteinfo .value").text("This space has not published any information about itself.");
-				if($(document.body).hasClass("ts-member")) {
-					siteInfoEditor(tiddler);
-				}
-			}, "render=1");
-	});
-	function toggleNext(ev) {
-		var label1 = "hide";
-		var label2 = "show";
-		var target = $(ev.target).parent().next();
-		var visible = $(ev.target).hasClass("open") ? true : false;
-		var label = visible ? label1 : label2;
-		$(target).stop(true, true);
-		if(!visible) {
-			$(target).slideDown(200);
-			$(ev.target).addClass("open").text(label1);
-		} else {
-			if($(target).parents().is(":hidden")) {
-				// see http://forum.jquery.com/topic/slideup-doesn-t-work-with-hidden-parent
-				$(target).hide();
-			} else {
-				$(target).slideUp(200);
-			}
-			$(ev.target).removeClass("open").text(label2);
-		}
-	}
-	// setup hide/show sliders
-	$(".toggleNext").each(function(i, el) {
-		$(el).addClass("open").click(toggleNext);
-		toggleNext({ target: el });
-	});
-
-	if(window != window.top) {
-		$("html").addClass("iframeMode");
-		$("a").live("click",function(ev) {
-			$(ev.target).attr("target", "_blank");
-		});
-	}
-</script>
+<script src="/status.js"></script>
+<script type='text/javascript' src="/bags/common/tiddlers/space.js"></script>
 <!--[if lt IE 8]>
 <script type="text/javascript" src="/bags/common/tiddlers/json2.js"></script>
 <![endif]-->
