@@ -4,14 +4,9 @@ tags: excludeLists excludeSearch excludeMissing
 !SpaceUnplugged
 {{unpluggedSpaceTab{
 {{wizard{
-<<image unsyncedIcon width:48>> If you are unplugged, from here you can sync your offline version with the online version.
+<<image unsyncedIcon width:48>> Sync is currently unavailable in ~TiddlyWiki due to security constraints in modern browsers. Research is being done to build a suitable alternative. In the meantime if you have changed content in an offline ~TiddlyWiki, you can get your content back into ~TiddlySpace by using the ''import'' functionality from the backstage of the online wiki.
 }}}
-{{wizard syncKey{
-{{keyHeading{
-Key}}}
-{{changedServer keyItem{<<message macros.sync.syncStatusList.changedServer.text>>}}} {{changedBoth keyItem{<<message macros.sync.syncStatusList.changedBoth.text>>}}} {{changedLocally keyItem{<<message macros.sync.syncStatusList.changedLocally.text>>}}} {{notFound keyItem{<<message macros.sync.syncStatusList.notFound.text>>}}}
 }}}
-<<sync>>
 
 !Menu
 <<message messages.memberStatus>> <<homeLink>>
