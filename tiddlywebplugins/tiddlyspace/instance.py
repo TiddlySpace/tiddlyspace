@@ -41,6 +41,19 @@ store_structure['bags']['tiddlyspace'] = {
     'policy': store_structure['bags']['system']['policy'],
 }
 
+store_structure['bags']['notifications'] = {
+    'desc': 'System wide global notifications',
+    'policy': {
+        'read': [],
+        'write': ['R:NOTIFIER'],
+        'create': ['R:NOTIFIER'],
+        'delete': ['R:NOTIFIER'],
+        'manage': ['R:NOTIFIER'],
+        'accept': ['NONE'],
+        'owner': 'administrator',
+    },
+}
+
 store_structure['recipes']['default']['recipe'].insert(1, ('tiddlyspace', ''))
 
 store_structure['bags']['frontpage_public'] = {
