@@ -34,10 +34,10 @@ var errorhandler = {
                                 var bagsP = $.inArray('bags', segments);
                                 var recipesP = $.inArray('recipes', segments);
                                 var segmentsCount = segments.length;
-                                if ((segmentsCount == 1
-                                            && bagsP == -1
-                                            && recipesP == -1)
-                                        || segmentsCount == 4) {
+                                if ((segmentsCount == 1 &&
+											bagsP == -1 &&
+											recipesP == -1) ||
+										segmentsCount == 4) {
 					errorhandler.suggestTiddlers(container, space, tiddler);
 				}
 			} else {
@@ -51,7 +51,7 @@ var errorhandler = {
 		$.ajax({url: "/status", dataType: "json",
 			success: function(status) {
 				if(status.username && status.username != "GUEST") {
-					var sh = status["server_host"];
+					var sh = status.server_host;
 					var newSpaceUri = sh.scheme + "://" + name + "." + sh.host;
 					newSpaceUri = sh.port ? newSpaceUri + ":" + sh.port : newSpaceUri;
 					var spaceCallback = function() {

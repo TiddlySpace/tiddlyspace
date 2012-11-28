@@ -244,8 +244,8 @@ test("check concertina commands do not appear in readonly mode", function() {
 		return function() {};
 	};
 	// run
-	macro.iconCommands.public(place1, tiddler);
-	macro.iconCommands.private(place2, tiddler);
+	macro.iconCommands['public'](place1, tiddler);
+	macro.iconCommands['private'](place2, tiddler);
 
 	// verify
 	var selector = "input[type=checkbox], .publishButton";

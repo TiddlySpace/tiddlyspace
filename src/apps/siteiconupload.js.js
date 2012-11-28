@@ -109,7 +109,7 @@ function DNDFileController(id, publicBag) {
 					tags: [],
 					text: data,
 					title: "SiteIcon",
-					type: file.type,
+					type: file.type
 				};
 
 			$.ajax({

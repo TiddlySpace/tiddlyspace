@@ -16,13 +16,10 @@ var _mockResolveSpaceName = function(x) {
 	switch(x) {
 		case "x_public":
 			return "x";
-			break;
 		case "bar_public":
 			return "bar";
-			break;
 		case "user_public":
 			return "user";
-			break;
 	}
 	return false;
 };

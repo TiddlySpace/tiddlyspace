@@ -246,8 +246,9 @@ test("moveTiddler check the callback where no delete", function() {
 	var tiddler = new Tiddler("pig");
 	var asExpected = false;
 	var callback = function(context) {
-		if(!context.deleteContext.data && context.copyContext.status == true
-			&& context.copyContext.statusText == "hello there") {
+		if(!context.deleteContext.data &&
+			context.copyContext.status === true &&
+			context.copyContext.statusText == "hello there") {
 			asExpected = true;
 		}
 	};
@@ -273,8 +274,9 @@ test("moveTiddler  check the content of callbacks", function() {
 	var tiddler = new Tiddler("pig");
 	var asExpected = false;
 	var callback = function(context) {
-		if(context.deleteContext.data == "foo" && context.copyContext.status == true
-			&& context.copyContext.statusText == "hello there") {
+		if(context.deleteContext.data === "foo" &&
+			context.copyContext.status === true &&
+			context.copyContext.statusText === "hello there") {
 			asExpected = true;
 		}
 	};

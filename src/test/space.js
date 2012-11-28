@@ -19,7 +19,9 @@ module("space resource", {
 			_request = options;
 			options.success(data, null, xhr);
 			options.error(xhr, null, null);
-			options.complete && options.complete(data, null, xhr);
+			if (options.complete) {
+				options.complete(data, null, xhr);
+			}
 		};
 	},
 	teardown: function() {

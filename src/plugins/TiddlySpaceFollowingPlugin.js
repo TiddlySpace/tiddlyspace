@@ -165,8 +165,7 @@ var followMacro = config.macros.followTiddlers = {
 		var user = params[1] || false;
 		if(tid) {
 			followMacro.makeButton(place, {
-				url: "/search?q=title:%22"
-                                    + encodeURIComponent(title) + "%22",
+				url: "/search?q=title:%22" + encodeURIComponent(title) + "%22",
 				containingTiddler: containingTiddler,
 				blacklisted: followMacro.getBlacklist(), title: title, user: user,
 				consultFollowRelationship: (args.follow &&
