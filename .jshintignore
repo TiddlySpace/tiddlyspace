@@ -1,3 +1,5 @@
+src/externals/alpha_jquery.js.js
+src/externals/alpha_twcore.js.js
 src/lib/chrjs.js
 src/lib/chrjs.users.js
 src/lib/bookmark_bubble.js.js
@@ -6,9 +8,8 @@ src/lib/jquery-form.js.js
 src/lib/jquery-json.js.js
 src/lib/jquery.js.js
 src/lib/jquery.timeago.js.js
+src/lib/jquery-ui.custom.js.js
 src/lib/json2.js.js
 src/lib/ts.js.js
-src/externals/alpha_jquery.js.js
-src/lib/jquery-ui.custom.js.js
-src/externals/alpha_twcore.js.js
+src/plugins/TiddlySpaceSanitizer.js
 src/test/run-qunit.js
