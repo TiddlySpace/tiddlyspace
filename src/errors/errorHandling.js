@@ -101,9 +101,10 @@ var errorhandler = {
 		var uri = "/bags/" + space + "_public/tiddlers";
 		$.ajax({url: uri, dataType: "text",
 			success: function(txt) {
-				var tiddlers = txt.split("\n");
-				var suggestions = [];
-				for(var i = 0; i < tiddlers.length; i++) {
+				var tiddlers = txt.split("\n"),
+					suggestions = [],
+					i;
+				for(i = 0; i < tiddlers.length; i++) {
 					var thisTitle = tiddlers[i];
 					if(errorhandler.areSimilar(title, thisTitle)) {
 						suggestions.push(thisTitle);
@@ -112,7 +113,7 @@ var errorhandler = {
 				if(suggestions.length > 0) {
 					$("<h2 />").text(errorhandler.locale.tiddlerSuggestionsHeader).appendTo(container);
 					var list = $("<ol />").appendTo(container)[0];
-					for(var i = 0; i < suggestions.length; i++) {
+					for(i = 0; i < suggestions.length; i++) {
 						var suggestion = suggestions[i];
 						var item = $("<li />").appendTo(list);
 						$("<a />").attr("href", "/" + suggestion).text(suggestion).appendTo(item);
@@ -125,8 +126,9 @@ var errorhandler = {
 		$(container).empty(errorhandler.locale.alternativeSpaces);
 		$.ajax({url: "/spaces", dataType: "json",
 			success: function(spaces) {
-				var suggestions = [];
-				for(var i = 0; i < spaces.length; i++) {
+				var suggestions = [],
+					i;
+				for(i = 0; i < spaces.length; i++) {
 					var thisSpace = spaces[i];
 					if(errorhandler.areSimilar(thisSpace.name, space)) {
 						suggestions.push(thisSpace);
@@ -136,7 +138,7 @@ var errorhandler = {
 				if(suggestions.length > 0) {
 					$("<h2 />").text(errorhandler.locale.spaceSuggestionsHeader).appendTo(container);
 					var list = $("<ol />").appendTo(container)[0];
-					for(var i = 0; i < suggestions.length; i++) {
+					for(i = 0; i < suggestions.length; i++) {
 						var suggestion = suggestions[i];
 						var item = $("<li />").appendTo(list);
 						var avatar = suggestion.uri + "bags/" + suggestion.name + "_public/tiddlers/SiteIcon";

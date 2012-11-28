@@ -75,7 +75,7 @@ test("activation", function() { // NB: assertions should be identical to firstRu
 	strictEqual(log.palette, true);
 	strictEqual(log.avatar, true);
 	strictEqual(log.autoSave.length, 2); // ColorPalette and SiteIcon handled separately
-	var flagTiddler = store.getTiddler("fooSetupFlag");
+	flagTiddler = store.getTiddler("fooSetupFlag");
 	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.6");
 });
 
@@ -94,7 +94,7 @@ test("firstRun", function() { // NB: assertions should be identical to activatio
 	strictEqual(log.palette, true);
 	strictEqual(log.avatar, true);
 	strictEqual(log.autoSave.length, 2); // ColorPalette and SiteIcon handled separately
-	var flagTiddler = store.getTiddler("fooSetupFlag");
+	flagTiddler = store.getTiddler("fooSetupFlag");
 	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.6");
 	strictEqual(flagTiddler.tags.indexOf("excludePublisher") > -1, true);
 });

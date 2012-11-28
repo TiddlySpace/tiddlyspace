@@ -1,17 +1,19 @@
 (function(module, $) {
 module("TiddlySpaceFilters", {
 	setup: function() {
-		var tiddlers = ["elephant", "pig", "Ant"];
-		var bag = "foo_private";
-		for(var i = 0; i < tiddlers.length; i++) {
-			var tiddler = new Tiddler(tiddlers[i]);
+		var tiddlers = ["elephant", "pig", "Ant"],
+			bag = "foo_private",
+			tiddler,
+			i;
+		for(i = 0; i < tiddlers.length; i++) {
+			tiddler = new Tiddler(tiddlers[i]);
 			tiddler.fields["server.bag"] = bag;
 			store.saveTiddler(tiddler);
 		}
 		tiddlers = ["Bee", "zebra"];
 		bag = "foo_public";
-		for(var i = 0; i < tiddlers.length; i++) {
-			var tiddler = new Tiddler(tiddlers[i]);
+		for(i = 0; i < tiddlers.length; i++) {
+			tiddler = new Tiddler(tiddlers[i]);
 			tiddler.fields["server.bag"] = bag;
 			store.saveTiddler(tiddler);
 		}

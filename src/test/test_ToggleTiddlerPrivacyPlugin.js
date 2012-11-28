@@ -22,7 +22,7 @@ test("setBag (change)", function() {
 	macro.setBag(el, "foo_public");
 
 	//test
-	var tiddler = store.getTiddler("foo");
+	tiddler = store.getTiddler("foo");
 	strictEqual(bagInput.val(), "foo_public");
 	strictEqual(workspaceInput.val(), "bags/foo_public");
 	strictEqual(tiddler.fields["server.bag"], "foo_public");
@@ -47,7 +47,7 @@ test("setBag", function() {
 	macro.setBag(el, "foo_private");
 	
 	//test
-	var tiddler = store.getTiddler("foo");
+	tiddler = store.getTiddler("foo");
 	strictEqual(bagInput.val(), "foo_private");
 	strictEqual(workspaceInput.val(), "bags/foo_private");
 	strictEqual(tiddler.fields["server.bag"], "foo_private");

@@ -42,7 +42,7 @@ var me = config.macros.viewRevisions = {
 		var pageSize = parseInt(params.page[0], 10) || me.defaultPageSize;
 		var linkObj = params.link ? params.link[0] || me.defaultLinkText : false;
 		if(linkObj) {
-			 revButton = $('<span class="button openRevisions" />')
+			revButton = $('<span class="button openRevisions" />')
 				.appendTo(place);
 			wikify(linkObj, revButton[0], null, tiddler);
 		} else {

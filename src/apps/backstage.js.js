@@ -158,8 +158,8 @@ var loadEvent = function() {
 	body.insertBefore(link, body.firstChild);
 	var html = [
 	'<div class="bubble">',
-	    '<iframe src="/bags/common/tiddlers/backstage#userpass-login" width="auto" style="border:none;"></iframe>',
-	    '<div class="tail"></div>',
+		'<iframe src="/bags/common/tiddlers/backstage#userpass-login" width="auto" style="border:none;"></iframe>',
+		'<div class="tail"></div>',
 	'</div>'].join("");
 	var bubble = document.createElement("div");
 	bubble.setAttribute("id", "bs-popup");

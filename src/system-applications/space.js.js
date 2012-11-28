@@ -36,7 +36,7 @@ ts.init(function(ts) {
 				publicBagUrl, '">',
 				numPublicTiddlers,
 				(numPublicTiddlers === 0 || numPublicTiddlers > 1) ? ' are' : ' is',
-				 ' public</a>.'].join("");
+					' public</a>.'].join("");
 			$("#info").html(html);
 		}
 		if(numMembers) {

@@ -9,3 +9,5 @@ src/lib/jquery.timeago.js.js
 src/lib/ts.js.js
 src/externals/alpha_jquery.js.js
 src/lib/jquery-ui.custom.js.js
+src/externals/alpha_twcore.js.js
+src/test/run-qunit.js
