@@ -1,9 +1,3 @@
-*.pyc
-
-dev_instance
-
-src/externals
-
 src/lib/chrjs.js
 src/lib/chrjs.users.js
 src/lib/bookmark_bubble.js.js
@@ -13,11 +7,3 @@ src/lib/jquery-json.js.js
 src/lib/jquery.js.js
 src/lib/jquery.timeago.js.js
 src/lib/ts.js.js
-
-src/test/qunit
-src/test/run-qunit.js
-src/test/lib
-
-test_instance
-
-tiddlywebplugins/tiddlyspace/resources
