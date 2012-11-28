@@ -9,7 +9,7 @@ also see STYLE guide
 Unit Tests
 ==========
 
-* `make test` runs all tests.  
+* `make test` runs all tests.
 * From scratch you should run `make remotes phantomjs test`
 * Python: test directory, using py.test (http://pytest.org)
 * JavaScript: src/test directory, using QUnit (http://docs.jquery.com/QUnit)
@@ -21,6 +21,7 @@ Development Instance
 * install dependencies
 ** components listed in setup.py's install_requires
 ** httplib2, PyYAML (required for testing)
+** node (required for JavaScript testing and linting)
 
 * Set up mysql on your machine. See MYSQL.
 
