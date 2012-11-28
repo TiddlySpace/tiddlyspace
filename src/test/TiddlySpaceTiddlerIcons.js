@@ -21,7 +21,7 @@ module("TiddlySpaceTiddlerIcons", {
 			} else {
 				return _format.apply(this, arguments);
 			}
-		}
+		};
 		var popup = $("<div />").attr("id", "test_ttt_popup").appendTo(document.body);
 		Popup = {
 			create: function(place) {
@@ -35,7 +35,7 @@ module("TiddlySpaceTiddlerIcons", {
 			remove: function() {
 				this.hidden = true;
 			}
-		}
+		};
 		_Popup = Popup;
 		_binaryTiddlersPlugin = config.extensions.BinaryTiddlersPlugin;
 		config.extensions.BinaryTiddlersPlugin = {
@@ -43,7 +43,7 @@ module("TiddlySpaceTiddlerIcons", {
 				var isPrivate = substr == "_private";
 				var isPublic = substr == "_public";
 				if(str == "bar_public" && isPublic) {
-					return true
+					return true;
 				} else if(str == "dog_private" && isPrivate) {
 					return true;
 				} else if(str == "jon_public" && isPublic) {
@@ -262,7 +262,7 @@ module("TiddlySpaceTiddlerIcons (dirty)", {
 		dirtyReported = false;
 		config.macros.tiddlerOrigin.reportDirty = function() {
 			dirtyReported = true;
-		}
+		};
 		_dirty = story.isDirty;
 		story.isDirty = function(title) {
 			if(title == "jack") {

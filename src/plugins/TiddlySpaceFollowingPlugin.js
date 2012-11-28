@@ -365,7 +365,7 @@ var scanMacro = config.macros.tsScan = {
 					scanMacro._scanCallback(place, tiddlers, options);
 				};
 				if(scanMacro.scanned[url] && scanMacro.scanned[url].callbacks) {
-					scanMacro.scanned[url].callbacks.push(callback)
+					scanMacro.scanned[url].callbacks.push(callback);
 				} else {
 					scanMacro.scanned[url] = {
 						callbacks: [callback]
@@ -509,7 +509,7 @@ var linkedMacro = config.macros.linkedTiddlers = {
 				consultFollowRelationship: args.follow ? true : false });
 		}
 	}
-}
+};
 
 if(config.options.chkFollowTiddlersIsLinkedTiddlers) {
 	merge(config.macros.followTiddlers, config.macros.linkedTiddlers);

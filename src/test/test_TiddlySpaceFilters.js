@@ -51,7 +51,7 @@ test("config.filterHelpers.is.private", function() {
 	var res2 = ftest(tiddler2);
 	var res3 = ftest(tiddler3);
 	strictEqual(config.extensions.tiddlyspace.currentSpace.name, "foo",
-		"These tests rely on foo being the default space.")
+		"These tests rely on foo being the default space.");
 	strictEqual(res1, true);
 	strictEqual(res2, false);
 	strictEqual(res3, false);

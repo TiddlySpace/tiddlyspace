@@ -15,14 +15,14 @@ var _mockCreateSpaceLink = function(container, space, title) {
 var _mockResolveSpaceName = function(x) {
 	switch(x) {
 		case "x_public":
-			return "x"
+			return "x";
 			break;
 		case "bar_public":
-			return "bar"
+			return "bar";
 			break;
 		case "user_public":
-			return "user"
-			break
+			return "user";
+			break;
 	}
 	return false;
 };
@@ -35,7 +35,7 @@ var runTest = function(container, bag, serverTitle) {
 	tiddler.fields["server.bag"] = bag;
 	paramString = {
 		parseParams: function() {
-			return [{}]
+			return [{}];
 		}
 	};
 	config.macros.view.views.replyLink("hello", container, ["title", "replyLink"], null,

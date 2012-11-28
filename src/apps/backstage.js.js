@@ -139,7 +139,7 @@ function addEventListener(node, event, handler, bubble) {
 		event = event == "load" ? "onload" : event;
 		node.attachEvent(event, handler);  
 	}
-};
+}
 
 var loadEvent = function() {
 	var link = document.createElement("a");
@@ -202,9 +202,9 @@ var loadEvent = function() {
 			fade(bubble, false);
 		} else {
 			fade(bubble, true);
-		};
+		}
 		bubbleOpen = !bubbleOpen;
-	}
+	};
 
 	addEventListener(link, "click", toggleBubble);
 

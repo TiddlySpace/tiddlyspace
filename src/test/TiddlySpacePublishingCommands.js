@@ -12,7 +12,7 @@ module("TiddlySpacePublishingCommands", {
 			} else {
 				return false;
 			}
-		}
+		};
 		readOnly = false;
 		var tid1 = new Tiddler("bfoo");
 		tid1.fields["server.bag"] = "foo_public";
@@ -114,7 +114,7 @@ test("createDraftTiddler", function() {
 	strictEqual(fields["publish.name"], "foo");
 	strictEqual(fields["geo.long"], "3");
 	strictEqual(fields["geo.lat"], "2");
-	strictEqual(typeof(fields["server.etag"]), "undefined")
+	strictEqual(typeof(fields["server.etag"]), "undefined");
 
 	tiddler = store.getTiddler("foo");
 	strictEqual(tiddler.fields["server.bag"], "foo_public", "checks old tiddler retained");
@@ -410,21 +410,21 @@ test("getMode", function() {
 		parseParams: function() {
 			return [{
 				"type": ["private"]
-			}]
+			}];
 		}
 	};
 	var paramString2 = {
 		parseParams: function() {
 			return [{
 				"type": ["public"]
-			}]
+			}];
 		}
 	};
 	var paramString3 = {
 		parseParams: function() {
 			return [{
 				"type": ["badvalue"]
-			}]
+			}];
 		}
 	};
 

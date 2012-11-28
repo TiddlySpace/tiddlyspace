@@ -220,7 +220,7 @@ var me = config.macros.viewRevisions = {
 			} else if ((context.revisions.length - 1) > to) {
 				me.showMoreButton(tiddlerElem, context, userParams, to + 1);
 			}
-		}
+		};
 		me.shiftVisibleDown(userParams.title, callback);
 	},
 

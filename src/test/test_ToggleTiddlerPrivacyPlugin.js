@@ -54,7 +54,7 @@ test("setBag", function() {
 	strictEqual(tiddler.fields["server.workspace"], "bags/foo_private");
 	strictEqual(radioPrivate.attr("checked"), true);
 	strictEqual(radioPublic.attr("checked"), false);
-	strictEqual($(el).attr("tiddlyfields"), "")
+	strictEqual($(el).attr("tiddlyfields"), "");
 });
 
 test("updateEditFields (custom fields already exist)", function() {

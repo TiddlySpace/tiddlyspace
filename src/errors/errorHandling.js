@@ -83,7 +83,7 @@ var errorhandler = {
 		}
 	},
 	createTiddler: function(container, space, title) {
-                var editURI = editURITemplate.replace('{tiddler}', title)
+		var editURI = editURITemplate.replace('{tiddler}', title);
 		$.ajax({url: "/status", dataType: "json",
 			success: function(status) {
 				if(status.username && status.username != "GUEST") {

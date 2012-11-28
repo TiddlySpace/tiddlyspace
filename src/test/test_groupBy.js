@@ -34,7 +34,7 @@ module("GroupBy Plugin", {
 		getTiddlers = function() {
 			var tiddlers = [];
 			for(var i = 0; i < 10; i++) {
-				tiddlers.push(new Tiddler("t"+i))
+				tiddlers.push(new Tiddler("t"+i));
 			}
 			tiddlers[0].tags = ["foo", "bar"];
 			tiddlers[1].tags = ["foo"];
@@ -59,7 +59,7 @@ module("GroupBy Plugin", {
 		var macro = config.macros.groupBy;
 		macro.morpher.bar = function(val) {
 			if(val) {
-				return "ok"
+				return "ok";
 			}
 		};
 	},
@@ -143,7 +143,7 @@ test("_onClickGroup", function() {
 	var items = $("li", el);
 	strictEqual(items.length, 5,
 	"should be only one tiddler in the popup plus the open all and open with this title, plus 2 list breaks");
-	strictEqual($(items[2]).text(), "item templatehello world")
+	strictEqual($(items[2]).text(), "item templatehello world");
 });
 
 

@@ -8,7 +8,7 @@ module("TiddlySpaceForms plugin", {
 		form = $("<form />").appendTo(document.body)[0];
 		_getCSRFToken = config.extensions.tiddlyspace.getCSRFToken;
 		config.extensions.tiddlyspace.getCSRFToken = function() {
-			return "blaglag"
+			return "blaglag";
 		};
 	},
 	teardown: function() {
