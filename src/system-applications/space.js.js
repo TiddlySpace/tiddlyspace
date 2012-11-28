@@ -1,3 +1,4 @@
+/*global $:false, window:false, tiddlyweb:false, document:false */
 ts.init(function(ts) {
 
 	"use strict";
