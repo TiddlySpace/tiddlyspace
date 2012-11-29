@@ -8,6 +8,7 @@ import simplejson
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
+from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.model.policy import Policy
 from tiddlyweb.store import NoRecipeError, NoBagError, NoUserError
@@ -217,6 +218,10 @@ def make_space(space_name, store, member):
         if Space.bag_is_public(bag_name):
             bag.policy.read = []
         store.put(bag)
+
+    info_tiddler = Tiddler('SiteInfo', space.public_bag())
+    info_tiddler.text = 'Space %s' % space_name
+    store.put(info_tiddler)
 
     public_recipe = Recipe(space.public_recipe())
     public_recipe.set_recipe(space.public_recipe_list())
