@@ -39,7 +39,7 @@ var twStylesheet = function(css, options) {
 };
 
 var stylesheet = ["iframe {",
-"	height: 340px;",
+"	height: 180px;",
 "	z-index: 1000;",
 "	position: relative;",
 "}",
@@ -131,6 +131,7 @@ var stylesheet = ["iframe {",
 "	display: block;",
 "}"
 ].join("\n");
+
 function addEventListener(node, event, handler, bubble) {
 	if (node.addEventListener){  
 		node.addEventListener(event, handler, bubble);   
@@ -152,6 +153,7 @@ var loadEvent = function() {
             link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/privateAndPublicIcon)';
         } else {
             link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/publicIcon)';
+			stylesheet = stylesheet.replace('height: 180px;', 'height: 156px;');
         }
 
 	var body = document.getElementsByTagName("BODY")[0];
