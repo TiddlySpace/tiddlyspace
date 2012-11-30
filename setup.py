@@ -50,6 +50,7 @@ setup(
         'tiddlywebplugins.templates',
         'tiddlywebplugins.csrf',
         'tiddlywebplugins.whoosher',
+        'tiddlywebplugins.markdown',
         'selector<0.9.0'
     ],
     include_package_data = True,
