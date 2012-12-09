@@ -50,7 +50,8 @@ setup(
         'tiddlywebplugins.templates',
         'tiddlywebplugins.csrf',
         'tiddlywebplugins.whoosher',
-        'selector<0.9.0'
+        'selector<0.9.0',
+        'httpexceptor>=1.1.0'
     ],
     include_package_data = True,
     zip_safe = False,
