@@ -50,6 +50,7 @@ setup(
         'tiddlywebplugins.templates',
         'tiddlywebplugins.csrf',
         'tiddlywebplugins.whoosher',
+        'tiddlywebplugins.markdown',
         'selector<0.9.0',
         'httpexceptor>=1.1.0'
     ],
