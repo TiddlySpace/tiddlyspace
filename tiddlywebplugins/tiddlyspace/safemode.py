@@ -10,7 +10,7 @@ from tiddlyweb.model.collections import Tiddlers
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.store import NoBagError, NoRecipeError, NoTiddlerError
-from tiddlyweb.web.http import HTTP403, HTTP404
+from httpexceptor import HTTP403, HTTP404
 from tiddlyweb.web.sendtiddlers import send_tiddlers
 from tiddlyweb.web.util import get_serialize_type
 
