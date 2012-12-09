@@ -6,7 +6,7 @@ from tiddlyweb.model.policy import PermissionsError
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.store import StoreError
-from tiddlyweb.web.http import HTTP404
+from httpexceptor import HTTP404
 
 from tiddlywebplugins.tiddlyspace.space import Space
 
