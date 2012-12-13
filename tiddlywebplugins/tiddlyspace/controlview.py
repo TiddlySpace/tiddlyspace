@@ -26,12 +26,13 @@ from defamation and fraud.
 
 import urllib
 
+from httpexceptor import HTTP404, HTTP400
+
 from tiddlyweb.control import recipe_template
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializer import Serializer
 from tiddlyweb.store import NoRecipeError
-from tiddlyweb.web.http import HTTP404, HTTP400
 from tiddlyweb.web.listentities import list_entities
 from tiddlyweb.web.util import get_serialize_type
 
@@ -100,9 +101,6 @@ class ControlView(object):
 
             search_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
-                serialize_type, mime_type = get_serialize_type(environ)
-                serializer = Serializer(serialize_type, environ)
-
                 if recipe_name == space.private_recipe():
                     recipes = space.list_recipes()
                 else:
@@ -112,19 +110,16 @@ class ControlView(object):
                     for recipe in recipes:
                         yield Recipe(recipe)
 
-                return list_entities(environ, start_response, mime_type,
-                    lister, serializer.list_recipes)
+                return list_entities(environ, start_response, 'list_recipes',
+                    store_list=lister)
 
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
-                serialize_type, mime_type = get_serialize_type(environ)
-                serializer = Serializer(serialize_type, environ)
-
                 def lister():
                     for bag in bags:
                         yield Bag(bag)
 
-                return list_entities(environ, start_response, mime_type,
-                        lister, serializer.list_bags)
+                return list_entities(environ, start_response, 'list_bags',
+                    store_list=lister)
 
             elif req_uri.startswith('/search') and req_uri.count('/') == 1:
                 search_string = ' OR '.join(['bag:%s' % bag

@@ -18,11 +18,11 @@ import wsgi_intercept
 import py.test
 
 from wsgi_intercept import httplib2_intercept
+from httpexceptor import HTTP409
 
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.user import User
-from tiddlyweb.web.http import HTTP409
 
 from tiddlywebplugins.tiddlyspace.spaces import _update_policy, _make_policy
 

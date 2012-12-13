@@ -7,12 +7,13 @@ import logging
 import urllib
 import urllib2
 
+from httpexceptor import HTTP404, HTTP400, HTTP415
+
 from tiddlyweb.control import readable_tiddlers_by_bag
 from tiddlyweb.store import StoreError, NoUserError
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.web.handler.search import get as search
-from tiddlyweb.web.http import HTTP404, HTTP400, HTTP415
 from tiddlyweb.web.util import (server_host_url, encode_name,
         get_serialize_type, tiddler_url)
 from tiddlywebplugins.tiddlyspace.spaces import space_uri

@@ -2,8 +2,9 @@
 Override behaviors from other modules.
 """
 
+from httpexceptor import HTTP404
+
 import tiddlyweb.web.util
-from tiddlyweb.web.http import HTTP404
 import tiddlywebplugins.status
 
 from tiddlywebplugins.tiddlyspace.space import Space
