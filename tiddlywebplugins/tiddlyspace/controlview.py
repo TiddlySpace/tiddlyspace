@@ -31,7 +31,7 @@ from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializer import Serializer
 from tiddlyweb.store import NoRecipeError
-from tiddlyweb.web.http import HTTP404, HTTP400
+from httpexceptor import HTTP404, HTTP400
 from tiddlyweb.web.listentities import list_entities
 from tiddlyweb.web.util import get_serialize_type
 

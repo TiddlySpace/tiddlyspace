@@ -17,7 +17,7 @@ from tiddlyweb.store import NoBagError
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
-from tiddlyweb.web.http import HTTP403
+from httpexceptor import HTTP403
 from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user

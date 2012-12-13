@@ -12,7 +12,7 @@ from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.model.policy import Policy
 from tiddlyweb.store import NoRecipeError, NoBagError, NoUserError
-from tiddlyweb.web.http import HTTP403, HTTP404, HTTP409
+from httpexceptor import HTTP403, HTTP404, HTTP409
 
 from tiddlywebplugins.utils import require_any_user
 
