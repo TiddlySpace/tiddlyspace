@@ -76,6 +76,10 @@ def get_space_tiddlers(environ, start_response):
     _setup_friendly_environ(environ)
     _extra_query_update(environ)
 
+    ext = environ.get('tiddlyweb.extension')
+    types = environ['tiddlyweb.config']['extension_types']
+    if ext and ext not in types:
+        environ['wsgiorg.routing_args'][1]['recipe_name'] += '.%s' % ext
     return get_tiddlers(environ, start_response)
 
 

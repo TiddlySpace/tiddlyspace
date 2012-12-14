@@ -34,7 +34,6 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializer import Serializer
 from tiddlyweb.store import NoRecipeError
 from tiddlyweb.web.listentities import list_entities
-from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.web import (determine_host,
