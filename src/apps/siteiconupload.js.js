@@ -68,7 +68,7 @@ function DNDFileController(id, publicBag) {
 		e.stopPropagation();
 		e.preventDefault();
 		$html.removeClass("dragging");
-	}
+	};
 
 	this.drop = function(e) {
 		e.stopPropagation();
@@ -96,7 +96,7 @@ function DNDFileController(id, publicBag) {
 		var reader = new FileReader();
 		reader.onerror = function(ev) {
 			console.log('error', ev);
-		}
+		};
 
 		// things to do once file is read in
 		reader.onload = function(ev) {
@@ -109,7 +109,7 @@ function DNDFileController(id, publicBag) {
 					tags: [],
 					text: data,
 					title: "SiteIcon",
-					type: file.type,
+					type: file.type
 				};
 
 			$.ajax({
@@ -137,7 +137,7 @@ function DNDFileController(id, publicBag) {
 	el_.addEventListener("dragover", this.dragover, false);
 	el_.addEventListener("dragleave", this.dragleave, false);
 	el_.addEventListener("drop", this.drop, false);
-};
+}
 
 // make initSiteIconUpload globally accessible
 window.initSiteIconUpload = initSiteIconUpload;

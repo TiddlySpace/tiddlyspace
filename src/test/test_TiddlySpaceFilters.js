@@ -1,17 +1,19 @@
 (function(module, $) {
 module("TiddlySpaceFilters", {
 	setup: function() {
-		var tiddlers = ["elephant", "pig", "Ant"];
-		var bag = "foo_private";
-		for(var i = 0; i < tiddlers.length; i++) {
-			var tiddler = new Tiddler(tiddlers[i]);
+		var tiddlers = ["elephant", "pig", "Ant"],
+			bag = "foo_private",
+			tiddler,
+			i;
+		for(i = 0; i < tiddlers.length; i++) {
+			tiddler = new Tiddler(tiddlers[i]);
 			tiddler.fields["server.bag"] = bag;
 			store.saveTiddler(tiddler);
 		}
 		tiddlers = ["Bee", "zebra"];
 		bag = "foo_public";
-		for(var i = 0; i < tiddlers.length; i++) {
-			var tiddler = new Tiddler(tiddlers[i]);
+		for(i = 0; i < tiddlers.length; i++) {
+			tiddler = new Tiddler(tiddlers[i]);
 			tiddler.fields["server.bag"] = bag;
 			store.saveTiddler(tiddler);
 		}
@@ -51,7 +53,7 @@ test("config.filterHelpers.is.private", function() {
 	var res2 = ftest(tiddler2);
 	var res3 = ftest(tiddler3);
 	strictEqual(config.extensions.tiddlyspace.currentSpace.name, "foo",
-		"These tests rely on foo being the default space.")
+		"These tests rely on foo being the default space.");
 	strictEqual(res1, true);
 	strictEqual(res2, false);
 	strictEqual(res3, false);

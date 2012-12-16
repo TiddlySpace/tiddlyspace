@@ -62,6 +62,44 @@ def test_friendly_encoded():
     assert 'text/html' in response['content-type']
     assert 'href="/#%5B%5BHouse%20Hold%5D%5D"' in content_friendly
 
+def test_markdown_support():
+    tiddler = Tiddler('Markdown Test', 'cdent_public')
+    tiddler.text = '_No Way_'
+    tiddler.type = 'text/x-markdown'
+    store.put(tiddler)
+    http = httplib2.Http()
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/Markdown%20Test',
+            method='GET')
+    assert response['status'] == '200', content
+    assert 'text/html' in response['content-type']
+    assert '<em>No Way</em>' in content
+
+def test_tiddlywikitext_support():
+    tiddler = Tiddler('TiddlyWiki Test', 'cdent_public')
+    tiddler.text = '//No Way//'
+    store.put(tiddler)
+    http = httplib2.Http()
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/TiddlyWiki%20Test',
+            method='GET')
+    assert response['status'] == '200', content
+    assert 'text/html' in response['content-type']
+    assert '<i class="">No Way</i>' in content
+
+    # set the type
+    tiddler = Tiddler('TiddlyWiki Test', 'cdent_public')
+    tiddler.text = '//No Way//'
+    tiddler.type = 'text/x-tiddlywiki'
+    store.put(tiddler)
+    http = httplib2.Http()
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/TiddlyWiki%20Test',
+            method='GET')
+    assert response['status'] == '200', content
+    assert 'text/html' in response['content-type']
+    assert '<i class="">No Way</i>' in content
+
 def test_root_tiddlers():
     http = httplib2.Http()
     response, content = http.request(

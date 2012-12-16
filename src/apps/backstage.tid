@@ -33,45 +33,21 @@ _cache-max-age: 43200
 <hr />
 <ul id="app-list">
         <li class="search">
-                <form method="GET" target="_top" action="/hsearch">
+                <form method="GET" target="_blank" action="/hsearch">
                 <img src="/bags/common/tiddlers/search.png" alt="Search Icon" class="app-img" />
                 <input type="search" name="q" placeholder="SEARCH" />
                 <form>
         </li>
-	<li class="write">
-		<a href="/takenote" target="_parent">
-			<img src="/bags/common/tiddlers/pencil_blue.png" alt="Icon for Takenote" class="app-img" />
-			WRITE
-		</a>
-	</li>
-	<li class="htmlserialisation">
-		<a href="/tiddlers.html?select=tag:!excludeLists;sort=-modified" target="_parent">
-			<img src="/bags/common/tiddlers/browse_read_blue.png" alt="Icon for the HTML Serialisation" class="app-img" />
-			BROWSE
-		</a>
-	</li>
-	<li class="tiddlywiki">
-		<a href="/tiddlers.wiki" target="_parent">
-			<img src="/bags/common/tiddlers/tiddlywiki2_blue.png" alt="Icon for TiddlyWiki" class="app-img" />
-			TIDDLYWIKI
-		</a>
-	</li>
-	<li class="apps">
-		<a href="/apps"  target="_parent">
-			<img src="/bags/common/tiddlers/box_closed_blue.png" alt="Icon for Apps" class="app-img" />
-			APPS
+	<li class="help">
+		<a href="http://help.tiddlyspace.com"  target="_blank">
+			<img src="/bags/common/tiddlers/help.png" alt="Help SiteIcon" class="app-img" />
+			HELP
 		</a>
 	</li>
 	<li class="space">
-		<a href="/_space"  target="_parent">
+		<a href="/_space"  target="_blank">
 			<img src="/SiteIcon" alt="Space SiteIcon" class="app-img" />
 			THIS SPACE
-		</a>
-	</li>
-	<li class="help">
-		<a href="http://help.tiddlyspace.com"  target="_parent">
-			<img src="/bags/common/tiddlers/help.png" alt="Help SiteIcon" class="app-img" />
-			HELP
 		</a>
 	</li>
 </ul>
@@ -105,7 +81,7 @@ _cache-max-age: 43200
 		if(!ts.user.anon) {
 			li = $('<li class="account" />').appendTo("#app-list")[0];
 			siteiconurl = host + '/bags/' + ts.user.name + '_public/tiddlers/SiteIcon';
-			link = $('<a target="_parent" />').attr("href", host + "/_account").
+			link = $('<a target="_blank" />').attr("href", host + "/_account").
 				text(" YOUR ACCOUNT").appendTo(li);
 			$('<img class="app-img">').attr("alt",  'SiteIcon for ' + ts.user.name).
 				attr("src", siteiconurl).prependTo(link);

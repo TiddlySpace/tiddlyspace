@@ -39,7 +39,7 @@ var twStylesheet = function(css, options) {
 };
 
 var stylesheet = ["iframe {",
-"	height: 340px;",
+"	height: 180px;",
 "	z-index: 1000;",
 "	position: relative;",
 "}",
@@ -131,6 +131,7 @@ var stylesheet = ["iframe {",
 "	display: block;",
 "}"
 ].join("\n");
+
 function addEventListener(node, event, handler, bubble) {
 	if (node.addEventListener){  
 		node.addEventListener(event, handler, bubble);   
@@ -139,7 +140,7 @@ function addEventListener(node, event, handler, bubble) {
 		event = event == "load" ? "onload" : event;
 		node.attachEvent(event, handler);  
 	}
-};
+}
 
 var loadEvent = function() {
 	var link = document.createElement("a");
@@ -152,14 +153,15 @@ var loadEvent = function() {
             link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/privateAndPublicIcon)';
         } else {
             link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/publicIcon)';
+			stylesheet = stylesheet.replace('height: 180px;', 'height: 156px;');
         }
 
 	var body = document.getElementsByTagName("BODY")[0];
 	body.insertBefore(link, body.firstChild);
 	var html = [
 	'<div class="bubble">',
-	    '<iframe src="/bags/common/tiddlers/backstage#userpass-login" width="auto" style="border:none;"></iframe>',
-	    '<div class="tail"></div>',
+		'<iframe src="/bags/common/tiddlers/backstage#userpass-login" width="auto" style="border:none;"></iframe>',
+		'<div class="tail"></div>',
 	'</div>'].join("");
 	var bubble = document.createElement("div");
 	bubble.setAttribute("id", "bs-popup");
@@ -202,9 +204,9 @@ var loadEvent = function() {
 			fade(bubble, false);
 		} else {
 			fade(bubble, true);
-		};
+		}
 		bubbleOpen = !bubbleOpen;
-	}
+	};
 
 	addEventListener(link, "click", toggleBubble);
 

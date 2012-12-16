@@ -11,7 +11,7 @@ module("EditConflictHandler plugin", {
 		$("<div />").attr("id", "editConflictTests").appendTo(document.body);
 		story.getTiddler = function() {
 			return $("#editConflictTests")[0];
-		}
+		};
 		_getTiddler = story.getTiddler;
 		var tiddler = new Tiddler("EditConflictTesting");
 		store.saveTiddler(tiddler);
@@ -19,7 +19,7 @@ module("EditConflictHandler plugin", {
 		_createTiddlyButton = createTiddlyButton;
 		createTiddlyButton = function(container) {
 			return $("<a />").appendTo(container)[0];
-		}
+		};
 	},
 	teardown: function() {
 		$("#editConflictTests").remove();
@@ -69,13 +69,13 @@ test("resetToServerVersion", function() {
 
 test("editConflictHandler", function() {
 	var ext = config.extensions.errorHandler;
-	var container = $("#editTestArea")[0]
+	var container = $("#editTestArea")[0];
 	var tiddler = store.getTiddler("EditConflictTesting");
 	ext.editConflictHandler(container, tiddler);
 	var buttons = $("a", container);
 	strictEqual(buttons.length, 3);
 	strictEqual($(buttons[0]).data("title"), "EditConflictTesting");
-})
+});
 
 test("makeDiffTiddler", function() {
 	var ext = config.extensions.errorHandler;

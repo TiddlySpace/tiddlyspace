@@ -1,20 +1,4 @@
-.PHONY: test remotes jslib qunit phantomjs jstest pytest dist release deploy pypi dev clean purge
-
-OS := $(shell uname)
-ARCH := $(shell uname -m)
-PHANTOMJS_MAC := phantomjs-1.6.1-macosx-static.zip
-PHANTOMJS_LINUX_32 := phantomjs-1.6.1-linux-i686-dynamic.tar.bz2
-PHANTOMJS_LINUX_64 := phantomjs-1.6.1-linux-x86_64-dynamic.tar.bz2
-ifeq ($(OS), Linux)
-	ifeq ($(ARCH), x86_64)
-		PHANTOMJS_DL := $(PHANTOMJS_LINUX_64)
-	else
-		PHANTOMJS_DL := $(PHANTOMJS_LINUX_32)
-	endif
-endif
-ifeq ($(OS), Darwin)
-	PHANTOMJS_DL := $(PHANTOMJS_MAC)
-endif
+.PHONY: test remotes jslib qunit get_phantomjs get_jshint jshint jstest pytest dist release deploy pypi dev clean purge
 
 wrap_jslib = curl -L -s $(2) | \
 	{ \
@@ -24,7 +8,7 @@ wrap_jslib = curl -L -s $(2) | \
 
 pytest:
 	py.test -x test
-	
+
 test: pytest jstest
 
 tiddlywiki:
@@ -82,15 +66,17 @@ qunit:
 	curl -Lo src/test/run-qunit.js \
 		https://raw.github.com/ariya/phantomjs/1.6/examples/run-qunit.js
 
-phantomjs:
-	wget http://phantomjs.googlecode.com/files/$(PHANTOMJS_DL) \
-	-O phantomjs.tar.bz2
-	tar xjf phantomjs.tar.bz2
-	mv phantomjs-* phantomjs
+get_phantomjs:
+	npm install -g phantomjs
 
 jstest:
-	@cd phantomjs/bin && \
-	./phantomjs ../../src/test/run-qunit.js ../../src/test/index.html
+	phantomjs src/test/run-qunit.js src/test/index.html
+
+get_jshint:
+	npm install -g jshint
+
+jshint:
+	jshint src/**/*.js
 
 dist: clean remotes test
 	python setup.py sdist

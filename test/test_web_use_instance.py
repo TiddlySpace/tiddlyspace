@@ -319,6 +319,19 @@ def test_space_server_settings_index():
     assert 'TiddlyWiki' not in content
     assert 'TiddlyWeb' not in content
 
+def test_notifications_bag_visibility():
+    """
+    notifications bag is considered an ADMIN_BAG
+    """
+    http = httplib2.Http()
+    response, content = http.request(
+            'http://0.0.0.0:8080/bags/notifications/tiddlers')
+    assert response['status'] == '200'
+    response, content = http.request(
+            'http://foo.0.0.0.0:8080/bags/notifications/tiddlers')
+    assert response['status'] == '200'
+
+
 # XXX: Disable until app switcher is re-enabled as default
 # TODO: Re-enable test when app swither is re-enabled as default
 """

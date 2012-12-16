@@ -11,13 +11,14 @@ try:
 except ImportError:
     from cgi import parse_qs
 
+from httpexceptor import HTTP403
+
 from tiddlyweb.filters import parse_for_filters
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.store import NoBagError
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
-from tiddlyweb.web.http import HTTP403
 from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.utils import require_any_user
@@ -75,6 +76,10 @@ def get_space_tiddlers(environ, start_response):
     _setup_friendly_environ(environ)
     _extra_query_update(environ)
 
+    ext = environ.get('tiddlyweb.extension')
+    types = environ['tiddlyweb.config']['extension_types']
+    if ext and ext not in types:
+        environ['wsgiorg.routing_args'][1]['recipe_name'] += '.%s' % ext
     return get_tiddlers(environ, start_response)
 
 

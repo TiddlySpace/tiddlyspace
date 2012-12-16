@@ -34,10 +34,10 @@ var errorhandler = {
                                 var bagsP = $.inArray('bags', segments);
                                 var recipesP = $.inArray('recipes', segments);
                                 var segmentsCount = segments.length;
-                                if ((segmentsCount == 1
-                                            && bagsP == -1
-                                            && recipesP == -1)
-                                        || segmentsCount == 4) {
+                                if ((segmentsCount == 1 &&
+											bagsP == -1 &&
+											recipesP == -1) ||
+										segmentsCount == 4) {
 					errorhandler.suggestTiddlers(container, space, tiddler);
 				}
 			} else {
@@ -51,7 +51,7 @@ var errorhandler = {
 		$.ajax({url: "/status", dataType: "json",
 			success: function(status) {
 				if(status.username && status.username != "GUEST") {
-					var sh = status["server_host"];
+					var sh = status.server_host;
 					var newSpaceUri = sh.scheme + "://" + name + "." + sh.host;
 					newSpaceUri = sh.port ? newSpaceUri + ":" + sh.port : newSpaceUri;
 					var spaceCallback = function() {
@@ -83,7 +83,7 @@ var errorhandler = {
 		}
 	},
 	createTiddler: function(container, space, title) {
-                var editURI = editURITemplate.replace('{tiddler}', title)
+		var editURI = editURITemplate.replace('{tiddler}', title);
 		$.ajax({url: "/status", dataType: "json",
 			success: function(status) {
 				if(status.username && status.username != "GUEST") {
@@ -101,9 +101,10 @@ var errorhandler = {
 		var uri = "/bags/" + space + "_public/tiddlers";
 		$.ajax({url: uri, dataType: "text",
 			success: function(txt) {
-				var tiddlers = txt.split("\n");
-				var suggestions = [];
-				for(var i = 0; i < tiddlers.length; i++) {
+				var tiddlers = txt.split("\n"),
+					suggestions = [],
+					i;
+				for(i = 0; i < tiddlers.length; i++) {
 					var thisTitle = tiddlers[i];
 					if(errorhandler.areSimilar(title, thisTitle)) {
 						suggestions.push(thisTitle);
@@ -112,7 +113,7 @@ var errorhandler = {
 				if(suggestions.length > 0) {
 					$("<h2 />").text(errorhandler.locale.tiddlerSuggestionsHeader).appendTo(container);
 					var list = $("<ol />").appendTo(container)[0];
-					for(var i = 0; i < suggestions.length; i++) {
+					for(i = 0; i < suggestions.length; i++) {
 						var suggestion = suggestions[i];
 						var item = $("<li />").appendTo(list);
 						$("<a />").attr("href", "/" + suggestion).text(suggestion).appendTo(item);
@@ -125,8 +126,9 @@ var errorhandler = {
 		$(container).empty(errorhandler.locale.alternativeSpaces);
 		$.ajax({url: "/spaces", dataType: "json",
 			success: function(spaces) {
-				var suggestions = [];
-				for(var i = 0; i < spaces.length; i++) {
+				var suggestions = [],
+					i;
+				for(i = 0; i < spaces.length; i++) {
 					var thisSpace = spaces[i];
 					if(errorhandler.areSimilar(thisSpace.name, space)) {
 						suggestions.push(thisSpace);
@@ -136,7 +138,7 @@ var errorhandler = {
 				if(suggestions.length > 0) {
 					$("<h2 />").text(errorhandler.locale.spaceSuggestionsHeader).appendTo(container);
 					var list = $("<ol />").appendTo(container)[0];
-					for(var i = 0; i < suggestions.length; i++) {
+					for(i = 0; i < suggestions.length; i++) {
 						var suggestion = suggestions[i];
 						var item = $("<li />").appendTo(list);
 						var avatar = suggestion.uri + "bags/" + suggestion.name + "_public/tiddlers/SiteIcon";

@@ -68,8 +68,8 @@ def update_space_settings(environ, name):
     for line in data_text.split('\n'):
         try:
             key, value = line.split(':', 1)
-            key = key.rstrip().lstrip()
-            value = value.rstrip().lstrip()
+            key = key.strip()
+            value = value.strip()
             if key in SERVER_SETTINGS_KEYS:
                 environ['tiddlyweb.space_settings'][key] = value
             else:

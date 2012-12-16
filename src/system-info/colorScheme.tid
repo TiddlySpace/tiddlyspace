@@ -7,10 +7,12 @@ Unless you're delighted with the default theme you can make some quick changes b
 <<RandomColorPaletteButton saturation_pale:0.67 saturation_light:0.53
 saturation_mid:0.43 saturation_dark:0.06 pale:0.99 light:0.85 mid:0.5 dark:0.31>>
 
-You can also change the look and feel completely by installing a new theme. To do this, find one you like in the @themes space, note down the name, and include it in this space by going to the space menu at the top-left of this page. Here are a few of our favourites:
+You can also change the look and feel completely by installing a new theme. To do this, find one you like in the @themes space, note down the name, and include it in this space by going to the space menu. You can reach the space menu by clicking on the blue and pink circle at the top-right of the page and chooshing "THIS SPACE". Here are a few to check out:
 * @pip
 * @caspian-ii
 * @basalt
 * @simplicity
 * @cheesecake
 * @jelly-doughnut
+
+(//Note that if you are using a custom TiddlySpace install, these themes may not be present.//)

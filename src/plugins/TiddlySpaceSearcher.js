@@ -140,7 +140,7 @@ var search = config.macros.tsSearch = {
 		var container = $("<div />").addClass("searchForm").appendTo(place)[0];
 		search.constructForm(container);
 	}
-}
+};
 
 })(jQuery);
 //}}}

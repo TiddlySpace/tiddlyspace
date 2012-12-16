@@ -27,21 +27,21 @@ from defamation and fraud.
 import logging
 import urllib
 
+from httpexceptor import HTTP404, HTTP400
+
 from tiddlyweb.control import recipe_template
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializer import Serializer
 from tiddlyweb.store import NoRecipeError, StoreError
-from tiddlyweb.web.http import HTTP404, HTTP400
 from tiddlyweb.web.listentities import list_entities
-from tiddlyweb.web.util import get_serialize_type
 
 from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.web import (determine_host,
         determine_space, determine_space_recipe)
 
 
-ADMIN_BAGS = ['common', 'MAPUSER', 'MAPSPACE']
+ADMIN_BAGS = ['common', 'MAPUSER', 'MAPSPACE', 'notifications']
 
 
 class ControlView(object):
@@ -101,9 +101,6 @@ class ControlView(object):
 
             search_string = None
             if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
-                serialize_type, mime_type = get_serialize_type(environ)
-                serializer = Serializer(serialize_type, environ)
-
                 if recipe_name == space.private_recipe():
                     recipes = space.list_recipes()
                 else:
@@ -113,20 +110,17 @@ class ControlView(object):
                     for recipe in recipes:
                         yield Recipe(recipe)
 
-                return list_entities(environ, start_response, mime_type,
-                    lister, serializer.list_recipes)
+                return list_entities(environ, start_response, 'list_recipes',
+                    store_list=lister)
 
             elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
-                serialize_type, mime_type = get_serialize_type(environ)
-                serializer = Serializer(serialize_type, environ)
-
                 def lister():
                     for bag in get_blessed_bags(environ, space_name):
                         yield Bag(bag)
 
                 try:
-                    return list_entities(environ, start_response, mime_type,
-                            lister, serializer.list_bags)
+                    return list_entities(environ, start_response, 'list_bags',
+                        store_list=lister)
                 except StoreError, exc:
                     raise HTTP400('invalid bag list in controlview: %s', exc)
 
