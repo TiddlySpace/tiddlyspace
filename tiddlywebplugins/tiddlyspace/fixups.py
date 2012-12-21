@@ -70,7 +70,7 @@ def web_tiddler_url(environ, tiddler, container='bags', full=True,
     will need to be reviewed.
     """
     if '_canonical_uri' in tiddler.fields:
-        return tiddler.fields['_canonical_uri']
+        return tiddler.fields['_canonical_uri'].encode('utf-8')
 
     saved_host = environ.get('HTTP_HOST', '')
     try:
