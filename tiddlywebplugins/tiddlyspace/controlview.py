@@ -269,13 +269,7 @@ class DropPrivs(object):
 class AllowOrigin(object):
     """
     On every GET request add an Access-Control-Allow-Origin header
-    to enable CORS (even though we don't fully use CORS).
-
-
-    XXX: Note there is a subtle bug in this. The headers is not
-    added when an HTTP304 is raised elsewhere in the stack.
-    Attempts to fix that directly did not appear to work, more
-    effort required.
+    to enable simple CORS (even though we don't fully use CORS).
     """
     def __init__(self, application):
         self.application = application
