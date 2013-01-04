@@ -31,7 +31,6 @@ from httpexceptor import HTTP404, HTTP400
 from tiddlyweb.control import recipe_template
 from tiddlyweb.model.bag import Bag
 from tiddlyweb.model.recipe import Recipe
-from tiddlyweb.serializer import Serializer
 from tiddlyweb.store import NoRecipeError
 from tiddlyweb.web.listentities import list_entities
 

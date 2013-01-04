@@ -79,7 +79,7 @@ def web_tiddler_url(environ, tiddler, container='bags', full=True,
         else:
             space_name = Space.name_from_bag(tiddler.bag)
         space_name = space_name + '.'
-    except ValueError, exc:
+    except ValueError:
         space_name = ''
 
     host = environ['tiddlyweb.config']['server_host']['host']
