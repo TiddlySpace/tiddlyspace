@@ -48,6 +48,9 @@ class ControlView(object):
     entities from the store are visible to the requestor. The effective
     result is that only those bags and recipes contained in the current
     space are visible in the HTTP routes.
+
+    Filtering can be disabled with a custom HTTP header X-ControlView set
+    to the string 'false'.
     """
 
     def __init__(self, application):
@@ -55,103 +58,114 @@ class ControlView(object):
 
     def __call__(self, environ, start_response):
         req_uri = environ.get('SCRIPT_NAME', '') + environ.get('PATH_INFO', '')
+        disable_control_view = (
+                environ.get('HTTP_X_CONTROLVIEW', '').lower() == 'false')
+        http_host, host_url = determine_host(environ)
 
-        if (req_uri.startswith('/bags')
-                or req_uri.startswith('/search')
-                or req_uri.startswith('/recipes')):
-            response = self._handle_core_request(environ, req_uri,
-                    start_response)
-            if response:
-                return response
+        if http_host != host_url:
+            space_name = determine_space(environ, http_host)
+            if (space_name is not None
+                    and not disable_control_view
+                    and (req_uri.startswith('/bags')
+                        or req_uri.startswith('/search')
+                        or req_uri.startswith('/recipes'))):
+                response = self._handle_core_request(environ, req_uri,
+                        space_name, start_response)
+                if response:
+                    return response
 
         return self.application(environ, start_response)
 
-    # XXX too long!
-    def _handle_core_request(self, environ, req_uri, start_response):
+    def _handle_core_request(self, environ, req_uri, space_name,
+            start_response):
         """
         Override a core request, adding filters or sending 404s where
-        necessary to limit the view of entities.
-
-        filtering can be disabled with a custom HTTP header X-ControlView set
-        to false
+        necessary to limit the visibility of entities.
         """
-        http_host, host_url = determine_host(environ)
+        recipe_name = determine_space_recipe(environ, space_name)
+        store = environ['tiddlyweb.store']
+        try:
+            recipe = store.get(Recipe(recipe_name))
+        except NoRecipeError, exc:
+            raise HTTP404('No recipe for space: %s', exc)
 
-        disable_ControlView = environ.get('HTTP_X_CONTROLVIEW') == 'false'
-        if http_host != host_url and not disable_ControlView:
-            space_name = determine_space(environ, http_host)
-            if space_name is None:
-                return None
-            recipe_name = determine_space_recipe(environ, space_name)
-            store = environ['tiddlyweb.store']
-            try:
-                recipe = store.get(Recipe(recipe_name))
-            except NoRecipeError, exc:
-                raise HTTP404('No recipe for space: %s', exc)
+        space = Space(space_name)
 
-            space = Space(space_name)
+        visible_bags = space.extra_bags()
+        for bag, _ in recipe.get_recipe(recipe_template(environ)):
+            visible_bags.append(bag)
+        visible_bags.extend(ADMIN_BAGS)
 
-            template = recipe_template(environ)
-            bags = space.extra_bags()
-            for bag, _ in recipe.get_recipe(template):
-                bags.append(bag)
-            bags.extend(ADMIN_BAGS)
-
-            search_string = None
-            if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
-                if recipe_name == space.private_recipe():
-                    recipes = space.list_recipes()
-                else:
-                    recipes = [space.public_recipe()]
-
-                def lister():
-                    for recipe in recipes:
-                        yield Recipe(recipe)
-
-                return list_entities(environ, start_response, 'list_recipes',
-                    store_list=lister)
-
-            elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
-                def lister():
-                    for bag in bags:
-                        yield Bag(bag)
-
-                return list_entities(environ, start_response, 'list_bags',
-                    store_list=lister)
-
-            elif req_uri.startswith('/search') and req_uri.count('/') == 1:
-                search_string = ' OR '.join(['bag:%s' % bag
-                    for bag in bags])
+        if req_uri.startswith('/recipes') and req_uri.count('/') == 1:
+            if recipe_name == space.private_recipe():
+                recipes = space.list_recipes()
             else:
+                recipes = [space.public_recipe()]
 
-                try:
-                    entity_name = urllib.unquote(
-                            req_uri.split('/')[2]).decode('utf-8')
-                except UnicodeDecodeError, exc:
-                    raise HTTP400(
-                            'incorrect encoding in URI, url-escaped '
-                            'utf-8 required: %s' % exc)
+            def lister():
+                """List recipes"""
+                for recipe in recipes:
+                    yield Recipe(recipe)
 
-                if '/recipes/' in req_uri:
-                    valid_recipes = space.list_recipes()
-                    if entity_name not in valid_recipes:
-                        raise HTTP404('recipe %s not found due to ControlView'
-                                % entity_name)
-                else:
-                    if entity_name not in bags:
-                        raise HTTP404('bag %s not found due to ControlView'
-                                % entity_name)
+            return list_entities(environ, start_response, 'list_recipes',
+                store_list=lister)
 
-            if search_string:
-                search_query = environ['tiddlyweb.query'].get('q', [''])[0]
-                environ['tiddlyweb.query.original'] = search_query
-                if search_query:
-                    search_query = '%s AND (%s)' % (search_query,
-                            search_string)
-                    environ['tiddlyweb.query']['q'][0] = search_query
-                else:
-                    search_query = '(%s)' % search_string
-                    environ['tiddlyweb.query']['q'] = [search_query]
+        elif req_uri.startswith('/bags') and req_uri.count('/') == 1:
+            def lister():
+                """List bags"""
+                for bag in visible_bags:
+                    yield Bag(bag)
+
+            return list_entities(environ, start_response, 'list_bags',
+                store_list=lister)
+
+        elif req_uri.startswith('/search') and req_uri.count('/') == 1:
+            self._handle_search(environ, visible_bags)
+        else:
+            self._handle_descendant(req_uri, space, visible_bags)
+
+    def _handle_descendant(self, req_uri, space, visible_bags):
+        """
+        Process a request which is not /bags, /recipes, or /search,
+        but a descendant of /bags or /recipes.
+
+        If the URI points to things which are not in this space, 404.
+        """
+        try:
+            entity_name = urllib.unquote(
+                    req_uri.split('/')[2]).decode('utf-8')
+        except UnicodeDecodeError, exc:
+            raise HTTP400(
+                    'incorrect encoding in URI, url-escaped utf-8 required: %s'
+                    % exc)
+
+        if '/recipes/' in req_uri:
+            valid_recipes = space.list_recipes()
+            if entity_name not in valid_recipes:
+                raise HTTP404('recipe %s not found due to ControlView'
+                        % entity_name)
+        else:
+            if entity_name not in visible_bags:
+                raise HTTP404('bag %s not found due to ControlView'
+                        % entity_name)
+
+    def _handle_search(self, environ, visible_bags):
+        """
+        Process a /search request by adding query parameters to limit
+        the results to the visible bags.
+        """
+        search_string = ' OR '.join(['bag:%s' % bag
+            for bag in visible_bags])
+
+        search_query = environ['tiddlyweb.query'].get('q', [''])[0]
+        environ['tiddlyweb.query.original'] = search_query
+        if search_query:
+            search_query = '%s AND (%s)' % (search_query,
+                    search_string)
+            environ['tiddlyweb.query']['q'][0] = search_query
+        else:
+            search_query = '(%s)' % search_string
+            environ['tiddlyweb.query']['q'] = [search_query]
 
 
 class DropPrivs(object):
