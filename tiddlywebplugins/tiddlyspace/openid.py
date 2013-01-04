@@ -17,11 +17,19 @@ FRAGMENT_PREFIX = 'auth:OpenID:'
 
 
 class Challenger(OpenID):
+    """
+    Subclass the default openid challenger to facilitate mapping
+    openids to users.
+    """
 
     def __init__(self):
         self.name = __name__
 
     def _domain_path(self, environ):
+        """
+        Set the path of the cookie being created. In TiddlySpace
+        we want the domain of the server. Thus the leading '.'.
+        """
         return "." + environ['tiddlyweb.config']['server_host']['host']
 
     def _success(self, environ, start_response, info):
@@ -31,7 +39,8 @@ class Challenger(OpenID):
         If this is a normal auth scenario make the name
         of the cookie the normal 'tiddlyweb_user'. If this
         is auth addition, where a fragment of 'auth:OpenID' is
-        set, then name the cookie 'tiddlyweb_secondary_user'.
+        set on the redirect uri, then name the cookie
+        'tiddlyweb_secondary_user'.
         """
         usersign = info.getDisplayIdentifier()
         if info.endpoint.canonicalID:
@@ -44,32 +53,33 @@ class Challenger(OpenID):
             'tiddlyweb_redirect', ['/'])[0]
         uri = urlparse.urljoin(server_host_url(environ), redirect)
 
-        cookie_name = 'tiddlyweb_user'
         cookie_age = environ['tiddlyweb.config'].get('cookie_age', None)
+
+        secondary_cookie_only = False
         try:
             fragment = uri.rsplit('#', 1)[1]
         except (ValueError, IndexError):
-            fragment = None
-        secondary_cookie_name = 'tiddlyweb_secondary_user'
-        secondary_cookie_only = False
-        if fragment:
+            pass
+        else:
             openid = fragment[len(FRAGMENT_PREFIX):]
             uri = uri.replace(FRAGMENT_PREFIX + openid,
                     FRAGMENT_PREFIX + usersign)
             secondary_cookie_only = True
 
         secret = environ['tiddlyweb.config']['secret']
-        cookie_header_string = make_cookie(cookie_name, usersign,
-                mac_key=secret, path=self._cookie_path(environ),
-                expires=cookie_age)
         secondary_cookie_header_string = make_cookie(
-                secondary_cookie_name, usersign,
+                'tiddlyweb_secondary_user', usersign,
                 mac_key=secret, path=self._cookie_path(environ),
                 expires=cookie_age, domain=self._domain_path(environ))
+
         headers = [('Location', uri.encode('utf-8')),
                     ('Content-Type', 'text/plain'),
                     ('Set-Cookie', secondary_cookie_header_string)]
+
         if not secondary_cookie_only:
+            cookie_header_string = make_cookie('tiddlyweb_user', usersign,
+                    mac_key=secret, path=self._cookie_path(environ),
+                    expires=cookie_age)
             headers.append(('Set-Cookie', cookie_header_string))
 
         start_response('303 See Other', headers)
@@ -77,6 +87,11 @@ class Challenger(OpenID):
 
     def _render_form(self, environ, start_response, openid='',
             message='', form=''):
+        """
+        Send out a CSRF protected form for doing openid login.
+        This isn't generally used in TiddlySpace, client side
+        interfaces POST their own data.
+        """
         redirect = environ['tiddlyweb.query'].get(
             'tiddlyweb_redirect', ['/'])[0]
         start_response('200 OK', [(
