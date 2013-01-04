@@ -72,8 +72,9 @@ def html_profile(environ, start_response):
 
     store = environ['tiddlyweb.store']
 
+    # Confirm username is a real User
     try:
-        _ = store.get(User(username))
+        store.get(User(username))
     except NoUserError:
         raise HTTP404('Profile not found for %s' % username)
 
