@@ -37,7 +37,6 @@ config = {
     'cookie_age': '2592000',  # 1 month
     'server_store': ['tiddlywebplugins.tiddlyspace.store', {
         'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
-    'indexer': 'tiddlywebplugins.mysql3',
     'tiddlywebwiki.binary_limit': 1048576,  # 1 MB
     # TiddlyWiki external, alpha, beta serialization
     'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
