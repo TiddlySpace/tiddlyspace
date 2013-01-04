@@ -10,6 +10,8 @@ from tiddlyweb.web.util import server_host_url, make_cookie
 
 from tiddlywebplugins.openid2 import Challenger as OpenID
 
+from tiddlywebplugins.tiddlyspace.cookie_form import FORM_FINISH
+
 
 FRAGMENT_PREFIX = 'auth:OpenID:'
 
@@ -87,20 +89,6 @@ class Challenger(OpenID):
     <form action="" method="POST">
     OpenID: <input name="openid" size="60" value="%s"/>
     <input type="hidden" name="tiddlyweb_redirect" value="%s" />
-    <input type="hidden" id="csrf_token" name="csrf_token" />
-    <input type="submit" value="submit" />
-    </form>
-    <script type="text/javascript"
-            src="%s/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF"></script>
-    <script type="text/javascript">
-        var csrfToken = window.getCSRFToken(),
-            el = null;
-
-        if (csrfToken) {
-            el = document.getElementById('csrf_token');
-            el.value = csrfToken;
-        }
-    </script>
+    %s
     </pre>
-</div>""" % (message, openid, redirect,
-    environ['tiddlyweb.config']['server_prefix'])]
+</div>""" % (message, openid, redirect, FORM_FINISH)]

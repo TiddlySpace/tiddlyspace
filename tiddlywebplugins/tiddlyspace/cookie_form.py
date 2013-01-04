@@ -3,6 +3,23 @@ subclass the cookie_form challenger to add csrf-awareness
 """
 from tiddlyweb.web.challengers import cookie_form
 
+FORM_FINISH = """
+<input type="hidden" id="csrf_token" name="csrf_token" />
+<input type="submit" value="submit" />
+</form>
+<script type="text/javascript"
+        src="/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF"></script>
+<script type="text/javascript">
+    var csrfToken = window.getCSRFToken(),
+        el = null;
+
+    if (csrfToken) {
+        el = document.getElementById('csrf_token');
+        el.value = csrfToken;
+    }
+</script>
+"""
+
 
 class Challenger(cookie_form.Challenger):
     def _send_cookie_form(self, environ, start_response, redirect,
@@ -20,19 +37,6 @@ class Challenger(cookie_form.Challenger):
 User: <input name="user" size="40" />
 Password <input type="password" name="password" size="40" />
 <input type="hidden" name="tiddlyweb_redirect" value="%s" />
-<input type="hidden" id="csrf_token" name="csrf_token" />
-<input type="submit" value="submit" />
-</form>
-<script type="text/javascript"
-        src="%s/bags/tiddlyspace/tiddlers/TiddlySpaceCSRF"></script>
-<script type="text/javascript">
-    var csrfToken = window.getCSRFToken(),
-        el = null;
-
-    if (csrfToken) {
-        el = document.getElementById('csrf_token');
-        el.value = csrfToken;
-    }
-</script>
+%s
 </pre>
-""" % (message, redirect, environ['tiddlyweb.config']['server_prefix'])]
+""" % (message, redirect, FORM_FINISH)]
