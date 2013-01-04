@@ -11,8 +11,8 @@ _cache-max-age: 43200
 <body style="display:none;">
 <form class="ts-login login login-method" action="" autocomplete="off" id="userpass-login" class="toggler">
 	<p>login via <a class="toggle-form" href="#openid-login">openid</a></p>
-	<input type="text" name="username" placeholder="username" />
-	<input type="password" name="password" placeholder="password" /> 
+	<input autocapitalize="off" autocorrect="off" type="text" name="username" placeholder="username" />
+	<input autocapitalize="off" autocorrect="off" type="password" name="password" placeholder="password" /> 
 	<input type="hidden" name="redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
 	<input type="submit" value="Log In" />
 </form>
@@ -20,7 +20,7 @@ _cache-max-age: 43200
 		method="post" action="/challenge/tiddlywebplugins.tiddlyspace.openid">
 	<p>login with <a class="toggle-form" href="#userpass-login">username and password</a></p>
 	<input name="tiddlyweb_redirect" type="hidden" value="/bags/common/tiddlers/backstage">
-	<input class="openid" type="text" name="openid" placeholder="your openid">
+	<input class="openid" autocapitalize="off" autocorrect="off" type="text" name="openid" placeholder="your openid">
 	<input class="button" type="submit" value="Sign In">
 	<a class="openid-help" href="http://openid.net/get-an-openid/">What is an open id?</a>
 </form>
