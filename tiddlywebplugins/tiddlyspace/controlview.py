@@ -182,6 +182,12 @@ class DropPrivs(object):
         return output
 
     def _handle_dropping_privs(self, environ, req_uri):
+        """
+        Determin if this request is to be considered "in space" or
+        not. If it is not and the current user is not GUEST we need
+        to pretend that the current user is GUEST, effectively
+        "dropping" privileges.
+        """
         if environ['tiddlyweb.usersign']['name'] == 'GUEST':
             return
 
@@ -193,32 +199,11 @@ class DropPrivs(object):
 
         space = Space(space_name)
 
-        store = environ['tiddlyweb.store']
         container_name = req_uri.split('/')[2]
 
-        if req_uri.startswith('/bags/'):
-            recipe_name = determine_space_recipe(environ, space_name)
-            space_recipe = store.get(Recipe(recipe_name))
-            template = recipe_template(environ)
-            recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
-            recipe_bags.extend(space.extra_bags())
-            if environ['REQUEST_METHOD'] == 'GET':
-                if container_name in recipe_bags:
-                    return
-                if container_name in ADMIN_BAGS:
-                    return
-            else:
-                base_bags = space.list_bags()
-                # add bags in the recipe which may have been added
-                # by the recipe mgt. That is: bags which are not
-                # included and not core.
-                acceptable_bags = [bag for bag in recipe_bags if not (
-                    Space.bag_is_public(bag) or Space.bag_is_private(bag)
-                    or Space.bag_is_associate(bag))]
-                acceptable_bags.extend(base_bags)
-                acceptable_bags.extend(ADMIN_BAGS)
-                if container_name in acceptable_bags:
-                    return
+        if (req_uri.startswith('/bags/')
+                and self._valid_bag(environ, space, container_name)):
+            return
 
         if (req_uri.startswith('/recipes/')
                 and container_name in space.list_recipes()):
@@ -247,6 +232,38 @@ class DropPrivs(object):
             self._drop_privs(environ)
 
         return
+
+    def _valid_bag(self, environ, space, container_name):
+        """
+        Return True if the requested entity is part of the current
+        space's recipe or an ADMIN BAG. Otherwise return False
+        indicating that privileges will be dropped.
+        """
+        store = environ['tiddlyweb.store']
+        recipe_name = determine_space_recipe(environ, space.name)
+        space_recipe = store.get(Recipe(recipe_name))
+        template = recipe_template(environ)
+        recipe_bags = [bag for bag, _ in space_recipe.get_recipe(template)]
+        recipe_bags.extend(space.extra_bags())
+        if environ['REQUEST_METHOD'] == 'GET':
+            if container_name in recipe_bags:
+                return True
+            if container_name in ADMIN_BAGS:
+                return True
+        else:
+            base_bags = space.list_bags()
+            # add bags in the recipe which may have been added
+            # by the recipe mgt. That is: bags which are not
+            # included and not core.
+            acceptable_bags = [bag for bag in recipe_bags if not (
+                Space.bag_is_public(bag) or Space.bag_is_private(bag)
+                or Space.bag_is_associate(bag))]
+            acceptable_bags.extend(base_bags)
+            acceptable_bags.extend(ADMIN_BAGS)
+            if container_name in acceptable_bags:
+                return True
+
+        return False
 
 
 class AllowOrigin(object):
