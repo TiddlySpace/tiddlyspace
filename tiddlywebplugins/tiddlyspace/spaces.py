@@ -36,8 +36,7 @@ def add_spaces_routes(selector):
     selector.add('/spaces/{space_name:segment}',
             GET=confirm_space,  # confirm space exists
             PUT=create_space,  # create a new space
-            POST=subscribe_space,  # subscribe a space to this space
-            )
+            POST=subscribe_space)  # subscribe a space to this space
     selector.add('/spaces/{space_name:segment}/members',  # list space members
             GET=list_space_members)
     selector.add('/spaces/{space_name:segment}/members/{user_name:segment}',
@@ -328,7 +327,7 @@ def _create_space(environ, start_response, space_name):
             environ['tiddlyweb.usersign']['name'])
     start_response('201 Created', [
         ('Location', space_uri(environ, space_name)),
-        ])
+    ])
     return ['']
 
 

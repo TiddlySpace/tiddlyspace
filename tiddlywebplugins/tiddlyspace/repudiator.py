@@ -46,7 +46,7 @@ class Repudiator(object):
             content_type = None
         if (self.environ['REQUEST_METHOD'] == 'GET'
             and (content_type and content_type.startswith(MANIFEST_TYPE))
-            and self.status.startswith('200')):
+                and self.status.startswith('200')):
             self.is_manifest = True
             self._flush_headers()
 

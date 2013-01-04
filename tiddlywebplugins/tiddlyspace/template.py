@@ -18,7 +18,7 @@ def send_template(environ, template_name, template_data=None):
     """
     Set some defaults for a template and send the output.
     """
-    if template_data == None:
+    if template_data is None:
         template_data = {}
     template = get_template(environ, template_name)
 
@@ -61,6 +61,6 @@ def send_template(environ, template_name, template_data=None):
             'css': linked_resources['HtmlCss'],
             'js': linked_resources['HtmlJavascript'],
             'server_host': server_base_url(environ),
-            }
+    }
     template_defaults.update(template_data)
     return template.generate(template_defaults)

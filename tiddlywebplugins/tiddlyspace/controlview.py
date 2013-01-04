@@ -81,7 +81,7 @@ class ControlView(object):
         disable_ControlView = environ.get('HTTP_X_CONTROLVIEW') == 'false'
         if http_host != host_url and not disable_ControlView:
             space_name = determine_space(environ, http_host)
-            if space_name == None:
+            if space_name is None:
                 return None
             recipe_name = determine_space_recipe(environ, space_name)
             store = environ['tiddlyweb.store']
@@ -189,7 +189,7 @@ class DropPrivs(object):
         http_host, _ = determine_host(environ)
         space_name = determine_space(environ, http_host)
 
-        if space_name == None:
+        if space_name is None:
             return
 
         space = Space(space_name)

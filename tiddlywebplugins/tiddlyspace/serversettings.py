@@ -81,7 +81,8 @@ def update_space_settings(environ, name):
     # TODO: Turn this back on when the app switcher is more complete
     #_figure_default_index(environ, bag_name, space)
 
-    environ['tiddlyweb.space_settings']['extra_query'] = ';'.join(query_strings)
+    environ['tiddlyweb.space_settings'][
+            'extra_query'] = ';'.join(query_strings)
 
 
 def _figure_default_index(environ, bag_name, space):

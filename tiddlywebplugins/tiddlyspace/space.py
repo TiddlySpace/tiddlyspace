@@ -22,9 +22,7 @@ class Space(object):
     and recipes can be deduced.
     """
 
-    ASSOCIATED_BAG_MAP = [
-            'archive',
-            ]
+    ASSOCIATED_BAG_MAP = ['archive']
 
     CORE_RECIPE = [
         ('system', ''),
@@ -33,7 +31,7 @@ class Space(object):
         ('system-info_public', ''),
         ('system-images_public', ''),
         ('system-theme_public', ''),
-        ]
+    ]
 
     def __init__(self, name):
         """

@@ -10,8 +10,8 @@ from tiddlywebwiki.instance import (instance_config, store_contents,
     store_structure)
 
 from tiddlywebplugins.prettyerror.instance import (
-         store_contents as prettyerror_store_contents,
-         store_structure as prettyerror_store_structure)
+        store_contents as prettyerror_store_contents,
+        store_structure as prettyerror_store_structure)
 
 from tiddlywebplugins.tiddlyspace.space import Space
 

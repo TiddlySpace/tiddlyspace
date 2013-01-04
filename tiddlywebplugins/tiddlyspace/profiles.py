@@ -204,7 +204,7 @@ try:
                     'hub.mode': 'publish',
                     'hub.url': profile_atom_url(
                         {'tiddlyweb.config': self.config}, user),
-                    }
+            }
 
             try:
                 target = self.config['atom.hub']
