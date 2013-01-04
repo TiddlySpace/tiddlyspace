@@ -22,6 +22,10 @@ FORM_FINISH = """
 
 
 class Challenger(cookie_form.Challenger):
+    """
+    Override the cookie_form Challenger to add CSRF
+    handling.
+    """
     def _send_cookie_form(self, environ, start_response, redirect,
             status='401 Unauthorized', message=''):
         """
