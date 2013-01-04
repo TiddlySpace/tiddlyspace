@@ -277,6 +277,9 @@ class AllowOrigin(object):
     def __call__(self, environ, start_response):
 
         def replacement_start_response(status, headers, exc_info=None):
+            """
+            Append a response header to headers if the request is a GET.
+            """
             if environ['REQUEST_METHOD'] == 'GET':
                 headers.append(('Access-Control-Allow-Origin', '*'))
             return start_response(status, headers, exc_info)
