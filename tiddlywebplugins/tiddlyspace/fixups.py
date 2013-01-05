@@ -69,9 +69,6 @@ def web_tiddler_url(environ, tiddler, container='bags', full=True,
     the server_host domain. If/when auxbags are made to work this
     will need to be reviewed.
     """
-    if '_canonical_uri' in tiddler.fields:
-        return tiddler.fields['_canonical_uri'].encode('utf-8')
-
     saved_host = environ.get('HTTP_HOST', '')
     try:
         if container == 'recipes':
