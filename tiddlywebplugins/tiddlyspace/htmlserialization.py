@@ -185,7 +185,10 @@ class Serialization(HTMLSerialization):
             container_policy = True
         except PermissionsError:
             container_policy = False
-        space_link = self._space_link(tiddler)
+        if not self.environ['tiddlyweb.space_settings'].get('index', None):
+            space_link = self._space_link(tiddler)
+        else:
+            space_link = ''
         try:
             modifier_link = space_uri(self.environ, tiddler.modifier)
         except AttributeError:

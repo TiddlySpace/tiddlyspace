@@ -40,14 +40,27 @@ def test_space_link():
         ('http://cdent.0.0.0.0:8080/HouseHold',
             '"/#%5B%5BHouseHold%5D%5D"'),
         ('http://0.0.0.0:8080/bags/cdent_public/tiddlers/HouseHold',
-            '"http://cdent.0.0.0.0:8080/#%5B%5BHouseHold%5D%5D"'),
+            '!"http://cdent.0.0.0.0:8080/#%5B%5BHouseHold%5D%5D"'),
         ]
     for url, expected in urls:
         response, content = http.request(url, method='GET')
         assert response['status'] == '200'
-        assert expected in content, content
+        if expected.startswith('!'):
+            expected == expected[1:]
+            assert expected not in content, content
+        else:
+            assert expected in content, content
 
     url = 'http://0.0.0.0:8080/bags/tiddlyspace/tiddlers/Backstage'
     response, content = http.request(url, method='GET')
     assert response['status'] == '200'
     assert '/#%5B%5BBackstage%5D%5D' not in content, content
+
+    tiddler = Tiddler('ServerSettings', 'cdent_public')
+    tiddler.text = 'index: HouseHold\n'
+    store.put(tiddler)
+
+    for url, expected in urls[:3]:
+        response, content = http.request(url, method='GET')
+        assert response['status'] == '200'
+        assert expected not in content, content
