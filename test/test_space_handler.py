@@ -157,6 +157,12 @@ def test_create_space():
     info = simplejson.loads(content)
     assert 'Space extra' in info['text']
 
+    response, content = http.request(
+            'http://extra.0.0.0.0:8080/GettingStarted.json')
+    assert response['status'] == '200'
+    info = simplejson.loads(content)
+    assert info['bag'] == 'extra_public'
+
     bag = store.get(Bag('extra_public'))
     assert bag.policy.owner == 'cdent'
     assert bag.policy.read == []

@@ -13,7 +13,8 @@ from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.model.policy import Policy
-from tiddlyweb.store import NoRecipeError, NoBagError, NoUserError
+from tiddlyweb.store import (StoreError, NoRecipeError, NoBagError,
+        NoUserError)
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -25,6 +26,11 @@ try:
     JSONDecodeError = simplejson.decoder.JSONDecodeError
 except AttributeError:  # Python 2.6+
     JSONDecodeError = ValueError
+
+GETTING_STARTED_TIDDLER = {
+        'title': 'GettingStarted',
+        'bag': 'system-info_public'
+}
 
 
 def add_spaces_routes(selector):
@@ -222,6 +228,16 @@ def make_space(space_name, store, member):
     info_tiddler = Tiddler('SiteInfo', space.public_bag())
     info_tiddler.text = 'Space %s' % space_name
     store.put(info_tiddler)
+    
+    # Duplicate GettingStarted into public bag.
+    getting_started_tiddler = Tiddler(GETTING_STARTED_TIDDLER['title'],
+            GETTING_STARTED_TIDDLER['bag'])
+    try:
+        getting_started_tiddler = store.get(getting_started_tiddler)
+        getting_started_tiddler.bag = space.public_bag()
+        store.put(getting_started_tiddler)
+    except StoreError:
+        pass
 
     public_recipe = Recipe(space.public_recipe())
     public_recipe.set_recipe(space.public_recipe_list())
