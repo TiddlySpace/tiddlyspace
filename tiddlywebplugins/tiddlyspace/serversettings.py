@@ -13,8 +13,8 @@ from tiddlywebplugins.tiddlyspace.space import Space
 SPACE_SERVER_SETTINGS = 'ServerSettings'
 SERVER_SETTINGS_KEYS = ['index', 'editor']
 DEFAULT_SERVER_SETTINGS = {
-        'index': None,
-        'editor': '/takenote#tiddler/{tiddler}',
+        'index': '',
+        'editor': '',
         'extra_query': ''}
 DEFAULT_NEWUSER_APP = 'apps'
 DEFAULT_SPACE_NAME = 'frontpage'

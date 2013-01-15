@@ -195,7 +195,6 @@ dd.meta-tag {
 	font-size: 0.8em;
 }
 
-/* TODO: avoid repetition - this css also lives in notabene.css */
 #backstage {
 	position: relative;
 	z-index: 2;

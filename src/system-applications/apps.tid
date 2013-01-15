@@ -32,11 +32,6 @@ tags: excludeLists excludeSearch
 					<div id="appswitcher">
 						<h2>Your Apps</h2>
 						<ul id="app-list">
-							<li class="write"><a href="/takenote">
-								<img src="/bags/common/tiddlers/pencil_blue.png" alt="Icon for Takenote" class="app-img" />
-								WRITE
-								</a>
-							</li>
 							<li class="htmlserialisation">
 								<a href="/tiddlers.html?select=tag:!excludeLists;sort=-modified">
 									<img src="/bags/common/tiddlers/browse_read_blue.png" alt="Icon for the HTML Serialisation" class="app-img" />
@@ -56,7 +51,6 @@ tags: excludeLists excludeSearch
 					</div>
 					<div id="app-desc">
 						<ul>
-							<li class="writedesc"><p>write your notes on the web.  Link them, tag them, share them.  Your notes are available everywhere, on and offline.</p></li>
 							<li class="htmlserialisationdesc"><p>an easy to understand HTML representation of your content.</p></li>
 							<li class="tiddlywikidesc"><p>use TiddlyWiki to create, edit and organise your content.</p></li>
 						</ul>

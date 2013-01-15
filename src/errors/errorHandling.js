@@ -97,7 +97,9 @@ var errorhandler = {
 	},
 	suggestTiddlers: function(container, space, title) {
 		$(container).empty(errorhandler.locale.alternativeTiddlers);
-		errorhandler.createTiddler(container, space, title);
+		if (editURITemplate) {
+			errorhandler.createTiddler(container, space, title);
+		}
 		var uri = "/bags/" + space + "_public/tiddlers";
 		$.ajax({url: uri, dataType: "text",
 			success: function(txt) {

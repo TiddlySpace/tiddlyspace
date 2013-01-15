@@ -2,8 +2,5 @@ tiddler: apps.tid
 tiddler: _space.tid
 tiddler: _account.tid
 
-# notabene app html
-recipe: https://raw.github.com/jdlrobson/notabene/master/dist/latest/tiddlyspace.recipe
-
 # reply button app html
 tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply.tid
