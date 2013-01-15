@@ -104,6 +104,9 @@ class Serialization(HTMLSerialization):
 
         # chop off the possible trailing .html
         tiddlers_url = tiddlers_url.rsplit('.html')[0]
+        friendly = False
+        if tiddlers_url.count('/') <= 1:
+            friendly = True
 
         if tiddlers.is_search:
             template = 'search.html'
@@ -120,6 +123,7 @@ class Serialization(HTMLSerialization):
             'tiddler_url': tiddler_url,
             'environ': self.environ,
             'revisions': tiddlers.is_revisions,
+            'friendly': friendly,
             'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
             'space_uri': space_uri,
             'space_bag': space_bag,
