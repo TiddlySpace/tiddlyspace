@@ -38,6 +38,25 @@ var twStylesheet = function(css, options) {
 	}
 };
 
+// detect background-size support
+// in <IE9 need to fallback to msfilter property
+function hasBgSizing() {
+	var supported,
+		elem = document.createElement('div');
+
+	document.body.appendChild(elem);
+	elem.style.cssText = "background-size: cover;";
+	supported = (elem.style.backgroundSize === undefined || elem.style.backgroundSize === null) ? false : true;
+	// clean up
+	elem.parentNode.removeChild(elem);
+	return supported;
+}
+var backgroundSizeSupported = hasBgSizing();
+
+// ms filters as fix for not supporting background-size property
+var msfilter_in = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/privateAndPublicIcon', sizingMethod='scale')",
+	msfilter_out = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/privateAndPublicIcon', sizingMethod='scale')";
+
 var stylesheet = ["iframe {",
 "	height: 180px;",
 "	z-index: 1000;",
@@ -150,9 +169,17 @@ var loadEvent = function() {
 
         // Quite a hack. GUEST does not have a csrf token.
         if (/csrf_token=\d+:\w+:\w+/.test(document.cookie)) {
-            link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/privateAndPublicIcon)';
+			if( backgroundSizeSupported ) {
+				link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/privateAndPublicIcon)';
+			} else {
+				link.style.filter = msfilter_in;
+			}
         } else {
-            link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/publicIcon)';
+			if( backgroundSizeSupported ) {
+				link.style.backgroundImage = 'url(/bags/tiddlyspace/tiddlers/publicIcon)';
+			} else {
+				link.style.filter = msfilter_out;
+			}
 			stylesheet = stylesheet.replace('height: 180px;', 'height: 156px;');
         }
 
