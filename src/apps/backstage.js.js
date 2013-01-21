@@ -201,7 +201,7 @@ var loadEvent = function() {
 				clearInterval(bubbleFadeInterval);
 				el.style.cssText = fadeIn ? "" : "visibility:hidden;";
 			}
-		}, 50);
+		}, 25);
 	}
 
 	addEventListener(link, "mousedown", function(ev) {
