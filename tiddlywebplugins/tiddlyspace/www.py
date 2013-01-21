@@ -3,7 +3,6 @@ Set up the routes and WSGI Middleware used by TiddlySpace.
 """
 
 from tiddlyweb.web.negotiate import Negotiate
-from tiddlyweb.web.wsgi import HTMLPresenter
 
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
 from tiddlywebplugins.utils import replace_handler
@@ -58,6 +57,3 @@ def establish_www(config):
         config['server_response_filters'].insert(
                 config['server_response_filters'].
                 index(PrettyHTTPExceptor) + 1, RepudiatorController)
-
-    if HTMLPresenter in config['server_response_filters']:
-        config['server_response_filters'].remove(HTMLPresenter)
