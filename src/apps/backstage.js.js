@@ -55,7 +55,7 @@ var backgroundSizeSupported = hasBgSizing();
 
 // ms filters as fix for not supporting background-size property
 var msfilter_in = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/privateAndPublicIcon', sizingMethod='scale')",
-	msfilter_out = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/privateAndPublicIcon', sizingMethod='scale')";
+	msfilter_out = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/publicIcon', sizingMethod='scale')";
 
 var stylesheet = ["iframe {",
 "	height: 180px;",
