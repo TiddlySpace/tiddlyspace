@@ -55,7 +55,7 @@ var backgroundSizeSupported = hasBgSizing();
 
 // ms filters as fix for not supporting background-size property
 var msfilter_in = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/privateAndPublicIcon', sizingMethod='scale')",
-	msfilter_out = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/privateAndPublicIcon', sizingMethod='scale')";
+	msfilter_out = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/publicIcon', sizingMethod='scale')";
 
 var stylesheet = ["iframe {",
 "	height: 180px;",
@@ -237,8 +237,16 @@ var loadEvent = function() {
 
 	addEventListener(link, "click", toggleBubble);
 
-	addEventListener(window, "click",
+	addEventListener(window.document.body, "click",
 		function(ev) {
+			var targ,
+			ev = ev || window.event;
+
+			if (ev.target) targ = ev.target;
+			else if (ev.srcElement) targ = ev.srcElement;
+			if(targ == link) {
+				return;
+			}
 			if(bubbleOpen) {
 				toggleBubble(ev);
 			}
