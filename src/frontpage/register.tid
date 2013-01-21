@@ -12,7 +12,7 @@ type: text/html
 	<div class="main section">
 		<h2>Get Your Own TiddlySpace!</h2>
 		<form class="ts-registration registration register clearfix" action="" autocomplete="off">
-			<input type="text" name="username" placeholder="username" />
+			<input type="text" name="username" placeholder="username" autofocus />
 			<div>
 				<input type="password" name="password" placeholder="password" /> 
 				<input type="password" name="password_confirm" placeholder="confirm password" />
