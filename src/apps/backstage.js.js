@@ -174,7 +174,7 @@ var loadEvent = function() {
 	body.insertBefore(link, body.firstChild);
 	var html = [
 	'<div class="bubble">',
-		'<iframe src="/backstage.html#userpass-login" name="tsbackstage" id="tsbackstage" width="auto" frameborder=0 border=0></iframe>',
+		'<iframe src="/bags/common/tiddlers/backstage#userpass-login" name="tsbackstage" id="tsbackstage" width="auto" frameborder=0 border=0></iframe>',
 		'<div class="arrow whitearrow"></div>',
 		'<div class="arrow"></div>',
 	'</div>'].join("");
