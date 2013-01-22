@@ -15,7 +15,7 @@ tags: excludeLists excludeSearch excludeMissing
 	<div id="text-html" class="main section">
 		<a class="app" href="/">home</a>
 		<div class="left">
-		<h2>About this space <button class='toggleNext'>show</button></button></h2>
+		<h2>About this space <button class='toggleNext'>show</button></h2>
 		<div id="siteinfo"></div>
 		<h2>Site Icon</h2>
 		<div>
@@ -48,7 +48,7 @@ tags: excludeLists excludeSearch excludeMissing
 				</form>
 			</div>
 			<h2>
-				Existing Members <button class='toggleNext'>&lt;</button></button>
+				Existing Members <button class='toggleNext'>&lt;</button>
 			</h2>
 			<div>
 				Your space currently has the following members: 
@@ -64,7 +64,7 @@ tags: excludeLists excludeSearch excludeMissing
 			</form>
 		</div>
 		<div>
-			<h2>Included Spaces <button class='toggleNext'>&lt;</button></button></h2>
+			<h2>Included Spaces <button class='toggleNext'>&lt;</button></h2>
 			<div>
 			This space includes the following spaces:
 			<ul class="ts-includes"></ul>
