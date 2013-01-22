@@ -8,49 +8,48 @@ _cache-max-age: 43200
 <link rel="stylesheet" href="/bags/common/tiddlers/reset.css" />
 <link rel="stylesheet" href="/bags/common/tiddlers/app.css" />
 </head>
-<body style="display:none;">
-<form class="ts-login login login-method" action="" autocomplete="off" id="userpass-login" class="toggler">
+<body style="display:none;" class="tsbackstage">
+<div class="logindetails">
+	<form class="ts-login login login-method" action="" autocomplete="off" id="userpass-login" class="toggler">
 	<p>login via <a class="toggle-form" href="#openid-login">openid</a></p>
 	<input autocapitalize="off" autocorrect="off" type="text" name="username" placeholder="username" />
 	<input autocapitalize="off" autocorrect="off" type="password" name="password" placeholder="password" /> 
 	<input type="hidden" name="redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
-	<input type="submit" value="Log In" />
+	<input type="submit" class="btn btn-action" value="Log In" />
 </form>
 <form class="ts-openidlogin login-method login-method-hide" id="openid-login"
 		method="post" action="/challenge/tiddlywebplugins.tiddlyspace.openid">
 	<p>login with <a class="toggle-form" href="#userpass-login">username and password</a></p>
 	<input name="tiddlyweb_redirect" type="hidden" value="/bags/common/tiddlers/backstage">
 	<input class="openid" autocapitalize="off" autocorrect="off" type="text" name="openid" placeholder="your openid">
-	<input class="button" type="submit" value="Sign In">
+	<input class="button btn btn-action" type="submit" value="Sign In">
 	<a class="openid-help" href="http://openid.net/get-an-openid/">What is an open id?</a>
 </form>
 <div class="ts-logout logout">
 	<form method="POST" action="/logout">
 		<input type="hidden" name="tiddlyweb_redirect" value="/bags/common/tiddlers/backstage?action=login#refreshParent" />
-		<input type="submit" class="button" value="Log out" />
+		<input type="submit" class="btn btn-system" value="Log out" />
 	</form>
 </div>
-<hr />
-<ul id="app-list">
+</div>
+<div><ul id="app-list">
         <li class="search">
                 <form method="GET" target="_blank" action="/hsearch">
                 <img src="/bags/common/tiddlers/search.png" alt="Search Icon" class="app-img" />
-                <input type="search" name="q" placeholder="SEARCH" />
+                <input type="text" name="q" placeholder="Search" />
                 <form>
         </li>
 	<li class="help">
 		<a href="http://help.tiddlyspace.com"  target="_blank">
-			<img src="/bags/common/tiddlers/help.png" alt="Help SiteIcon" class="app-img" />
-			HELP
+			<img src="/bags/common/tiddlers/help.png" alt="Help SiteIcon" class="app-img" />Help
 		</a>
 	</li>
 	<li class="space">
 		<a href="/_space"  target="_blank">
-			<img src="/SiteIcon" alt="Space SiteIcon" class="app-img" />
-			THIS SPACE
+			<img src="/SiteIcon" alt="Space SiteIcon" class="app-img" />This space
 		</a>
 	</li>
-</ul>
+</ul></div>
 <script type='text/javascript' src='/bags/common/tiddlers/jquery.js'></script>
 <script type="text/javascript" src="/bags/tiddlyspace/tiddlers/chrjs"></script>
 <script type="text/javascript" src="/bags/common/tiddlers/chrjs.users"></script>
@@ -82,7 +81,7 @@ _cache-max-age: 43200
 			li = $('<li class="account" />').appendTo("#app-list")[0];
 			siteiconurl = host + '/bags/' + ts.user.name + '_public/tiddlers/SiteIcon';
 			link = $('<a target="_blank" />').attr("href", host + "/_account").
-				text(" YOUR ACCOUNT").appendTo(li);
+				text("Your account").appendTo(li);
 			$('<img class="app-img">').attr("alt",  'SiteIcon for ' + ts.user.name).
 				attr("src", siteiconurl).prependTo(link);
 		}
