@@ -1,6 +1,6 @@
 body {
-	font-size: 8px;
-	font-family: 'Helvetica Neue', Helvetica, sans-serif;
+	font-size: 62.5%;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -18,20 +18,24 @@ form input {
 	height: 24px;
 }
 
-form input[type=submit] {
-	border: solid 1px #CCC;
-	width: auto;
-	background-color: white;
+form input[type=text],
+form input[type=password] {
+	border-radius: 2px;
+	padding: 0.1em 0.5em;
 }
 
-.ts-logout {
-	font-size: 16px;
+form input[type=submit] {
+	width: auto;
+}
+
+.ts-logout,
+.ts-logout form {
+	font-size: 1.6em;
+	text-align: center;
 }
 
 .ts-logout form {
 	display: inline;
-	margin-left: 20px;
-	font-size: 16px;
 }
 
 #app-list {
@@ -39,46 +43,27 @@ form input[type=submit] {
 }
 
 #app-list li {
-	height: 4.25em;
-	line-height: 3.125em;
-	border-top: 1px solid #fff;
-	border-bottom: 1px solid #C3D3DD;
+	height: 4.5em;
+	line-height: 4.5em;
 	background: url(/bags/common/tiddlers/double_angle_lightblue_42x42.png) no-repeat 90% #F0F4F8;
 	background-size: 24px 24px;
-	-webkit-transition: background 0.4s linear;
-	-moz-transition: background 0.4s linear;
-	-o-transition: background 0.4s linear;
-	-ms-transition: background 0.4s linear;
-	transition: background 0.4s linear;
 }
 
 #app-list li:hover {
-	border-top: 1px solid #F0F4F8;
-	line-height: 3.25em;
 	cursor: pointer;
-	background: url(/bags/common/tiddlers/double_angle_darkpink_bevel_42x42.png) no-repeat 90% #F3F9FF;
-}
-
-#app-list li:hover:last-child {
-	line-height: 3.125em;
+	background: url(/bags/common/tiddlers/double_angle_lightblue_42x42.png) no-repeat 90% #0082AF;
+	background-size: 24px 24px;
 }
 
 #app-list li form,
 #app-list li a {
 	display: block;
 	height: 100%;
-	font-size: 2.5em;
+	font-size: 2em;
 	text-decoration: none;
-	color: #BC4378;
+	color: #8C9DA7;
 	width: 100%;
-}
-
-#app-list li a {
-	-webkit-transition: color 0.4s linear;
-	-moz-transition: color 0.4s linear;
-	-o-transition: color 0.4s linear;
-	-ms-transition: color 0.4s linear;
-	transition: color 0.4s linear;
+	font-weight: normal;
 }
 
 #app-list li input {
@@ -89,25 +74,20 @@ form input[type=submit] {
 	color: #E56AA0;
 }
 
+.tsbackstage #app-list li:hover a {
+	color: #fff;
+}
+
 #app-list .app-img {
 	position: relative;
 	top: 0.2125em;
-	margin: 0 1em;
+	margin: 0 1.25em 0 1em;
 	height: 1.25em;
 	width: 1.25em;
 }
 
-#app-list li a span.comingsoon {
-	font-size: 0.5em;
-	color: #B8B6BD;
-}
-
-.write {
-	opacity: 0.1;
-}
-
-.ts-member .write {
-	opacity: 1;
+#app-list .search .app-img {
+	margin-right: 10px;
 }
 
 .ts-loggedin .login-method:target,
@@ -123,4 +103,78 @@ form input[type=submit] {
 }
 .login-method p {
 	padding-bottom: 5px;
+}
+
+.tsbackstage .message {
+	color: #4C4A54;
+	display: block;
+	text-align: center;
+}
+
+.tsbackstage .message a {
+	text-decoration: none;
+}
+
+.btn {
+	border-radius: 2px;
+}
+
+.btn-action {
+	background: #0082AF;
+	color: #fff;
+	border: none;
+}
+
+.btn-action:hover {
+	box-shadow: 0 0 3px rgba(0,0,0,.5);
+}
+
+form input.btn-system {
+	background: #F8F9F9;
+	color: #4C4A54;
+	border: 1px solid rgba(0,0,0,.2);
+}
+
+.btn-system:hover {
+	color: #000;
+	cursor: pointer;
+	box-shadow: 0 0 3px rgba(0,0,0,.25);
+}
+
+.search form {
+	height: 4.5em;
+}
+
+.search input {
+	font-size: 1em;
+	border: none;
+	outline: none;
+	padding: 0.2em 0.5em;
+	background: transparent;
+	border-radius: 2px;
+}
+
+.search:hover input {
+	color: #fff;
+}
+
+.search input:focus {
+	-webkit-box-shadow: inset 0 0 8px  rgba(140,157,167,0.75);
+	-moz-box-shadow: inset 0 0 8px  rgba(140,157,167,0.75);
+	box-shadow: inset 0 0 8px  rgba(140,157,167,0.75);
+}
+
+.search:hover input:focus {
+	-webkit-box-shadow: inset 0 0 8px  rgba(255,255,255,0.5);
+	-moz-box-shadow: inset 0 0 8px  rgba(255,255,255,0.5);
+	box-shadow: inset 0 0 8px  rgba(255,255,255,0.5);
+}
+
+.logindetails {
+	background: #fff;
+	padding: 1em 1em 2em;
+	box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.25);
+	z-index: 1;
+	position: relative;
+	text-align: center;
 }
