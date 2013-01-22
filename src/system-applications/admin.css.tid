@@ -45,11 +45,6 @@ type: text/css
 	display: none;
 }
 
-.ts-includes button,
-.ts-members button {
-	font-size: 0.8em;
-}
-
 #header h2 {
 	text-align: center;
 }
@@ -144,8 +139,11 @@ button {
 	-o-transition: all 0.4s ease-in-out;
 	-ms-transition: all 0.4s ease-in-out;
 	transition: all 0.4s ease-in-out;
-	margin-left: 16px;
 	border: none;
+}
+
+.toggleNext {
+	margin-left: 16px;
 }
 
 input[type=submit]:hover,
