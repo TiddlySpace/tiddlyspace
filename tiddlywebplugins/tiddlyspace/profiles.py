@@ -23,6 +23,9 @@ from tiddlywebplugins.utils import get_store
 from tiddlywebplugins.tiddlyspace.template import send_template
 
 
+LOGGER = logging.getLogger(__name__)
+
+
 def add_profile_routes(selector):
     """
     Add the necessary routes for profiles and webfinger.
@@ -216,20 +219,20 @@ try:
             try:
                 response = urllib2.urlopen(target, encoded_data)
                 status = response.getcode()
-                logging.warn('sent %s to %s got %s',
+                LOGGER.warn('sent %s to %s got %s',
                         encoded_data, target, status)
                 if status != '204':
-                    logging.warn('non 204 response from hub: %s', status)
+                    LOGGER.warn('non 204 response from hub: %s', status)
             except urllib2.HTTPError, exc:
                 if exc.code != 204:
-                    logging.warn(
+                    LOGGER.warn(
                             'urlopen errored with %s when publishing to hub',
                             exc)
             except urllib2.URLError, exc:
-                logging.warn(
+                LOGGER.warn(
                         'urlopen errored with %s when publishing to hub', exc)
             except AttributeError, exc:
-                logging.warn('error when publishing to hub: %s, %s',
+                LOGGER.warn('error when publishing to hub: %s, %s',
                         exc, response.info())
 except ImportError:
     pass

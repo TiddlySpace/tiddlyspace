@@ -13,6 +13,9 @@ from tiddlyweb.util import read_utf8_file
 from tiddlywebwiki.serialization import Serialization as WikiSerialization
 
 
+LOGGER = logging.getLogger(__name__)
+
+
 def build_config_var(alpha=False, beta=False, external=False):
     """
     Create the configuration key which will be used to locate
@@ -62,11 +65,11 @@ class Serialization(WikiSerialization):
         wiki = None
         if alpha or beta or external:
             config_var = build_config_var(alpha, beta, external)
-            logging.debug('looking for %s', config_var)
+            LOGGER.debug('looking for %s', config_var)
             base_wiki_file = self.environ.get('tiddlyweb.config',
                     {}).get(config_var, '')
             if base_wiki_file:
-                logging.debug('using %s as base_tiddlywiki', base_wiki_file)
+                LOGGER.debug('using %s as base_tiddlywiki', base_wiki_file)
                 wiki = read_utf8_file(base_wiki_file)
         if not wiki:
             wiki = WikiSerialization._get_wiki(self)
