@@ -100,7 +100,7 @@ var errorhandler = {
 		if (editURITemplate) {
 			errorhandler.createTiddler(container, space, title);
 		}
-		var uri = "/bags/" + space + "_public/tiddlers";
+		var uri = "/bags/" + space + "_public/tiddlers.txt";
 		$.ajax({url: uri, dataType: "text",
 			success: function(txt) {
 				var tiddlers = txt.split("\n"),
