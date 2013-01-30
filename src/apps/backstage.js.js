@@ -152,6 +152,7 @@ var loadEvent = function() {
 	var link = document.createElement("a");
 	link.setAttribute("id", "app-picker");
 	link.setAttribute("class", "app-picker");
+	link.setAttribute("title", "Click to navigate around tiddlyspace");
 	link.appendChild(document.createTextNode("tiddlyspace"));
 
         // Quite a hack. GUEST does not have a csrf token.
