@@ -1,11 +1,5 @@
 type: text/css
 
-.messageArea {
-	padding: 10px;
-	border: groove 1px #CCC;
-	background-color: #EEE;
-}
-
 .autocompleteLink img {
 	margin-right: 8px;
 }
@@ -321,6 +315,41 @@ a.app:hover {
 
 #dropzone .notloading {
 	display: none;
+}
+
+/* notification area styles */
+
+.messageArea {
+	padding: 10px;
+	border: solid 1px #CCC;
+	border-radius: 2px;
+	background-color: #EEE;
+	margin-bottom: 0.25em;
+	position: relative;
+}
+
+.messageArea .close-btn {
+	position: absolute;
+	top: -.25em;
+	right: -.25em;
+	font-size: 16px;
+	line-height: 20px;
+	background: transparent;
+	color: #596A73;
+	visibility: hidden;
+}
+
+.messageArea:hover .close-btn {
+	visibility: visible;
+}
+
+.messageArea p {
+	margin: 0;
+	line-height: 1.4em;
+}
+
+.messageArea a {
+	cursor: pointer;
 }
 
 @media (max-width:600px) {
