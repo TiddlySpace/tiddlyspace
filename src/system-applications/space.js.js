@@ -164,12 +164,16 @@ ts.init(function(ts) {
 function toggleNext(ev) {
 	var label1 = "hide",
 		label2 = "show",
-		target = $(ev.target).parent().next(),
-		visible = $(ev.target).hasClass("open") ? true : false;
+		$evtarget = $(ev.target),
+		target = $evtarget.parent().next(),
+		visible = $evtarget.hasClass("open") ? true : false;
+
 	$(target).stop(true, true);
 	if(!visible) {
 		$(target).slideDown(200);
-		$(ev.target).addClass("open").text(label1);
+		$evtarget
+			.addClass("open")
+			.attr("title", label1);
 	} else {
 		if($(target).parents().is(":hidden")) {
 			// see http://forum.jquery.com/topic/slideup-doesn-t-work-with-hidden-parent
@@ -177,7 +181,9 @@ function toggleNext(ev) {
 		} else {
 			$(target).slideUp(200);
 		}
-		$(ev.target).removeClass("open").text(label2);
+		$evtarget
+			.removeClass("open")
+			.attr("title", label2);
 	}
 }
 

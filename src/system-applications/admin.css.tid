@@ -144,6 +144,17 @@ button {
 
 .toggleNext {
 	margin-left: 16px;
+	background: url(down_tsgrey.png) no-repeat;
+	position: absolute;
+	right: 24px;
+	top: 50%;
+	margin-top: -12px;
+	width: 24px;
+	height: 24px;
+}
+
+.toggleNext.open {
+	background: url(up_tsgrey.png) no-repeat;
 }
 
 input[type=submit]:hover,
@@ -152,9 +163,17 @@ button:hover {
 	background: #0082AF;
 }
 
+button.toggleNext:hover {
+	background: url(down_tsblue.png) no-repeat;
+}
+
+button.toggleNext.open:hover {
+	background: url(up_tsblue.png) no-repeat;
+}
+
 input[disabled=disabled]:hover,
 button[disabled=disabled]:hover {
-	background: #CCC;
+	background: #c4c6c7;
 }
 
 button.delete:hover {
@@ -210,6 +229,11 @@ a {
 
 h1,h2,h3,h4,h5 {
 	color: #4C4A54;
+}
+
+h2 {
+	position: relative;
+	padding-right: 48px;
 }
 
 .left {
