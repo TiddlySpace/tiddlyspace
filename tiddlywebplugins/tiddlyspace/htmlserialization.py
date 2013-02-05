@@ -59,17 +59,15 @@ class Serialization(HTMLSerialization):
         tiddlers_url = (self.environ.get('SCRIPT_NAME', '')
                 + self.environ.get('PATH_INFO', ''))
 
-        routing_args = self.environ.get('wsgiorg.routing_args', ([], {}))[1]
-
         container_name = ''
         container_type = 'bags'
         container_url = ''
         container_policy = False
         store = self.environ['tiddlyweb.store']
         user = self.environ['tiddlyweb.usersign']
-        if routing_args and not tiddlers.is_search:
-            if 'recipe_name' in routing_args:
-                name = get_route_value(self.environ, 'recipe_name')
+        if not tiddlers.is_search:
+            if tiddlers.recipe:
+                name = tiddlers.recipe
                 container_url = '/recipes/%s' % name
                 container_name = 'Recipe %s' % name
                 container_type = 'recipes'
@@ -78,8 +76,8 @@ class Serialization(HTMLSerialization):
                     container_policy = True
                 except PermissionsError:
                     pass
-            elif 'bag_name' in routing_args:
-                name = get_route_value(self.environ, 'bag_name')
+            elif tiddlers.bag:
+                name = tiddlers.bag
                 container_url = '/bags/%s' % name
                 container_name = 'Bag %s' % name
                 try:
