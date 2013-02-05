@@ -19,7 +19,7 @@ from tiddlyweb.store import NoBagError
 from tiddlyweb import control
 from tiddlyweb.web.handler.recipe import get_tiddlers
 from tiddlyweb.web.handler.tiddler import get as get_tiddler
-from tiddlyweb.web.util import get_serialize_type
+from tiddlyweb.web.util import get_serialize_type, get_route_value
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -45,7 +45,7 @@ def get_identities(environ, start_response):
     user must be an admin.
     """
     store = environ['tiddlyweb.store']
-    username = environ['wsgiorg.routing_args'][1]['username']
+    username = get_route_value(environ, 'username')
     usersign = environ['tiddlyweb.usersign']['name']
     roles = environ['tiddlyweb.usersign']['roles']
 

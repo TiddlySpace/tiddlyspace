@@ -15,7 +15,7 @@ from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.model.user import User
 from tiddlyweb.web.handler.search import get as search
 from tiddlyweb.web.util import (server_host_url, encode_name,
-        get_serialize_type, tiddler_url)
+        get_serialize_type, tiddler_url, get_route_value)
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
 from tiddlywebplugins.tiddlyspace.web import determine_host
 from tiddlyweb.wikitext import render_wikitext
@@ -58,7 +58,7 @@ def atom_profile(environ, start_response):
     Send the atom profile, which is actually a search
     for tiddlers modified by the user.
     """
-    username = environ['wsgiorg.routing_args'][1]['username']
+    username = get_route_value(environ, 'username')
     search_string = _search_string(username)
     environ['tiddlyweb.query']['q'] = [search_string]
     return search(environ, start_response)
@@ -70,7 +70,7 @@ def html_profile(environ, start_response):
     their profile from their space, and their most recently
     modified tiddlers.
     """
-    username = environ['wsgiorg.routing_args'][1]['username']
+    username = get_route_value(environ, 'username')
     usersign = environ['tiddlyweb.usersign']
 
     store = environ['tiddlyweb.store']

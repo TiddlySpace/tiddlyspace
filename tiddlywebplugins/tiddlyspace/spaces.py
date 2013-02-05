@@ -15,6 +15,7 @@ from tiddlyweb.model.user import User
 from tiddlyweb.model.policy import Policy
 from tiddlyweb.store import (StoreError, NoRecipeError, NoBagError,
         NoUserError)
+from tiddlyweb.web.util import get_route_value
 
 from tiddlywebplugins.utils import require_any_user
 
@@ -58,8 +59,8 @@ def add_space_member(environ, start_response):
     raise 404.
     """
     store = environ['tiddlyweb.store']
-    space_name = environ['wsgiorg.routing_args'][1]['space_name']
-    user_name = environ['wsgiorg.routing_args'][1]['user_name']
+    space_name = get_route_value(environ, 'space_name')
+    user_name = get_route_value(environ, 'user_name')
     current_user = environ['tiddlyweb.usersign']
 
     _same_space_required(environ, space_name)
@@ -112,7 +113,7 @@ def confirm_space(environ, start_response):
     not, raise 404.
     """
     store = environ['tiddlyweb.store']
-    space_name = environ['wsgiorg.routing_args'][1]['space_name']
+    space_name = get_route_value(environ, 'space_name')
     try:
         space = Space(space_name)
         store.get(Recipe(space.public_recipe()))
@@ -129,8 +130,7 @@ def create_space(environ, start_response):
     Create a space if it does not yet exists. If it does
     raise 409.
     """
-    space_name = environ['wsgiorg.routing_args'][1]['space_name']
-    space_name = urllib.unquote(space_name).decode('UTF-8')
+    space_name = get_route_value(environ, 'space_name')
     _validate_space_name(environ, space_name)
     return _create_space(environ, start_response, space_name)
 
@@ -142,8 +142,8 @@ def delete_space_member(environ, start_response):
     nothing.
     """
     store = environ['tiddlyweb.store']
-    space_name = environ['wsgiorg.routing_args'][1]['space_name']
-    user_name = environ['wsgiorg.routing_args'][1]['user_name']
+    space_name = get_route_value(environ, 'space_name')
+    user_name = get_route_value(environ, 'user_name')
     current_user = environ['tiddlyweb.usersign']
 
     _same_space_required(environ, space_name)
@@ -196,7 +196,7 @@ def list_space_members(environ, start_response):
     to list the members.
     """
     store = environ['tiddlyweb.store']
-    space_name = environ['wsgiorg.routing_args'][1]['space_name']
+    space_name = get_route_value(environ, 'space_name')
     current_user = environ['tiddlyweb.usersign']
     try:
         space = Space(space_name)
@@ -286,7 +286,7 @@ def subscribe_space(environ, start_response):
     Raise 409 if a space in the JSON does not exist.
     """
     store = environ['tiddlyweb.store']
-    space_name = environ['wsgiorg.routing_args'][1]['space_name']
+    space_name = get_route_value(environ, 'space_name')
     current_user = environ['tiddlyweb.usersign']
     try:
         current_space = Space(space_name)
