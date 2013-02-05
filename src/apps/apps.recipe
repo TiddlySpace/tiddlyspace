@@ -9,3 +9,10 @@ tiddler: cancelTiddler.png.tid
 tiddler: deleteTiddler.png.tid
 tiddler: saveTiddler.png.tid
 tiddler: backstageIcon.png.tid
+
+# icons for _space and _account
+tiddler: ../icons/down_tsblue.png.tid
+tiddler: ../icons/down_tsgrey.png.tid
+tiddler: ../icons/up_tsblue.png.tid
+tiddler: ../icons/up_tsgrey.png.tid
+

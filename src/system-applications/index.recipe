@@ -2,11 +2,5 @@ tiddler: apps.tid
 tiddler: _space.tid
 tiddler: _account.tid
 
-# icons
-tiddler: ../icons/down_tsblue.png.tid
-tiddler: ../icons/down_tsgrey.png.tid
-tiddler: ../icons/up_tsblue.png.tid
-tiddler: ../icons/up_tsgrey.png.tid
-
 # reply button app html
 tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply.tid

@@ -14,7 +14,7 @@ tags: excludeLists excludeSearch excludeMissing
 
 <div id="container">
 	<div class="main section">
-		<a class="app" href="/apps">back to apps</a>
+		<a class="app" href="/">home</a>
 		<div class="left">
 		<div id="siteiconArea">
 		<h2>User Icon</h2>

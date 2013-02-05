@@ -88,7 +88,7 @@ type: text/css
 }
 
 #siteinfo .edit {
-	right: 0px;
+	right: 50px;
 	top: -40px;
 	color: white;
 	_color: black; /* ie6 hack */
