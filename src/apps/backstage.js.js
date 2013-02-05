@@ -51,7 +51,6 @@ function hasBgSizing() {
 	elem.parentNode.removeChild(elem);
 	return supported;
 }
-var backgroundSizeSupported = hasBgSizing();
 
 // ms filters as fix for not supporting background-size property
 var msfilter_in = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/privateAndPublicIcon', sizingMethod='scale')",
@@ -154,6 +153,7 @@ var loadEvent = function() {
 	link.setAttribute("class", "app-picker");
 	link.setAttribute("title", "Click to navigate around tiddlyspace");
 	link.appendChild(document.createTextNode("tiddlyspace"));
+	var backgroundSizeSupported = hasBgSizing();
 
         // Quite a hack. GUEST does not have a csrf token.
         if (/csrf_token=\d+:\w+:\w+/.test(document.cookie)) {
