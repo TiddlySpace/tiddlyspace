@@ -1,11 +1,5 @@
 type: text/css
 
-.messageArea {
-	padding: 10px;
-	border: groove 1px #CCC;
-	background-color: #EEE;
-}
-
 .autocompleteLink img {
 	margin-right: 8px;
 }
@@ -38,16 +32,45 @@ type: text/css
 .ts-includes li,
 .ts-space-search li,
 .ts-members li {
-	font-size: 1.3em;
+	font-size: 16px;
+	line-height: 2em;
+}
+
+.ts-members,
+.ts-includes {
+	padding: 0;
+}
+
+.ts-members li,
+.ts-includes li {
+	list-style: none;
+	margin: 0 1em;
+	position: relative;
+}
+
+.ts-members li button,
+.ts-includes li button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: transparent;
+	color: #E0BCB2;
+	font-size: 1em;
+	line-height: 2em;
+}
+
+.ts-members li button:hover,
+.ts-includes li button:hover {
+	color: #fff;
+}
+
+.ts-members li button:hover,
+.ts-includes li:hover button {
+	color: #AF2800;
 }
 
 .list-container {
 	display: none;
-}
-
-.ts-includes button,
-.ts-members button {
-	font-size: 0.8em;
 }
 
 #header h2 {
@@ -144,8 +167,22 @@ button {
 	-o-transition: all 0.4s ease-in-out;
 	-ms-transition: all 0.4s ease-in-out;
 	transition: all 0.4s ease-in-out;
-	margin-left: 16px;
 	border: none;
+}
+
+.toggleNext {
+	margin-left: 16px;
+	background: url(down_tsgrey.png) no-repeat;
+	position: absolute;
+	right: 24px;
+	top: 50%;
+	margin-top: -12px;
+	width: 24px;
+	height: 24px;
+}
+
+.toggleNext.open {
+	background: url(up_tsgrey.png) no-repeat;
 }
 
 input[type=submit]:hover,
@@ -154,13 +191,17 @@ button:hover {
 	background: #0082AF;
 }
 
-input[disabled=disabled]:hover,
-button[disabled=disabled]:hover {
-	background: #CCC;
+button.toggleNext:hover {
+	background: url(down_tsblue.png) no-repeat;
 }
 
-button.delete:hover {
-	background: #AF2800;
+button.toggleNext.open:hover {
+	background: url(up_tsblue.png) no-repeat;
+}
+
+input[disabled=disabled]:hover,
+button[disabled=disabled]:hover {
+	background: #c4c6c7;
 }
 
 a:hover {
@@ -212,6 +253,11 @@ a {
 
 h1,h2,h3,h4,h5 {
 	color: #4C4A54;
+}
+
+h2 {
+	position: relative;
+	padding-right: 48px;
 }
 
 .left {
@@ -299,6 +345,41 @@ a.app:hover {
 
 #dropzone .notloading {
 	display: none;
+}
+
+/* notification area styles */
+
+.messageArea {
+	padding: 10px;
+	border: solid 1px #CCC;
+	border-radius: 2px;
+	background-color: #EEE;
+	margin-bottom: 0.25em;
+	position: relative;
+}
+
+.messageArea .close-btn {
+	position: absolute;
+	top: -.25em;
+	right: -.25em;
+	font-size: 16px;
+	line-height: 20px;
+	background: transparent;
+	color: #596A73;
+	visibility: hidden;
+}
+
+.messageArea:hover .close-btn {
+	visibility: visible;
+}
+
+.messageArea p {
+	margin: 0;
+	line-height: 1.4em;
+}
+
+.messageArea a {
+	cursor: pointer;
 }
 
 @media (max-width:600px) {
