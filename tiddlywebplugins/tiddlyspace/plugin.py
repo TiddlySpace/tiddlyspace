@@ -5,6 +5,7 @@ Initialize tiddlyspace as a tiddlyweb plugin.
 from tiddlyweb.util import merge_config
 
 from tiddlywebplugins.instancer.util import get_tiddler_locations
+from tiddlywebplugins.utils import remove_handler
 
 from tiddlywebplugins.tiddlyspace.commands import establish_commands
 from tiddlywebplugins.tiddlyspace.config import config as space_config
@@ -82,6 +83,8 @@ def init_plugin(config):
         config['instance_tiddlers']['frontpage_public'] = []
 
     if 'selector' in config:  # system plugin
+        # remove friendlywiki
+        remove_handler(config['selector'], '/{recipe_name:segment}')
         establish_www(config)
 
     # update html serialization

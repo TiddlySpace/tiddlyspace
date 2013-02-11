@@ -6,8 +6,9 @@ from copy import deepcopy
 
 from tiddlywebplugins.instancer.util import get_tiddler_locations
 
-from tiddlywebwiki.instance import (instance_config, store_contents,
-    store_structure)
+from tiddlywebwiki.instance import (instance_config,
+        store_contents as tiddlywebwiki_store_contents,
+        store_structure as tiddlywebwiki_store_structure)
 
 from tiddlywebplugins.prettyerror.instance import (
         store_contents as prettyerror_store_contents,
@@ -15,7 +16,16 @@ from tiddlywebplugins.prettyerror.instance import (
 
 from tiddlywebplugins.tiddlyspace.space import Space
 
+store_contents = {}
+store_structure = {}
 
+# adjust for tiddlywebwiki
+store_contents.update(get_tiddler_locations(
+    tiddlywebwiki_store_contents, 'tiddlywebwiki'))
+store_structure['bags'] = tiddlywebwiki_store_structure['bags']
+store_structure['recipes'] = tiddlywebwiki_store_structure['recipes']
+
+# adjust for prettyerror
 store_contents.update(get_tiddler_locations(
     prettyerror_store_contents, 'tiddlywebplugins.prettyerror'))
 store_structure['bags'].update(prettyerror_store_structure['bags'])
