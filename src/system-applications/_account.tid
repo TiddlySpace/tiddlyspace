@@ -24,7 +24,7 @@ tags: excludeLists excludeSearch excludeMissing
 				<input type="hidden" name="title" value="SiteIcon" />
 				<input type="hidden" name="tags" value="excludeLists">
 				<input type="hidden" name="csrf_token" class="csrf" />
-				<input type="file" name="file" />
+				<input type="file" name="file" accept="image/*" />
 				<input type="submit" value="upload" />
 			</form>
 			<div id="dropzone">Drop file here
