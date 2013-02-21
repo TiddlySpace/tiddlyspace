@@ -2,7 +2,7 @@ AUTHOR = 'Osmosoft'
 AUTHOR_EMAIL = 'tiddlyspace@osmosoft.com'
 NAME = 'tiddlywebplugins.tiddlyspace'
 DESCRIPTION = 'A discoursive social model for Tiddlers'
-VERSION = '1.1.40' # NB: duplicate of tiddlywebplugins.tiddlyspace.__init__
+VERSION = '1.2.0' # NB: duplicate of tiddlywebplugins.tiddlyspace.__init__
 
 
 import os
@@ -25,7 +25,7 @@ setup(
     install_requires = [
         'setuptools',
         'tiddlyweb>=1.4.4',
-        'tiddlywebwiki>=0.61.0',
+        'tiddlywebwiki>=0.62.0',
         'tiddlywebplugins.status>=0.6',
         'tiddlywebplugins.utils>=1.0',
         'tiddlywebplugins.logout>=0.6',
@@ -51,6 +51,7 @@ setup(
         'tiddlywebplugins.csrf',
         'tiddlywebplugins.whoosher',
         'tiddlywebplugins.markdown',
+        'tiddlywebplugins.imaker',
         'httpexceptor',
         'selector<0.9.0'
     ],

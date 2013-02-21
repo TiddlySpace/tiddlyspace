@@ -4,8 +4,6 @@ structure and contents of a default TiddlySpace instance
 
 from copy import deepcopy
 
-from tiddlywebplugins.instancer.util import get_tiddler_locations
-
 from tiddlywebwiki.instance import (instance_config,
         store_structure as tiddlywebwiki_store_structure)
 
