@@ -65,10 +65,9 @@ def init_plugin(config):
         tiddlywebplugins.dispatcher.init(config)
         tiddlywebplugins.dispatcher.listener.init(config)
 
-    # XXX: The following is required to work around issues with twp.instancer.
-    # Without this, config settings from tiddlywebwiki take precedence.
-    config['serializers']['text/x-tiddlywiki'] = space_config[
-            'serializers']['text/x-tiddlywiki']
+    # reset config _again_ to deal with any adjustments from the
+    # above init calls
+    merge_config(config, space_config)
 
     # When tiddlyspace.frontpage_installed is True, don't update
     # the frontpage_public bag, thus not overwriting what's there.
