@@ -4,8 +4,6 @@ Base configuration for TiddlySpace.
 This provides the basics which may be changed in tidlywebconfig.py.
 """
 
-from tiddlywebplugins.instancer.util import get_tiddler_locations
-
 from tiddlywebplugins.tiddlyspace.instance import store_contents
 
 try:
@@ -21,7 +19,8 @@ TIDDLYWIKI_EXTERNAL_ALPHA = resource_filename(PACKAGE_NAME,
         'resources/external_alpha.html')
 
 config = {
-    'instance_tiddlers': get_tiddler_locations(store_contents, PACKAGE_NAME),
+    'instance_pkgstores': ['tiddlywebplugins.console',
+        'tiddlywebplugins.prettyerror', 'tiddlywebwiki', PACKAGE_NAME],
     'atom.default_filter': 'select=tag:!excludeLists;sort=-modified;limit=20',
     'atom.author_uri_map': '/profiles/%s',
     'atom.hub': 'http://pubsubhubbub.appspot.com/',

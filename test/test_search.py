@@ -26,10 +26,6 @@ def setup_module(module):
     module.http = httplib2.Http()
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
 def test_basic_search():
     response, content = http.request(
             'http://0.0.0.0:8080/search.json?q=title:TiddlyWebAdaptor')

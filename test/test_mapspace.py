@@ -29,10 +29,6 @@ def setup_module(module):
     module.badauth = b64encode('fnd:pig')
     module.http = httplib2.Http()
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
 def test_mapspace_bag_correct():
     bag = store.get(Bag('MAPSPACE'))
 

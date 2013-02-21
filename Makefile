@@ -28,7 +28,7 @@ tiddlywiki:
 		-O src/externals/alpha_twcore.js.js
 
 remotes: tiddlywiki jslib
-	./cacher
+	twibuilder tiddlywebplugins.tiddlyspace
 
 jslib: qunit
 	$(call wrap_jslib, src/lib/chrjs.js, \

@@ -10,7 +10,7 @@ from tiddlyweb.config import config
 from tiddlyweb.store import HOOKS
 
 from tiddlywebplugins.utils import get_store
-from tiddlywebplugins.instancer.util import spawn
+from tiddlywebplugins.imaker import spawn
 from tiddlywebplugins.tiddlyspace import instance as instance_module
 from tiddlywebplugins.tiddlyspace.config import config as init_config
 from tiddlywebplugins.tiddlyspace.spaces import make_space
@@ -64,7 +64,7 @@ def make_test_env(module, hsearch=False):
     if sys.path[0] != os.getcwd():
         sys.path.insert(0, os.getcwd())
     spawn('test_instance', init_config, instance_module)
-    os.symlink('../tiddlywebplugins/templates', 'templates')
+    os.symlink('tiddlywebplugins/templates', 'test_instance/templates')
 
     from tiddlyweb.web import serve
     module.store = get_store(config)

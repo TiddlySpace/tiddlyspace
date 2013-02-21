@@ -13,11 +13,6 @@ def setup_module(module):
     module.http = httplib2.Http()
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def test_cors_headers_present():
     response, content = http.request(
             'http://0.0.0.0:8080/bags/common/tiddlers/backstage.js')

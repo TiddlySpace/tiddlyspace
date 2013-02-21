@@ -22,9 +22,6 @@ def setup_module(module):
     make_fake_space(module.store, 'cdent')
     module.store.put(User('cdent'))
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
 
 def test_for_meta():
     response, content = http.request('http://0.0.0.0:8080/.well-known/host-meta')

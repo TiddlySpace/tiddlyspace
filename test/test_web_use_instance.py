@@ -20,11 +20,6 @@ def setup_module(module):
     wsgi_intercept.add_wsgi_intercept('foo.0.0.0.0', 8080, app_fn)
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def test_home_page_exist():
     http = httplib2.Http()
     response, content = http.request('http://0.0.0.0:8080/', method='GET')

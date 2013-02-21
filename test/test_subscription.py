@@ -32,11 +32,6 @@ def setup_module(module):
         module.store.put(user)
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def remove_subscription(subscribed, subscriber, cookie=None):
     return add_subscription(subscribed, subscriber, cookie=cookie,
             unsubscribe=True)

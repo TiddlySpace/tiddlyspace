@@ -25,9 +25,6 @@ def setup_module(module):
     module.http = httplib2.Http()
     make_fake_space(store, 'thing')
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
 
 def test_status_unclaimed_space():
     response, content = http.request('http://unclaimed-space.0.0.0.0:8080/status')

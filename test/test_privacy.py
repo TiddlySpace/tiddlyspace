@@ -27,10 +27,6 @@ def setup_module(module):
     store.put(user)
     module.http = httplib2.Http()
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
 
 def test_create_spaces():
     cookie = get_auth('thingone', 'how')

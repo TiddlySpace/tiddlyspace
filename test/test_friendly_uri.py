@@ -23,11 +23,6 @@ def setup_module(module):
     wsgi_intercept.add_wsgi_intercept('cdent.0.0.0.0', 8080, app_fn)
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def test_friendly():
     tiddler = Tiddler('HouseHold', 'cdent_public')
     store.put(tiddler)

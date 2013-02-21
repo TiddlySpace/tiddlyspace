@@ -35,11 +35,6 @@ def setup_module(module):
     store.put(notmanifest)
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def test_basic_get():
     for i in range(10):
         response, content = http.request(

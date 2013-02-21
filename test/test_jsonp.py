@@ -33,11 +33,6 @@ def setup_module(module):
     make_fake_space(store, 'foo')
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def test_call_jsonp():
     """
     test that we can get some stuff as JSONP

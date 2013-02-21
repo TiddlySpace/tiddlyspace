@@ -23,11 +23,6 @@ def setup_module(module):
     module.http = httplib2.Http()
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def test_hash():
     bag = Bag('one')
     store.put(bag)

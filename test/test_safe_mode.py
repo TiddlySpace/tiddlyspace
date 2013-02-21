@@ -29,11 +29,6 @@ def setup_module(module):
     module.http = httplib2.Http()
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def test_safe_403():
     response, content = http.request('http://cdent.0.0.0.0:8080/_safe',
             method='GET',

@@ -40,11 +40,6 @@ def setup_module(module):
     module.store.put(user)
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def test_create_map_requires_user():
     http = httplib2.Http()
     response, content = http.request(

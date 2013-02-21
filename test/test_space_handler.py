@@ -54,11 +54,6 @@ def setup_module(module):
     module.store.put(user)
 
 
-def teardown_module(module):
-    import os
-    os.chdir('..')
-
-
 def test_spaces_list():
     http = httplib2.Http()
     response, content = http.request('http://0.0.0.0:8080/spaces',
