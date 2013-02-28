@@ -57,7 +57,7 @@ var msfilter_in = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags
 	msfilter_out = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/publicIcon', sizingMethod='scale')";
 
 var stylesheet = ["iframe {",
-"	height: 256px; /* need to dynamically resize this so all opts fit */",
+"	height: 256px /* default value unless changed */",
 "	z-index: 1000;",
 "	position: relative;",
 "}",
@@ -143,7 +143,7 @@ function addEventListener(node, event, handler, bubble) {
 	} else if (node.attachEvent){  
 		event = event == "click" ? "onclick" : event;
 		event = event == "load" ? "onload" : event;
-		node.attachEvent(event, handler);  
+		node.attachEvent(event, handler);
 	}
 }
 
@@ -252,6 +252,16 @@ var loadEvent = function() {
 
 if(window.top == window) { // only add the backstage when NOT in an iframe (top window)
 	addEventListener(window, "load", loadEvent);
+	// check if postMessage is supported
+	// best test: https://github.com/ternarylabs/porthole/pull/10
+	if(!!window.postMessage) {
+		addEventListener(window, "message", function(e) {
+			var iframe = document.getElementById('tsbackstage');
+			if(e.data) {
+				iframe.style.height = e.data + "px";
+			}
+		});
+	}
 }
 
 })();
