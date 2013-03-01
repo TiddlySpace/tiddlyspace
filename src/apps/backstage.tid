@@ -89,7 +89,7 @@ _cache-max-age: 43200
 	(function($) {
 		$(function() {
 			// send doc height to parent window
-			var totalHeight = $(document).height();
+			var totalHeight = $("html").height();
 			if(self !== top && !!window.postMessage) {
 				parent.postMessage(totalHeight, "*");
 			}
