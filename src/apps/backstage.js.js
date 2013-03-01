@@ -56,8 +56,8 @@ function hasBgSizing() {
 var msfilter_in = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/privateAndPublicIcon', sizingMethod='scale')",
 	msfilter_out = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/bags/tiddlyspace/tiddlers/publicIcon', sizingMethod='scale')";
 
-var stylesheet = ["iframe {",
-"	height: 256px /* default value unless changed */",
+var stylesheet = ["#tsbackstage {",
+"	height: 256px; /* default value unless changed */",
 "	z-index: 1000;",
 "	position: relative;",
 "}",
