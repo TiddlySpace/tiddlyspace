@@ -5,3 +5,4 @@ tiddler: TiddlySpaceInit.js
 tiddler: TiddlySpaceCloneCommand.js
 tiddler: ErrorHandler.js
 tiddler: TiddlySpaceCSRF.js
+tiddler: TiddlyFileImporter.js
