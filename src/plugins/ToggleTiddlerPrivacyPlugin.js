@@ -1,6 +1,6 @@
 /***
 |''Name''|ToggleTiddlerPrivacyPlugin|
-|''Version''|0.7.0|
+|''Version''|0.7.1|
 |''Status''|@@beta@@|
 |''Description''|Allows you to set the privacy of new tiddlers and external tiddlers within an EditTemplate, and allows you to set a default privacy setting|
 |''CoreVersion''|2.6.1|
@@ -69,6 +69,7 @@ var macro = config.macros.setPrivacy = {
 		}
 	},
 	setBag: function(tiddlerEl, newBag, options) {
+		var status;
 		var title = $(tiddlerEl).attr("tiddler");
 		var tiddler = store.getTiddler(title);
 		var originButton = $(".originButton", tiddlerEl)[0];
