@@ -34,10 +34,10 @@ var macro = config.macros.setPrivacy = {
 		var currentSpace = tiddlyspace.currentSpace.name;
 		var currentBag = tiddler ? tiddler.fields["server.bag"] : false;
 		var isNewTiddler = el.hasClass("missing") || !currentBag; // XXX: is this reliable?
-		var status = tiddlyspace.getTiddlerStatusType(tiddler);
+		var tiddlerStatus = tiddlyspace.getTiddlerStatusType(tiddler);
 		var customFields = el.attr("tiddlyfields");
 		customFields = customFields ? customFields.decodeHashMap() : {};
-		if(isNewTiddler || !["public", "private", "unsyncedPrivate", "unsyncedPublic"].contains(status)) {
+		if(isNewTiddler || !["public", "private", "unsyncedPrivate", "unsyncedPublic"].contains(tiddlerStatus)) {
 			var defaultValue = "public";
 			if(args.defaultValue) {
 				defaultValue = args.defaultValue[0].toLowerCase();
@@ -69,7 +69,7 @@ var macro = config.macros.setPrivacy = {
 		}
 	},
 	setBag: function(tiddlerEl, newBag, options) {
-		var status;
+		var bagStatus;
 		var title = $(tiddlerEl).attr("tiddler");
 		var tiddler = store.getTiddler(title);
 		var originButton = $(".originButton", tiddlerEl)[0];
@@ -91,13 +91,13 @@ var macro = config.macros.setPrivacy = {
 		if(newBag.indexOf("_public") > -1) {
 			rPrivate.attr("checked", false);
 			rPublic.attr("checked", true);
-			status = "public";
+			bagStatus = "public";
 		} else {
 			rPublic.attr("checked", false); // explicitly do this for ie
 			rPrivate.attr("checked", true);
-			status = "private";
+			bagStatus = "private";
 		}
-		refreshIcon(status);
+		refreshIcon(bagStatus);
 	},
 	createRoundel: function(container, tiddler, currentSpace, defaultValue, options) {
 		var privateBag = "%0_private".format(currentSpace);
