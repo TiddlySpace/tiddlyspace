@@ -9,7 +9,7 @@ repository: http://github.com/TiddlySpace/tiddlyspace
 from tiddlywebplugins.tiddlyspace.plugin import init_plugin
 
 
-__version__ = '1.2.2'
+__version__ = '1.2.3'
 
 
 def init(config):
