@@ -6,6 +6,7 @@ TiddlySpace instantiation script
 
 import sys
 try:
+    import pkg_resources
     import mangler
 except ImportError:
     pass
