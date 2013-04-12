@@ -53,10 +53,6 @@ setup(
         'tiddlywebplugins.markdown',
         'tiddlywebplugins.imaker',
         'httpexceptor',
-        'selector<0.9.0',
-        'pyparsing<2.0.0',
-        'Markdown<2.3'
-        'feedgenerator<1.4',
     ],
     include_package_data = True,
     zip_safe = False,

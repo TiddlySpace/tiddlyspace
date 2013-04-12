@@ -46,7 +46,7 @@ def make_test_env(module, hsearch=False):
     except:
         pass
 
-    os.system('mysqladmin -f drop tiddlyspacetest create tiddlyspacetest')
+    os.system('echo "drop database if exists tiddlyspacetest; create database tiddlyspacetest character set = utf8mb4 collate = utf8mb4_bin;" | mysql')
     if SESSION_COUNT > 1:
         del sys.modules['tiddlywebplugins.tiddlyspace.store']
         del sys.modules['tiddlywebplugins.mysql3']
