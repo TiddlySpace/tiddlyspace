@@ -41,6 +41,11 @@ def make_test_env(module, hsearch=False):
     used by whoosh.
     """
     global SESSION_COUNT
+
+    # bump up a level if we're already in the test instance
+    if os.getcwd().endswith('test_instance'):
+        os.chdir('..')
+
     try:
         shutil.rmtree('test_instance')
     except:
@@ -54,6 +59,7 @@ def make_test_env(module, hsearch=False):
         import tiddlywebplugins.tiddlyspace.store
         import tiddlywebplugins.mysql3
         import tiddlywebplugins.sqlalchemy3
+        tiddlywebplugins.mysql3.Session.remove()
         clear_hooks(HOOKS)
     SESSION_COUNT += 1
     db_config = init_config['server_store'][1]['db_config']
@@ -64,10 +70,12 @@ def make_test_env(module, hsearch=False):
     if sys.path[0] != os.getcwd():
         sys.path.insert(0, os.getcwd())
     spawn('test_instance', init_config, instance_module)
-    os.symlink('tiddlywebplugins/templates', 'test_instance/templates')
+    os.chdir('test_instance')
+    os.symlink('../tiddlywebplugins/templates', 'templates')
+    os.symlink('../tiddlywebplugins', 'tiddlywebplugins')
 
     from tiddlyweb.web import serve
-    module.store = get_store(config)
+    module.store = get_store(init_config)
 
     app = serve.load_app()
 

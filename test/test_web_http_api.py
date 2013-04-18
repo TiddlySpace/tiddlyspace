@@ -30,7 +30,7 @@ def setup_module(module):
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
 
     module.http = httplib2.Http()
-    TESTS = yaml.load(open('test/httptest.yaml'))
+    TESTS = yaml.load(open('../test/httptest.yaml'))
 
 
 def test_assert_response():
