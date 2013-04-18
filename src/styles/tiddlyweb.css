@@ -1,0 +1,114 @@
+body, h1, h2, h3, h4, div, ul {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	font-family: "Lucida Grande", Helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 1.5em;
+	background-color: #FFF;
+	color: #000;
+}
+
+.wikkly-code-block {
+	font-family: monospace
+}
+
+.wikkly-code-inline {
+	font-family: monospace
+}
+
+a:link,
+a:visited {
+	text-decoration: none;
+	border-bottom: 1px dotted #0056C0;
+	color: #333;
+}
+a:hover,
+a:active,
+a:focus {
+	text-decoration: none;
+	color: #0056C0;
+}
+
+.tiddler h1 h2 h3 {
+	margin: 0;
+	padding: 0;
+}
+
+div#header {
+	background-color: #000;
+	border-bottom: 2px solid #666;
+	padding: 2em 1em;
+	margin: 0;
+
+}
+
+	div#header h1 {
+		font-size: 3em;
+		font-weight: normal;
+		color: #FFF;
+	}
+
+div#content {
+	display: block;
+	padding: 1em 1em 2em 1em;
+	background-color: #EEE;
+	border-bottom: solid 1px #666;
+	overflow: auto;
+}
+
+div#tiddlersheader,
+div.tiddlerslink {
+	padding: 0 0 1em 0;
+}
+
+ul {
+	margin-left: 1em;
+	color: #000;
+}
+
+	ul li {
+		margin-left: 20px;
+	}
+
+div.tiddler, ul.listing{
+	padding: 1em;
+	border: solid 1px #666;
+	background-color: #FFF;
+	overflow: auto;
+}
+
+#twitter {
+	width: 25%;
+	font-size: 75%;
+	float: right;
+	overflow: hidden;
+}
+
+table {
+	font-size: 75%;
+	float: right;
+	background-color: #FFF;
+	padding: 5px;
+}
+
+div#footer {
+	padding: 0.5em 1em;
+	font-size: 0.9em;
+	background-color: #FFF;
+}
+
+	div#badge {
+		float: right;
+		font-style: italic;
+	}
+
+	div#usergreet {
+		float: left;
+	}
+
+.wikkly-strike {
+    text-decoration: line-through;
+}

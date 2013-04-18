@@ -1,4 +1,3 @@
-tiddler: https://github.com/tiddlyweb/tiddlyweb.com/raw/master/tiddlyweb.css
 tiddler: icons/defaultSiteIcon.tid
 tiddler: icons/defaultUserIcon.tid
 tiddler: lib/bookmark_bubble.js.js
@@ -24,6 +23,7 @@ tiddler: externals/alpha_jQuery.twStylesheet.js.js
 tiddler: externals/alpha_twcore.js.js
 tiddler: styles/profile.css
 tiddler: styles/HtmlBackground.tid
+tiddler: styles/tiddlyweb.css
 recipe: apps/apps.recipe
 
 # appspage common files

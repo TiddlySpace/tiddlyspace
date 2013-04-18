@@ -2,6 +2,7 @@
 {% block links %}
         <link rel="alternate" type="application/atom+xml"
         title="Atom activity feed" href="{{ activity_feed }}" />
+        <base href="{{ space_uri }}" />
 {% endblock %}
 {% block title %}
         <h1 id="hcard-{{ username }}" class="vcard">
@@ -21,8 +22,8 @@
         <div class="main section" id="activity">
             <ul id="tiddlers" class="listing">
             {% for tiddler in tiddlers %}
-            <li><a href="{{ tiddler_url(environ, tiddler) }}">{{
-                tiddler.title|e }}</a></li>
+            <li><a href="{{ tiddler_url(environ, tiddler,
+                friendly=True) }}">{{ tiddler.title|e }}</a></li>
             {% endfor %}
             </ul>
         </div>
