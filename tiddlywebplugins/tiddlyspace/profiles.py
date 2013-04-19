@@ -224,7 +224,7 @@ try:
                 status = response.getcode()
                 LOGGER.warn('sent %s to %s got %s',
                         encoded_data, target, status)
-                if status != '204':
+                if status != 204:
                     LOGGER.warn('non 204 response from hub: %s', status)
             except urllib2.HTTPError, exc:
                 if exc.code != 204:
