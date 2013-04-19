@@ -6,11 +6,15 @@ TiddlySpace uses MySQL as its storage. Therefore it requires:
 * sqlalchemy
 * MySQL-Python
 
-All of which are available from PyPI.
-
 Also required, of course, is MySQL itself. If your operating system
 includes its own packaging of mysql, then use that. Otherwise see
 http://www.mysql.com/downloads/
+
+All of the Python modules are available from PyPI. Please read the
+README and docs associated with tiddlywebplugins.mysql3 before attempting
+to set up MySQL for TiddlySpace. This description may also be useful:
+
+    http://tiddlyweb.tiddlyspace.com/Hosting%20Your%20Own%20TiddlySpace
 
 Update the global my.cnf to add to the [mysqld] section:
 
@@ -37,7 +41,7 @@ documentation, tutorials, etc.
 TiddlySpace has a default store configuration of:
 
     'server_store': ['tiddlywebplugins.mysql3', {
-        'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
+        'db_config': 'mysql:///tiddlyspace?charset=utf8mb4'}],
 
 which defaults to using whoever the current user is.
 
@@ -45,8 +49,7 @@ On the deployed server this is changed to:
 
     'server_store': ['tiddlywebplugins.caching', {}],
     'cached_store': ['tiddlywebplugins.mysql3', {
-        'db_config': 'mysql://tiddlyweb@localhost/tiddlyspace?charset=utf8&use_unicode=0'}],
-    'indexer': 'tiddlywebplugins.mysql',
+        'db_config': 'mysql://tiddlyweb@localhost/tiddlyspace?charset=utf8mb4'}],
 
 which uses 'tiddlyweb' as the user.
 
