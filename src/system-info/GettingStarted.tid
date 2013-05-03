@@ -28,7 +28,7 @@ Go to [[SpaceSettings]] to finish customising  your space. When you're done, com
 The [[ServerSettings]] tiddler is used to provide the following space configuration options:
 
 #index: The value is the name of a tiddler that will be presented when loading the space.  For example, when set to Hello for the space hello.tiddlyspace.com, navigating to that URL will present the Hello tiddler.
-#edit: The name of an editor application to edit tiddlers with.  Applications are [[included spaces|How do I include/exclude spaces?]]@docs
+#edit: The name of an [[editor application|Example Tiddler Editors]]@docs to edit tiddlers with.  Applications are [[included spaces|How do I include/exclude spaces?]]@docs
 
 To edit these options, click [[here|ServerSettings]] to open the [[ServerSettings]] tiddler then click on the edit button (the pencil icon).  Then add the options you wish to set and then click on the save button (the tick icon).
 
@@ -38,7 +38,7 @@ index: HelloThere
 edit: /edit#{tiddler}
 }}}
 
-The additional text after /edit allows a tiddler URL to open the tiddler in edit mode e.g:
+The additional text after /edit allows a tiddler to be opened in edit mode e.g:
 {{{http://hello.tiddlyspace.com/edit#MyTiddler}}}
 
 !!See Also
