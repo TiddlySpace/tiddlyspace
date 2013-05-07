@@ -45,9 +45,6 @@ def init_plugin(config):
         from werkzeug.contrib.profiler import ProfilerMiddleware
         config['server_request_filters'].insert(0, ProfilerMiddleware)
 
-    from dozer import Dozer
-    config['server_request_filters'].insert(0, Dozer)
-
     tiddlywebplugins.whoosher.init(config)
     tiddlywebwiki.init(config)
     tiddlywebplugins.logout.init(config)
