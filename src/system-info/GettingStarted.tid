@@ -28,7 +28,7 @@ Go to [[SpaceSettings]] to finish customising  your space. When you're done, com
 The [[ServerSettings]] tiddler is used to provide the following space configuration options:
 
 #index: The value is the name of a tiddler that will be presented when loading the space.  For example, when set to Hello for the space hello.tiddlyspace.com, navigating to that URL will present the Hello tiddler.
-#editor: The name of an [[editor application|http://docs.tiddlyspace.com/Example%20Tiddler%20Editors]]@docs to edit tiddlers with.  Applications are [[included spaces|http://docs.tiddlyspace.com/How%20do%20I%20include%2Fexclude%20spaces%3F]]
+#editor: The name of an [[editor application|http://docs.tiddlyspace.com/Example%20Tiddler%20Editors]] to edit tiddlers with.  Applications are [[included spaces|http://docs.tiddlyspace.com/How%20do%20I%20include%2Fexclude%20spaces%3F]]
 
 To edit these options, click [[here|ServerSettings]] to open the [[ServerSettings]] tiddler then click on the edit button (the pencil icon).  Then add the options you wish to set and then click on the save button (the tick icon).
 
@@ -50,7 +50,7 @@ The additional text after /edit allows a tiddler to be opened in edit mode e.g:
 You can [[Start writing]] some [[tiddlers|http://docs.tiddlyspace.com/Tiddler]].
 If you're not done tweaking yet though, you can always [[Customise this space|SpaceSettings]] a bit more.
 
-You can also [[access and read other tiddlers in various ways|http://docs.tiddlyspace.com/Viewing%20 Tiddlers]].
+You can also [[access and read other tiddlers in various ways|http://docs.tiddlyspace.com/Viewing%20Tiddlers]].
 
 !Administration
 If you'd like to change your password or create another space, visit "Your Account" from the [[Universal Backstage|http://docs.tiddlyspace.com/UniversalBackstage]] (the blue dot in the upper right of the page). If you'd like to add a member or [[include a space|http://docs.tiddlyspace.com/How%20do%20I%20include%2Fexclude%20spaces%3F]] visit "This Space" from the [[Universal Backstage|http://docs.tiddlyspace.com/UniversalBackstage]].
