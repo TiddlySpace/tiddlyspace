@@ -28,17 +28,17 @@ Go to [[SpaceSettings]] to finish customising  your space. When you're done, com
 The [[ServerSettings]] tiddler is used to provide the following space configuration options:
 
 #index: The value is the name of a tiddler that will be presented when loading the space.  For example, when set to Hello for the space hello.tiddlyspace.com, navigating to that URL will present the Hello tiddler.
-#edit: The name of an editor application to edit tiddlers with.  Applications are [[included spaces|http://docs.tiddlyspace.com/How%20do%20I%20include%2Fexclude%20spaces%3F]]
+#editor: The name of an [[editor application|Example Tiddler Editors]]@docs to edit tiddlers with.  Applications are [[included spaces|http://docs.tiddlyspace.com/How%20do%20I%20include%2Fexclude%20spaces%3F]]
 
 To edit these options, click [[here|ServerSettings]] to open the [[ServerSettings]] tiddler then click on the edit button (the pencil icon).  Then add the options you wish to set and then click on the save button (the tick icon).
 
 An example [[ServerSettings]] tiddler:
 {{{
 index: HelloThere
-edit: /edit#{tiddler}
+editor: /edit#{tiddler}
 }}}
 
-The additional text after /edit allows a tiddler URL to open the tiddler in edit mode e.g:
+The additional text after /edit allows a tiddler to be opened in edit mode e.g:
 {{{http://hello.tiddlyspace.com/edit#MyTiddler}}}
 
 !!See Also
@@ -49,6 +49,8 @@ The additional text after /edit allows a tiddler URL to open the tiddler in edit
 !Finished customising?
 You can [[Start writing]] some [[tiddlers|http://docs.tiddlyspace.com/Tiddler]].
 If you're not done tweaking yet though, you can always [[Customise this space|SpaceSettings]] a bit more.
+
+You can also [[access and read other tiddlers in various ways|Viewing Tiddlers]]@docs.
 
 !Administration
 If you'd like to change your password or create another space, visit "Your Account" from the [[Universal Backstage|http://docs.tiddlyspace.com/UniversalBackstage]] (the blue dot in the upper right of the page). If you'd like to add a member or [[include a space|http://docs.tiddlyspace.com/How%20do%20I%20include%2Fexclude%20spaces%3F]] visit "This Space" from the [[Universal Backstage|http://docs.tiddlyspace.com/UniversalBackstage]].
