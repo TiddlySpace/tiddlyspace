@@ -34,8 +34,6 @@ Development Instance
      $ cd dev_instance
   if using devstore2, add the following config to tiddlywebconfig.py:
 
-     'system_plugins': ['tiddlywebplugins.tiddlyspace', 'tiddlywebplugins.twimport'],
-     'twanager_plugins': ['tiddlywebplugins.tiddlyspace', 'tiddlywebplugins.twimport'],
      'server_store': ['tiddlywebplugins.devstore2', {'devstore_root': '../src'}],
      'wrapped_devstore': ['tiddlywebplugins.tiddlyspace.store', {
          'db_config': 'mysql:///tiddlyspace?charset=utf8mb4'}],
