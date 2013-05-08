@@ -84,7 +84,7 @@ dist: clean remotes test
 release: dist pypi
 
 deploy: release
-	./deploy.sh $(ARGS)
+	@echo "Go to tiddlyspace.com to run tsupdate."
 
 pypi: test
 	python setup.py sdist upload
