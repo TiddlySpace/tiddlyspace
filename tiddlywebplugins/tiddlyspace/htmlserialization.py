@@ -8,7 +8,7 @@ from tiddlyweb.model.policy import PermissionsError
 from tiddlyweb.model.recipe import Recipe
 from tiddlyweb.serializations.html import Serialization as HTMLSerialization
 from tiddlyweb.wikitext import render_wikitext
-from tiddlyweb.web.util import encode_name, tiddler_url, get_route_value
+from tiddlyweb.web.util import encode_name, tiddler_url
 
 from tiddlywebplugins.tiddlyspace.space import Space
 from tiddlywebplugins.tiddlyspace.spaces import space_uri
