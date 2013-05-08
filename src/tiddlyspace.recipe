@@ -1,7 +1,7 @@
 recipe: backstage/index.recipe
 recipe: plugins/index.recipe
 recipe: lib/index.recipe
-recipe: system-applications/index.recipe
+recipe: tiddlyspace/index.recipe
 tiddler: https://github.com/jdlrobson/TiddlyWikiPlugins/raw/master/plugins/ImageMacroPlugin/plugins/ImageMacroPlugin.js
 tiddler: icons/SiteIcon.tid
 tiddler: icons/favicon.ico.tid

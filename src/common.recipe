@@ -24,13 +24,13 @@ tiddler: externals/alpha_twcore.js.js
 tiddler: styles/profile.css
 tiddler: styles/HtmlBackground.tid
 tiddler: styles/tiddlyweb.css
-recipe: apps/apps.recipe
+recipe: common/apps.recipe
 
 # appspage common files
-tiddler: system-applications/appspagecss.tid
-tiddler: system-applications/appspagejs.tid
-tiddler: system-applications/admin.css.tid
-tiddler: system-applications/space.js.js
+tiddler: tiddlyspace/appspagecss.tid
+tiddler: tiddlyspace/appspagejs.tid
+tiddler: tiddlyspace/admin.css.tid
+tiddler: tiddlyspace/space.js.js
 
 # Icons used by the appswitcher
 tiddler: icons/browse_read_blue.png.tid
