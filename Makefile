@@ -89,7 +89,7 @@ deploy: release
 pypi: test
 	python setup.py sdist upload
 
-dev: remotes dev_local
+dev: remotes dev_local dev_symlinks
 
 dev_local:
 	@mysqladmin -f drop tiddlyspace || true
@@ -104,6 +104,17 @@ dev_local:
 		>> dev_instance/tiddlywebconfig.py
 	@echo "INFO development instance created in dev_instance"
 
+dev_symlinks:
+	@echo "sym-linking src folders to bag names"
+	@cd src && \
+	ln -s frontpage frontpage_public && \
+	ln -s system-applications system-applications_public && \
+	ln -s system-images system-images_public && \
+	ln -s system-plugins system-plugins_public && \
+	ln -s system-theme system-theme_public && \
+	ln -s lib common
+	@echo "done"
+
 clean:
 	find . -name "*.pyc" | xargs rm || true
 	rm -rf dist || true
@@ -112,6 +123,7 @@ clean:
 	rm -rf tiddlywebplugins/tiddlyspace/resources || true
 	rm -f src/externals/* || true
 	rm -r test_instance || true
+	rm src/*_public common || true
 
 purge: clean
 	cat .gitignore | while read -r entry; do rm -r $$entry; done || true

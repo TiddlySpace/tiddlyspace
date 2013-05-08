@@ -21,6 +21,7 @@ Development Instance
 * install dependencies
 ** components listed in setup.py's install_requires
 ** httplib2, PyYAML (required for testing)
+** tiddlywebplugins.devstore2, tiddlywebplugins.twimport (optional, for ease of updating system tiddlers)
 ** node (required for JavaScript testing and linting)
 
 * Set up mysql on your machine. See MYSQL.
@@ -31,6 +32,14 @@ Development Instance
 * create development instance:
      $ make dev
      $ cd dev_instance
+  if using devstore2, add the following config to tiddlywebconfig.py:
+
+     'system_plugins': ['tiddlywebplugins.tiddlyspace', 'tiddlywebplugins.twimport'],
+     'twanager_plugins': ['tiddlywebplugins.tiddlyspace', 'tiddlywebplugins.twimport'],
+     'server_store': ['tiddlywebplugins.devstore2', {'devstore_root': '../src'}],
+     'wrapped_devstore': ['tiddlywebplugins.tiddlyspace.store', {
+         'db_config': 'mysql:///tiddlyspace?charset=utf8mb4'}],
+
   fire up the server
      $ twanager server 0.0.0.0 8080
   open http://tiddlyspace.org:8080 in web browser
