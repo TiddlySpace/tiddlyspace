@@ -48,3 +48,5 @@ Deployment
 To deploy to tiddlyspace.com (you must have appropriate permissions):
 
     $ make deploy
+
+and then go to tiddlyspace.com to run tsupdate.
