@@ -112,7 +112,7 @@ dev_symlinks:
 	ln -s system-images system-images_public && \
 	ln -s system-plugins system-plugins_public && \
 	ln -s system-theme system-theme_public && \
-	ln -s lib common
+	ln -s apps common
 	@echo "done"
 
 clean:
@@ -123,7 +123,7 @@ clean:
 	rm -rf tiddlywebplugins/tiddlyspace/resources || true
 	rm -f src/externals/* || true
 	rm -r test_instance || true
-	rm src/*_public common || true
+	rm src/*_public src/common || true
 
 purge: clean
 	cat .gitignore | while read -r entry; do rm -r $$entry; done || true
