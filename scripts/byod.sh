@@ -1,6 +1,8 @@
 #!/bin/sh
 
-# This script writes a domain name to the Nginx aliases file
+# This script is for use on tiddlyspace.com, running behind an Nginx server.
+#
+# It writes a domain name to the Nginx aliases file
 # and adds the corresponding tiddler to the MAPSPACE bag.
 # Run ./byod.sh without any arguments for usage.
 
