@@ -8,6 +8,10 @@ tags: excludeLists excludeSearch excludeMissing
 	<title>This Space</title>
 	<link href="/bags/common/tiddlers/profile.css" type='text/css' rel='stylesheet' >
 	<link href="/bags/common/tiddlers/admin.css" type='text/css' rel='stylesheet' >
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/bags/common/tiddlers/json2.js"></script>
+	<script type="text/javascript" src="/bags/common/tiddlers/es5-shim.min.js"></script>
+	<![endif]-->
 </head>
 <body>
 <div id="container">
@@ -85,8 +89,5 @@ tags: excludeLists excludeSearch excludeMissing
 <script src="/bags/common/tiddlers/ts.js"></script>
 <script src="/status.js"></script>
 <script src="/bags/common/tiddlers/space.js"></script>
-<!--[if lt IE 8]>
-<script type="text/javascript" src="/bags/common/tiddlers/json2.js"></script>
-<![endif]-->
 </body>
 </html>
