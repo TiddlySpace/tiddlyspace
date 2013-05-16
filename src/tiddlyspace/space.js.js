@@ -10,8 +10,7 @@ ts.init(function(ts) {
 		return;
 	}
 
-	var address = window.location.hostname.split("."),
-		spaceName = address[0],
+	var spaceName = tiddlyweb.status.space.name,
 		publicBag = spaceName + "_public",
 		publicBagUrl = "/bags/" + publicBag + "/tiddlers",
 		space = new tiddlyweb.Space(spaceName, "/"),
