@@ -266,7 +266,7 @@ $(".toggleNext").each(function(i, el) {
 	}
 
 	function cloneGettingStarted() {
-		var url = "bags/system-info_public/tiddlers/GettingStarted.json?fat=1",
+		var url = "bags/system-info_public/tiddlers/GettingStarted.json",
 			gsurl = "/bags/" + spacename + "_public/tiddlers/GettingStarted";
 
 		$.getJSON(url, function(tiddler) {
