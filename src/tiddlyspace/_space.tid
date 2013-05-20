@@ -41,7 +41,7 @@ tags: excludeLists excludeSearch excludeMissing
 			<button class="close-btn" title="cancel reset">×</button>
 			<p>Are you sure you want to reset the space? You can't go back!</p>
 			<form>
-				<label for="reset-confirm">Enter space the name to confirm.</label>
+				<label for="reset-confirm">Enter the space name to confirm.</label>
 				<input type="text" name="reset-confirm" class="reset-confirm-input inputBox" />
 			</form>
 			<div class="reset-message-area">
