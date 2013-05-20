@@ -411,7 +411,7 @@ a.app:hover {
 	background: rgba(0,0,0,0.1);
 	visibility: hidden;
 	text-align: center;
-	color: #fff;
+	color: #F0F4F8;
 	font-size: 2em;
 	padding: 14px;
 }
@@ -432,7 +432,8 @@ a.app:hover {
 }
 
 .error.messageArea {
-	border-color: red;
+	border-color: #AF1404;
+	background: rgba(175,20,4,0.1);
 }
 
 /* should check if box-sizing available */
@@ -442,13 +443,13 @@ a.app:hover {
 }
 
 .error .reset-confirm-input {
-	color: red;
+	color: #AF1404;
 }
 
 .reset-message-area  p.recipe-error-msg {
 	font-size: 14px;
 	line-height: 38px;
-	background: red;
+	background: #AF1404;
 }
 
 @media (max-width:600px) {
