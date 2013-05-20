@@ -47,6 +47,7 @@ tags: excludeLists excludeSearch excludeMissing
 			<div class="reset-message-area">
 				<p class="performing">Resetting...</p>
 				<p class="finished">Reset Done!</p>
+				<p class="recipe-error-msg">Error removing includes. Please remove manually.</p>
 			</div>
 		</div>
 		</div>

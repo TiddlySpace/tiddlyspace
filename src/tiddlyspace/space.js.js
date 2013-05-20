@@ -211,7 +211,9 @@ $(".toggleNext").each(function(i, el) {
 			pri_recipe = new tiddlyweb.Recipe(spacename + "_private", "/");
 
 		function callback() {}
-		function errorback() {}
+		function errorback() {
+			$.event.trigger("recipe-error");
+		}
 		pub_recipe.get(function(recipe, status, xhr) {
 			recipe.recipe = pub_recipe_arr;
 			recipe.put(callback, errorback);
@@ -325,9 +327,15 @@ $(".toggleNext").each(function(i, el) {
 					$( document ).on("resetcomplete", function() {
 						$resetwrap.removeClass("inaction").addClass("resetcomplete");
 						$msgArea
-							.find(".performing").hide()
+							.find("p").hide()
 							.end()
 							.find(".finished").show();
+					});
+					$( document ).on("recipe-error", function() {
+						$msgArea
+							.find("p").hide()
+							.end()
+							.find(".recipe-error-msg").show();
 					});
 					resetSpace( $(".spacereset") );
 				} else {

@@ -416,13 +416,9 @@ a.app:hover {
 	padding: 14px;
 }
 
-.reset-message-area .performing,
-.reset-message-area .finished {
-	display: none;
-}
-
 .reset-message-area p {
 	line-height: 77px;
+	display: none;
 }
 
 .inaction .reset-message-area {
@@ -447,6 +443,12 @@ a.app:hover {
 
 .error .reset-confirm-input {
 	color: red;
+}
+
+.reset-message-area  p.recipe-error-msg {
+	font-size: 14px;
+	line-height: 38px;
+	background: red;
 }
 
 @media (max-width:600px) {
