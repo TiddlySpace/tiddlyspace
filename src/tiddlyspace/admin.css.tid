@@ -382,6 +382,73 @@ a.app:hover {
 	cursor: pointer;
 }
 
+.spacereset {
+	margin-top: 26px;
+}
+
+.resetcomplete {
+	background: green;
+}
+
+.reset-confirm-wrap {
+	position: relative;
+}
+
+.reset-confirm-wrap .close-btn {
+	top: -.5em;
+	right: -.5em;
+	visibility: visible;
+}
+
+.reset-confirm-wrap label {
+	font-weight: bold;
+}
+
+.reset-message-area {
+	position: absolute;
+	top: 0; bottom: 0;
+	right: 0; left: 0;
+	background: rgba(0,0,0,0.1);
+	visibility: hidden;
+	text-align: center;
+	color: #fff;
+	font-size: 2em;
+	padding: 14px;
+}
+
+.reset-message-area .performing,
+.reset-message-area .finished {
+	display: none;
+}
+
+.reset-message-area p {
+	line-height: 77px;
+}
+
+.inaction .reset-message-area {
+	visibility: visible;
+	background: #0082AF;
+}
+
+.resetcomplete .reset-message-area {
+	background: #00B041;
+	visibility: visible;
+}
+
+.error.messageArea {
+	border-color: red;
+}
+
+/* should check if box-sizing available */
+.reset-confirm-input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.error .reset-confirm-input {
+	color: red;
+}
+
 @media (max-width:600px) {
 	.left, .right {
 		float: none;

@@ -36,6 +36,19 @@ tags: excludeLists excludeSearch excludeMissing
 		</div>
 		<h2>Vital Statistics</h2>
 		<div id="info">please wait while information is loaded about this space...</div>
+		<button class="spacereset">Reset Space</button>
+		<div class="reset-confirm-wrap messageArea">
+			<button class="close-btn" title="cancel reset">×</button>
+			<p>Are you sure you want to reset the space? You can't go back!</p>
+			<form>
+				<label for="reset-confirm">Enter space the name to confirm.</label>
+				<input type="text" name="reset-confirm" class="reset-confirm-input inputBox" />
+			</form>
+			<div class="reset-message-area">
+				<p class="performing">Resetting...</p>
+				<p class="finished">Reset Done!</p>
+			</div>
+		</div>
 		</div>
 		<div class="right">
 		<div class="ts-membership">
