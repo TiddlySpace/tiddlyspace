@@ -239,7 +239,7 @@ $(".toggleNext").each(function(i, el) {
 							type: "DELETE",
 							url: url + "/" + el.title
 						}).done(function() {
-							if(arr.length === 1 && cb) {
+							if(index + 1 === arr.length && cb) {
 								cb();
 							}
 						});
