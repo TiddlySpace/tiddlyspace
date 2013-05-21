@@ -382,6 +382,102 @@ a.app:hover {
 	cursor: pointer;
 }
 
+.spacereset {
+	margin-top: 26px;
+}
+
+.resetcomplete {
+	background: green;
+}
+
+.reset-confirm-wrap {
+	position: relative;
+}
+
+.reset-confirm-wrap .close-btn {
+	top: -.5em;
+	right: -.5em;
+	visibility: visible;
+}
+
+.reset-confirm-wrap label {
+	font-weight: bold;
+}
+
+.reset-confirm-wrap form {
+	margin-top: 10px;
+}
+
+.reset-confirm-wrap form button {
+	float: right;
+	margin-bottom: 0;
+	background: #AF1404;
+}
+
+.reset-message-area {
+	position: absolute;
+	top: 0; bottom: 0;
+	right: 0; left: 0;
+	background: rgba(0,0,0,0.1);
+	visibility: hidden;
+	text-align: center;
+	color: #F0F4F8;
+	font-size: 2em;
+	padding: 14px;
+}
+
+.reset-message-area p {
+	line-height: 77px;
+	display: none;
+}
+
+.inaction .reset-message-area {
+	visibility: visible;
+	background: #0082AF;
+}
+
+.resetcomplete .reset-message-area {
+	background: #00B041;
+	visibility: visible;
+}
+
+.error.messageArea {
+	border-color: #AF1404;
+	background: rgba(175,20,4,0.1);
+}
+
+/* should check if box-sizing available */
+.reset-confirm-input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.error .reset-confirm-input {
+	color: #AF1404;
+}
+
+.reset-message-area  p.recipe-error-msg {
+	font-size: 14px;
+	line-height: 38px;
+	background: #AF1404;
+}
+
+/* micro clearfix */
+.cf:before,
+.cf:after {
+	content: " ";
+	display: table;
+}
+
+.cf:after {
+	clear: both;
+}
+
+/* For IE 6/7 only */
+.cf {
+	*zoom: 1;
+}
+
 @media (max-width:600px) {
 	.left, .right {
 		float: none;
