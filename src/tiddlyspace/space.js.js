@@ -300,11 +300,12 @@ $(".toggleNext").each(function(i, el) {
 	$(function() {
 		var $resetwrap = $(".reset-confirm-wrap").hide(),
 			$resetform = $resetwrap.find("form"),
-			$msgArea = $resetwrap.find(".reset-message-area");
+			$msgArea = $resetwrap.find(".reset-message-area"),
+			$resetbtn = $(".spacereset");
 
 		// need to check if user is a member
 		if(status.space.recipe.match(/_private$/)) {
-			$(".spacereset").on("click", function(e) {
+			$resetbtn.on("click", function(e) {
 				$resetwrap
 					.show()
 					.find("input")
@@ -343,6 +344,8 @@ $(".toggleNext").each(function(i, el) {
 				}
 				return false;
 			});
+		} else {
+			$resetbtn.hide();
 		}
 	});
 }(jQuery));
