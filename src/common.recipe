@@ -46,10 +46,10 @@ tiddler: icons/help.png.tid
 tiddler: icons/ajax-loader.gif.tid
 
 # reply button common files
-tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply-button.js.tid
-tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply-loader.js.tid
-tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply.js.tid
-tiddler: https://raw.github.com/bengillies/ts-reply/master/reply.png.tid
+tiddler: https://raw.github.com/tiddlyspace/ts-reply/master/_reply-button.js.tid
+tiddler: https://raw.github.com/tiddlyspace/ts-reply/master/_reply-loader.js.tid
+tiddler: https://raw.github.com/tiddlyspace/ts-reply/master/_reply.js.tid
+tiddler: https://raw.github.com/tiddlyspace/ts-reply/master/reply.png.tid
 
 # normalize.css
 tiddler: https://github.com/necolas/normalize.css/raw/master/normalize.css
