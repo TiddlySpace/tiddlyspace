@@ -3,4 +3,4 @@ tiddler: _space.tid
 tiddler: _account.tid
 
 # reply button app html
-tiddler: https://raw.github.com/bengillies/ts-reply/master/_reply.tid
+tiddler: https://raw.github.com/tiddlyspace/ts-reply/master/_reply.tid
