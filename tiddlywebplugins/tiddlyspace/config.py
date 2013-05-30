@@ -11,10 +11,9 @@ except ImportError:
 
 
 PACKAGE_NAME = 'tiddlywebplugins.tiddlyspace'
-TIDDLYWIKI_ALPHA = resource_filename(PACKAGE_NAME, 'resources/alpha.html')
 TIDDLYWIKI_BETA = resource_filename(PACKAGE_NAME, 'resources/beta.html')
-TIDDLYWIKI_EXTERNAL_ALPHA = resource_filename(PACKAGE_NAME,
-        'resources/external_alpha.html')
+TIDDLYWIKI_EXTERNAL_BETA = resource_filename(PACKAGE_NAME,
+        'resources/external_beta.html')
 
 config = {
     'instance_pkgstores': ['tiddlywebplugins.console',
@@ -35,10 +34,9 @@ config = {
     'server_store': ['tiddlywebplugins.tiddlyspace.store', {
         'db_config': 'mysql:///tiddlyspace?charset=utf8mb4'}],
     'tiddlywebwiki.binary_limit': 1048576,  # 1 MB
-    # TiddlyWiki external, alpha, beta serialization
+    # TiddlyWiki external, and/or beta serialization
     'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
-    'base_tiddlywiki_alpha': TIDDLYWIKI_ALPHA,
-    'base_tiddlywiki_external_alpha': TIDDLYWIKI_EXTERNAL_ALPHA,
+    'base_tiddlywiki_external_beta': TIDDLYWIKI_EXTERNAL_BETA,
     'tiddlywebwiki.friendlywiki': False,
     'wsearch.handler': 'hsearch',
     'wikitext.type_render_map': {

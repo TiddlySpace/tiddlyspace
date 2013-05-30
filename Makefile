@@ -14,18 +14,16 @@ test: pytest jstest
 tiddlywiki:
 	mkdir src/externals || true
 	mkdir tiddlywebplugins/tiddlyspace/resources || true
-	wget http://tiddlywiki.github.com/beta/empty.html \
+	wget http://tiddlywiki.com/beta/empty.html \
 		-O tiddlywebplugins/tiddlyspace/resources/beta.html
-	wget http://tiddlywiki.github.com/alpha/empty.html \
-		-O tiddlywebplugins/tiddlyspace/resources/alpha.html
-	wget http://tiddlywiki.github.com/alpha/tiddlywiki_externaljs_tiddlyspace.html \
-		-O tiddlywebplugins/tiddlyspace/resources/external_alpha.html
-	wget http://tiddlywiki.github.com/alpha/jquery.js \
-		-O src/externals/alpha_jquery.js.js
-	wget http://tiddlywiki.github.com/alpha/jQuery.twStylesheet.js \
-		-O src/externals/alpha_jQuery.twStylesheet.js.js
-	wget http://tiddlywiki.github.com/alpha/twcore.js \
-		-O src/externals/alpha_twcore.js.js
+	wget http://tiddlywiki.com/beta/tiddlywiki_externaljs_tiddlyspace.html \
+		-O tiddlywebplugins/tiddlyspace/resources/external_beta.html
+	wget http://tiddlywiki.com/beta/jquery.js \
+		-O src/externals/beta_jquery.js.js
+	wget http://tiddlywiki.com/beta/jQuery.twStylesheet.js \
+		-O src/externals/beta_jQuery.twStylesheet.js.js
+	wget http://tiddlywiki.com/beta/twcore.js \
+		-O src/externals/beta_twcore.js.js
 
 remotes: tiddlywiki jslib
 	twibuilder tiddlywebplugins.tiddlyspace
