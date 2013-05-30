@@ -12,6 +12,8 @@ from tiddlyweb.util import read_utf8_file
 
 from tiddlywebwiki.serialization import Serialization as WikiSerialization
 
+from tiddlywebplugins.tiddlyspace.web import (determine_host,
+        determine_space, determine_space_recipe)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -40,6 +42,19 @@ class Serialization(WikiSerialization):
     Also, if the TiddlyWiki is not being downloaded, add
     the UniversalBackstage by injecting a script tag.
     """
+
+    def list_tiddlers(self, tiddlers):
+        """
+        Override tiddlers.link so the location in noscript is to
+        /tiddlers.
+        """
+        http_host, _ = determine_host(self.environ) 
+        space_name = determine_space(self.environ, http_host)
+        recipe_name = determine_space_recipe(self.environ, space_name)
+        if '/recipes/%s' % recipe_name in tiddlers.link:
+            tiddlers.link = '/tiddlers'
+        return WikiSerialization.list_tiddlers(self, tiddlers)
+
     def _get_wiki(self):
         alpha = beta = external = False
 
