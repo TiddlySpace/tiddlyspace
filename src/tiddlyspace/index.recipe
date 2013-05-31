@@ -1,6 +1,7 @@
 tiddler: apps.tid
 tiddler: _space.tid
 tiddler: _account.tid
+tiddler: robots.tid
 
 # reply button app html
 tiddler: https://raw.github.com/tiddlyspace/ts-reply/master/_reply.tid
