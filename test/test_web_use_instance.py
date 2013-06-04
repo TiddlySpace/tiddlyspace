@@ -330,6 +330,40 @@ def test_notifications_bag_visibility():
     assert response['status'] == '200'
 
 
+def test_space_wiki_noscript_link_is_tiddlers():
+    """
+    The link in the noscript section of a space-based (recipe-created)
+    tiddlywiki should be to /tiddlers not to the recipe.
+    """
+    # Get rid of ServerSettings to return to wiki rep rep
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    store.delete(tiddler)
+    http = httplib2.Http()
+
+    # root
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200'
+    assert 'you may still <a href="/tiddlers">browse' in content
+
+    # tiddlers.wiki
+    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers.wiki')
+    assert response['status'] == '200'
+    assert 'you may still <a href="/tiddlers">browse' in content
+
+    # recipe
+    response, content = http.request(
+            'http://foo.0.0.0.0:8080/recipes/foo_public/tiddlers.wiki')
+    assert response['status'] == '200'
+    assert 'you may still <a href="/tiddlers">browse' in content
+
+    # bag
+    response, content = http.request(
+            'http://foo.0.0.0.0:8080/bags/foo_public/tiddlers.wiki')
+    assert response['status'] == '200'
+    assert 'you may still <a href="/bags/foo_public/tiddlers">browse' in content
+             
+
+
 # XXX: Disable until app switcher is re-enabled as default
 # TODO: Re-enable test when app swither is re-enabled as default
 """
