@@ -27,6 +27,12 @@ tiddlywiki:
 		"http://tiddlywiki.github.com/beta/jQuery.twStylesheet.js")
 	$(call download, "src/externals/beta_twcore.js.js", \
 		"http://tiddlywiki.github.com/beta/twcore.js")
+	$(call download, "tiddlywebplugins/tiddlyspace/resources/external.html", \
+		"http://tiddlywiki.github.com/tiddlywiki_externaljs_tiddlyspace.html")
+	$(call download, "src/externals/jQuery.twStylesheet.js.js", \
+		"http://tiddlywiki.github.com/jQuery.twStylesheet.js")
+	$(call download, "src/externals/twcore.js.js", \
+		"http://tiddlywiki.github.com/twcore.js")
 
 remotes: tiddlywiki jslib
 	twibuilder tiddlywebplugins.tiddlyspace

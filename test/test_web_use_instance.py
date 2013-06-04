@@ -223,7 +223,6 @@ def test_disable_ControlView():
     assert 'bar_public' not in content, content
 
 
-@pytest.mark.xfail(reason="issue 1060")
 def test_space_server_settings_twrelease():
     http = httplib2.Http()
     response, content = http.request('http://foo.0.0.0.0:8080/')
@@ -275,6 +274,26 @@ def test_space_server_settings_twrelease():
     response, content = http.request('http://foo.0.0.0.0:8080/')
     assert response['status'] == '200'
     assert '/bags/common/tiddlers/beta_jquery.js' in content
+
+    # externalized but not beta
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    tiddler.text = 'external: True'
+    store.put(tiddler)
+
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200', content
+    assert '/bags/common/tiddlers/jquery.js' in content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers',
+            headers={'Accept': 'text/x-tiddlywiki'})
+    assert response['status'] == '200'
+    assert '/bags/common/tiddlers/jquery.js' in content
+    assert '/bags/common/tiddlers/twcore.js' in content
+    assert 'TiddlyWiki created by Jeremy Ruston' in content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/bags/common/tiddlers/twcore.js')
+    assert response['status'] == '200'
+
 
 def test_space_server_settings_filter():
     http = httplib2.Http()

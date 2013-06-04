@@ -14,6 +14,8 @@ PACKAGE_NAME = 'tiddlywebplugins.tiddlyspace'
 TIDDLYWIKI_BETA = resource_filename(PACKAGE_NAME, 'resources/beta.html')
 TIDDLYWIKI_EXTERNAL_BETA = resource_filename(PACKAGE_NAME,
         'resources/external_beta.html')
+TIDDLYWIKI_EXTERNAL = resource_filename(PACKAGE_NAME,
+        'resources/external.html')
 
 config = {
     'instance_pkgstores': ['tiddlywebplugins.console',
@@ -37,6 +39,7 @@ config = {
     # TiddlyWiki external, and/or beta serialization
     'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
     'base_tiddlywiki_external_beta': TIDDLYWIKI_EXTERNAL_BETA,
+    'base_tiddlywiki_external': TIDDLYWIKI_EXTERNAL,
     'tiddlywebwiki.friendlywiki': False,
     'wsearch.handler': 'hsearch',
     'wikitext.type_render_map': {
