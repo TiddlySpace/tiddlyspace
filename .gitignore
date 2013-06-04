@@ -2,8 +2,6 @@
 
 dev_instance
 
-src/externals
-
 src/lib/chrjs.js
 src/lib/chrjs.users.js
 src/lib/bookmark_bubble.js.js

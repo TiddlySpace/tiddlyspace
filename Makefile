@@ -115,7 +115,7 @@ clean:
 	rm -rf build || true
 	rm -rf *.egg-info || true
 	rm -rf tiddlywebplugins/tiddlyspace/resources || true
-	rm -f src/externals/* || true
+	rm -f src/externals/*js || true
 	rm -r test_instance || true
 
 purge: clean
