@@ -1,13 +1,14 @@
 .PHONY: test remotes jslib qunit get_phantomjs get_jshint jshint jstest pytest dist release deploy pypi dev clean purge
 
-wrap_jslib = curl -L -s $(2) | \
-	{ \
-		echo "/***"; echo $(2); echo "***/"; \
-		echo "//{{{"; cat -; echo "//}}}"; \
+wrap_jslib = { \
+		echo "/***" &&  echo $(2) && echo "***/" && \
+		echo "//{{{" && \
+		curl --location -f -s $(2) && \
+		echo "//}}}"; \
 	} > $(1)
 
 download = \
-	curl --location --output $(1) --time-cond $(1) --remote-time $(2); echo
+	curl --location -f --output $(1) --time-cond $(1) --remote-time $(2)
 
 pytest:
 	py.test -x test
@@ -42,7 +43,9 @@ tiddlywiki:
 remotes: tiddlywiki jslib
 	twibuilder tiddlywebplugins.tiddlyspace
 
-jslib: qunit
+jslib: qunit remotejs
+
+remotejs:
 	$(call wrap_jslib, "src/lib/chrjs.js", \
 		"https://github.com/tiddlyweb/chrjs/raw/master/main.js")
 	$(call wrap_jslib, "src/lib/chrjs.users.js", \
