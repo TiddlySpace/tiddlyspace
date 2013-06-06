@@ -33,6 +33,11 @@ tiddlywiki:
 		"http://tiddlywiki.github.com/jQuery.twStylesheet.js")
 	$(call download, "src/externals/twcore.js.js", \
 		"http://tiddlywiki.github.com/twcore.js")
+	$(call download, "src/externals/twjquery.js.js", \
+		"http://tiddlywiki.github.com/jquery.js")
+	# Fix up path to jquery to avoid collision with main hosted
+	# jquery.
+	sed -i -e 's|/bags/common/tiddlers/jquery.js|/bags/common/tiddlers/twjquery.js|;' tiddlywebplugins/tiddlyspace/resources/external.html
 
 remotes: tiddlywiki jslib
 	twibuilder tiddlywebplugins.tiddlyspace

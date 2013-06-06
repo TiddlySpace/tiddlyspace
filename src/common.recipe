@@ -29,6 +29,7 @@ tiddler: externals/beta_jQuery.twStylesheet.js.js
 tiddler: externals/beta_twcore.js.js
 tiddler: externals/jQuery.twStylesheet.js.js
 tiddler: externals/twcore.js.js
+tiddler: externals/twjquery.js.js
 
 # appspage common files
 tiddler: tiddlyspace/appspagecss.tid
