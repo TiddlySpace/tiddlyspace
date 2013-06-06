@@ -18,39 +18,41 @@ tags: excludeLists excludeSearch excludeMissing
 	<div id="text-html" class="main section">
 		<a class="app" href="/">home</a>
 		<div class="left">
-		<h2>About this space <button class='toggleNext'></button></h2>
-		<div id="siteinfo"></div>
-		<h2>Site Icon</h2>
-		<div>
-			<img id="siteicon" class="siteicon">
-			<form id="upload" method="POST" enctype="multipart/form-data">
-				<input type="hidden" name="title" value="SiteIcon" />
-				<input type="hidden" name="tags" value="excludeLists">
-				<input type="hidden" name="csrf_token" class="csrf" />
-				<input type="file" name="file" accept="image/*" />
-				<input class="btn" type="submit" value="upload" />
-			</form>
-			<div id="dropzone">Drop file here
-				<img class="notloading" src="/bags/common/tiddlers/ajax-loader.gif" alt="submitting SiteIcon" />
-			</div>
-		</div>
-		<h2>Vital Statistics</h2>
-		<div id="info">please wait while information is loaded about this space...</div>
-		<button class="spacereset">Reset Space</button>
-		<div class="reset-confirm-wrap messageArea">
-			<button class="close-btn" title="cancel reset">×</button>
-			<p>Are you sure you want to reset the space? You can't go back! This will remove all the content from the space!</p>
-			<form class="cf">
-				<label for="reset-confirm">Enter the space name to confirm.</label>
-				<input type="text" name="reset-confirm" class="reset-confirm-input inputBox" />
-				<button type="submit">Reset Now</button>
-			</form>
-			<div class="reset-message-area">
-				<p class="performing">Resetting...</p>
-				<p class="finished">Reset Done!</p>
-				<p class="recipe-error-msg">Error removing includes. Please remove manually.</p>
-			</div>
-		</div>
+            <h2>About this space <button class='toggleNext'></button></h2>
+            <div id="siteinfo"></div>
+            <h2>Site Icon</h2>
+            <div>
+                <img id="siteicon" class="siteicon">
+                <form id="upload" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="title" value="SiteIcon" />
+                    <input type="hidden" name="tags" value="excludeLists">
+                    <input type="hidden" name="csrf_token" class="csrf" />
+                    <input type="file" name="file" accept="image/*" />
+                    <input class="btn" type="submit" value="upload" />
+                </form>
+                <div id="dropzone">Drop file here
+                    <img class="notloading" src="/bags/common/tiddlers/ajax-loader.gif" alt="submitting SiteIcon" />
+                </div>
+            </div>
+            <h2>Vital Statistics</h2>
+            <div id="info">please wait while information is loaded about this space...</div>
+            <div class="ts-membership">
+                <button class="spacereset">Reset Space</button>
+                <div class="reset-confirm-wrap messageArea">
+                    <button class="close-btn" title="cancel reset">×</button>
+                    <p>Are you sure you want to reset the space? You can't go back! This will remove all the content from the space!</p>
+                    <form class="cf">
+                        <label for="reset-confirm">Enter the space name to confirm.</label>
+                        <input type="text" name="reset-confirm" class="reset-confirm-input inputBox" />
+                        <button type="submit">Reset Now</button>
+                    </form>
+                    <div class="reset-message-area">
+                        <p class="performing">Resetting...</p>
+                        <p class="finished">Reset Done!</p>
+                        <p class="recipe-error-msg">Error removing includes. Please remove manually.</p>
+                    </div>
+                </div>
+            </div>
 		</div>
 		<div class="right">
 		<div class="ts-membership">
