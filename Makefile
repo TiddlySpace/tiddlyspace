@@ -18,17 +18,21 @@ tiddlywiki:
 	mkdir src/externals || true
 	mkdir tiddlywebplugins/tiddlyspace/resources || true
 	$(call download, "tiddlywebplugins/tiddlyspace/resources/beta.html", \
-		"http://tiddlywiki.github.com/beta/empty.html")
-	$(call download, "tiddlywebplugins/tiddlyspace/resources/alpha.html", \
-		"http://tiddlywiki.github.com/alpha/empty.html")
-	$(call download, "tiddlywebplugins/tiddlyspace/resources/external_alpha.html", \
-		"http://tiddlywiki.github.com/alpha/tiddlywiki_externaljs_tiddlyspace.html")
-	$(call download, "src/externals/alpha_jquery.js.js", \
-		"http://tiddlywiki.github.com/alpha/jquery.js")
-	$(call download, "src/externals/alpha_jQuery.twStylesheet.js.js", \
-		"http://tiddlywiki.github.com/alpha/jQuery.twStylesheet.js")
-	$(call download, "src/externals/alpha_twcore.js.js", \
-		"http://tiddlywiki.github.com/alpha/twcore.js")
+		"http://tiddlywiki.com/beta/empty.html")
+	$(call download, "tiddlywebplugins/tiddlyspace/resources/external_beta.html", \
+		"http://tiddlywiki.github.com/beta/tiddlywiki_externaljs_tiddlyspace.html")
+	$(call download, "src/externals/beta_jquery.js.js", \
+		"http://tiddlywiki.github.com/beta/jquery.js")
+	$(call download, "src/externals/beta_jQuery.twStylesheet.js.js", \
+		"http://tiddlywiki.github.com/beta/jQuery.twStylesheet.js")
+	$(call download, "src/externals/beta_twcore.js.js", \
+		"http://tiddlywiki.github.com/beta/twcore.js")
+	$(call download, "tiddlywebplugins/tiddlyspace/resources/external.html", \
+		"http://tiddlywiki.github.com/tiddlywiki_externaljs_tiddlyspace.html")
+	$(call download, "src/externals/jQuery.twStylesheet.js.js", \
+		"http://tiddlywiki.github.com/jQuery.twStylesheet.js")
+	$(call download, "src/externals/twcore.js.js", \
+		"http://tiddlywiki.github.com/twcore.js")
 
 remotes: tiddlywiki jslib
 	twibuilder tiddlywebplugins.tiddlyspace
@@ -111,7 +115,7 @@ clean:
 	rm -rf build || true
 	rm -rf *.egg-info || true
 	rm -rf tiddlywebplugins/tiddlyspace/resources || true
-	rm -f src/externals/* || true
+	rm -f src/externals/*js || true
 	rm -r test_instance || true
 
 purge: clean

@@ -18,13 +18,17 @@ tiddler: lib/es5-shim.min.js.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid
-tiddler: externals/alpha_jquery.js.js
-tiddler: externals/alpha_jQuery.twStylesheet.js.js
-tiddler: externals/alpha_twcore.js.js
 tiddler: styles/profile.css
 tiddler: styles/HtmlBackground.tid
 tiddler: styles/tiddlyweb.css
 recipe: common/apps.recipe
+
+# externalized tiddlywiki files
+tiddler: externals/beta_jquery.js.js
+tiddler: externals/beta_jQuery.twStylesheet.js.js
+tiddler: externals/beta_twcore.js.js
+tiddler: externals/jQuery.twStylesheet.js.js
+tiddler: externals/twcore.js.js
 
 # appspage common files
 tiddler: tiddlyspace/appspagecss.tid

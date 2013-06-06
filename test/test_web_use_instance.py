@@ -1,4 +1,6 @@
 
+import pytest
+
 from test.fixtures import make_test_env, make_fake_space, get_auth
 
 from wsgi_intercept import httplib2_intercept
@@ -225,21 +227,21 @@ def test_space_server_settings_twrelease():
     http = httplib2.Http()
     response, content = http.request('http://foo.0.0.0.0:8080/')
     assert response['status'] == '200'
-    assert '/bags/common/tiddlers/alpha_jquery.js' not in content
+    assert '/bags/common/tiddlers/beta_jquery.js' not in content
 
     response, content = http.request('http://foo.0.0.0.0:8080/tiddlers.wiki')
     assert response['status'] == '200'
-    assert '/bags/common/tiddlers/alpha_jquery.js' not in content
+    assert '/bags/common/tiddlers/beta_jquery.js' not in content
     assert 'TiddlyWiki created by Jeremy Ruston' in content
 
     response, content = http.request('http://foo.0.0.0.0:8080/tiddlers',
             headers={'Accept': 'text/x-tiddlywiki'})
     assert response['status'] == '200'
-    assert '/bags/common/tiddlers/alpha_jquery.js' not in content
+    assert '/bags/common/tiddlers/beta_jquery.js' not in content
     assert 'TiddlyWiki created by Jeremy Ruston' in content
 
     tiddler = Tiddler('ServerSettings', 'foo_public')
-    tiddler.text = 'external: True\ntwrelease:alpha'
+    tiddler.text = 'external: True\ntwrelease:beta'
     store.put(tiddler)
 
     tiddler2 = Tiddler('fooSetupFlag', 'foo_public')
@@ -247,31 +249,51 @@ def test_space_server_settings_twrelease():
 
     response, content = http.request('http://foo.0.0.0.0:8080/')
     assert response['status'] == '200', content
-    assert '/bags/common/tiddlers/alpha_jquery.js' in content
+    assert '/bags/common/tiddlers/beta_jquery.js' in content
 
     response, content = http.request('http://foo.0.0.0.0:8080/tiddlers',
             headers={'Accept': 'text/x-tiddlywiki'})
     assert response['status'] == '200'
-    assert '/bags/common/tiddlers/alpha_jquery.js' in content
+    assert '/bags/common/tiddlers/beta_jquery.js' in content
     assert 'TiddlyWiki created by Jeremy Ruston' in content
 
     # bad content
     tiddler = Tiddler('ServerSettings', 'foo_public')
-    tiddler.text = 'external: True\ntwrelease=alpha'
+    tiddler.text = 'external: True\ntwrelease=beta'
     store.put(tiddler)
 
     response, content = http.request('http://foo.0.0.0.0:8080/')
     assert response['status'] == '200'
-    assert '/bags/common/tiddlers/alpha_jquery.js' not in content
+    assert '/bags/common/tiddlers/beta_jquery.js' not in content
 
     # ignored blank line
     tiddler = Tiddler('ServerSettings', 'foo_public')
-    tiddler.text = 'external: True\n\ntwrelease:alpha'
+    tiddler.text = 'external: True\n\ntwrelease:beta'
     store.put(tiddler)
 
     response, content = http.request('http://foo.0.0.0.0:8080/')
     assert response['status'] == '200'
-    assert '/bags/common/tiddlers/alpha_jquery.js' in content
+    assert '/bags/common/tiddlers/beta_jquery.js' in content
+
+    # externalized but not beta
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    tiddler.text = 'external: True'
+    store.put(tiddler)
+
+    response, content = http.request('http://foo.0.0.0.0:8080/')
+    assert response['status'] == '200', content
+    assert '/bags/common/tiddlers/jquery.js' in content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers',
+            headers={'Accept': 'text/x-tiddlywiki'})
+    assert response['status'] == '200'
+    assert '/bags/common/tiddlers/jquery.js' in content
+    assert '/bags/common/tiddlers/twcore.js' in content
+    assert 'TiddlyWiki created by Jeremy Ruston' in content
+
+    response, content = http.request('http://foo.0.0.0.0:8080/bags/common/tiddlers/twcore.js')
+    assert response['status'] == '200'
+
 
 def test_space_server_settings_filter():
     http = httplib2.Http()
@@ -280,7 +302,7 @@ def test_space_server_settings_filter():
     assert 'tags="excludeLists ' in content
 
     tiddler = Tiddler('ServerSettings', 'foo_public')
-    tiddler.text = 'twrelease:alpha\nselect: tag:!excludeLists\n'
+    tiddler.text = 'twrelease:beta\nselect: tag:!excludeLists\n'
     store.put(tiddler)
 
     response, content = http.request('http://foo.0.0.0.0:8080/')
