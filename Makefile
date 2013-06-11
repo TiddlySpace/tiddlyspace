@@ -21,24 +21,28 @@ tiddlywiki:
 	$(call download, "tiddlywebplugins/tiddlyspace/resources/beta.html", \
 		"http://tiddlywiki.com/beta/empty.html")
 	$(call download, "tiddlywebplugins/tiddlyspace/resources/external_beta.html", \
-		"http://tiddlywiki.github.com/beta/tiddlywiki_externaljs_tiddlyspace.html")
+		"http://tiddlywiki.com/beta/tiddlywiki_externaljs_tiddlyspace.html")
 	$(call download, "src/externals/beta_jquery.js.js", \
-		"http://tiddlywiki.github.com/beta/jquery.js")
+		"http://tiddlywiki.com/beta/jquery.js")
 	$(call download, "src/externals/beta_jQuery.twStylesheet.js.js", \
-		"http://tiddlywiki.github.com/beta/jQuery.twStylesheet.js")
+		"http://tiddlywiki.com/beta/jQuery.twStylesheet.js")
 	$(call download, "src/externals/beta_twcore.js.js", \
-		"http://tiddlywiki.github.com/beta/twcore.js")
-	$(call download, "tiddlywebplugins/tiddlyspace/resources/external.html", \
-		"http://tiddlywiki.github.com/tiddlywiki_externaljs_tiddlyspace.html")
+		"http://tiddlywiki.com/beta/twcore.js")
+	$(call download, "tiddlywebplugins/tiddlyspace/resources/external.html.wrongbag", \
+		"http://tiddlywiki.com/tiddlywiki_externaljs_tiddlyspace.html")
 	$(call download, "src/externals/jQuery.twStylesheet.js.js", \
-		"http://tiddlywiki.github.com/jQuery.twStylesheet.js")
+		"http://tiddlywiki.com/jQuery.twStylesheet.js")
 	$(call download, "src/externals/twcore.js.js", \
-		"http://tiddlywiki.github.com/twcore.js")
+		"http://tiddlywiki.com/twcore.js")
 	$(call download, "src/externals/twjquery.js.js", \
-		"http://tiddlywiki.github.com/jquery.js")
+		"http://tiddlywiki.com/jquery.js")
 	# Fix up path to jquery to avoid collision with main hosted
 	# jquery.
-	sed -i -e 's|/bags/common/tiddlers/jquery.js|/bags/common/tiddlers/twjquery.js|;' tiddlywebplugins/tiddlyspace/resources/external.html
+	sed -e 's|/bags/common/tiddlers/jquery.js|/bags/common/tiddlers/twjquery.js|;' < \
+		tiddlywebplugins/tiddlyspace/resources/external.html.wrongbag > \
+		tiddlywebplugins/tiddlyspace/resources/external.html && \
+		rm tiddlywebplugins/tiddlyspace/resources/external.html.wrongbag
+
 
 remotes: tiddlywiki jslib
 	twibuilder tiddlywebplugins.tiddlyspace
@@ -47,9 +51,9 @@ jslib: qunit remotejs
 
 remotejs:
 	$(call wrap_jslib, "src/lib/chrjs.js", \
-		"https://github.com/tiddlyweb/chrjs/raw/master/main.js")
+		"https://raw.github.com/tiddlyweb/chrjs/master/main.js")
 	$(call wrap_jslib, "src/lib/chrjs.users.js", \
-		"https://github.com/tiddlyweb/chrjs/raw/master/users.js")
+		"https://raw.github.com/tiddlyweb/chrjs/master/users.js")
 	$(call wrap_jslib, "src/lib/jquery.js.js", \
 		"http://code.jquery.com/jquery.min.js")
 	$(call wrap_jslib, "src/lib/ts.js.js", \
@@ -69,7 +73,7 @@ qunit:
 	mkdir -p src/test/qunit
 	mkdir -p src/test/lib
 	$(call download, "src/test/qunit/qunit.js", \
-		"https://github.com/jquery/qunit/raw/master/qunit/qunit.js")
+		"https://raw.github.com/jquery/qunit/master/qunit/qunit.js")
 	$(call download, "src/test/lib/jquery.js", \
 		"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js")
 	$(call download, "src/test/lib/jquery-json.js", \
