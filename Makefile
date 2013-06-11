@@ -72,6 +72,7 @@ remotejs:
 qunit:
 	mkdir -p src/test/qunit
 	mkdir -p src/test/lib
+	cp src/lib/json2.js.js src/test/lib/json2.js
 	$(call download, "src/test/qunit/qunit.js", \
 		"https://raw.github.com/jquery/qunit/master/qunit/qunit.js")
 	$(call download, "src/test/qunit/qunit.css", \
