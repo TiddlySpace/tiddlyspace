@@ -8,6 +8,7 @@ node_js:
 - 0.1
 before_script:
 - npm install -g grunt-cli
+- make jslib
 env:
   global:
   - secure: ! 'dd0vLMEetaOdzYbyl36rBc7gGd/mDWrZvQV30MZG/aRFRhyedusej/6yKsTf
