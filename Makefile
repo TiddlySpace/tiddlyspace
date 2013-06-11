@@ -74,6 +74,8 @@ qunit:
 	mkdir -p src/test/lib
 	$(call download, "src/test/qunit/qunit.js", \
 		"https://raw.github.com/jquery/qunit/master/qunit/qunit.js")
+	$(call download, "src/test/qunit/qunit.css", \
+		"https://raw.github.com/jquery/qunit/master/qunit/qunit.css")
 	$(call download, "src/test/lib/jquery.js", \
 		"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js")
 	$(call download, "src/test/lib/jquery-json.js", \
