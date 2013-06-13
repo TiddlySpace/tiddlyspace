@@ -96,7 +96,7 @@ test("firstRun", function() { // NB: assertions should be identical to activatio
 	strictEqual(log.autoSave.length, 2); // ColorPalette and SiteIcon handled separately
 	flagTiddler = store.getTiddler("fooSetupFlag");
 	strictEqual(flagTiddler.fields.tiddlyspaceinit_version, "0.6");
-	strictEqual(flagTiddler.tags.indexOf("excludePublisher") > -1, true);
+	strictEqual($.inArray("excludePublisher", flagTiddler.tags) > -1, true);
 });
 
 test("update from v0.1", function() {

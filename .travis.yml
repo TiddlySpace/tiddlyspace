@@ -1,0 +1,23 @@
+
+
+
+
+---
+language: node_js
+node_js:
+- 0.1
+before_script:
+- npm install -g grunt-cli
+- make jslib
+env:
+  global:
+  - secure: ! 'dd0vLMEetaOdzYbyl36rBc7gGd/mDWrZvQV30MZG/aRFRhyedusej/6yKsTf
+
+      z2koeQBQVMu2QMivdE2aa9ysFri4U09Nxq4vx/HPgiLagfRD7mYUziMQ+dh6
+
+      fl8XYM+sN9Et77tzW42WbT48iREkU+C+z2O/mzJj+IEor/H/1p8='
+  - secure: ! 'H/q1fkJ4IzdN05tvTqcANNvjAFn3o5ZhTzFPNv5wsHmE98mLqky8gtv92VOb
+
+      p3l5C5PvpJDB1Z6mJJYN694vh3GIqmgYNBWHCVjnDiYCSJ7NOqtGz9MtVgDp
+
+      Pu4J2F9vGkMyp7genqT+PO8f1i6TWiJI48XqQGy+uomXzOEIngU='

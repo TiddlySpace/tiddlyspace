@@ -20,3 +20,5 @@ src/test/lib
 test_instance
 
 tiddlywebplugins/tiddlyspace/resources
+
+node_modules
