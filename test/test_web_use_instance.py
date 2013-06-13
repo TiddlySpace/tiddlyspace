@@ -382,6 +382,26 @@ def test_space_wiki_noscript_link_is_tiddlers():
     assert 'you may still <a href="/bags/foo_public/tiddlers">browse' in content
              
 
+def test_htmltemplate_setting():
+    http = httplib2.Http()
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    tiddler.text = 'htmltemplate: fix1\n'
+    store.put(tiddler)
+
+    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers')
+
+    assert response['status'] == '200'
+    assert '<!-- this is the fix1 template --!>' in content
+
+    tiddler = Tiddler('ServerSettings', 'foo_public')
+    tiddler.text = ''
+    store.put(tiddler)
+
+    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers')
+
+    assert response['status'] == '200'
+    assert '<!-- this is the fix1 template --!>' not in content
+
 
 # XXX: Disable until app switcher is re-enabled as default
 # TODO: Re-enable test when app swither is re-enabled as default

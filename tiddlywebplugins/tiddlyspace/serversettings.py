@@ -11,10 +11,11 @@ from tiddlywebplugins.tiddlyspace.web import determine_space, determine_host
 from tiddlywebplugins.tiddlyspace.space import Space
 
 SPACE_SERVER_SETTINGS = 'ServerSettings'
-SERVER_SETTINGS_KEYS = ['index', 'editor']
+SERVER_SETTINGS_KEYS = ['index', 'editor', 'htmltemplate']
 DEFAULT_SERVER_SETTINGS = {
         'index': '',
         'editor': '',
+        'htmltemplate': '',
         'extra_query': ''}
 DEFAULT_NEWUSER_APP = 'apps'
 DEFAULT_SPACE_NAME = 'frontpage'

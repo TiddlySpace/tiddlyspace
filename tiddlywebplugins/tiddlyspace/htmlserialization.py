@@ -59,6 +59,10 @@ class Serialization(HTMLSerialization):
         tiddlers_url = (self.environ.get('SCRIPT_NAME', '')
                 + self.environ.get('PATH_INFO', ''))
 
+        template_name = 'friendlytiddlers.html'
+        if '/bags/' in tiddlers_url or '/recipes/' in tiddlers_url:
+            template_name = 'tiddlers.html'
+
         container_name = ''
         container_type = 'bags'
         container_url = ''
@@ -107,14 +111,12 @@ class Serialization(HTMLSerialization):
             friendly = True
 
         if tiddlers.is_search:
-            template = 'search.html'
+            template_name = 'search.html'
             if 'tiddlyweb.query.original' in self.environ:
                 tiddlers.title = ('Search for %s'
                         % self.environ['tiddlyweb.query.original'])
-        else:
-            template = 'tiddlers.html'
 
-        return send_template(self.environ, template, {
+        return send_template(self.environ, template_name, {
             'meta_keywords': 'tiddlers, tiddlyspace',
             'meta_description': 'A list of tiddlers on TiddlySpace',
             'title': tiddlers.title,
@@ -170,6 +172,13 @@ class Serialization(HTMLSerialization):
         subsystem. Links to the tiddler in the wiki are
         provided.
         """
+        tiddlers_url = (self.environ.get('SCRIPT_NAME', '')
+                + self.environ.get('PATH_INFO', ''))
+
+        template_name = 'friendlytiddler.html'
+        if '/tiddlers/' in tiddlers_url:
+            template_name = 'tiddler.html'
+
         user = self.environ['tiddlyweb.usersign']
         store = self.environ['tiddlyweb.store']
         if tiddler.recipe:
@@ -197,7 +206,7 @@ class Serialization(HTMLSerialization):
             creator_link = ""
 
         html = render_wikitext(tiddler, self.environ)
-        return send_template(self.environ, 'tiddler.html', {
+        return send_template(self.environ, template_name, {
             'meta_keywords': ', '.join(tiddler.tags),
             'meta_description': tiddler.title,
             'title': '%s' % tiddler.title,

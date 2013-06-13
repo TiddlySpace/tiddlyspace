@@ -45,7 +45,9 @@ def establish_www(config):
         config['server_request_filters'].append(CSRFProtector)
 
     if ServerSettings not in config['server_request_filters']:
-        config['server_request_filters'].append(ServerSettings)
+        config['server_request_filters'].insert(
+                config['server_request_filters'].
+                index(ControlView), ServerSettings)
 
     if AllowOrigin not in config['server_response_filters']:
         config['server_response_filters'].insert(
