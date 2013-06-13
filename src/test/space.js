@@ -111,7 +111,7 @@ test("removing members", function() {
 
 	var callback = function(data, status, xhr) {
 		var username = _request.url.split("/").pop();
-		var pos = members.indexOf(username);
+		var pos = $.inArray(username, members);
 		members.splice(pos, 1);
 		_data = members;
 	};

@@ -110,7 +110,7 @@ var macro = config.macros.groupBy = {
 			value = macro.isTypeArray(value) ? value : [ value ];
 			for(j = 0; j < value.length; j++) {
 				var v = morpher(value[j], options);
-				if(v && excludeValues.indexOf(v) === -1) {
+				if(v && $.inArray(v, excludeValues) === -1) {
 					totalGroups += 1;
 					if(!values[v]) {
 						values[v] = [];

@@ -15,6 +15,11 @@ Unit Tests
 * JavaScript: src/test directory, using QUnit (http://docs.jquery.com/QUnit)
 * `make jstest` runs the QUnit tests using PhantomJS (http://phantomjs.org/)
 
+Other Forms of Testing
+======================
+
+See TESTING.
+
 Development Instance
 ====================
 
