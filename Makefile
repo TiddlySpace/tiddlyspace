@@ -16,7 +16,6 @@ pytest:
 test: pytest jstest
 
 tiddlywiki:
-	mkdir src/externals || true
 	mkdir tiddlywebplugins/tiddlyspace/resources || true
 	$(call download, "tiddlywebplugins/tiddlyspace/resources/beta.html", \
 		"http://tiddlywiki.com/beta/empty.html")
