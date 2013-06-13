@@ -97,6 +97,16 @@ get_jshint:
 jshint:
 	jshint src/**/*.js
 
+saucelabs_deps:
+	npm install -g grunt-cli
+	npm install
+
+saucelabs_test:
+	grunt test
+
+jstest_browser:
+	grunt dev
+
 dist: clean remotes test
 	python setup.py sdist
 
