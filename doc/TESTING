@@ -1,0 +1,35 @@
+Sauce Labs Testing
+==================
+
+Requires:
+
+* Node
+* A Sauce Labs account under TiddlySpace
+
+The QUnit tests can be run against multiple browser types via the Sauce Labs
+platform.
+
+This requires a Sauce Labs username and access key.  Once you have these, set
+them as environment variables as follows:
+
+    export SAUCE_USERNAME=<username>
+    export SAUCE_ACCESS_KEY=<key>
+
+For first time setup run:
+
+    make saucelabs_deps
+
+To run tests via Sauce Labs:
+
+    make saucelabs_test
+
+Testing Locally
+===============
+
+To run the QUnit tests on a local browser of your choice:
+
+    jstest_browser
+
+Then navigate to:
+
+    http://localhost:9999/test/
