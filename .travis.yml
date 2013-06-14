@@ -1,7 +1,3 @@
-
-
-
-
 ---
 language: node_js
 node_js:
@@ -11,13 +7,13 @@ before_script:
 - make jslib
 env:
   global:
-  - secure: ! 'dd0vLMEetaOdzYbyl36rBc7gGd/mDWrZvQV30MZG/aRFRhyedusej/6yKsTf
+  - secure: ! 'Garibk5hJveks68NNN1xG3ZtXoTwl0Zd8ntMoAGA+EysxsCkZ62A3J6TpxO/
 
-      z2koeQBQVMu2QMivdE2aa9ysFri4U09Nxq4vx/HPgiLagfRD7mYUziMQ+dh6
+      gIAnpNCSN/FjUlJzaoUqiwZglBMV9IB8oVYlgndEK7IUGQjr88fMf3543vI+
 
-      fl8XYM+sN9Et77tzW42WbT48iREkU+C+z2O/mzJj+IEor/H/1p8='
-  - secure: ! 'H/q1fkJ4IzdN05tvTqcANNvjAFn3o5ZhTzFPNv5wsHmE98mLqky8gtv92VOb
+      w4OXei6+wIZVkgnGzsswXTaN/UL6O0V5BXvDV8e6HnZ+P9MGMvw='
+  - secure: ! 'eRVQBuAT2sc5u4ZgylwRU901yWpSa20+/GIJO7s/tzw5rgjA/MJ1FIgLssUa
 
-      p3l5C5PvpJDB1Z6mJJYN694vh3GIqmgYNBWHCVjnDiYCSJ7NOqtGz9MtVgDp
+      kPILLcIiRypQ8hcjghiM4jqe+lgNepIwrsHWIt5D0bKes23WzDLFqV4vSpxY
 
-      Pu4J2F9vGkMyp7genqT+PO8f1i6TWiJI48XqQGy+uomXzOEIngU='
+      nNhvgG8UG5ccnZZDQ1ZgTvBtyoQDajVrOHwvxmWfp2u4iaiQpfE='
