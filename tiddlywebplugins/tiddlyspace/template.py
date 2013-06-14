@@ -24,10 +24,13 @@ def send_template(environ, template_name, template_data=None):
     """
     Set some defaults for a template and send the output.
     """
+    default_css_tiddler = '/bags/common/tiddlers/profile.css'
     if template_data is None:
         template_data = {}
     html_template_prefix = environ['tiddlyweb.space_settings']['htmltemplate']
     if html_template_prefix:
+        default_css_tiddler = ('/bags/common/tiddlers/%s.css' %
+                html_template_prefix)
         html_template_prefix += '_'
         try:
             name = html_template_prefix + template_name
@@ -40,7 +43,7 @@ def send_template(environ, template_name, template_data=None):
     store = environ['tiddlyweb.store']
 
     linked_resources = {
-            'HtmlCss': ['/bags/common/tiddlers/profile.css'],
+            'HtmlCss': [default_css_tiddler],
             'HtmlJavascript': []}
 
     if not html_template_prefix or template_name in CUSTOMIZABLES:

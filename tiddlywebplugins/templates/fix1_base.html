@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<!-- this is the fix1 template --!>
+    <head>
+        <meta charset="utf-8">
+        <title>TiddlySpace - {{ title }}</title>
+        <link rel="stylesheet" href="/bags/common/tiddlers/normalize.css">
+        {%- for link in css -%}
+        <link rel="stylesheet" href="{{ link }}" type="text/css" />
+        {%- endfor -%}
+        {% block links %}
+        {% endblock %}
+        <meta name="viewport" content="width=device-width"> 
+    </head>
+    <body>
+        <div id="header">
+        {% block title %}
+        <h1>{{ title|e }}</h1>
+        {% endblock %}
+        </div>
+        <div id="article">
+        {% block content %}
+        {% endblock %}
+        </div>
+        <div id="footer">
+        Brought to you by <a href="{{ original_server_host }}">TiddlySpace</a>.
+        </div>
+        {% block scripts %}
+        {% endblock %}
+        {%- for link in js -%}
+        <script type="text/javascript" src="{{ link }}"></script>
+        {%- endfor -%}
+        <script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
+    </body>
+</html>
