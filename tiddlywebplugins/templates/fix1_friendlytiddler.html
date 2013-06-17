@@ -1,7 +1,7 @@
 {% extends 'fix1_base.html' %}
 {% block links %}
     <link rel="alternate" type="application/atom+xml"
-    title="Atom {{tiddler.title|e}}" href="{{ tiddler_url }}.atom" />
+    title="Atom {{tiddler.title|e}}" href="/{{ tiddler.title|urlencode }}.atom" />
 {% endblock %}
 {% block title %}
     <h1>
@@ -17,8 +17,7 @@
         <ul class="tags">
             {% for tag in tags %}
             <li class="tag"><a
-                href="/search?q=tag:{{tag|urlencode}}">{{ tag
-                }}</a></li>
+                href="/search?q=tag:{{tag|urlencode}}">{{ tag|e }}</a></li>
             </li>
             {% endfor %}
         </ul>

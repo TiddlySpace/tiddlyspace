@@ -72,6 +72,11 @@ class Serialization(HTMLSerialization):
         if not tiddlers.is_search:
             if tiddlers.recipe:
                 name = tiddlers.recipe
+                try:
+                    space_name = Space.name_from_recipe(name)
+                    tiddlers.title = 'Tiddlers in %s'  % space_name
+                except ValueError:
+                    pass
                 container_url = '/recipes/%s' % name
                 container_name = 'Recipe %s' % name
                 container_type = 'recipes'
@@ -82,6 +87,11 @@ class Serialization(HTMLSerialization):
                     pass
             elif tiddlers.bag:
                 name = tiddlers.bag
+                try:
+                    space_name = Space.name_from_recipe(name)
+                    tiddlers.title = 'Tiddlers in %s'  % space_name
+                except ValueError:
+                    pass
                 container_url = '/bags/%s' % name
                 container_name = 'Bag %s' % name
                 try:
