@@ -1,0 +1,8 @@
+{% extends 'clean1/base.html' %}
+{% block content %}
+        <ul class="listing" id="recipes">
+        {%- for recipe in recipes -%}
+        <li><a href="/recipes/{{ recipe.name|uri }}">{{ recipe.name|e }}</a></li>
+        {%- endfor -%}
+        </ul>
+{% endblock %}

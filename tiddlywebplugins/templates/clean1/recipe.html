@@ -1,0 +1,16 @@
+{% extends 'clean1/base.html' %}
+{% block content %}
+        <p><a href="/recipes/{{ recipe.name|uri }}/tiddlers">Tiddlers in
+            this recipe</a></p>
+        <p>{{ recipe.desc }}</p>
+        <ul class="listing">
+        {% for bag, filter in recipe.get_recipe() %}
+            {% if filter %}
+            <li><a href="/bags/{{ bag|uri }}/tiddlers?{{
+                line[1]|uri }}">{{ bag }}: {{ filter }}</a></li>
+            {% else %}
+            <li><a href="/bags/{{ bag|uri }}/tiddlers">{{ bag }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+{% endblock %}

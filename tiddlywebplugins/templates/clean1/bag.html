@@ -1,26 +1,18 @@
 {% extends 'clean1/base.html' %}
 {% block content %}
-        <div class="meta section" id="bag">
-            <p><a href="/bags/{{ bag.name|uri }}/tiddlers">Tiddlers in
-                this bag</a></p>
-            <p>{{ bag.desc|e }}</p>
-            <p>You have the following permissions on this bag:</p>
-            <ul>
-            {%- for perm in user_perms -%}
-            <li>{{ perm }}</li>
-            {%- endfor -%}
-            </ul>
-            <dl id="policy">
-                {%- for constraint in policy.attributes -%}
-                <dt>{{ constraint }}</dt>
-                <dd><ul>
-                    {%- for name in policy.__getattribute__(constraint) -%}
-                    <li>{{ name }}</li>
-                    {%- else -%}
-                    <li>Open to anyone.</li>
-                    {%- endfor -%}
-                </ul></dd>
+        <p><a href="/bags/{{ bag.name|uri }}/tiddlers">Tiddlers in
+            this bag</a></p>
+        <p>{{ bag.desc|e }}</p>
+        <dl id="policy">
+            {%- for constraint in policy.attributes -%}
+            <dt>{{ constraint }}</dt>
+            <dd><ul>
+                {%- for name in policy.__getattribute__(constraint) -%}
+                <li>{{ name }}</li>
+                {%- else -%}
+                <li>Open to anyone.</li>
                 {%- endfor -%}
-            </dl>
-        </div>
+            </ul></dd>
+            {%- endfor -%}
+        </dl>
 {% endblock %}
