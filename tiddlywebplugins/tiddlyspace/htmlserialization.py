@@ -69,6 +69,7 @@ class Serialization(HTMLSerialization):
         container_policy = False
         store = self.environ['tiddlyweb.store']
         user = self.environ['tiddlyweb.usersign']
+        space_name = ''
         if not tiddlers.is_search:
             if tiddlers.recipe:
                 name = tiddlers.recipe
@@ -143,6 +144,7 @@ class Serialization(HTMLSerialization):
             'container_url': container_url,
             'container_policy': container_policy,
             'links': links,
+            'space_name': space_name,
             'tiddlers': tiddlers})
 
     def recipe_as(self, recipe):
@@ -203,9 +205,10 @@ class Serialization(HTMLSerialization):
         except PermissionsError:
             container_policy = False
         if not self.environ['tiddlyweb.space_settings'].get('index', None):
-            space_link = self._space_link(tiddler)
+            space_link, space_name = self._space_link(tiddler)
         else:
             space_link = ''
+            space_name = ''
         try:
             modifier_link = space_uri(self.environ, tiddler.modifier)
         except AttributeError:
@@ -228,6 +231,7 @@ class Serialization(HTMLSerialization):
             'list_link': list_link,
             'list_title': list_title,
             'space_link': space_link,
+            'space_name': space_name,
             'tiddler': tiddler,
             'container_policy': container_policy,
             'tiddler_url': tiddler_url(self.environ, tiddler)})
@@ -237,6 +241,7 @@ class Serialization(HTMLSerialization):
         Create a link back to this tiddler in its space.
         """
         if tiddler.recipe:
+            space_name = tiddler.recipe.split('_', 1)[0]
             link = _encode_space_link(tiddler)
         elif space_bag(tiddler.bag):
             space_name = tiddler.bag.split('_', 1)[0]
@@ -244,9 +249,9 @@ class Serialization(HTMLSerialization):
             link = _encode_space_link(tiddler)
             link = '%s%s' % (space_link_uri, link)
         else:
-            return ''
+            return '', ''
 
-        return '%s%s' % (self._server_prefix(), link)
+        return '%s%s' % (self._server_prefix(), link), space_name
 
 
 def space_bag(bag_name):

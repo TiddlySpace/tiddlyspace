@@ -13,6 +13,8 @@ SPACE_NAME_PATTERN = re.compile(r"^[0-9a-z][0-9a-z\-]*[0-9a-z]$")
 PUBLIC = '_public'
 PRIVATE = '_private'
 
+CORE_EXTERNAL_BAGS = ['common']
+
 
 class Space(object):
     """
@@ -156,6 +158,13 @@ class Space(object):
         Given a recipe name determine if it is private.
         """
         return cls._is_private(recipe_name)
+
+    @staticmethod
+    def core_bags():
+        for bag, filter in Space.CORE_RECIPE:
+            yield bag
+        for bag in CORE_EXTERNAL_BAGS:
+            yield bag
 
     @staticmethod
     def _is_private(name):
