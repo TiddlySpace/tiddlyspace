@@ -227,6 +227,7 @@ def make_space(space_name, store, member):
 
     info_tiddler = Tiddler('SiteInfo', space.public_bag())
     info_tiddler.text = 'Space %s' % space_name
+    info_tiddler.modifier = environ['tiddlyweb.usersign']['name']
     store.put(info_tiddler)
 
     # Duplicate GettingStarted into public bag.
