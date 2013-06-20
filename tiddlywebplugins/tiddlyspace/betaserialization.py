@@ -47,7 +47,7 @@ class Serialization(WikiSerialization):
         Override tiddlers.link so the location in noscript is to
         /tiddlers.
         """
-        http_host, _ = determine_host(self.environ) 
+        http_host, _ = determine_host(self.environ)
         space_name = determine_space(self.environ, http_host)
         recipe_name = determine_space_recipe(self.environ, space_name)
         if '/recipes/%s' % recipe_name in tiddlers.link:

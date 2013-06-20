@@ -35,7 +35,7 @@ def send_template(environ, template_name, template_data=None):
         try:
             name = html_template_prefix + template_name
             template = get_template(environ, name)
-        except TemplateNotFound, exc:
+        except TemplateNotFound:
             template = get_template(environ, template_name)
     else:
         template = get_template(environ, template_name)
@@ -63,7 +63,8 @@ def send_template(environ, template_name, template_data=None):
                         try:
                             tiddler = store.get(tiddler)
                             if 'Javascript' in title:
-                                urls = tiddler.text.strip().rstrip().split('\n')
+                                urls = tiddler.text.strip().rstrip().split(
+                                        '\n')
                                 linked_resources[title] = urls
                             else:
                                 url = '/bags/%s/tiddlers/%s' % (encode_name(

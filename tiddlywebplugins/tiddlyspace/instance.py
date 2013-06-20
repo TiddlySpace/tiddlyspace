@@ -30,9 +30,12 @@ instance_config['twanager_plugins'] = ['tiddlywebplugins.tiddlyspace']
 store_contents['common'] = ['src/common.recipe']
 store_contents['tiddlyspace'] = ['src/tiddlyspace.recipe']
 store_contents['system-info_public'] = ['src/system-info_public/index.recipe']
-store_contents['system-plugins_public'] = ['src/system-plugins_public/index.recipe']
-store_contents['system-theme_public'] = ['src/system-theme_public/index.recipe']
-store_contents['system-images_public'] = ['src/system-images_public/index.recipe']
+store_contents['system-plugins_public'] = [
+    'src/system-plugins_public/index.recipe']
+store_contents['system-theme_public'] = [
+    'src/system-theme_public/index.recipe']
+store_contents['system-images_public'] = [
+    'src/system-images_public/index.recipe']
 store_contents['frontpage_public'] = ['src/frontpage_public/index.recipe']
 
 store_structure['bags']['common']['policy'] = \

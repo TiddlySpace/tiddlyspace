@@ -75,7 +75,7 @@ class Serialization(HTMLSerialization):
                 name = tiddlers.recipe
                 try:
                     space_name = Space.name_from_recipe(name)
-                    tiddlers.title = 'Tiddlers in %s'  % space_name
+                    tiddlers.title = 'Tiddlers in %s' % space_name
                 except ValueError:
                     pass
                 container_url = '/recipes/%s' % name
@@ -90,7 +90,7 @@ class Serialization(HTMLSerialization):
                 name = tiddlers.bag
                 try:
                     space_name = Space.name_from_recipe(name)
-                    tiddlers.title = 'Tiddlers in %s'  % space_name
+                    tiddlers.title = 'Tiddlers in %s' % space_name
                 except ValueError:
                     pass
                 container_url = '/bags/%s' % name
