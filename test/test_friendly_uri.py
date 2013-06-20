@@ -108,4 +108,4 @@ def test_root_tiddlers():
             method='GET')
     assert response['status'] == '200', content
     assert '/HouseHold">HouseHold' in content, content
-    assert '/BinaryTiddlersPlugin">BinaryTiddlersPlugin' in content
+    assert '/BinaryTiddlersPlugin">BinaryTiddlersPlugin' not in content

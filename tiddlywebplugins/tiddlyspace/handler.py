@@ -79,15 +79,18 @@ def get_space_tiddlers(environ, start_response):
 
     ext = environ.get('tiddlyweb.extension')
     types = environ['tiddlyweb.config']['extension_types']
-    print 'filters', environ['tiddlyweb.filters']
+
+    # If filters not set, sort by -modified.
     if not environ['tiddlyweb.filters']:
         environ['tiddlyweb.filters'] = parse_for_filters('sort=-modified', environ)[0]
+
+    # Filter out core bags.
     core_bag_filters = []
     for bag in Space.core_bags():
         core_bag_filters.append('select=bag:!%s' % bag)
     core_bag_filters = parse_for_filters(';'.join(core_bag_filters), environ)[0]
     environ['tiddlyweb.filters'].extend(core_bag_filters)
-    print 'filters', environ['tiddlyweb.filters']
+
     if ext and ext not in types:
         environ['wsgiorg.routing_args'][1]['recipe_name'] += '.%s' % ext
     return get_tiddlers(environ, start_response)
