@@ -43,10 +43,11 @@ def send_template(environ, template_name, template_data=None):
     store = environ['tiddlyweb.store']
 
     linked_resources = {
-            'HtmlCss': [default_css_tiddler],
+            'HtmlCss': [],
             'HtmlJavascript': []}
 
     if not html_template_prefix or template_name in CUSTOMIZABLES:
+        linked_resources['HtmlCss'] = [default_css_tiddler]
         # Load CSS and JavaScript overrides.
         current_space = determine_space(environ, determine_host(environ)[0])
         if current_space:
