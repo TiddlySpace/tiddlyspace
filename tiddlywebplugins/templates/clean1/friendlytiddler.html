@@ -4,7 +4,8 @@
     title="Atom {{tiddler.title|e}}" href="/{{ tiddler.title|urlencode }}.atom" />
 {% endblock %}
 {% block header %}
-<a title="Site Tiddlers" href="/tiddlers"><img class="siteicon" alt="siteicon" src="/SiteIcon"></a>
+<a title="{{ space_name}} Home" href="/"><img class="siteicon" alt="siteicon" src="/SiteIcon"></a>
+<a title="{{ space_name}} Tiddlers" href="/tiddlers">Tiddlers</a>
 <a title="Subscribe" href="/{{ tiddler.title|urlencode }}.atom"><img src="/bags/commong/tiddlers/syndication.png"></a>
 {% endblock %}
 
