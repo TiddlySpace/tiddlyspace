@@ -13,8 +13,6 @@ SPACE_NAME_PATTERN = re.compile(r"^[0-9a-z][0-9a-z\-]*[0-9a-z]$")
 PUBLIC = '_public'
 PRIVATE = '_private'
 
-CORE_EXTERNAL_BAGS = ['common']
-
 
 class Space(object):
     """
@@ -162,8 +160,6 @@ class Space(object):
     @staticmethod
     def core_bags():
         for bag, filter in Space.CORE_RECIPE:
-            yield bag
-        for bag in CORE_EXTERNAL_BAGS:
             yield bag
 
     @staticmethod
