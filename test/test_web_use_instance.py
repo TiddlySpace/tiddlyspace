@@ -385,13 +385,13 @@ def test_space_wiki_noscript_link_is_tiddlers():
 def test_htmltemplate_setting():
     http = httplib2.Http()
     tiddler = Tiddler('ServerSettings', 'foo_public')
-    tiddler.text = 'htmltemplate: fix1\n'
+    tiddler.text = 'htmltemplate: clean1\n'
     store.put(tiddler)
 
     response, content = http.request('http://foo.0.0.0.0:8080/tiddlers')
 
     assert response['status'] == '200'
-    assert '<!-- this is the fix1 template --!>' in content
+    assert '<!-- this is the clean1 template --!>' in content
 
     tiddler = Tiddler('ServerSettings', 'foo_public')
     tiddler.text = ''
@@ -400,7 +400,7 @@ def test_htmltemplate_setting():
     response, content = http.request('http://foo.0.0.0.0:8080/tiddlers')
 
     assert response['status'] == '200'
-    assert '<!-- this is the fix1 template --!>' not in content
+    assert '<!-- this is the clean1 template --!>' not in content
 
 
 # XXX: Disable until app switcher is re-enabled as default

@@ -31,7 +31,7 @@ def send_template(environ, template_name, template_data=None):
     if html_template_prefix:
         default_css_tiddler = ('/bags/common/tiddlers/%s.css' %
                 html_template_prefix)
-        html_template_prefix += '_'
+        html_template_prefix += '/'
         try:
             name = html_template_prefix + template_name
             template = get_template(environ, name)
