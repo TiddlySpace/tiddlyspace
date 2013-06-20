@@ -3,6 +3,11 @@
     <link rel="alternate" type="application/atom+xml"
     title="Atom {{tiddler.title|e}}" href="/{{ tiddler.title|urlencode }}.atom" />
 {% endblock %}
+{% block header %}
+<a title="Site Tiddlers" href="/tiddlers"><img class="siteicon" alt="siteicon" src="/SiteIcon"></a>
+<a title="Subscribe" href="/{{ tiddler.title|urlencode }}.atom"><img src="/bags/commong/tiddlers/syndication.png"></a>
+{% endblock %}
+
 {% block title %}
     <h1>
     {% if space_link %}
@@ -12,8 +17,14 @@
     {% endif %}
     </h1>
 {% endblock %}
+
 {% block content %}
     <div class="meta">
+        <p>By <a class="user modifier" href="{{ modifier_link }}">{{
+            tiddler.modifier|e }}</a></p>
+        <p>Updated <span class="date modified"
+            data-modified="{{tiddler.modified|format_modified|e}}">
+            {{tiddler.modified|format_modified|e}}</span></p>
         <ul class="tags">
             {% for tag in tags %}
             <li class="tag"><a
@@ -21,31 +32,8 @@
             </li>
             {% endfor %}
         </ul>
-        <dl class="attributes">
-            <dt>modifier</dt>
-            <dd>
-            {% if modifier_link %}
-            <a href="{{ modifier_link }}">{{ tiddler.modifier|e }}</a>
-            {% else %}
-            {{ tiddler.modifier|e }}
-            {% endif %}
-            </dd>
-            <dt>modified</dt>
-            <dd>{{ tiddler.modified|format_modified|e }}</dd>
-            <dt>creator</dt>
-            <dd>
-            {% if creator_link %}
-            <a href="{{ creator_link }}">{{ tiddler.creator|e }}</a>
-            {% else %}
-            {{ tiddler.creator|e }}
-            {% endif %}
-            </dd>
-            <dt>created</dt>
-            <dd>{{ tiddler.created|format_modified|e }}</dd>
-            <dt>revision</dt>
-        </dl>
     </div>
-    <div class="bodytext">
+    <div class="tiddlertext">
         {{ html }}
     </div>
 {% endblock %}

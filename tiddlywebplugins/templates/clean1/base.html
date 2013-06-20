@@ -5,6 +5,7 @@
         <meta charset="utf-8">
         <title>TiddlySpace - {{ title }}</title>
         <link rel="stylesheet" href="/bags/common/tiddlers/normalize.css">
+        <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
         {%- for link in css -%}
         <link rel="stylesheet" href="{{ link }}" type="text/css" />
         {%- endfor -%}
@@ -13,18 +14,28 @@
         <meta name="viewport" content="width=device-width"> 
     </head>
     <body>
-        <div id="header">
-        {% block title %}
-        <h1>{{ title|e }}</h1>
-        {% endblock %}
-        </div>
-        <div id="article">
-        {% block content %}
-        {% endblock %}
-        </div>
-        <div id="footer">
+
+        <header>
+            {% block header %}
+            {% endblock %}
+        </header>
+
+        <article>
+            <header>
+            {% block title %}
+            <h1>{{ title|e }}</h1>
+            {% endblock %}
+            </header>
+            <section>
+            {% block content %}
+            {% endblock %}
+            </section>
+        </article>
+
+        <footer>
         Brought to you by <a href="{{ original_server_host }}">TiddlySpace</a>.
-        </div>
+        </footer>
+
         {% block scripts %}
         {% endblock %}
         {%- for link in js -%}
