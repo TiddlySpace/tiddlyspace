@@ -58,3 +58,6 @@ tiddler: https://raw.github.com/tiddlyspace/ts-reply/master/reply.png.tid
 
 # normalize.css
 tiddler: https://github.com/necolas/normalize.css/raw/master/normalize.css text/css
+
+# syndication icon
+tiddler: common/syndication.png
