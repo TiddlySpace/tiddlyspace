@@ -15,6 +15,7 @@ tiddler: lib/jquery-form.js.js
 tiddler: lib/jquery.timeago.js.js
 tiddler: lib/run-timeago.js.js
 tiddler: lib/es5-shim.min.js.js
+tiddler: lib/html5.js.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid
