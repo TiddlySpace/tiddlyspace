@@ -49,9 +49,10 @@ class Serialization(WikiSerialization):
         """
         http_host, _ = determine_host(self.environ) 
         space_name = determine_space(self.environ, http_host)
-        recipe_name = determine_space_recipe(self.environ, space_name)
-        if '/recipes/%s' % recipe_name in tiddlers.link:
-            tiddlers.link = '/tiddlers'
+        if space_name:
+            recipe_name = determine_space_recipe(self.environ, space_name)
+            if '/recipes/%s' % recipe_name in tiddlers.link:
+                tiddlers.link = '/tiddlers'
         return WikiSerialization.list_tiddlers(self, tiddlers)
 
     def _get_wiki(self):
