@@ -56,11 +56,8 @@ class Serialization(HTMLSerialization):
         to the container if it can be viewed by the current
         user. List the available serializations for the tiddlers.
         """
-        tiddlers_url = (self.environ.get('SCRIPT_NAME', '')
-                + self.environ.get('PATH_INFO', ''))
-
         template_name = 'friendlytiddlers.html'
-        if '/bags/' in tiddlers_url or '/recipes/' in tiddlers_url:
+        if '/bags/' in tiddlers.link or '/recipes/' in tiddlers.link:
             template_name = 'tiddlers.html'
 
         container_name = ''
@@ -70,7 +67,7 @@ class Serialization(HTMLSerialization):
         store = self.environ['tiddlyweb.store']
         user = self.environ['tiddlyweb.usersign']
         space_name = ''
-        if not tiddlers.is_search:
+        if not (tiddlers.is_search or tiddlers.is_revisions):
             if tiddlers.recipe:
                 name = tiddlers.recipe
                 try:
@@ -101,8 +98,10 @@ class Serialization(HTMLSerialization):
                 except PermissionsError:
                     pass
 
-            if tiddlers.is_revisions:
-                container_policy = True
+        if tiddlers.is_revisions:
+            container_policy = True
+            container_url = tiddlers.link.rsplit('/revisions')[0]
+            container_name = 'Head'
 
         try:
             query_string = self.environ.get('QUERY_STRING', '').decode('utf-8')
@@ -114,12 +113,6 @@ class Serialization(HTMLSerialization):
 
         if query_string:
             query_string = '?%s' % query_string
-
-        # chop off the possible trailing .html
-        tiddlers_url = tiddlers_url.rsplit('.html')[0]
-        friendly = False
-        if tiddlers_url.count('/') <= 1:
-            friendly = True
 
         if tiddlers.is_search:
             template_name = 'search.html'
@@ -134,8 +127,7 @@ class Serialization(HTMLSerialization):
             'tiddler_url': tiddler_url,
             'environ': self.environ,
             'revisions': tiddlers.is_revisions,
-            'friendly': friendly,
-            'tiddlers_url': tiddlers_url.decode('utf-8', 'replace'),
+            'tiddlers_url': tiddlers.link,
             'space_uri': space_uri,
             'space_bag': space_bag,
             'query_string': query_string,
