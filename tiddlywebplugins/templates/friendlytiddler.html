@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block links %}
+        <link rel="alternate" type="application/atom+xml"
+        title="Atom {{tiddler.title|e}}" href="{{ tiddler_url }}.atom" />
+{% endblock %}
+{% block title %}
+        <h1>
+        {% if space_link %}
+        <a href="{{ space_link }}" id='title'>{{ tiddler.title|e }}</a>
+        {% else %}
+        <span id="title">{{tiddler.title|e}}</span>
+        {% endif %}
+        </h1>
+{% endblock %}
+{% block content %}
+        <div class="meta" id='links'>
+          <a class="revisions"
+              href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions">revision</a>
+          <a class="revision"
+              href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions/{{tiddler.revision}}">
+            {{tiddler.revision|e}}</a>
+        {% if container_policy %}
+          in bag <a class="bag" href="/bags/{{tiddler.bag|uri}}">{{tiddler.bag|e}}</a>
+          {% if tiddler.recipe %} and recipe <a class="recipe"
+              href="/recipes/{{tiddler.recipe|uri}}">{{tiddler.recipe|e}}</a>{% endif %}
+          {% endif %}
+          in <a href="{{ list_link }}">this collection of tiddlers</a>
+        </div>
+        {%- set reserved_fields = ['geo.lat', 'geo.long'] -%}
+        <div id="tiddlertext">
+            <div class="tiddler">
+              <div id="text-html" class="main section">{{ html }}</div>
+              <dl class="meta section">
+                  <dt>bag</dt>
+                    <dd>
+                      {%- if container_policy -%}<a class="bag" href="/bags/{{tiddler.bag|uri}}"
+                      {%- else -%}<span class="bag"{%- endif -%}
+                      >{{tiddler.bag|e}}
+                      {%- if container_policy -%}</a>
+                      {%- else -%}</span>{%- endif %}
+                    </dd>
+                  <dt>created</dt><dd class="dtstart meta-created" data-timestamp="{{tiddler.created|e}}">{{tiddler.created|format_modified|e}}</dd>
+                  <dt>creator</dt><dd><a class="meta-creator" href="{{ creator_link }}">{{tiddler.creator|e}}</a></dd>
+                  <dt>modified</dt><dd class="meta-modified" data-timestamp="{{tiddler.modified|e}}">{{tiddler.modified|format_modified|e}}</dd>
+                  <dt>modifier</dt><dd><a href="{{ modifier_link }}" class="meta-modifier">{{tiddler.modifier|e}}</a></dd>
+                  {%- if tiddler.tags|length > 0 -%}
+                  <dt>tags</dt>
+                  {%- for i in tags -%}
+                  <dd class="meta-tag">
+                    <a class="tag" href='/search?q=tag:"{{i|e}}"'>{{ i|e }}</a>
+                  </dd>
+                  {%- endfor -%}
+                  {%- endif -%}
+                  {%- if tiddler.fields['geo.lat'] and tiddler.fields['geo.long'] -%}
+                  <dt>location</dt>
+                  <dd>
+                  <a class="geo" href="http://www.openstreetmap.org/?lat={{tiddler.fields['geo.lat']|e}}&lon={{tiddler.fields['geo.long']|e}}&zoom=14">
+                    latitude <span class="latitude" title="{{tiddler.fields['geo.lat']|e}}">{{tiddler.fields['geo.lat']|e}}</span>
+                    longitude <span class="longitude" title="{{tiddler.fields['geo.long']|e}}">{{tiddler.fields['geo.long']|e}}</span>
+                  </a>
+                  </dd>
+                  {%- endif -%}
+                  {%- for i in fields -%}
+                    {%- if i[0] == "_" %}
+                    {%- set fieldClass = "hidden" -%}
+                    {%- else -%}
+                    {%- set fieldClass = "" -%}
+                    {%- endif -%}
+                    {%- if i not in reserved_fields -%}
+                      {%- if fields[i] -%}
+                      <dt class="{{fieldClass}}">{{i}}</dt>
+                      <dd class="{{fieldClass}} meta-{{i|e}}">{{fields[i]|e}}</dd>
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+              </dl>
+            </div>
+        </div>
+{% endblock %}
+{% block scripts %}
+	<script type="text/javascript" src="/bags/common/tiddlers/jquery.js"></script>
+    <script type="text/javascript" src="/bags/common/tiddlers/_reply-loader.js"></script>
+{% endblock %}

@@ -67,6 +67,8 @@ remotejs:
 		"https://raw.github.com/malsup/form/master/jquery.form.js")
 	$(call wrap_jslib, "src/lib/jquery.timeago.js.js", \
 		"http://timeago.yarp.com/jquery.timeago.js")
+	$(call wrap_jslib, "src/lib/html5.js.js", \
+		"http://html5shiv.googlecode.com/svn/trunk/html5.js")
 
 qunit:
 	mkdir -p src/test/qunit

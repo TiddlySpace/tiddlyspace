@@ -1,0 +1,46 @@
+{% extends 'clean1/base.html' %}
+{% block links %}
+    <link rel="alternate" type="application/atom+xml"
+    title="Atom {{tiddler.title|e}}" href="/{{ tiddler.title|urlencode }}.atom" />
+{% endblock %}
+{% block header %}
+<a title="{{ space_name}} Home" href="/">
+    <img class="siteicon" alt="siteicon" src="/SiteIcon"></a>
+<a title="{{ space_name}} Tiddlers" href="/tiddlers">Tiddlers</a>
+<a title="Subscribe" href="/{{ tiddler.title|urlencode }}.atom">
+    <img alt="Subscribe" src="/bags/common/tiddlers/syndication.png"></a>
+{% endblock %}
+
+{% block title %}
+    <h1>
+    {% if space_link %}
+    <a href="{{ space_link }}" id='title'>{{ tiddler.title|e }}</a>
+    {% else %}
+    <span id="title">{{tiddler.title|e}}</span>
+    {% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+    <div class="meta">
+        <p>By <a class="user modifier" href="{{ modifier_link }}">{{
+            tiddler.modifier|e }}</a></p>
+        <p>Updated <span class="date modified"
+            data-modified="{{tiddler.modified|format_modified|e}}">
+            {{tiddler.modified|format_modified|e}}</span></p>
+        <ul class="tags">
+            {% for tag in tags %}
+            <li class="tag"><a
+                href="/search?q=tag:{{tag|urlencode}}">{{ tag|e }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="tiddlertext">
+        {{ html }}
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="/bags/common/tiddlers/jquery.js"></script>
+    <script type="text/javascript" src="/bags/common/tiddlers/_reply-loader.js"></script>
+{% endblock %}

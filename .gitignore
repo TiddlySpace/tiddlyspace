@@ -12,6 +12,7 @@ src/lib/jquery-json.js.js
 src/lib/jquery.js.js
 src/lib/jquery.timeago.js.js
 src/lib/ts.js.js
+src/lib/html5.js.js
 
 src/test/qunit
 src/test/run-qunit.js

@@ -15,6 +15,7 @@ tiddler: lib/jquery-form.js.js
 tiddler: lib/jquery.timeago.js.js
 tiddler: lib/run-timeago.js.js
 tiddler: lib/es5-shim.min.js.js
+tiddler: lib/html5.js.js
 tiddler: icons/close.png.tid
 tiddler: icons/backstage.png.tid
 tiddler: icons/shim.tid
@@ -58,3 +59,9 @@ tiddler: https://raw.github.com/tiddlyspace/ts-reply/master/reply.png.tid
 
 # normalize.css
 tiddler: https://github.com/necolas/normalize.css/raw/master/normalize.css text/css
+
+# syndication icon
+tiddler: common/syndication.png
+
+# clean1
+tiddler: common/clean1.css
