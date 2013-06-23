@@ -1,7 +1,10 @@
 {% extends 'clean1/base.html' %}
-{% block content %}
+{% block header %}
+        <p><a rel="collection" href="/bags">Bags</a></p>
         <p><a href="/bags/{{ bag.name|uri }}/tiddlers">Tiddlers in
             this bag</a></p>
+{% endblock %}
+{% block content %}
         <p>{{ bag.desc|e }}</p>
         <dl id="policy">
             {%- for constraint in policy.attributes -%}

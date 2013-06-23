@@ -183,6 +183,10 @@ class Serialization(HTMLSerialization):
         if '/tiddlers/' in tiddlers_url:
             template_name = 'tiddler.html'
 
+        revision = False
+        if '/revisions/' in tiddlers_url:
+            revision = True
+
         user = self.environ['tiddlyweb.usersign']
         store = self.environ['tiddlyweb.store']
         if tiddler.recipe:
@@ -191,6 +195,13 @@ class Serialization(HTMLSerialization):
         else:
             list_link = '/bags/%s/tiddlers' % encode_name(tiddler.bag)
             list_title = 'Tiddlers in Bag %s' % tiddler.bag
+        tiddlerurl = tiddler_url(self.environ, tiddler)
+        if revision:
+            list_link = '%s/%s/revisions' % (list_link,
+                    encode_name(tiddler.title))
+            list_title = 'Revisions of %s' % tiddler.title
+            tiddlerurl = '%s/revisions/%s' % (tiddlerurl,
+                    encode_name('%s' % tiddler.revision))
         try:
             store.get(Bag(tiddler.bag)).policy.allows(user, 'manage')
             container_policy = True
@@ -210,6 +221,9 @@ class Serialization(HTMLSerialization):
         except AttributeError:
             creator_link = ""
 
+        links = self.environ.get('tiddlyweb.config',
+                {}).get('extension_types', {}).keys()
+
         html = render_wikitext(tiddler, self.environ)
         return send_template(self.environ, template_name, {
             'meta_keywords': ', '.join(tiddler.tags),
@@ -226,7 +240,8 @@ class Serialization(HTMLSerialization):
             'space_name': space_name,
             'tiddler': tiddler,
             'container_policy': container_policy,
-            'tiddler_url': tiddler_url(self.environ, tiddler)})
+            'links': links,
+            'tiddler_url': tiddlerurl})
 
     def _space_link(self, tiddler):
         """

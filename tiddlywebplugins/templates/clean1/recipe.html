@@ -1,7 +1,10 @@
 {% extends 'clean1/base.html' %}
-{% block content %}
+{% block header %}
+        <p><a rel="collection" href="/recipes">Recipes</a></p>
         <p><a href="/recipes/{{ recipe.name|uri }}/tiddlers">Tiddlers in
             this recipe</a></p>
+{% endblock %}
+{% block content %}
         <p>{{ recipe.desc }}</p>
         <ul class="listing">
         {% for bag, filter in recipe.get_recipe() %}

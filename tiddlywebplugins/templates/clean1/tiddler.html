@@ -4,7 +4,12 @@
         title="Atom {{tiddler.title|e}}" href="{{ tiddler_url }}.atom" />
 {% endblock %}
 {% block header %}
-Need a link to "up" here.
+<p><a rel="collection" title="up" href="{{ list_link }}">{{ list_title }}</a></p>
+        <p>This tiddler as:
+            {%- for type in links -%}
+            &nbsp;<a rel="alternate"
+                href="{{tiddler_url}}.{{type}}{{query_string}}">{{type}}</a>
+            {%- endfor -%}</p>
 {% endblock %}
 {% block title %}
         <h1>
