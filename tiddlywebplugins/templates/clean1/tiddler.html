@@ -24,7 +24,7 @@ Need a link to "up" here.
         {% else %}{{ tiddler.recipe|e }}{% endif %}
         </dd>
         {% endif %}
-        <dt>bag</td>
+        <dt>bag</dt>
         <dd>{% if container_policy %}<a class="bag"
         href="/bags/{{tiddler.bag|uri}}">{{tiddler.bag|e}}</a>
         {% else %}
@@ -46,10 +46,10 @@ Need a link to "up" here.
         <dd><a href="{{ creator_link }}" class="meta-creator">{{tiddler.creator|e}}</a></dd>
         <dt>type</dt>
         <dd>{{ tiddler.type|e }}</dd>
-        <dt>tags</td>
+        <dt>tags</dt>
         <dd><ul>
         {% for tag in tiddler.tags %}
-        <li><a class="tag" href='/search?q=tag:"{{tag|e}}"'>{{
+        <li><a class="tag" href='/search?q=tag:"{{tag|urlencode}}"'>{{
             tag|e }}</a></li>
         {% endfor %}
         </ul></dd>
