@@ -391,7 +391,7 @@ def test_htmltemplate_setting():
     response, content = http.request('http://foo.0.0.0.0:8080/tiddlers')
 
     assert response['status'] == '200'
-    assert '<!-- this is the clean1 template --!>' in content
+    assert '<!-- this is the clean1 template -->' in content
 
     tiddler = Tiddler('ServerSettings', 'foo_public')
     tiddler.text = ''
@@ -400,7 +400,7 @@ def test_htmltemplate_setting():
     response, content = http.request('http://foo.0.0.0.0:8080/tiddlers')
 
     assert response['status'] == '200'
-    assert '<!-- this is the clean1 template --!>' not in content
+    assert '<!-- this is the clean1 template -->' not in content
 
 
 # XXX: Disable until app switcher is re-enabled as default
