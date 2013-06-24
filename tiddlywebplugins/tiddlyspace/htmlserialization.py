@@ -56,6 +56,11 @@ class Serialization(HTMLSerialization):
         to the container if it can be viewed by the current
         user. List the available serializations for the tiddlers.
         """
+        tiddlers_url = (self.environ.get('SCRIPT_NAME', '')
+                + self.environ.get('PATH_INFO', ''))
+        if tiddlers_url.startswith('/tiddlers'):
+            tiddlers.link = '/tiddlers'
+
         template_name = 'friendlytiddlers.html'
         if '/bags/' in tiddlers.link or '/recipes/' in tiddlers.link:
             template_name = 'tiddlers.html'
