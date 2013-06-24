@@ -158,6 +158,11 @@ class Space(object):
         return cls._is_private(recipe_name)
 
     @staticmethod
+    def core_bags():
+        for bag, filter in Space.CORE_RECIPE:
+            yield bag
+
+    @staticmethod
     def _is_private(name):
         return _has_ending(name, PRIVATE)
 
