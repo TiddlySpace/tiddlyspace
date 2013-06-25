@@ -380,27 +380,6 @@ def test_space_wiki_noscript_link_is_tiddlers():
             'http://foo.0.0.0.0:8080/bags/foo_public/tiddlers.wiki')
     assert response['status'] == '200'
     assert 'you may still <a href="/bags/foo_public/tiddlers">browse' in content
-             
-
-def test_htmltemplate_setting():
-    http = httplib2.Http()
-    tiddler = Tiddler('ServerSettings', 'foo_public')
-    tiddler.text = 'htmltemplate: clean1\n'
-    store.put(tiddler)
-
-    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers')
-
-    assert response['status'] == '200'
-    assert '<!-- this is the clean1 template -->' in content
-
-    tiddler = Tiddler('ServerSettings', 'foo_public')
-    tiddler.text = ''
-    store.put(tiddler)
-
-    response, content = http.request('http://foo.0.0.0.0:8080/tiddlers')
-
-    assert response['status'] == '200'
-    assert '<!-- this is the clean1 template -->' not in content
 
 
 # XXX: Disable until app switcher is re-enabled as default

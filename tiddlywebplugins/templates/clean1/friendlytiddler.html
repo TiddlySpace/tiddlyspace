@@ -28,6 +28,7 @@
         <p>Updated <span class="date modified"
             data-modified="{{tiddler.modified|format_modified|e}}">
             {{tiddler.modified|format_modified|e}}</span></p>
+        {% if tags %}
         <ul class="tags">
             {% for tag in tags %}
             <li class="tag"><a
@@ -35,6 +36,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% endif %}
     </div>
     <div class="tiddlertext">
         {{ html }}
