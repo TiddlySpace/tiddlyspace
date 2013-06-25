@@ -33,8 +33,8 @@
         {% block scripts %}
         {% endblock %}
         {%- for link in js -%}
-        <script type="text/javascript" src="{{ link }}"></script>
+        <script src="{{ link }}"></script>
         {%- endfor -%}
-        <script type="text/javascript" src="/bags/common/tiddlers/backstage.js"></script>
+        <script src="/bags/common/tiddlers/backstage.js"></script>
     </body>
 </html>
