@@ -18,6 +18,11 @@ form input {
 	height: 24px;
 }
 
+.ts-login input,
+.ts-logout input {
+    font-size: 11px;
+}
+
 form input[type=text],
 form input[type=password] {
 	border-radius: 2px;
@@ -40,6 +45,8 @@ form input[type=submit] {
 
 #app-list {
 	background: #F0F4F8;
+	list-style: none;
+	padding: 0; margin: 0;
 }
 
 #app-list li {
@@ -177,4 +184,8 @@ form input.btn-system {
 	z-index: 1;
 	position: relative;
 	text-align: center;
+}
+
+.logindetails p {
+    margin: 0;
 }
