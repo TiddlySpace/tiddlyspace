@@ -12,11 +12,11 @@
             {%- endfor -%}</p>
 {% endblock %}
 {% block title %}
-        <h1>
+        <h1 class="tiddlertitle">
         {% if space_link %}
-        <a href="{{ space_link }}" id='title'>{{ tiddler.title|e }}</a>
+        <a href="{{ space_link }}">{{ tiddler.title|e }}</a>
         {% else %}
-        <span id="title">{{tiddler.title|e}}</span>
+        {{tiddler.title|e}}
         {% endif %}
         </h1>
 {% endblock %}
