@@ -5,7 +5,7 @@ _cache-max-age: 43200
 <!DOCTYPE HTML>
 <html>
 <head>
-<link rel="stylesheet" href="/bags/common/tiddlers/normalise.css" />
+<link rel="stylesheet" href="/bags/common/tiddlers/normalize.css" />
 <link rel="stylesheet" href="/bags/common/tiddlers/app.css" />
 </head>
 <body style="display:none;" class="tsbackstage">
