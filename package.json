@@ -1,6 +1,6 @@
 {
   "name": "TiddlySpace",
-  "version": "1.2.19",
+  "version": "1.2.20",
   "devDependencies": {
     "grunt": "~0.4.0",
     "grunt-cli": "~0.1.6",
