@@ -14,10 +14,10 @@
                 href="{{tiddlers_url}}.{{type}}{{query_string}}">{{type}}</a>
             {%- endfor -%}</p>
 {% endblock %}
-{% block title%}
-        <h1>{{ title|e }}</h1>
-{% endblock %}
 {% block content %}
+    <article class="collection">
+        <h1>{{ title|e }}</h1>
+
         <ul id="tiddlers" class="listing">
         {% if revisions %}
             {%- for tiddler in tiddlers -%}
@@ -41,4 +41,5 @@
             {%- endfor -%}
         {% endif %}
         </ul>
+    </article>
 {% endblock %}

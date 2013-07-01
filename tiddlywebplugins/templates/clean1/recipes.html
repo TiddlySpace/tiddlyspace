@@ -1,8 +1,10 @@
 {% extends 'clean1/base.html' %}
 {% block content %}
+    <article class="collection">
         <ul class="listing" id="recipes">
         {%- for recipe in recipes -%}
         <li><a href="/recipes/{{ recipe.name|uri }}">{{ recipe.name|e }}</a></li>
         {%- endfor -%}
         </ul>
+    </article>
 {% endblock %}

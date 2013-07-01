@@ -5,6 +5,7 @@
             this bag</a></p>
 {% endblock %}
 {% block content %}
+    <article class="bag">
         <p>{{ bag.desc|e }}</p>
         <dl id="policy">
             {%- for constraint in policy.attributes -%}
@@ -18,4 +19,5 @@
             </ul></dd>
             {%- endfor -%}
         </dl>
+    </article>
 {% endblock %}
