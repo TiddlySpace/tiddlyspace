@@ -11,37 +11,40 @@
     <img alt="Subscribe" src="/bags/common/tiddlers/syndication.png"></a>
 {% endblock %}
 
-{% block title %}
-    <h1 class="tiddlertitle">
-    {% if space_link %}
-    <a href="{{ space_link }}">{{ tiddler.title|e }}</a>
-    {% else %}
-    {{tiddler.title|e}}
-    {% endif %}
-    </h1>
+{% block content %}
+    <article class='tiddler'>
+        <header>
+            <h1 class="title">
+                {% if space_link %}
+                <a href="{{ space_link }}">{{ tiddler.title|e }}</a>
+                {% else %}
+                {{tiddler.title|e}}
+                {% endif %}
+            </h1>
+            <div class="meta">
+                <p>By <a class="user modifier" href="{{ modifier_link }}">{{
+                    tiddler.modifier|e }}</a></p>
+                <p>Updated <span class="date modified"
+                    data-modified="{{tiddler.modified|format_modified|e}}">
+                    {{tiddler.modified|format_modified|e}}</span></p>
+            </div>
+            {% if tags %}
+            <ul class="tags">
+                {% for tag in tags %}
+                <li><a
+                    href="/search?q=tag:{{tag|urlencode}}">{{ tag|e }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+        </header>
+
+        <section>
+            {{ html }}
+        </section>
+    </article>
 {% endblock %}
 
-{% block content %}
-    <div class="meta">
-        <p>By <a class="user modifier" href="{{ modifier_link }}">{{
-            tiddler.modifier|e }}</a></p>
-        <p>Updated <span class="date modified"
-            data-modified="{{tiddler.modified|format_modified|e}}">
-            {{tiddler.modified|format_modified|e}}</span></p>
-        {% if tags %}
-        <ul class="tags">
-            {% for tag in tags %}
-            <li class="tag"><a
-                href="/search?q=tag:{{tag|urlencode}}">{{ tag|e }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-    <div class="tiddlertext">
-        {{ html }}
-    </div>
-{% endblock %}
 {% block scripts %}
     <script src="/bags/common/tiddlers/jquery.js"></script>
     <script src="/bags/common/tiddlers/_reply-loader.js"></script>

@@ -5,6 +5,7 @@
             this recipe</a></p>
 {% endblock %}
 {% block content %}
+    <article class="recipe">
         <p>{{ recipe.desc }}</p>
         <ul class="listing">
         {% for bag, filter in recipe.get_recipe() %}
@@ -16,4 +17,5 @@
             {% endif %}
         {% endfor %}
         </ul>
+    </article>
 {% endblock %}

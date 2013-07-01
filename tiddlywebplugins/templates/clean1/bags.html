@@ -1,8 +1,10 @@
 {% extends 'clean1/base.html' %}
 {% block content %}
+    <article class="collection">
         <ul class="listing" id="bags">
         {%- for bag in bags -%}
         <li><a href="/bags/{{ bag.name|uri }}/tiddlers">{{ bag.name|e }}</a></li>
         {%- endfor -%}
         </ul>
+    </article>
 {% endblock %}
