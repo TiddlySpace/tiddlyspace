@@ -20,17 +20,8 @@
             {% endblock %}
         </header>
 
-        <article>
-            <header>
-            {% block title %}
-            <h1>{{ title|e }}</h1>
-            {% endblock %}
-            </header>
-            <section>
-            {% block content %}
-            {% endblock %}
-            </section>
-        </article>
+        {% block content %}
+        {% endblock %}
 
         <footer>
         Brought to you by <a href="{{ original_server_host }}">TiddlySpace</a>.

@@ -11,62 +11,65 @@
                 href="{{tiddler_url}}.{{type}}{{query_string}}">{{type}}</a>
             {%- endfor -%}</p>
 {% endblock %}
-{% block title %}
-        <h1 class="tiddlertitle">
-        {% if space_link %}
-        <a href="{{ space_link }}">{{ tiddler.title|e }}</a>
-        {% else %}
-        {{tiddler.title|e}}
-        {% endif %}
-        </h1>
-{% endblock %}
 {% block content %}
-    <dl>
-        {%if tiddler.recipe %}
-        <dt>recipe</dt>
-        <dd>{% if container_policy %}
-        <a href="/recipes/{{tiddler.recipe|uri}}">{{tiddler.recipe|e}}</a>
-        {% else %}{{ tiddler.recipe|e }}{% endif %}
-        </dd>
-        {% endif %}
-        <dt>bag</dt>
-        <dd>{% if container_policy %}<a class="bag"
-        href="/bags/{{tiddler.bag|uri}}">{{tiddler.bag|e}}</a>
-        {% else %}
-        {{ tiddler.bag|e }}
-        {% endif %}
-        </dd>
-        <dt><a
-            href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions">revision</a></dt>
-        <dd><a class="revision"
-              href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions/{{tiddler.revision}}">
-              {{tiddler.revision|e}}</a></dd>
-        <dt>modified</dt>
-        <dd data-created="{{tiddler.modified|e}}">{{tiddler.modified|format_modified|e}}</dd>
-        <dt>modifier</dt>
-        <dd><a href="{{ modifier_link }}" class="meta-modifier">{{tiddler.modifier|e}}</a></dd>
-        <dt>created</dt>
-        <dd data-created="{{tiddler.created|e}}">{{tiddler.created|format_modified|e}}</dd>
-        <dt>creator</dt>
-        <dd><a href="{{ creator_link }}" class="meta-creator">{{tiddler.creator|e}}</a></dd>
-        <dt>type</dt>
-        <dd>{{ tiddler.type|e }}</dd>
-        <dt>tags</dt>
-        <dd><ul>
-        {% for tag in tiddler.tags %}
-        <li><a class="tag" href='/search?q=tag:"{{tag|urlencode}}"'>{{
-            tag|e }}</a></li>
-        {% endfor %}
-        </ul></dd>
-        <dt>fields</dt>
-        <dd><dl>
-            {% for field_name in fields %}
-            <dt>{{ field_name|e }}</dt>
-            <dd>{{ fields[field_name]|e }}</dd>
+    <article class="tiddler">
+        <header>
+            <h1 class="title">
+            {% if space_link %}
+            <a href="{{ space_link }}">{{ tiddler.title|e }}</a>
+            {% else %}
+            {{tiddler.title|e}}
+            {% endif %}
+            </h1>
+        </header>
+
+        <dl>
+            {%if tiddler.recipe %}
+            <dt>recipe</dt>
+            <dd>{% if container_policy %}
+            <a href="/recipes/{{tiddler.recipe|uri}}">{{tiddler.recipe|e}}</a>
+            {% else %}{{ tiddler.recipe|e }}{% endif %}
+            </dd>
+            {% endif %}
+            <dt>bag</dt>
+            <dd>{% if container_policy %}<a class="bag"
+            href="/bags/{{tiddler.bag|uri}}">{{tiddler.bag|e}}</a>
+            {% else %}
+            {{ tiddler.bag|e }}
+            {% endif %}
+            </dd>
+            <dt><a
+                href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions">revision</a></dt>
+            <dd><a class="revision"
+                  href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions/{{tiddler.revision}}">
+                  {{tiddler.revision|e}}</a></dd>
+            <dt>modified</dt>
+            <dd data-created="{{tiddler.modified|e}}">{{tiddler.modified|format_modified|e}}</dd>
+            <dt>modifier</dt>
+            <dd><a href="{{ modifier_link }}" class="meta-modifier">{{tiddler.modifier|e}}</a></dd>
+            <dt>created</dt>
+            <dd data-created="{{tiddler.created|e}}">{{tiddler.created|format_modified|e}}</dd>
+            <dt>creator</dt>
+            <dd><a href="{{ creator_link }}" class="meta-creator">{{tiddler.creator|e}}</a></dd>
+            <dt>type</dt>
+            <dd>{{ tiddler.type|e }}</dd>
+            <dt>tags</dt>
+            <dd><ul>
+            {% for tag in tiddler.tags %}
+            <li><a class="tag" href='/search?q=tag:"{{tag|urlencode}}"'>{{
+                tag|e }}</a></li>
             {% endfor %}
-        </dl></dd>
-    </dl>
-    <div class="tiddlertext">
-        {{ html }}
-    </div>
+            </ul></dd>
+            <dt>fields</dt>
+            <dd><dl>
+                {% for field_name in fields %}
+                <dt>{{ field_name|e }}</dt>
+                <dd>{{ fields[field_name]|e }}</dd>
+                {% endfor %}
+            </dl></dd>
+        </dl>
+        <section>
+            {{ html }}
+        </section>
+    </article>
 {% endblock %}
