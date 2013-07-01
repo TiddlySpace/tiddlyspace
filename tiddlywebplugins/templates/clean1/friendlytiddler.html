@@ -21,13 +21,10 @@
                 {{tiddler.title|e}}
                 {% endif %}
             </h1>
-            <div class="meta">
-                <p>By <a class="user modifier" href="{{ modifier_link }}">{{
+            <p class="user modifier">By <a href="{{ modifier_link }}">{{
                     tiddler.modifier|e }}</a></p>
-                <p>Updated <span class="date modified"
-                    data-modified="{{tiddler.modified|format_modified|e}}">
+            <p class="date modified">Updated <span data-modified="{{tiddler.modified|format_modified|e}}">
                     {{tiddler.modified|format_modified|e}}</span></p>
-            </div>
             {% if tags %}
             <ul class="tags">
                 {% for tag in tags %}
