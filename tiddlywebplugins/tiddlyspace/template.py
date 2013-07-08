@@ -63,9 +63,10 @@ def send_template(environ, template_name, template_data=None):
                         try:
                             tiddler = store.get(tiddler)
                             if 'Javascript' in title:
-                                urls = tiddler.text.strip().rstrip().split(
-                                        '\n')
-                                linked_resources[title] = urls
+                                url_content = tiddler.text.strip()
+                                if url_content:
+                                    urls = url_content.split('\n')
+                                    linked_resources[title] = urls
                             else:
                                 url = '/bags/%s/tiddlers/%s' % (encode_name(
                                     tiddler.bag), title)
