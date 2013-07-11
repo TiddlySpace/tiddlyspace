@@ -1,3 +1,4 @@
+{% import 'macros.html' as macros %}
 {% extends 'clean1/base.html' %}
 {% block links %}
         <link rel="alternate" type="application/atom+xml"
@@ -44,11 +45,11 @@
                   href="/bags/{{tiddler.bag|uri}}/tiddlers/{{tiddler.title|uri}}/revisions/{{tiddler.revision}}">
                   {{tiddler.revision|e}}</a></dd>
             <dt>modified</dt>
-            <dd data-created="{{tiddler.modified|e}}">{{tiddler.modified|format_modified|e}}</dd>
+            <dd>{{ macros.tiddler_timestamp('modified', tiddler) }}</dd>
             <dt>modifier</dt>
             <dd><a href="{{ modifier_link }}" class="meta-modifier">{{tiddler.modifier|e}}</a></dd>
             <dt>created</dt>
-            <dd data-created="{{tiddler.created|e}}">{{tiddler.created|format_modified|e}}</dd>
+            <dd>{{ macros.tiddler_timestamp('created', tiddler) }}</dd>
             <dt>creator</dt>
             <dd><a href="{{ creator_link }}" class="meta-creator">{{tiddler.creator|e}}</a></dd>
             <dt>type</dt>

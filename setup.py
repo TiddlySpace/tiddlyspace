@@ -47,7 +47,7 @@ setup(
         'tiddlywebplugins.privateer',
         'tiddlywebplugins.relativetime',
         'tiddlywebplugins.jsonp>=0.4',
-        'tiddlywebplugins.templates',
+        'tiddlywebplugins.templates>=0.9.5',
         'tiddlywebplugins.csrf',
         'tiddlywebplugins.whoosher',
         'tiddlywebplugins.markdown',

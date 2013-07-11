@@ -7,6 +7,8 @@ import wsgi_intercept
 import httplib2
 import simplejson
 
+from tiddlywebplugins.templates import rfc3339, format_modified
+
 from tiddlyweb.model.tiddler import Tiddler
 from tiddlyweb.web.util import encode_name
 
@@ -25,6 +27,8 @@ def setup_module(module):
     tiddler.text = '# Hi\n\n# one\n# two'
     tiddler.tags = ['alpha', 'beta', '12th monkey']
     store.put(tiddler)
+
+    module.tiddler_modified = tiddler.modified
     
     module.http = httplib2.Http()
 
@@ -35,6 +39,13 @@ def test_clean1_present():
 
 def test_clean1_no_core():
     match_tiddlers('TiddlyWebAdaptors', neg=True)
+
+
+def test_tiddler_modified():
+    rfc_time = rfc3339(tiddler_modified)
+    http_time = format_modified(tiddler_modified)
+    match_tiddler('TestMe', '<time class="modified" datetime="%s">%s</time>'
+            % (rfc_time, http_time))
 
 
 def test_tag_list():
@@ -68,5 +79,3 @@ def match_tiddlers(match_string, neg=False):
         assert match_string not in content
     else:
         assert match_string in content
-
-

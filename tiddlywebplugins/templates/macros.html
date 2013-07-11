@@ -1,0 +1,3 @@
+{% macro tiddler_timestamp(type, tiddler) %}
+<time class="{{ type }}" datetime="{{ tiddler[type]|rfc3339 }}">{{ tiddler[type]|format_modified }}</time>
+{% endmacro %}

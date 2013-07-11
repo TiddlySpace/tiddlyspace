@@ -1,3 +1,4 @@
+{% import 'macros.html' as macros %}
 {% extends 'clean1/base.html' %}
 {% block links %}
     <link rel="alternate" type="application/atom+xml"
@@ -23,8 +24,9 @@
             </h1>
             <p class="user modifier">By <a href="{{ modifier_link }}">{{
                     tiddler.modifier|e }}</a></p>
-            <p class="date modified">Updated <span data-modified="{{tiddler.modified|format_modified|e}}">
-                    {{tiddler.modified|format_modified|e}}</span></p>
+                <p class="date modified">Updated
+                {{ macros.tiddler_timestamp('modified', tiddler) }}
+                </p>
             {% if tags %}
             <ul class="tags">
                 {% for tag in tags %}

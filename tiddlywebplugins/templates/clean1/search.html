@@ -1,3 +1,4 @@
+{% import 'macros.html' as macros %}
 {% extends 'clean1/base.html' %}
 {% block links %}
         <link rel="alternate" type="application/atom+xml"
@@ -24,9 +25,7 @@
         <a class="user modifier" href="{{
             space_uri(environ, tiddler.modifier) | e }}">{{ tiddler.modifier|e }}</a>
         {% endif %}
-        <span class="date modified"
-            data-modified="{{tiddler.modified|format_modified|e}}">
-            {{tiddler.modified|format_modified|e}}</span>
+        {{ macros.tiddler_timestamp('modified', tiddler) }}
         </li>
         {%- endfor -%}
         </ul>
