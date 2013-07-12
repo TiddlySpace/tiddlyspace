@@ -93,7 +93,8 @@ def get_space_tiddlers(environ, start_response):
             core_bag_filters.append('select=bag:!%s' % bag)
         core_bag_filters = parse_for_filters(';'.join(core_bag_filters),
                 environ)[0]
-        environ['tiddlyweb.filters'].extend(core_bag_filters)
+        environ['tiddlyweb.filters'] = (core_bag_filters
+                + environ['tiddlyweb.filters'])
 
     if ext and ext not in types:
         environ['wsgiorg.routing_args'][1]['recipe_name'] += '.%s' % ext

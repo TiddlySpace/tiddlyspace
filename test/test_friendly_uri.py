@@ -9,6 +9,7 @@ from test.fixtures import make_test_env, make_fake_space
 from wsgi_intercept import httplib2_intercept
 import wsgi_intercept
 import httplib2
+import simplejson
 
 from tiddlyweb.model.tiddler import Tiddler
 
@@ -109,3 +110,30 @@ def test_root_tiddlers():
     assert response['status'] == '200', content
     assert '/HouseHold">HouseHold' in content, content
     assert '/BinaryTiddlersPlugin">BinaryTiddlersPlugin' not in content
+
+def test_root_tiddlers_filter():
+    """
+    Test filtering the in space tiddlers.
+
+    TiddlyWiki Test
+    Markdown Test
+    House Hold
+    HouseHold
+    SiteInfo
+    GettingStarted
+    """
+    http = httplib2.Http()
+
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/tiddlers.json',
+            method='GET')
+    assert response['status'] == '200', content
+    tiddlers = simplejson.loads(content)
+    assert len(tiddlers) == 6, tiddlers
+
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/tiddlers.json?limit=4',
+            method='GET')
+    assert response['status'] == '200', content
+    tiddlers = simplejson.loads(content)
+    assert len(tiddlers) == 4, tiddlers
