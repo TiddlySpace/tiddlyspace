@@ -82,10 +82,12 @@ def get_space_tiddlers(environ, start_response):
 
     # If not a wiki, limit the tiddlers
     if 'text/x-tiddlywiki' not in environ['tiddlyweb.type']:
-        # If filters not set, sort by -modified.
-        if not environ['tiddlyweb.filters']:
-            environ['tiddlyweb.filters'] = parse_for_filters(
-                    'sort=-modified', environ)[0]
+        # If sort filter not set, sort by -modified
+        filter_types = [filter[1][0]
+                for filter in environ['tiddlyweb.filters']]
+        if 'sort' not in filter_types:
+            environ['tiddlyweb.filters'].extend(parse_for_filters(
+                    'sort=-modified', environ)[0])
 
         # Filter out core bags.
         core_bag_filters = []

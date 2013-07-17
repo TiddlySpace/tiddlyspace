@@ -137,3 +137,19 @@ def test_root_tiddlers_filter():
     assert response['status'] == '200', content
     tiddlers = simplejson.loads(content)
     assert len(tiddlers) == 4, tiddlers
+
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/tiddlers.json',
+            method='GET')
+    assert response['status'] == '200', content
+    tiddlers = simplejson.loads(content)
+    last_tiddler = tiddlers[-1]
+
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/tiddlers.json?sort=modified',
+            method='GET')
+    assert response['status'] == '200', content
+    tiddlers = simplejson.loads(content)
+    first_tiddler = tiddlers[0]
+
+    assert first_tiddler['title'] == last_tiddler['title']

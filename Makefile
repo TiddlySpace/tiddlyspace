@@ -64,7 +64,7 @@ remotejs:
 	$(call wrap_jslib, "src/lib/jquery-json.js.js", \
 		"http://jquery-json.googlecode.com/files/jquery.json-2.3.min.js")
 	$(call wrap_jslib, "src/lib/jquery-form.js.js", \
-		"https://raw.github.com/malsup/form/master/jquery.form.js")
+		"http://malsup.github.io/jquery.form.js")
 	$(call wrap_jslib, "src/lib/jquery.timeago.js.js", \
 		"http://timeago.yarp.com/jquery.timeago.js")
 	$(call wrap_jslib, "src/lib/html5.js.js", \
