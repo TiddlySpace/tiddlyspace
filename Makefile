@@ -1,4 +1,4 @@
-.PHONY: test remotes jslib qunit get_phantomjs get_jshint jshint jstest pytest dist release deploy pypi dev clean purge
+.PHONY: test remotes jslib qunit get_phantomjs get_jshint jshint jstest pytest dist release deploy pypi dev clean purge tagv
 
 wrap_jslib = { \
 		echo "/***" &&  echo $(2) && echo "***/" && \
@@ -12,6 +12,13 @@ download = \
 
 pytest:
 	py.test -x test
+
+tagv: version = $(shell python -c 'import tiddlywebplugins.tiddlyspace; \
+	print "v" + tiddlywebplugins.tiddlyspace.__version__')
+
+tagv:
+	git tag -a -m $(version) $(version) && \
+		git push origin master --tags
 
 test: pytest jstest
 
@@ -112,7 +119,7 @@ jstest_browser:
 dist: clean remotes test
 	python setup.py sdist
 
-release: dist pypi
+release: tagv dist pypi
 
 deploy: release
 	@echo "Go to tiddlyspace.com to run tsupdate."
