@@ -86,8 +86,8 @@ def get_space_tiddlers(environ, start_response):
         filter_types = [filter[1][0]
                 for filter in environ['tiddlyweb.filters']]
         if 'sort' not in filter_types:
-            environ['tiddlyweb.filters'].extend(parse_for_filters(
-                    'sort=-modified', environ)[0])
+            environ['tiddlyweb.filters'] = parse_for_filters(
+                    'sort=-modified', environ)[0] + environ['tiddlyweb.filters']
 
         # Filter out core bags.
         core_bag_filters = []
