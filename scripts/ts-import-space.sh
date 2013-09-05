@@ -64,12 +64,12 @@ del() {
     do
         ENCODED_TIDDLER=$(python -c "import urllib; print urllib.quote('''$TIDDLER''', safe='')")
         echo "Deleting $ENCODED_TIDDLER from target..."
-        curl -X DELETE --cookie $DEST_COOKIE $DESTBAG/$ENCODED_TIDDLER
+        curl -s -X DELETE --cookie $DEST_COOKIE $DESTBAG/$ENCODED_TIDDLER
     done
 }
 
 create_dest_space() {
-    curl -X PUT -H "Content-Type:application/json" --cookie $DEST_COOKIE $DEST_SPACE_URL/spaces/$DEST_SPACE
+    curl -s -X PUT -H "Content-Type:application/json" --cookie $DEST_COOKIE $DEST_SPACE_URL/spaces/$DEST_SPACE
 }
 
 authenticate() {
