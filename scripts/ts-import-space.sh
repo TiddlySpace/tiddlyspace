@@ -105,13 +105,13 @@ exit_on_fail $?
 echo "***Authenticating against $DEST_SPACE***"
 authenticate $DEST_SPACE_URL $DEST_USER $DEST_PASSWORD $DEST_COOKIE $DEST_TS_CHALLENGER
 exit_on_fail $?
-echo "***Creating target space***"
+echo "***Creating target space $DEST_SPACE***"
 create_dest_space
-echo "***Importing public tiddlers***"
+echo "***Importing public tiddlers into $DEST_SPACE***"
 del $DEST_PUBLIC_BAG
 move $SRC_PUBLIC_BAG $SRC_USER $SRC_PASSWORD $DEST_PUBLIC_BAG \
     $DEST_USER $DEST_PASSWORD
-echo "***Importing private tiddlers***"
+echo "***Importing private tiddlers into $DEST_SPACE***"
 del $DEST_PRIVATE_BAG
 move $SRC_PRIVATE_BAG $SRC_USER $SRC_PASSWORD $DEST_PRIVATE_BAG \
     $DEST_USER $DEST_PASSWORD
