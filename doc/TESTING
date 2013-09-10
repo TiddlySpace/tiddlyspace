@@ -15,6 +15,15 @@ them as environment variables as follows:
     export SAUCE_USERNAME=<username>
     export SAUCE_ACCESS_KEY=<key>
 
+Note: 
+
+The Grunt file uses these variables when running the test task.
+By default the username is "tiddlyspace".
+
+For automated builds via Travis CI, the encrypted key from the .travis.yml
+file is used.
+
+
 For first time setup run:
 
     make saucelabs_deps
@@ -28,7 +37,7 @@ Testing Locally
 
 To run the QUnit tests on a local browser of your choice:
 
-    jstest_browser
+    make jstest_browser
 
 Then navigate to:
 
