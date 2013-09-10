@@ -1,4 +1,12 @@
 module.exports = function(grunt) {
+    var sauceUser = "tiddlyspace";
+    var sauceKey = null;
+    if (typeof process.env.SAUCE_USERNAME !== "undefined") {
+        sauceUser = process.env.SAUCE_USERNAME;
+    }
+    if (typeof process.env.SAUCE_ACCESS_KEY !== "undefined") {
+        sauceKey = process.env.SAUCE_ACCESS_KEY;
+    }
     var browsers = [{
         browserName: "internet explorer",
         version: "10",
@@ -46,7 +54,8 @@ module.exports = function(grunt) {
         'saucelabs-qunit': {
             all: {
                 options: {
-                    username: "tiddlyspace",
+                    username: sauceUser,
+                    key: sauceKey,
                     urls: ["http://127.0.0.1:9999/test/index.html"],
                     tunnelTimeout: 5,
                     build: process.env.TRAVIS_JOB_ID,
