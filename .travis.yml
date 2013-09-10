@@ -7,18 +7,8 @@ before_script:
 - make jslib
 env:
   global:
-  - secure: ! 'Garibk5hJveks68NNN1xG3ZtXoTwl0Zd8ntMoAGA+EysxsCkZ62A3J6TpxO/
+    secure: ! 'QROb6CA0Nhnh3qocTrzA50Qd33KRwrYBt4RvnNJd5WaIoDgL7bWBEFi0CxeF
 
-      gIAnpNCSN/FjUlJzaoUqiwZglBMV9IB8oVYlgndEK7IUGQjr88fMf3543vI+
+      5TnJAkFuX2ONypXOS94gzCCqYcJAxn7O35s3Ck8FMSNYXgXAJ2+e5eYiVonU
 
-      w4OXei6+wIZVkgnGzsswXTaN/UL6O0V5BXvDV8e6HnZ+P9MGMvw='
-  - secure: ! 'eRVQBuAT2sc5u4ZgylwRU901yWpSa20+/GIJO7s/tzw5rgjA/MJ1FIgLssUa
-
-      kPILLcIiRypQ8hcjghiM4jqe+lgNepIwrsHWIt5D0bKes23WzDLFqV4vSpxY
-
-      nNhvgG8UG5ccnZZDQ1ZgTvBtyoQDajVrOHwvxmWfp2u4iaiQpfE='
-  - secure: ! 'Q/T2wLFpcJ0qc8B9bNHm/Hwn5wP+6V3FsDcB2K7mXVNAws4C6FT7CIMTzqzt
-
-      nNdEwFL+5zcGxk3IPirmx2ZXaZrfcs3mPvU8HLg6ZxPj5MPJAee2gCheKG3K
-
-      DfzgQ9md0OyuRcWwo4rVBPx6DT2YRMNEQbkHZItL3Azm5T04WwQ='
+      GvnwbdFM6lE0ysc8r1wWRWWtbalhBWZhdiyF0XhoQnCfupia0vk='
