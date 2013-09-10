@@ -46,6 +46,7 @@ module.exports = function(grunt) {
         'saucelabs-qunit': {
             all: {
                 options: {
+                    username: "tiddlyspace",
                     urls: ["http://127.0.0.1:9999/test/index.html"],
                     tunnelTimeout: 5,
                     build: process.env.TRAVIS_JOB_ID,
