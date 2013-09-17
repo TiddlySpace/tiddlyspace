@@ -23,7 +23,6 @@ def init_plugin(config):
     import tiddlywebplugins.cookiedomain
     import tiddlywebplugins.tiddlyspace.validator
     import tiddlywebplugins.prettyerror
-    import tiddlywebplugins.pathinfohack
     import tiddlywebplugins.hashmaker
     import tiddlywebplugins.form
     import tiddlywebplugins.reflector
@@ -54,7 +53,6 @@ def init_plugin(config):
     tiddlywebplugins.oom.init(config)
     tiddlywebplugins.cookiedomain.init(config)
     tiddlywebplugins.prettyerror.init(config)
-    tiddlywebplugins.pathinfohack.init(config)
     tiddlywebplugins.hashmaker.init(config)
     tiddlywebplugins.form.init(config)
     tiddlywebplugins.reflector.init(config)
