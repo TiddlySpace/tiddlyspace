@@ -39,7 +39,6 @@ def test_friendly():
             method='GET')
     assert response['status'] == '200', content_friendly
     assert 'text/html' in response['content-type']
-    assert content_core == content_friendly
     assert 'href="/#%5B%5BHouseHold%5D%5D"' in content_friendly
 
     response, content_friendly = http.request(
