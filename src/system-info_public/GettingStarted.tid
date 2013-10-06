@@ -25,12 +25,19 @@ Go to [[SpaceSettings]] to finish customising  your space. When you're done, com
 
 !Further Customisation
 
-The [[ServerSettings]] tiddler is used to provide the following space configuration options:
+For advanced options, the [[ServerSettings]] tiddler is used to enable the following features:
 
-#index: The value is the name of a tiddler that will be presented when loading the space.  For example, when set to Hello for the space hello.tiddlyspace.com, navigating to that URL will present the Hello tiddler.
-#editor: The name of an [[editor application|http://docs.tiddlyspace.com/Example%20Tiddler%20Editors]] to edit tiddlers with.  Applications are [[included spaces|http://docs.tiddlyspace.com/How%20do%20I%20include%2Fexclude%20spaces%3F]]
+#index: The value is the name of a tiddler that will be presented when loading the space.  For example, when set to {{{Hello}}} for the space hello.tiddlyspace.com, navigating to that URL will present the Hello tiddler. If there is no {{{Hello}}} you will get an error.
+#editor: The name of an [[editor application|http://docs.tiddlyspace.com/Example%20Tiddler%20Editors]] to edit tiddlers with.  Applications come from [[included spaces|http://docs.tiddlyspace.com/How%20do%20I%20include%2Fexclude%20spaces%3F]]
 
-To edit these options, click [[here|ServerSettings]] to open the [[ServerSettings]] tiddler then click on the edit button (the pencil icon).  Then add the options you wish to set and then click on the save button (the tick icon).
+//If you do not need or understand these features there is no need to create a ServerSettings tiddler.//
+
+To edit these options: 
+
+* click [[here|ServerSettings]] to open the [[ServerSettings]] tiddler
+* click on the edit button (the pencil icon)
+* add the options you wish to set 
+* click on the save button (the tick icon).
 
 An example [[ServerSettings]] tiddler:
 {{{
