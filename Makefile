@@ -50,10 +50,14 @@ tiddlywiki:
 		rm tiddlywebplugins/tiddlyspace/resources/external.html.wrongbag
 
 
-remotes: tiddlywiki jslib
+remotes: tiddlywiki jslib csslib
 	twibuilder tiddlywebplugins.tiddlyspace
 
 jslib: qunit remotejs
+
+csslib:
+	$(call download, "src/lib/normalize.css", \
+		"https://raw.github.com/necolas/normalize.css/master/normalize.css")
 
 remotejs:
 	$(call wrap_jslib, "src/lib/chrjs.js", \
