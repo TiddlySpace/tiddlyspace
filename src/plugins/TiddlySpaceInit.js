@@ -170,21 +170,34 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		};
 		tid.get(callback, errback);
 	},
+	savePublicTiddlerText: function(title, text, pubWorkspace) {
+		var tid = new Tiddler(title);
+		tid.text = text;
+		tid.tags = ["excludeLists"];
+		tid.fields = $.extend({}, config.defaultCustomFields);
+		tid.fields["server.workspace"] = pubWorkspace;
+		tid.fields["server.page.revision"] = "false";
+		tid = store.saveTiddler(tid);
+		autoSaveChanges(null, [tid]);
+	},
 	setupMarkupPreHead: function() {
 		var pubWorkspace = tiddlyspace.getCurrentWorkspace("public");
 		var existing = store.getTiddler("MarkupPreHead");
 		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
+			var context = this;
 			tweb.getStatus(function(status) {
-				var tid = new Tiddler("MarkupPreHead");
-				tid.text = markupPreHead.format(currentSpace.name, tiddlyspace.getHost(status.server_host,
-					currentSpace.name));
-				tid.tags = ["excludeLists"];
-				tid.fields = $.extend({}, config.defaultCustomFields);
-				tid.fields["server.workspace"] = pubWorkspace;
-				tid.fields["server.page.revision"] = "false";
-				tid = store.saveTiddler(tid);
-				autoSaveChanges(null, [tid]);
+				var text = markupPreHead.format(currentSpace.name,
+					tiddlyspace.getHost(status.server_host, currentSpace.name));
+				context.savePublicTiddlerText("MarkupPreHead", text,
+					pubWorkspace);
 			});
+		}
+		// also set up DefaultTiddlers
+		var title = "DefaultTiddlers";
+		existing = store.getTiddler(title) || new Tiddler(title);
+		if(existing.fields["server.workspace"] != pubWorkspace) {
+			var text = existing.text || store.getShadowTiddlerText(title);
+			this.savePublicTiddlerText(title, text, pubWorkspace);
 		}
 	}
 };

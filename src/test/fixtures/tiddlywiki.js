@@ -154,6 +154,14 @@ TiddlyWiki.prototype.isShadowTiddler = function(title) {
 	return config.shadowTiddlers[title] === undefined ? false : true;
 };
 
+TiddlyWiki.prototype.getShadowTiddlerText = function(title)
+{
+	if(typeof config.shadowTiddlers[title] == "string")
+		return config.shadowTiddlers[title];
+	else
+		return "";
+};
+
 Array.prototype.contains = function(item)
 {
 	return $.inArray(item, this) != -1;
