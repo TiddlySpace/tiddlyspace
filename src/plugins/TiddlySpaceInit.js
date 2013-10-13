@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.7.2|
+|''Version''|0.7.3|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
