@@ -13,7 +13,7 @@ download = \
 pytest:
 	py.test -x test
 
-tagv: version = $(shell python -c 'import mangerl; \
+tagv: version = $(shell python -c 'import mangler; \
 	import tiddlywebplugins.tiddlyspace; \
 	print "v" + tiddlywebplugins.tiddlyspace.__version__')
 
