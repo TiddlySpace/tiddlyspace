@@ -26,7 +26,7 @@
     content-type: application/json
   status: 409
   expected:
-  - Invalid space name, ascii required
+  - Invalid space name,
 
 # Create a unicorn (unicode!) user
 - name: Create one unicorn 2
@@ -38,7 +38,7 @@
     content-type: application/json
   status: 409
   expected:
-  - Invalid space name, ascii required
+  - Invalid space name,
 
 - name: Attempt invalide user
   desc: POST to create a user with a bad name
@@ -176,7 +176,7 @@
   method: PUT
   status: 409
   expected:
-  - Invalid space name, ascii required
+  - Invalid space name, must be valid
 
 # Create caps space
 - name: Create caps space fail

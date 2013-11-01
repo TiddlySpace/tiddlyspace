@@ -37,15 +37,9 @@ class Space(object):
         """
         Name must be plain ascii and match SPACE_NAME_PATTERN.
         """
-        try:
-            name = str(name)
-        except UnicodeEncodeError:
-            raise ValueError('Invalid space name, ascii required: %s' %
-                name.encode('UTF-8'))
         if not SPACE_NAME_PATTERN.match(name):
             raise ValueError(
-                    'Invalid space name, must be valid host name (RFC 1035)' +
-                    ': %s' % name)
+                    'Invalid space name, must be valid host name (RFC 1035)')
         self.name = name
 
     def extra_bags(self):
