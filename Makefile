@@ -87,11 +87,11 @@ qunit:
 	mkdir -p src/test/lib
 	cp src/lib/json2.js.js src/test/lib/json2.js
 	$(call download, "src/test/qunit/qunit.js", \
-		"https://raw.github.com/jquery/qunit/master/qunit/qunit.js")
+		"http://code.jquery.com/qunit/qunit-1.12.0.js")
 	$(call download, "src/test/qunit/qunit.css", \
-		"https://raw.github.com/jquery/qunit/master/qunit/qunit.css")
+		"http://code.jquery.com/qunit/qunit-1.12.0.css")
 	$(call download, "src/test/lib/jquery.js", \
-		"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js")
+		"http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js")
 	$(call download, "src/test/lib/jquery-json.js", \
 		"http://jquery-json.googlecode.com/files/jquery.json-2.2.js")
 	$(call download, "src/test/lib/jquery.mockjax.js", \
