@@ -229,6 +229,10 @@ class Serialization(HTMLSerialization):
         links = self.environ.get('tiddlyweb.config',
                 {}).get('extension_types', {}).keys()
 
+        def call_space_uri(tiddler):
+            space_name = tiddler.recipe.split('_', 1)[0]
+            return space_uri(self.environ, space_name)
+
         html = render_wikitext(tiddler, self.environ)
         return send_template(self.environ, template_name, {
             'meta_keywords': ', '.join(tiddler.tags),
@@ -243,6 +247,7 @@ class Serialization(HTMLSerialization):
             'list_title': list_title,
             'space_link': space_link,
             'space_name': space_name,
+            'space_uri': call_space_uri,
             'tiddler': tiddler,
             'container_policy': container_policy,
             'links': links,

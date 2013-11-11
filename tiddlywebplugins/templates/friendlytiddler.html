@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
+{% block htmltag %}
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+{% endblock %}
 {% block links %}
         <link rel="alternate" type="application/atom+xml"
         title="Atom {{tiddler.title|e}}" href="{{ tiddler_url }}.atom" />
+{% endblock %}
+{% block meta %}
+{% include 'ogp.html' %}
 {% endblock %}
 {% block title %}
         <h1>

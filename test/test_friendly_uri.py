@@ -152,3 +152,41 @@ def test_root_tiddlers_filter():
     first_tiddler = tiddlers[0]
 
     assert first_tiddler['title'] == last_tiddler['title']
+
+
+def test_open_graph():
+    """
+    Make sure the open graph stuff is present in the right places.
+    """
+    http = httplib2.Http()
+    tiddler = Tiddler('Open Graph', 'cdent_public')
+    tiddler.text = 'I am the text'
+    tiddler.modifier = 'cdent'
+    tiddler.tags = ['alpha', 'beta', 'cat dog']
+    store.put(tiddler)
+
+    response, content = http.request('http://cdent.0.0.0.0:8080/Open%20Graph')
+    assert response['status'] == '200'
+    assert '<html prefix="og: http://ogp.me/ns#' in content
+    assert '<meta property="og:title" content="Open Graph" />' in content
+    assert '<meta property="og:url" content="http://cdent.0.0.0.0:8080/Open%20Graph" />' in content
+    assert '<meta property="og:image" content="http://cdent.0.0.0.0:8080/SiteIcon" />' in content
+    assert '<meta property="article:tag" content="alpha" />' in content
+    assert '<meta property="article:modified_time"' in content
+    assert '<meta property="article:published_time"' in content
+    assert '<meta property="article:author"' in content
+    assert '<meta property="og:site_name" content="TiddlySpace" />' in content
+
+    response, content = http.request(
+            'http://cdent.0.0.0.0:8080/bags/cdent_public/tiddlers/Open%20Graph')
+    assert response['status'] == '200'
+    assert '<html>' in content
+    assert '<html prefix>' not in content
+
+    # clean1 frields gets ogp too
+    tiddler = Tiddler('ServerSettings', 'cdent_public')
+    tiddler.text = 'htmltemplate: clean1\n'
+    store.put(tiddler)
+    response, content = http.request('http://cdent.0.0.0.0:8080/Open%20Graph')
+    assert response['status'] == '200'
+    assert '<html prefix="og: http://ogp.me/ns#' in content

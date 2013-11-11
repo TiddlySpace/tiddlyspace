@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% block htmltag %}
 <html>
+{% endblock %}
 <!-- this is the clean1 template -->
     <head>
         <meta charset="UTF-8">
@@ -10,6 +12,8 @@
         <link rel="stylesheet" href="{{ link }}" type="text/css" />
         {%- endfor -%}
         {% block links %}
+        {% endblock %}
+        {% block meta %}
         {% endblock %}
         <meta name="viewport" content="width=device-width"> 
     </head>

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% block htmltag %}
 <html>
+{% endblock %}
     <head>
         <title>{{ title }}</title>
         {%- for link in css -%}
@@ -14,6 +16,8 @@
         <meta name="description" content="{{ meta_description|e }}"> 
         <meta name="keywords" content="{{ meta_keywords|e }}"> 
         <meta name="viewport" content="width=device-width"> 
+        {% block meta %}
+        {% endblock %}
     </head>
     <body>
         <div id="container">

@@ -1,0 +1,12 @@
+<meta property="og:title" content="{{tiddler.title|e}}" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="{{ space_uri(tiddler) }}{{ tiddler.title|uri }}" />
+<meta property="og:image" content="{{ space_uri(tiddler) }}SiteIcon" />
+<meta property="og:description" content="{{ tiddler.text[:200]|e }}" />
+<meta property="og:site_name" content="TiddlySpace" />
+<meta property="article:published_time" content="{{ tiddler.created|rfc3339 }}" />
+<meta property="article:modified_time" content="{{ tiddler.modified|rfc3339 }}" />
+<meta property="article:author" content="{{ modifier_link }}" />
+{% for tag in tiddler.tags %}
+<meta property="article:tag" content="{{ tag|e }}" />
+{% endfor %}
