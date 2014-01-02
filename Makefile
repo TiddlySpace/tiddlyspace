@@ -26,23 +26,23 @@ test: pytest jstest
 tiddlywiki:
 	mkdir tiddlywebplugins/tiddlyspace/resources || true
 	$(call download, "tiddlywebplugins/tiddlyspace/resources/beta.html", \
-		"http://tiddlywiki.com/beta/empty.html")
+		"http://classic.tiddlywiki.com/beta/empty.html")
 	$(call download, "tiddlywebplugins/tiddlyspace/resources/external_beta.html", \
-		"http://tiddlywiki.com/beta/tiddlywiki_externaljs_tiddlyspace.html")
+		"http://classic.tiddlywiki.com/beta/tiddlywiki_externaljs_tiddlyspace.html")
 	$(call download, "src/externals/beta_jquery.js.js", \
-		"http://tiddlywiki.com/beta/jquery.js")
+		"http://classic.tiddlywiki.com/beta/jquery.js")
 	$(call download, "src/externals/beta_jQuery.twStylesheet.js.js", \
-		"http://tiddlywiki.com/beta/jQuery.twStylesheet.js")
+		"http://classic.tiddlywiki.com/beta/jQuery.twStylesheet.js")
 	$(call download, "src/externals/beta_twcore.js.js", \
-		"http://tiddlywiki.com/beta/twcore.js")
+		"http://classic.tiddlywiki.com/beta/twcore.js")
 	$(call download, "tiddlywebplugins/tiddlyspace/resources/external.html.wrongbag", \
-		"http://tiddlywiki.com/tiddlywiki_externaljs_tiddlyspace.html")
+		"http://classic.tiddlywiki.com/tiddlywiki_externaljs_tiddlyspace.html")
 	$(call download, "src/externals/jQuery.twStylesheet.js.js", \
-		"http://tiddlywiki.com/jQuery.twStylesheet.js")
+		"http://classic.tiddlywiki.com/jQuery.twStylesheet.js")
 	$(call download, "src/externals/twcore.js.js", \
-		"http://tiddlywiki.com/twcore.js")
+		"http://classic.tiddlywiki.com/twcore.js")
 	$(call download, "src/externals/twjquery.js.js", \
-		"http://tiddlywiki.com/jquery.js")
+		"http://classic.tiddlywiki.com/jquery.js")
 	# Fix up path to jquery to avoid collision with main hosted
 	# jquery.
 	sed -e 's|/bags/common/tiddlers/jquery.js|/bags/common/tiddlers/twjquery.js|;' < \
